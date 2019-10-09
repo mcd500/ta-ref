@@ -1,8 +1,8 @@
 include ../common.mk
 
 TARGET   := hello-sgx
-SRC      := $(wildcard *.cpp)
-OBJECTS  := $(SRC:%.cpp=%.o)
+SRC      += $(wildcard *.cpp)
+OBJECTS  += $(SRC:%.cpp=%.o)
 CXXFLAGS += -Wall -g
 LDFLAGS  :=
 
