@@ -1,0 +1,9 @@
+[submodule "lib/tiny_sha3"]
+	path = lib/tiny_sha3
+	url = https://github.com/mjosaarinen/tiny_sha3/
+[submodule "lib/tiny-AES-c"]
+	path = lib/tiny-AES-c
+	url = https://github.com/kokke/tiny-AES-c
+[submodule "lib/ed25519"]
+	path = lib/ed25519
+	url = https://github.com/orlp/ed25519/
