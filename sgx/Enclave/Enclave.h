@@ -39,6 +39,8 @@ extern "C" {
 
 int printf(const char* fmt, ...);
 
+void message_digest_test(void);
+
 #if defined(__cplusplus)
 }
 #endif

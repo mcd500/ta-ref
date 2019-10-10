@@ -223,7 +223,7 @@ int SGX_CDECL main(int argc, char *argv[])
 {
     (void)(argc);
     (void)(argv);
-    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+    int ret = SGX_ERROR_UNEXPECTED;
 
     /* Initialize the enclave */
     if(initialize_enclave() < 0){

@@ -48,6 +48,12 @@ enclave {
 //    from "TrustedLibrary/Random.edl" import *;
 //    from "TrustedLibrary/Time.edl" import *;
 
+    /* structure definition */
+    struct ree_time_t {
+        uint32_t seconds;
+        uint32_t millis;
+    };
+
     /* 
      * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
      *  [in, ]: copy the string buffer to App outside.

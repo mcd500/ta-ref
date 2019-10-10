@@ -61,7 +61,7 @@ void ecall_ta_main(void)
 
     message_digest_test();
 
-#if NOT_DONE
+#ifdef NOT_DONE
     symmetric_key_enc_verify_test();
 
     symmetric_key_dec_verify_test();
