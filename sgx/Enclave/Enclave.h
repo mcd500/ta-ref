@@ -40,6 +40,7 @@ extern "C" {
 int printf(const char* fmt, ...);
 
 void message_digest_test(void);
+void symmetric_key_enc_verify_test(void);
 
 #if defined(__cplusplus)
 }
