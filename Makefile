@@ -1,3 +1,6 @@
+all:
+	make -C sgx
+
 doc: clean-doc
 	doxygen
 	cd latex; make
