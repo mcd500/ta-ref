@@ -7,6 +7,3 @@
 [submodule "lib/ed25519"]
 	path = lib/ed25519
 	url = https://github.com/orlp/ed25519/
-[submodule "junkyard"]
-	path = junkyard
-	url = http://150.82.217.189/vc707/junkyard.git
