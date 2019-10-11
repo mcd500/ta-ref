@@ -8,5 +8,5 @@ $ make doc
 # Build
 
 ```sh
-# make
+$ make
 ```
