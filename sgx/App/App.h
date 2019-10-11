@@ -56,7 +56,7 @@ extern sgx_enclave_id_t global_eid;    /* global enclave id */
 extern "C" {
 #endif
 
-sgx_status_t ecall_ta_main(sgx_enclave_id_t eid);
+// sgx_status_t ecall_ta_main(sgx_enclave_id_t eid);
 
 #if defined(__cplusplus)
 }

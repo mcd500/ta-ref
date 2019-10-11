@@ -34,10 +34,10 @@
 #include "Enclave.h"
 #include "Enclave_t.h"
 
-#include "sha3/sha3.h"
+#include "sha3.hpp"
 #include "ed25519/ed25519.h"
 
-#include "ed25519/test_dev_key.h"
+#include "test_dev_key.h"
 
 #define SHA_LENGTH (256/8)
 #define SIG_LENGTH 64
