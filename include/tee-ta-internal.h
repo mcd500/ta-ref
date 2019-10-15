@@ -28,7 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 /**
- * @file riscv-internal-tee.h
+ * @file tee-ta-internal.h
  * draft RISC-V Internal TEE API
  * @brief Candidate API list for Global Platform like RISC-V TEE.
  * @author Akira Tsukamoto, AIST

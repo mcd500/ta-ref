@@ -28,7 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 #include <stdio.h>
-#include <riscv-internal-tee.h>
+#include "tee-ta-internal.h"
 
 int main(int argc, char *argv[])
 {
