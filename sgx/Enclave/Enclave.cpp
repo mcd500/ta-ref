@@ -59,6 +59,8 @@ void ecall_ta_main(void)
 
     printf("ecall_ta_main() start\n");
 
+    secure_storage_test();
+
     message_digest_test();
 
     symmetric_key_enc_verify_test();

@@ -27,25 +27,59 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef _ENCLAVE_H_
-#define _ENCLAVE_H_
 
-#include <assert.h>
-#include <stdlib.h>
+#include <string.h>
 
-#if defined(__cplusplus)
-extern "C" {
-#endif
+#include "sgx_trts.h"
+#include "Enclave.h"
+#include "Enclave_t.h"
 
-int printf(const char* fmt, ...);
+/* ecall_print_file:
+ *   testing basic file i/o wit ocall
+ */
+void secure_storage_test(void)
+{
+  static unsigned char data[256] = {
+    // 0x00,0x01,...,0xff
+#include "test.dat"
+  };
 
-void secure_storage_test(void);
-void message_digest_test(void);
-void symmetric_key_enc_verify_test(void);
-void asymmetric_key_sign_test(void);
+#define O_RDONLY   0
+#define O_WRONLY   00001
+#define O_CREAT	   00100
+#define O_TRUNC	   01000
 
-#if defined(__cplusplus)
+  int desc = 0;
+
+  /* write */
+  ocall_open_file("FileOne", 7, O_WRONLY|O_CREAT|O_TRUNC, &desc);
+  printf("open_file WO -> %d\n", desc);
+
+  ocall_write_file(desc, (const char *)data, 256);
+
+  ocall_close_file(desc);
+
+  /* read */
+  ocall_open_file("FileOne", 7, O_RDONLY, &desc);
+  printf("open_file RO -> %d\n", desc);
+
+  unsigned char rbuf[256];
+  ocall_read_file(desc, (char *)rbuf, 256);
+
+  // Dump read contents
+  ocall_print_string("bytes read: ");
+  for (int i = 0; i < sizeof(rbuf); i++) {
+    printf ("%02x", rbuf[i]);
+  }
+  ocall_print_string("\n");
+
+  int verify_ok;
+  verify_ok = !memcmp(rbuf, data, 256);
+  if (verify_ok) {
+    ocall_print_string("verify ok\n");
+  } else {
+    ocall_print_string("verify fails\n");
+  }
+
+  ocall_close_file(desc);
 }
-#endif
-
-#endif /* !_ENCLAVE_H_ */
