@@ -45,7 +45,7 @@
 /* ecall_print_digest:
  *   testing digest-sign-verify with asymmetric key
  */
-void message_digest_test(void)
+void asymmetric_key_sign_test(void)
 {
   sha3_ctx_t ctx;
   static unsigned char data[256] = {
@@ -63,9 +63,29 @@ void message_digest_test(void)
   sha3_final(hash, &ctx);
 
   // Dump hashed data
-  ocall_print_string("hash: ");
+  ocall_print_string("digest: ");
   for (int i = 0; i < SHA_LENGTH; i++) {
     printf ("%02x", hash[i]);
   }
   ocall_print_string("\n");
+
+  // Sign hashed data with test keys
+  ed25519_sign(sig, hash, SHA_LENGTH,
+	       _sanctum_dev_public_key, _sanctum_dev_secret_key);
+
+  // Dump signature
+  ocall_print_string("signature: ");
+  for (int i = 0; i < SIG_LENGTH; i++) {
+    printf ("%02x", sig[i]);
+  }
+  ocall_print_string("\n");
+
+  // Verify signature against hashed data
+  int verify_ok;
+  verify_ok = ed25519_verify(sig, hash, SHA_LENGTH, _sanctum_dev_public_key);
+  if (verify_ok) {
+    ocall_print_string("verify ok\n");
+  } else {
+    ocall_print_string("verify fails\n");
+  }
 }

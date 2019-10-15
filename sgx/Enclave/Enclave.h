@@ -41,6 +41,7 @@ int printf(const char* fmt, ...);
 
 void message_digest_test(void);
 void symmetric_key_enc_verify_test(void);
+void asymmetric_key_sign_test(void);
 
 #if defined(__cplusplus)
 }
