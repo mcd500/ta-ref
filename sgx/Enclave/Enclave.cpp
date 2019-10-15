@@ -59,6 +59,10 @@ void ecall_ta_main(void)
 
     printf("ecall_ta_main() start\n");
 
+    ree_time_test();
+
+    trusted_time_test();
+
     secure_storage_test();
 
     message_digest_test();

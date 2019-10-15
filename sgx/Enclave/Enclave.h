@@ -39,6 +39,8 @@ extern "C" {
 
 int printf(const char* fmt, ...);
 
+void ree_time_test(void);
+void trusted_time_test(void);
 void secure_storage_test(void);
 void message_digest_test(void);
 void symmetric_key_enc_verify_test(void);
