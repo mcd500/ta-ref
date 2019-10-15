@@ -79,6 +79,6 @@ void ecall_ta_main(void)
 #ifdef NOT_DONE
 #endif
 
-    printf("ecall_ta_main() start\n");
+    printf("ecall_ta_main() end\n");
 }
 
