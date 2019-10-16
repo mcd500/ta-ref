@@ -37,9 +37,7 @@
 #ifndef TA_INTERNAL_TEE_H
 #define TA_INTERNAL_TEE_H
 
-#include <stdint.h>
-
-typedef uint32_t TEE_Result;
+#include "tee-common.h"
 
 #ifdef __cplusplus
 extern "C" {
