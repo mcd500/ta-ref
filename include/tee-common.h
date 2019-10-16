@@ -44,6 +44,11 @@
 extern "C" {
 #endif
 
+#ifdef DEBUG
+#define pr_deb(...)       do { printf(__VA_ARGS__); } while (0)
+#else
+#define pr_deb(...)       do { } while (0)
+#endif /* DEBUG */
 typedef uint32_t TEE_Result;
 
 #ifdef __cplusplus
