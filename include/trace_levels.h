@@ -1,8 +1,5 @@
 /*
- * SPDX-License-Identifier: BSD-2-Clause
- *
- * Copyright (C) 2019 National Institute of Advanced Industrial Science
- *                           and Technology (AIST)
+ * Copyright (c) 2014, STMicroelectronics International N.V.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,38 +24,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-/**
- * @file tee-common.h
- * draft RISC-V Internal TEE API
- * @brief Common type and definitions of RISC-V TEE.
- * @author Akira Tsukamoto, AIST
- * @date 2019/09/25
+#ifndef TRACE_LEVELS_H
+#define TRACE_LEVELS_H
+
+/*
+ * Trace levels.
+ *
+ * ALWAYS is used when you always want a print to be seen, but it is not always
+ * an error.
+ *
+ * ERROR is used when some kind of error has happened, this is most likely the
+ * print you will use most of the time when you report some kind of error.
+ *
+ * INFO is used when you want to print some 'normal' text to the user.
+ * This is the default level.
+ *
+ * DEBUG is used to print extra information to enter deeply in the module.
+ *
+ * FLOW is used to print the execution flox, typically the in/out of functions.
+ *
  */
 
-#ifndef TEE_COMMON_H
-#define TEE_COMMON_H
+#define TRACE_MIN       1
+#define TRACE_ERROR     TRACE_MIN
+#define TRACE_INFO      2
+#define TRACE_DEBUG     3
+#define TRACE_FLOW      4
+#define TRACE_MAX       TRACE_FLOW
 
-#include <stdint.h>
+/* Trace level of the casual printf */
+#define TRACE_PRINTF_LEVEL TRACE_ERROR
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef DEBUG
-#define pr_deb(...)       do { printf(__VA_ARGS__); } while (0)
-#else
-#define pr_deb(...)       do { } while (0)
-#endif /* DEBUG */
-
-//#include <tee_api.h>
-#include <tee_api_defines.h>
-#include <tee_api_types.h>
-#include <tee_ta_api.h>
-
-//typedef uint32_t TEE_Result;
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* TEE_COMMON_H */
+#endif /*TRACE_LEVELS_H*/
