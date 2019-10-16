@@ -54,3 +54,128 @@ TEE_Result GetRelTimeEnd(uint64_t end)
 }
 
 
+TEE_Result TEE_CreatePersistentObject()
+{
+    return 0;
+}
+
+
+TEE_Result TEE_OpenPersistentObject()
+{
+    return 0;
+}
+
+
+TEE_Result TEE_GetObjectInfo1()
+{
+    return 0;
+}
+
+
+TEE_Result TEE_WriteObjectData()
+{
+    return 0;
+}
+
+
+TEE_Result TEE_ReadObjectData()
+{
+    return 0;
+}
+
+
+TEE_Result TEE_CloseObject()
+{
+    return 0;
+}
+
+
+
+TEE_Result TEE_GenerateRandom()
+{
+    return 0;
+}
+
+
+
+TEE_Result TEE_AllocateOperation()
+{
+    return 0;
+}
+
+
+TEE_Result TEE_FreeOperation()
+{
+    return 0;
+}
+
+
+
+
+TEE_Result TEE_DigestUpdate()
+{
+    return 0;
+}
+
+
+TEE_Result TEE_DigestDoFinal()
+{
+    return 0;
+}
+
+
+
+TEE_Result TEE_AEInit()
+{
+    return 0;
+}
+
+
+TEE_Result TEE_AEUpdate()
+{
+    return 0;
+}
+
+
+TEE_Result TEE_AEEncryptFinal()
+{
+    return 0;
+}
+
+
+TEE_Result TEE_AEDecryptFinal()
+{
+    return 0;
+}
+
+
+
+TEE_Result TEE_AllocateTransientObject()
+{
+    return 0;
+}
+
+
+TEE_Result TEE_InitRefAttribute()
+{
+    return 0;
+}
+
+
+TEE_Result TEE_FreeTransientObject()
+{
+    return 0;
+}
+
+
+
+TEE_Result TEE_AsymmetricSignDigest()
+{
+    return 0;
+}
+
+
+TEE_Result TEE_AsymmetricVerifyDigest()
+{
+    return 0;
+}
