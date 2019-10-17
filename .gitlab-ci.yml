@@ -1,6 +1,15 @@
 variables:
     GITLAB_URL: http://150.82.217.189
     GITLAB_USER: vc707
+    KEYSTONE_PATH: /home/user/projects/keystone
+
+before_script:
+
+cache:
+    untracked: true
+    paths:
+      - ${KEYSTONE_PATH}
+
 build:
     only:
       - master
