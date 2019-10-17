@@ -1,5 +1,6 @@
 all:
 	make -C sgx
+	make -C keystone
 
 doc: clean-doc
 	doxygen
