@@ -55,7 +55,7 @@ $(ENCLAVE_LIB_BUILD)/tiny-AES-c/%.o: ../lib/tiny-AES-c/%.c Enclave/Enclave_t.h
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
 $(Enclave_Name): $(Enclave_Lib_Objects)
-	make -C Enclave TEE_TA_DIR=$(shell pwd)/..
+	make -C Enclave TEE_TA_DIR=$(shell pwd)/.. KEYSTONE_SDK_DIR=$(KEYSTONE_SDK_DIR)
 
 .PHONY: clean copytosdk
 
@@ -64,6 +64,6 @@ copytosdk: $(App_Name) $(Enclave_Name)
 	cp -p $(KEYSTONE_SDK_DIR)/rts/eyrie/eyrie-rt $(KEYSTONE_INSTALL_DIR)
 
 clean:
-	make -C Enclave clean TEE_TA_DIR=$(shell pwd)/..
+	make -C Enclave clean TEE_TA_DIR=$(shell pwd)/.. KEYSTONE_SDK_DIR=$(KEYSTONE_SDK_DIR)
 	make -C App clean
 	rm -fr $(Enclave_Lib_Objects) $(ENCLAVE_LIB_BUILD)

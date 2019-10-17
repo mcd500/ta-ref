@@ -12,3 +12,4 @@ clean-doc:
 
 clean:
 	make -C sgx clean
+	make -C keystone clean
