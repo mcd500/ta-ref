@@ -19,7 +19,7 @@ build:
 
     script:
       - git submodule update --init --recursive
-      - make -C keystone
+      - make PATH=${PATH}:${KEYSTONE_DIR}/bin -C keystone
       - make
       - make doc
     artifacts:
