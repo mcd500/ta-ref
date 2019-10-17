@@ -1,15 +1,17 @@
 variables:
-   GITLAB_URL: http://150.82.217.189
-   GITLAB_USER: vc707
+    GITLAB_URL: http://150.82.217.189
+    GITLAB_USER: vc707
 build:
-   only:
-     - master
-   tags:
-     - shell
-   script:
-     - git submodule update --init --recursive
-     - make
-     - make doc
-   artifacts:
-     paths:
-     - tee-internal-doc-draft.pdf
+    only:
+      - master
+    tags:
+      - shell
+
+    script:
+      - git submodule update --init --recursive
+      - make
+      - make doc
+    artifacts:
+      paths:
+        - ${KEYSTONE_PATH}
+        - tee-internal-doc-draft.pdf
