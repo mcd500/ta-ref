@@ -43,12 +43,15 @@ $(App_Name):
 ######## Enclave Objects ########
 
 $(ENCLAVE_LIB_BUILD)/tiny_sha3/%.o: ../lib/tiny_sha3/%.c Enclave/Enclave_t.h
+	make -p $(ENCLAVE_LIB_BUILD)/tiny_sha3
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
 $(ENCLAVE_LIB_BUILD)/ed25519/%.o: ../lib/ed25519/src/%.c Enclave/Enclave_t.h
+	make -p $(ENCLAVE_LIB_BUILD)/ed25519
 	$(CC) $(Enclave_C_Flags) -DED25519_NO_SEED -c $< -o $@
 
 $(ENCLAVE_LIB_BUILD)/tiny-AES-c/%.o: ../lib/tiny-AES-c/%.c Enclave/Enclave_t.h
+	make -p $(ENCLAVE_LIB_BUILD)/tiny-AES-c
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
 $(Enclave_Name): $(Enclave_Lib_Objects)
