@@ -1,7 +1,8 @@
 variables:
     GITLAB_URL: http://150.82.217.189
     GITLAB_USER: vc707
-    KEYSTONE_PATH: /home/user/projects/keystone
+    KEYSTONE_DIR: /home/user/projects/keystone
+    KEYSTONE_SDK_DIR: /home/user/projects/keystone/sdk
 
 before_script:
 
@@ -18,9 +19,9 @@ build:
 
     script:
       - git submodule update --init --recursive
+      - make -C keystone
       - make
       - make doc
     artifacts:
       paths:
-        - ${KEYSTONE_PATH}
         - tee-internal-doc-draft.pdf
