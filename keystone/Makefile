@@ -66,4 +66,4 @@ copytosdk: $(App_Name) $(Enclave_Name)
 clean:
 	make -C Enclave clean TEE_TA_DIR=$(shell pwd)/..
 	make -C App clean
-	rm -f $(Enclave_Lib_Objects)
+	rm -fr $(Enclave_Lib_Objects) $(ENCLAVE_LIB_BUILD)
