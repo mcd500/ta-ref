@@ -1,14 +1,14 @@
 KEYSTONE_DIR=./build-keystone
 
+.PHONY: all keystone doc clean clean-doc
 all:
 	make -C sgx
 	make -C keystone
 
 keystone:
 	./unpack-prebuilt-keystone.sh
-	cd $(KEYSTONE_DIR)
-	./aist-setuo.sh
-	. source.sh | make run-tests KEYSTONE_DIR=$(KEYSTONE_DIR)
+	cd $(KEYSTONE_DIR);  ./aist-setup.sh
+	cd $(KEYSTONE_DIR); . source.sh | make run-tests KEYSTONE_DIR=$(KEYSTONE_DIR)
 
 doc: clean-doc
 	doxygen
