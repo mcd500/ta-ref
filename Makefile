@@ -3,7 +3,7 @@ KEYSTONE_DIR=./build-keystone
 .PHONY: all keystone doc clean clean-doc
 all: keystone
 	make -C sgx
-	make -C keystone
+	make -C keystone KEYSTONE_DIR=$(KEYSTONE_DIR)
 
 keystone:
 	./unpack-prebuilt-keystone.sh
@@ -20,4 +20,4 @@ clean-doc:
 
 clean:
 	make -C sgx clean
-	make -C keystone clean
+	make -C keystone clean KEYSTONE_DIR=$(KEYSTONE_DIR)
