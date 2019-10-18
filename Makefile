@@ -1,7 +1,7 @@
 KEYSTONE_DIR=./build-keystone
 
 .PHONY: all keystone doc clean clean-doc
-all:
+all: keystone
 	make -C sgx
 	make -C keystone
 
