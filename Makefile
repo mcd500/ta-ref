@@ -1,6 +1,14 @@
+KEYSTONE_DIR=./build-keystone
+
 all:
 	make -C sgx
 	make -C keystone
+
+keystone:
+	./unpack-prebuilt-keystone.sh
+	cd $(KEYSTONE_DIR)
+	./aist-setuo.sh
+	. source.sh | make run-tests KEYSTONE_DIR=$(KEYSTONE_DIR)
 
 doc: clean-doc
 	doxygen
