@@ -1,6 +1,6 @@
 # Documentation file
 
-    [Draft TEE Internal API doc](./tee-internal-doc-draft.pdf)
+   [Draft TEE Internal API doc](./tee-internal-doc-draft.pdf)
 
 # Prerequisites
 
