@@ -1,14 +1,15 @@
-KEYSTONE_DIR=./build-keystone
+PWD=$(shell pwd)
+KEYSTONE_DIR=$(PWD)/build-keystone
 
 .PHONY: all keystone doc clean clean-doc
 all: keystone
 	make -C sgx
-	make -C keystone KEYSTONE_DIR=$(KEYSTONE_DIR)
+	PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make -C keystone KEYSTONE_DIR=$(KEYSTONE_DIR)
 
 keystone:
 	./unpack-prebuilt-keystone.sh
-	cd $(KEYSTONE_DIR);  ./aist-setup.sh
-	cd $(KEYSTONE_DIR); . source.sh | make run-tests KEYSTONE_DIR=$(KEYSTONE_DIR)
+	cd $(KEYSTONE_DIR); ./aist-setup.sh
+	cd $(KEYSTONE_DIR); PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make run-tests KEYSTONE_SDK_DIR=$(KEYSTONE_DIR)/sdk
 
 doc: clean-doc
 	doxygen
