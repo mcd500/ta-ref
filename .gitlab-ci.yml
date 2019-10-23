@@ -3,7 +3,7 @@ variables:
     GITLAB_USER: vc707
     RISCV_GCC_DIR: /home/user/projects/keystone/riscv/bin
     KEYSTONE_DIR: /home/user/projects/keystone
-#    KEYSTONE_SDK_DIR: /home/user/projects/keystone/sdk
+    KEYSTONE_SDK_DIR: /home/user/projects/keystone/sdk
 
 before_script:
 
