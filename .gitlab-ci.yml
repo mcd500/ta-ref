@@ -1,7 +1,7 @@
 variables:
     GITLAB_URL: http://150.82.217.189
     GITLAB_USER: vc707
-    RISC-V_GCC_DIR: /home/user/projects/keystone/riscv/bin
+    RISCV_GCC_DIR: /home/user/projects/keystone/riscv/bin
 #    KEYSTONE_SDK_DIR: /home/user/projects/keystone/sdk
 
 before_script:
@@ -19,7 +19,7 @@ build:
 
     script:
       - git submodule update --init --recursive
-      - export PATH=${PATH}:${RISC-V_GCC_DIR}
+      - export PATH=${PATH}:${RISCV_GCC_DIR}
       - make
       - make doc
     artifacts:
