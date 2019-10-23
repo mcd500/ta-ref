@@ -27,14 +27,14 @@ SDK_EDGE_LIB = $(SDK_LIB_DIR)/libkeystone-edge.a
 SDK_INCLUDE_ENCLAVE_DIR = $(SDK_LIB_DIR)/app/include
 SDK_INCLUDE_EDGE_DIR = $(SDK_LIB_DIR)/edge/include
 
-TEE_TA_INCLUDE_DIR = $(TEE_TA_DIR)/include
+TEE_TA_INCLUDE_DIR = $(TEE_TA_DIR)/../include
 LIBBUILD_DIR = $(TEE_TA_DIR)/keystone/libbuild
 ED25519_OBJS = $(wildcard $(LIBBUILD_DIR)/ed25519/*.o)
 AES_OBJS = $(LIBBUILD_DIR)/tiny-AES-c/aes.o
 SHA3_OBJS = $(LIBBUILD_DIR)/tiny_sha3/sha3.o
 
 LDFLAGS = -static -L$(SDK_LIB_DIR)
-CFLAGS += -I$(SDK_INCLUDE_ENCLAVE_DIR) -I$(SDK_INCLUDE_EDGE_DIR) -I. -I$(TEE_TA_INCLUDE_DIR) -I$(TEE_TA_DIR)/common
+CFLAGS += -I$(SDK_INCLUDE_ENCLAVE_DIR) -I$(SDK_INCLUDE_EDGE_DIR) -I. -I$(TEE_TA_INCLUDE_DIR) -I$(TEE_TA_DIR)/../common
 
 ENCLAVE_C_OBJS = $(patsubst %.c,%.o, $(ENCLAVE_C_SRCS))
 ENCLAVE_A_OBJS = $(patsubst %.s,%.o, $(ENCLAVE_A_SRCS))
