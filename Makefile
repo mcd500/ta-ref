@@ -9,7 +9,7 @@ all: keystone
 keystone:
 	./unpack-prebuilt-keystone.sh
 	cd $(KEYSTONE_DIR); ./aist-setup.sh
-	cd $(KEYSTONE_DIR); PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make run-tests KEYSTONE_SDK_DIR=$(KEYSTONE_DIR)/sdk
+	cd $(KEYSTONE_DIR); PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make run-tests KEYSTONE_SDK_DIR=$(KEYSTONE_DIR)/sdk KEYSTONE_DIR=$(KEYSTONE_DIR)
 
 doc: clean-doc
 	doxygen
@@ -18,6 +18,9 @@ doc: clean-doc
 
 clean-doc:
 	rm -fr html latex
+
+clean-build-keystone:
+	make -C build-keystone clean
 
 clean:
 	make -C sgx clean
