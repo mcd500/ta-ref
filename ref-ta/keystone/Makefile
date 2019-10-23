@@ -1,4 +1,4 @@
-include ../common.mk
+include ../../common.mk
 
 ifndef KEYSTONE_DIR
 $(error KEYSTONE_DIR is not set)
@@ -16,7 +16,7 @@ AS = riscv64-unknown-linux-gnu-as
 
 Enclave_C_Flags = $(CFLAGS)
 
-Enclave_ed25519_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/ed25519/,$(subst .c,.o,$(notdir $(wildcard ../lib/ed25519/src/*.c))))
+Enclave_ed25519_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/ed25519/,$(subst .c,.o,$(notdir $(wildcard ../../lib/ed25519/src/*.c))))
 
 Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(ENCLAVE_LIB_BUILD)/tiny_sha3/sha3.o $(ENCLAVE_LIB_BUILD)/tiny-AES-c/aes.o
 
@@ -42,15 +42,15 @@ $(App_Name):
 
 ######## Enclave Objects ########
 
-$(ENCLAVE_LIB_BUILD)/tiny_sha3/%.o: ../lib/tiny_sha3/%.c Enclave/Enclave_t.h
+$(ENCLAVE_LIB_BUILD)/tiny_sha3/%.o: ../../lib/tiny_sha3/%.c Enclave/Enclave_t.h
 	mkdir -p $(ENCLAVE_LIB_BUILD)/tiny_sha3
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
-$(ENCLAVE_LIB_BUILD)/ed25519/%.o: ../lib/ed25519/src/%.c Enclave/Enclave_t.h
+$(ENCLAVE_LIB_BUILD)/ed25519/%.o: ../../lib/ed25519/src/%.c Enclave/Enclave_t.h
 	mkdir -p $(ENCLAVE_LIB_BUILD)/ed25519
 	$(CC) $(Enclave_C_Flags) -DED25519_NO_SEED -c $< -o $@
 
-$(ENCLAVE_LIB_BUILD)/tiny-AES-c/%.o: ../lib/tiny-AES-c/%.c Enclave/Enclave_t.h
+$(ENCLAVE_LIB_BUILD)/tiny-AES-c/%.o: ../../lib/tiny-AES-c/%.c Enclave/Enclave_t.h
 	mkdir -p $(ENCLAVE_LIB_BUILD)/tiny-AES-c
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 

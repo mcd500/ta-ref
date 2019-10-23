@@ -29,18 +29,18 @@
 #
 #
 
-include ../common.mk
+include ../../common.mk
 
 # Using SIM as defualt during development, comment out when it is ready
 SGX_MODE=SIM
 
 SGX_COMMON_CFLAGS     += $(CFLAGS) -DED25519_NO_SEED=1
 SGX_COMMON_CXXFLAGS   += $(CXXFLAGS)
-Enclave_Include_Paths += -I ../include -I ../lib -I ../common
-Enclave_C_Files       += $(wildcard ../common/*.c) \
-                         $(wildcard ../lib/tiny_sha3/sha*.c) \
-                         $(wildcard ../lib/ed25519/src/*.c) \
-                         $(wildcard ../lib/tiny-AES-c/aes.c)
+Enclave_Include_Paths += $(CFLAGS)
+Enclave_C_Files       += $(wildcard ../../common/*.c) \
+                         $(wildcard ../../lib/tiny_sha3/sha*.c) \
+                         $(wildcard ../../lib/ed25519/src/*.c) \
+                         $(wildcard ../../lib/tiny-AES-c/aes.c)
 
 ######## SGX SDK Settings ########
 
@@ -270,19 +270,19 @@ Enclave/%.o: Enclave/%.cpp Enclave/Enclave_t.h
 	@$(CXX) $(SGX_COMMON_CXXFLAGS) $(Enclave_Cpp_Flags) -c $< -o $@
 	@echo "CXX  <=  $<"
 
-../common/%.o: ../common/%.c Enclave/Enclave_t.h
+../../common/%.o: ../../common/%.c Enclave/Enclave_t.h
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -c $< -o $@
 	@echo "CC   <=  $<"
 
-../lib/tiny_sha3/%.o: ../lib/tiny_sha3/%.c Enclave/Enclave_t.h
+../../lib/tiny_sha3/%.o: ../../lib/tiny_sha3/%.c Enclave/Enclave_t.h
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -c $< -o $@
 	@echo "CC   <=  $<"
 
-../lib/ed25519/src/%.o: ../lib/ed25519/src/%.c Enclave/Enclave_t.h
+../../lib/ed25519/src/%.o: ../../lib/ed25519/src/%.c Enclave/Enclave_t.h
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -DED25519_NO_SEED -c $< -o $@
 	@echo "CC   <=  $<"
 
-../lib/tiny-AES-c/%.o: ../lib/tiny-AES-c/%.c Enclave/Enclave_t.h
+../../lib/tiny-AES-c/%.o: ../../lib/tiny-AES-c/%.c Enclave/Enclave_t.h
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -c $< -o $@
 	@echo "CC   <=  $<"
 
