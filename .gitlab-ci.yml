@@ -13,7 +13,6 @@ cache:
 
 build:
     only:
-      - master
       - with-build-keystone
     tags:
       - shell
