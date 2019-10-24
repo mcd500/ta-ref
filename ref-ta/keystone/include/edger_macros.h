@@ -106,7 +106,8 @@ edge_add_size(size_t* total, size_t size)
     if (pargs_in->argname) { \
       pargs_in->argname = (argtype)(output_buffer + output_buffer_offset); \
       EDGE_ADD_SIZE(output_buffer_offset, (size_t)(argsize)); \
-      if (edge_call_check_ptr_valid(output_buffer, output_buffer_offset)) { \
+      if (edge_call_check_ptr_valid((uintptr_t)output_buffer, \
+				    output_buffer_offset)) {  \
         _result = EDGE_BAD_OFFSET; \
         goto done; \
       } \
@@ -119,7 +120,8 @@ edge_add_size(size_t* total, size_t size)
       argtype _p_in = (argtype)pargs_in->argname; \
       pargs_in->argname = (argtype)(output_buffer + output_buffer_offset); \
       EDGE_ADD_SIZE(output_buffer_offset, (size_t)argsize); \
-      if (edge_call_check_ptr_valid(output_buffer, output_buffer_offset)) { \
+      if (edge_call_check_ptr_valid((uintptr_t)output_buffer, \
+				    output_buffer_offset)) {  \
         _result = EGGE_BAD_OFFSET; \
         goto done; \
       } \
