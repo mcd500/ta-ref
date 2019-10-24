@@ -12,9 +12,8 @@ screen -L -dmS qemu ${TEE_REF_TA_DIR}/scripts/keystone-run-qemu.sh
 sleep 10
 ${TEE_REF_TA_DIR}/scripts/keystone-match.expect
 
-sed -i "s/.*\[SE\]\ gettimeofday.*/TIME/" ${KEYSTONE_DIR}/${TEST_LOG}
-sed -i "s/^REE\ time.*/TIME/" ${KEYSTONE_DIR}/${TEST_LOG}
-sed -i "s/.*based\ on\ rdcycle.*/TIME/" ${KEYSTONE_DIR}/${TEST_LOG}
+# Ignore the results which begin with '@'
+sed -i "s/^@.*/TIME/" ${KEYSTONE_DIR}/${TEST_LOG}
 
 diff -up ${KEYSTONE_DIR}/${TEST_LOG} ${TEE_REF_TA_DIR}/tests/test-qemu.expected.log
 if [ $? -eq 0 ]
