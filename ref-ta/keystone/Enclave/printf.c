@@ -72,12 +72,8 @@
 #define FLAGS_LONG_LONG (1U <<  9U)
 #define FLAGS_PRECISION (1U << 10U)
 
-void _putchar(char character)
-{
-  char buf[2];
-  buf[0] = character; buf[1] = '\0';
-  ocall_print_string(buf);
-}
+extern int putchar(char ch);
+#define _putchar putchar
 
 // output function type
 typedef void (*out_fct_type)(char character, void* buffer, size_t idx, size_t maxlen);
@@ -694,6 +690,7 @@ static int _vsnprintf(out_fct_type out, char* buffer, const size_t maxlen, const
 ///////////////////////////////////////////////////////////////////////////////
 
 
+#if 0
 int printf(const char* format, ...)
 {
   va_list va;
@@ -703,7 +700,7 @@ int printf(const char* format, ...)
   va_end(va);
   return ret;
 }
-
+#endif
 
 int sprintf(char* buffer, const char* format, ...)
 {

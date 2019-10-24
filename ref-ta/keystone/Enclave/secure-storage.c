@@ -29,6 +29,7 @@
  */
 
 #include <string.h>
+#include <stdio.h>
 
 //#include "Enclave.h"
 #include "Enclave_t.h"
@@ -51,34 +52,35 @@ void secure_storage_test(void)
 
   /* write */
   int desc;
-  desc = ocall_open_file("FileOne", 7, O_WRONLY|O_CREAT|O_TRUNC);
+  ocall_open_file(&desc, "FileOne", O_WRONLY|O_CREAT|O_TRUNC);
   printf("open_file WO -> %d\n", desc);
 
-  ocall_write_file(desc, (const char *)data, 256);
+  int retval;
+  ocall_write_file(&retval, desc, (const char *)data, 256);
 
-  ocall_close_file(desc);
+  ocall_close_file(&retval, desc);
 
   /* read */
-  desc = ocall_open_file("FileOne", 7, O_RDONLY);
+  ocall_open_file(&desc, "FileOne", O_RDONLY);
   printf("open_file RO -> %d\n", desc);
 
   unsigned char rbuf[256];
-  ocall_read_file(desc, (char *)rbuf, 256);
+  ocall_read_file(&retval, desc, (char *)rbuf, 256);
 
   // Dump read contents
-  ocall_print_string("bytes read: ");
+  printf("bytes read: ");
   for (int i = 0; i < sizeof(rbuf); i++) {
     printf ("%02x", rbuf[i]);
   }
-  ocall_print_string("\n");
+  printf("\n");
 
   int verify_ok;
   verify_ok = !memcmp(rbuf, data, 256);
   if (verify_ok) {
-    ocall_print_string("verify ok\n");
+    printf("verify ok\n");
   } else {
-    ocall_print_string("verify fails\n");
+    printf("verify fails\n");
   }
 
-  ocall_close_file(desc);
+  ocall_close_file(&retval, desc);
 }

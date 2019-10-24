@@ -2,6 +2,10 @@ ifndef KEYSTONE_SDK_DIR
 export KEYSTONE_SDK_DIR = $(KEYSTONE_DIR)/sdk
 endif
 
+ifndef EDGER
+$(error EDGER is not set)
+endif
+
 CC = riscv64-unknown-linux-gnu-gcc
 CXX = riscv64-unknown-linux-gnu-g++
 CFLAGS = -Wall
@@ -19,18 +23,25 @@ SDK_INCLUDE_VERIFIER_DIR = $(SDK_LIB_DIR)/verifier
 
 APP = app
 
-CCFLAGS += -I$(SDK_INCLUDE_HOST_DIR) -I$(SDK_INCLUDE_EDGE_DIR) -I$(SDK_INCLUDE_VERIFIER_DIR) -I./
+CCFLAGS += -I$(SDK_INCLUDE_HOST_DIR) -I$(SDK_INCLUDE_EDGE_DIR) -I$(SDK_INCLUDE_VERIFIER_DIR) -I../include -I./
 LDFLAGS = -L$(SDK_LIB_DIR)
 
-OBJS = App.o Enclave_u.o
+OBJS = App.o
+EOBJS = Enclave_u.o
 
 all: $(APP)
 
-$(APP): $(OBJS) $(SDK_HOST_LIB) $(SDK_EDGE_LIB) $(SDK_VERIFIER_LIB)
+$(APP): $(OBJS) $(EOBJS) $(SDK_HOST_LIB) $(SDK_EDGE_LIB) $(SDK_VERIFIER_LIB)
 	$(CXX) $(CCFLAGS) $(LDFLAGS) -o $(APP) $^
 
-$(OBJS): %.o: %.cpp
+$(OBJS): %.o: %.cpp Enclave_u.h
 	$(CXX) $(CCFLAGS) -c $<
 
+Enclave_u.c Enclave_u.h Enclave_args.h: ../Def/Enclave.edl
+	$(EDGER) --untrusted $<
+
+$(EOBJS): %.o: %.c ../include/edger_macros.h Enclave_u.h Enclave_args.h
+	$(CC)  $(CCFLAGS) -c $<
+
 clean:
-	rm -rf $(OBJS) $(APP)
+	rm -rf $(OBJS) $(APP) Enclave_u.* Enclave_args.h

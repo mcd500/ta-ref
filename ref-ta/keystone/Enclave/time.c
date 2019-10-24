@@ -42,7 +42,8 @@ void ree_time_test(void)
   struct ree_time_t time;
 
   /* REE time */
-  ocall_ree_time(&time);
+  int retval;
+  ocall_ree_time(&retval, &time);
   printf ("@REE time %u sec %u millis\n", time.seconds, time.millis);
 }
 
