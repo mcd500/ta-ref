@@ -29,6 +29,7 @@
  */
 
 #include <string.h>
+#include <stdio.h>
 
 //#include "Enclave.h"
 #include "Enclave_t.h"
@@ -76,11 +77,11 @@ void symmetric_key_enc_verify_test(void)
   AES_CBC_encrypt_buffer(&ctx, out, CIPHER_LENGTH);
 
   // Dump encrypted data
-  ocall_print_string("cipher: ");
+  printf("cipher: ");
   for (int i = 0; i < CIPHER_LENGTH; i++) {
     printf ("%02x", out[i]);
   }
-  ocall_print_string("\n");
+  printf("\n");
 
   // Decrypt it
   AES_init_ctx_iv(&ctx, aes256_key, iv);
@@ -88,18 +89,18 @@ void symmetric_key_enc_verify_test(void)
   AES_CBC_decrypt_buffer(&ctx, out, CIPHER_LENGTH);
 
   // Dump data
-  ocall_print_string("decrypted to: ");
+  printf("decrypted to: ");
   for (int i = 0; i < CIPHER_LENGTH; i++) {
     printf ("%02x", out[i]);
   }
-  ocall_print_string("\n");
+  printf("\n");
 
   // Verify decrypted data against original one
   int verify_ok;
   verify_ok = !memcmp(out, data, CIPHER_LENGTH);
   if (verify_ok) {
-    ocall_print_string("verify ok\n");
+    printf("verify ok\n");
   } else {
-    ocall_print_string("verify fails\n");
+    printf("verify fails\n");
   }
 }

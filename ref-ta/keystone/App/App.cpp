@@ -12,40 +12,42 @@
 #include "keystone.h"
 #include "Enclave_u.h"
 
-unsigned long print_string(char* str){
+extern "C" {
+
+size_t ocall_print_string(const char* str){
   printf("%s",str);
   return strlen(str);
 }
 
-int open_file(const char* fname, int flags)
+int ocall_open_file(const char* fname, int flags)
 {
   int desc = open(fname, flags);
   printf("@[SE] open file %s flags %x -> %d\n",fname,flags,desc);
   return desc;
 }
 
-int close_file(int fdesc)
+int ocall_close_file(int fdesc)
 {
   int rtn = close(fdesc);
   printf("[SE] close desc %d -> %d\n",fdesc,rtn);
   return rtn;
 }
 
-int write_file(int fdesc, const char *buf, size_t len)
+int ocall_write_file(int fdesc, const char *buf, size_t len)
 {
   int rtn = write(fdesc, buf, len);
   printf("@[SE] write desc %d buf %x len %d-> %d\n",fdesc,buf,len,rtn);
   return rtn;
 }
 
-int read_file(int fdesc, char *buf, size_t len)
+int ocall_read_file(int fdesc, char *buf, size_t len)
 {
   int rtn = read(fdesc, buf, len);
   printf("@[SE] read desc %d buf %x len %d-> %d\n",fdesc,buf,len,rtn);
   return rtn;
 }
 
-int ree_time(struct ree_time_t *timep)
+int ocall_ree_time(struct ree_time_t *timep)
 {
   struct timeval tv;
   struct timezone tz;
@@ -56,6 +58,22 @@ int ree_time(struct ree_time_t *timep)
   return rtn;
 }
 
+extern edge_ocall_func_t __Enclave_ocall_function_table[];
+
+};
+
+int edge_init(Keystone* enclave)
+{
+    enclave->registerOcallDispatch(incoming_call_dispatch);
+    edge_ocall_func_t *func = __Enclave_ocall_function_table;
+    int id = 1;
+    while (*func) {
+        register_call(id++, *func++);
+    }
+    edge_call_init_internals((uintptr_t)enclave->getSharedBuffer(),
+                             enclave->getSharedBufferSize());
+    return 0;
+}
 
 /* We hardcode these for demo purposes. */
 const char* enc_path = "enclave.eapp_riscv";
