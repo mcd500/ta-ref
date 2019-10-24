@@ -43,7 +43,7 @@ void ree_time_test(void)
 
   /* REE time */
   ocall_ree_time(&time);
-  printf ("REE time %u sec %u millis\n", time.seconds, time.millis);
+  printf ("@REE time %u sec %u millis\n", time.seconds, time.millis);
 }
 
 /* ecall_print_time:
@@ -57,5 +57,5 @@ void trusted_time_test(void)
   gettimeofday(&tv, &tz);
   time.seconds = tv.tv_sec;
   time.millis = 0;
-  printf ("time %u based on rdcycle\n", time.seconds);
+  printf ("@time %u based on rdcycle\n", time.seconds);
 }
