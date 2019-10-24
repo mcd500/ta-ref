@@ -1,7 +1,7 @@
 SHELL=/bin/bash -x
 
-PWD=$(shell pwd)
-KEYSTONE_DIR     = $(PWD)/build-keystone
+TEE_REF_TA_DIR   = $(shell pwd)
+KEYSTONE_DIR     = $(TEE_REF_TA_DIR)/build-keystone
 KEYSTONE_SDK_DIR = $(KEYSTONE_DIR)/sdk
 #PATH             = $(KEYSTONE_DIR)/riscv/bin:$(PATH)
 
@@ -16,16 +16,26 @@ keystone:
 	cd $(KEYSTONE_DIR); ./aist-setup.sh
 	cd $(KEYSTONE_DIR); PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make run-tests KEYSTONE_SDK_DIR=$(KEYSTONE_DIR)/sdk KEYSTONE_DIR=$(KEYSTONE_DIR)
 
+.PHONY: keystone-qemu
+keystone-qemu:
+	set -e; cd $(KEYSTONE_DIR); \
+	export TEE_REF_TA_DIR=$(TEE_REF_TA_DIR); \
+	export KEYSTONE_DIR=$(KEYSTONE_DIR); \
+	export KEYSTONE_SDK_DIR=$(KEYSTONE_SDK_DIR); \
+	export PATH=$(KEYSTONE_DIR)/riscv/bin:$(PATH); \
+	$(TEE_REF_TA_DIR)/scripts/keystone-cp.sh; \
+	make -C hifive-work/buildroot_initramfs; \
+	make -f hifive.mk
+
 .PHONY: keystone-test
 keystone-test:
 	set -e; cd $(KEYSTONE_DIR); \
-	export KEYSTONE_DIR=$(PWD)/build-keystone; \
-	export KEYSTONE_SDK_DIR=$(KEYSTONE_DIR)/sdk; \
+	export TEE_REF_TA_DIR=$(TEE_REF_TA_DIR); \
+	export KEYSTONE_DIR=$(KEYSTONE_DIR); \
+	export KEYSTONE_SDK_DIR=$(KEYSTONE_SDK_DIR); \
 	export PATH=$(KEYSTONE_DIR)/riscv/bin:$(PATH); \
-	./tests/tests/vault.sh; \
-	make -C hifive-work/buildroot_initramfs; \
-	make -f hifive.mk
-	./scripts/check-ref-ta-keystone.sh
+	$(TEE_REF_TA_DIR)/scripts/keystone-cp.sh; \
+	$(TEE_REF_TA_DIR)/scripts/keystone-check.sh
 
 .PHONY: check
 check: keystone-test
