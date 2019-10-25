@@ -39,7 +39,7 @@ keystone-test:
 	$(TEE_REF_TA_DIR)/scripts/keystone-check.sh
 
 .PHONY: check
-check: keystone-test
+check: all keystone-test
 
 .PHONY: doc
 doc: clean-doc
