@@ -34,7 +34,7 @@ int close_file(int fdesc)
 int write_file(int fdesc, const char *buf, size_t len)
 {
   int rtn = write(fdesc, buf, len);
-  printf("[SE] write desc %d buf %x len %d-> %d\n",fdesc,buf,len,rtn);
+  printf("@[SE] write desc %d buf %x len %d-> %d\n",fdesc,buf,len,rtn);
   return rtn;
 }
 

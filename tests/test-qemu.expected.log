@@ -6,7 +6,7 @@ TIME
 TIME
 TIME
 open_file WO -> 3
-[SE] write desc 3 buf 47e040 len 256-> 256
+TIME
 [SE] close desc 3 -> 0
 open_file RO -> 3
 [SE] read desc 3 buf 31364 len 256-> 256
