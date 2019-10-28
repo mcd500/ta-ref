@@ -694,6 +694,8 @@ static int _vsnprintf(out_fct_type out, char* buffer, const size_t maxlen, const
 ///////////////////////////////////////////////////////////////////////////////
 
 
+// This will issue one ocall for each charactor.
+#if 0
 int printf(const char* format, ...)
 {
   va_list va;
@@ -703,7 +705,7 @@ int printf(const char* format, ...)
   va_end(va);
   return ret;
 }
-
+#endif
 
 int sprintf(char* buffer, const char* format, ...)
 {
