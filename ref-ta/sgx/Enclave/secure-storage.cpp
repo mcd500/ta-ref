@@ -31,6 +31,7 @@
 #include <string.h>
 
 #include "sgx_trts.h"
+#include "sgx_utils.h"
 #include "Enclave.h"
 #include "Enclave_t.h"
 

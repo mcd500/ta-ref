@@ -31,6 +31,7 @@
 #include <string.h>
 
 //#include "Enclave.h"
+#include "report.h"
 #include "Enclave_t.h"
 
 /* ecall_print_file:
