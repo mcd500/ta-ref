@@ -20,7 +20,7 @@ unsigned long print_string(char* str){
 int open_file(const char* fname, int flags)
 {
   int desc = open(fname, flags);
-  printf("[SE] open file %s flags %x -> %d\n",fname,flags,desc);
+  printf("@[SE] open file %s flags %x -> %d\n",fname,flags,desc);
   return desc;
 }
 
@@ -41,7 +41,7 @@ int write_file(int fdesc, const char *buf, size_t len)
 int read_file(int fdesc, char *buf, size_t len)
 {
   int rtn = read(fdesc, buf, len);
-  printf("[SE] read desc %d buf %x len %d-> %d\n",fdesc,buf,len,rtn);
+  printf("@[SE] read desc %d buf %x len %d-> %d\n",fdesc,buf,len,rtn);
   return rtn;
 }
 
