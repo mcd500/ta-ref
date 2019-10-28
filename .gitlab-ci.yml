@@ -13,6 +13,7 @@ cache:
 
 stages:
     build
+    test
 
 build:
     stage: build
@@ -30,3 +31,14 @@ build:
     artifacts:
       paths:
         - tee-internal-doc-draft.pdf
+
+test:
+    stage: test
+    only:
+      - master
+      - with-build-keystone
+    tags:
+      - shell
+
+    script:
+      - echo "test"
