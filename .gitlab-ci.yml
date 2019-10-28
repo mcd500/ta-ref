@@ -11,7 +11,11 @@ cache:
     untracked: true
     paths:
 
+stages:
+    build
+
 build:
+    stage: build
     only:
       - master
       - with-build-keystone
