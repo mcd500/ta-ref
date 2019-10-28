@@ -37,7 +37,7 @@ SGX_MODE=SIM
 SGX_COMMON_CFLAGS     += $(CFLAGS) -DED25519_NO_SEED=1
 SGX_COMMON_CXXFLAGS   += $(CXXFLAGS)
 Enclave_Include_Paths += $(CFLAGS)
-Enclave_C_Files       += $(wildcard ../../common/*.c) \
+Enclave_C_Files       += $(wildcard ../../platform/sgx/*.c) \
                          $(wildcard ../../lib/tiny_sha3/sha*.c) \
                          $(wildcard ../../lib/ed25519/src/*.c) \
                          $(wildcard ../../lib/tiny-AES-c/aes.c)

@@ -14,7 +14,8 @@ ENCLAVE_C_SRCS= Enclave.c Enclave_t.c \
 		secure-storage.c \
 		symmetric_key.c \
 		time.c \
-		printf.c
+		printf.c \
+		$(wildcard $(TEE_TA_DIR)/../platform/keystone/*.c)
 
 CC = riscv64-unknown-linux-gnu-gcc
 CFLAGS = -Wall
@@ -45,12 +46,12 @@ ENCLAVE_BIN = $(patsubst %,%.eapp_riscv,$(ENCLAVE))
 all: $(ENCLAVE_BIN)
 
 $(ENCLAVE_C_OBJS): %.o: %.c
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(ENCLAVE_BIN): %.eapp_riscv : $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB)
 	$(LINK) $(LDFLAGS) -o $@ $^ -T $(ENCLAVE_LDS)
 	chmod -x $@
 
 clean:
-	rm -f *.o $(ENCLAVE_BIN) $(EXTRA_CLEAN)
+	rm -f *.o $(ENCLAVE_C_OBJS) $(ENCLAVE_BIN) $(EXTRA_CLEAN)
 
