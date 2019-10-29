@@ -1,8 +1,8 @@
 SHELL=/bin/bash -x
 
 TEE_REF_TA_DIR   = $(shell pwd)
-KEYSTONE_DIR     = $(TEE_REF_TA_DIR)/build-keystone
-KEYSTONE_SDK_DIR = $(KEYSTONE_DIR)/sdk
+KEYSTONE_DIR     ?= $(TEE_REF_TA_DIR)/build-keystone
+KEYSTONE_SDK_DIR ?= $(KEYSTONE_DIR)/sdk
 #PATH             = $(KEYSTONE_DIR)/riscv/bin:$(PATH)
 
 .PHONY: all
