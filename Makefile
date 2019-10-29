@@ -35,7 +35,7 @@ keystone-test:
 	export KEYSTONE_SDK_DIR=$(KEYSTONE_SDK_DIR); \
 	export PATH=$(KEYSTONE_DIR)/riscv/bin:$(PATH); \
 	$(TEE_REF_TA_DIR)/scripts/keystone-cp.sh; \
-	make -C $(TEE_REF_TA_DIR)/build-keystone image; \
+	make -C $(KEYSTONE_DIR) image; \
 	$(TEE_REF_TA_DIR)/scripts/keystone-check.sh
 
 .PHONY: check
