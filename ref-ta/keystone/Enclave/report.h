@@ -1,4 +1,5 @@
 #ifndef _REPORT_H
+#define _REPORT_H
 
 #define MDSIZE  64
 #define SIGNATURE_SIZE  64
