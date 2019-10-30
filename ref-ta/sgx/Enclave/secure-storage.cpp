@@ -36,7 +36,7 @@
 #include "Enclave_t.h"
 
 #define USE_CRYPTO 1
-#define DEBUG
+//#define DEBUG
 
 #if USE_CRYPTO
 #include "aes/aes.hpp"
@@ -64,12 +64,21 @@ void secure_storage_test(void)
   struct AES_ctx ctx;
   static uint8_t iv[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
   uint8_t aes256_key[KEY_LENGTH];
-  const sgx_report_t *rpt = sgx_self_report();
-  uint8_t *p = (uint8_t*)&(rpt->mac);
-  uint8_t *q = (uint8_t*)&(rpt->key_id);
-  // sgx report MAC is 128-bit. Take 128-bit more from key_id so to use aes256.
-  memcpy(aes256_key, p, sizeof(sgx_mac_t));
-  memcpy(aes256_key + sizeof(sgx_mac_t), q, KEY_LENGTH - sizeof(sgx_mac_t));
+  sgx_key_request_t key_request;
+  sgx_key_128bit_t report_key;
+  sgx_key_128bit_t *rpt = &report_key;
+  memset(&report_key, 0, sizeof(sgx_key_128bit_t));
+  memset(&key_request, 0, sizeof(sgx_key_request_t));
+  key_request.key_name = SGX_KEYSELECT_REPORT;
+  sgx_status_t err = sgx_get_key(&key_request, &report_key);
+  if(err != SGX_SUCCESS) {
+    printf("sgx_get_key fails %d\n", err);
+  }
+  // sgx report key is 128-bit. Fill 128-bit zero more. This is bad.
+  uint8_t *p = (uint8_t*)rpt;
+  memcpy(aes256_key, p, sizeof(sgx_key_128bit_t));
+  memset(aes256_key + sizeof(sgx_key_128bit_t), 0,
+	 KEY_LENGTH - sizeof(sgx_key_128bit_t));
 # ifdef DEBUG
   // Dump aes256_key for debug
   printf("aes256 key\n");
