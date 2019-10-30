@@ -38,18 +38,19 @@
  */
 void random_test(void)
 {
-#if 0
   unsigned char rbuf[16];
+  ssize_t retval;
+  size_t sz;
 
-  rtn = sgx_read_rand(rbuf, sizeof(rbuf));
-  if (rtn == SGX_SUCCESS) {
-    ocall_print_string("random: ");
+  ocall_getrandom(&retval, rbuf, sizeof(rbuf), 0);
+
+  if (retval) {
+    ocall_print_string(&sz, "@random: ");
     for (int i = 0; i < sizeof(rbuf); i++) {
       printf ("%02x", rbuf[i]);
     }
-    ocall_print_string("\n");
+    ocall_print_string(&sz, "\n");
   } else {
-    ocall_print_string("can't get random\n");
+    ocall_print_string(&sz, "can't get random\n");
   }
-#endif
 }

@@ -6,6 +6,8 @@ TIME
 TIME
 TIME
 TIME
+TIME
+TIME
 open_file WO -> 3
 TIME
 [SE] close desc 3 -> 0

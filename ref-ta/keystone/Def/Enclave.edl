@@ -64,7 +64,7 @@ enclave {
     };
 
     /* 
-     * ocall_read_file - invokes OCALL to write to file descriptor inside the enclave.
+     * ocall_read_file - invokes OCALL to read from file descriptor inside the enclave.
      *  [out]: copy pointer to App inside.
      *  [size=len]: specifies 'ptr' is a buffer with 'len' size.
      */
@@ -89,6 +89,16 @@ enclave {
      */
     untrusted {
         int ocall_ree_time([out] struct ree_time_t *time);
+    };
+
+    /* 
+     * ocall_getrandom - invokes OCALL to get random bytes inside the enclave.
+     *  [out]: copy pointer to App inside.
+     *  [size=len]: specifies 'ptr' is a buffer with 'len' size.
+     */
+    untrusted {
+        ssize_t ocall_getrandom([out, size=len] char *buf, size_t len,
+	    		        unsigned int flags);
     };
 
     trusted {

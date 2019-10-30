@@ -3,6 +3,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/time.h>
+#include <sys/random.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <cstdio>
@@ -55,6 +56,13 @@ int ocall_ree_time(struct ree_time_t *timep)
   printf("@[SE] gettimeofday %d sec %d usec -> %d\n",tv.tv_sec,tv.tv_usec,rtn);
   timep->seconds = tv.tv_sec;
   timep->millis = tv.tv_usec / 1000;
+  return rtn;
+}
+
+ssize_t ocall_getrandom(char *buf, size_t len, unsigned int flags)
+{
+  ssize_t rtn = getrandom(buf, len, flags);
+  printf("@[SE] getrandom buf %x len %d flags %d -> %d\n",buf,len,flags,rtn);
   return rtn;
 }
 
