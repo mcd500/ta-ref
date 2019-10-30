@@ -35,15 +35,51 @@
 #include "Enclave.h"
 #include "Enclave_t.h"
 
+#define USE_CRYPTO 1
+#define DEBUG
+
+#if USE_CRYPTO
+#include "aes/aes.hpp"
+#endif
+
+// data and cipher length
+#define DATA_LENGTH 256
+
+#if USE_CRYPTO
+#define KEY_LENGTH (256/8)
+#endif
+
 /* ecall_print_file:
  *   testing basic file i/o wit ocall
  */
 void secure_storage_test(void)
 {
-  static unsigned char data[256] = {
+  static unsigned char data[DATA_LENGTH] = {
     // 0x00,0x01,...,0xff
 #include "test.dat"
   };
+  unsigned char buf[DATA_LENGTH];
+
+#if USE_CRYPTO
+  struct AES_ctx ctx;
+  static uint8_t iv[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
+  uint8_t aes256_key[KEY_LENGTH];
+  const sgx_report_t *rpt = sgx_self_report();
+  uint8_t *p = (uint8_t*)&(rpt->mac);
+  uint8_t *q = (uint8_t*)&(rpt->key_id);
+  // sgx report MAC is 128-bit. Take 128-bit more from key_id so to use aes256.
+  memcpy(aes256_key, p, sizeof(sgx_mac_t));
+  memcpy(aes256_key + sizeof(sgx_mac_t), q, KEY_LENGTH - sizeof(sgx_mac_t));
+# ifdef DEBUG
+  // Dump aes256_key for debug
+  printf("aes256 key\n");
+  int i;
+  for (i = 0; i < KEY_LENGTH; i++) {
+    printf("%02x", aes256_key[i]);
+  }
+  printf("\n");
+# endif
+#endif
 
 #define O_RDONLY   0
 #define O_WRONLY   00001
@@ -56,7 +92,15 @@ void secure_storage_test(void)
   ocall_open_file("FileOne", 7, O_WRONLY|O_CREAT|O_TRUNC, &desc);
   printf("open_file WO -> %d\n", desc);
 
-  ocall_write_file(desc, (const char *)data, 256);
+#if USE_CRYPTO
+  memcpy(buf, data, DATA_LENGTH);
+  // Encrypt test data
+  AES_init_ctx_iv(&ctx, aes256_key, iv);
+  AES_CBC_encrypt_buffer(&ctx, buf, DATA_LENGTH);
+  ocall_write_file(desc, (const char *)buf, DATA_LENGTH);
+#else
+  ocall_write_file(desc, (const char *)data, DATA_LENGTH);
+#endif
 
   ocall_close_file(desc);
 
@@ -64,18 +108,23 @@ void secure_storage_test(void)
   ocall_open_file("FileOne", 7, O_RDONLY, &desc);
   printf("open_file RO -> %d\n", desc);
 
-  unsigned char rbuf[256];
-  ocall_read_file(desc, (char *)rbuf, 256);
+  ocall_read_file(desc, (char *)buf, DATA_LENGTH);
+#if USE_CRYPTO
+  // Decrypt test data
+  AES_init_ctx_iv(&ctx, aes256_key, iv);
+  AES_CBC_decrypt_buffer(&ctx, buf, DATA_LENGTH);
+  memset(aes256_key, 0, KEY_LENGTH);
+#endif
 
   // Dump read contents
   ocall_print_string("bytes read: ");
-  for (int i = 0; i < sizeof(rbuf); i++) {
-    printf ("%02x", rbuf[i]);
+  for (int i = 0; i < sizeof(buf); i++) {
+    printf ("%02x", buf[i]);
   }
   ocall_print_string("\n");
 
   int verify_ok;
-  verify_ok = !memcmp(rbuf, data, 256);
+  verify_ok = !memcmp(buf, data, DATA_LENGTH);
   if (verify_ok) {
     ocall_print_string("verify ok\n");
   } else {
