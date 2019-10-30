@@ -54,7 +54,7 @@ clean-doc:
 
 .PHONY: clean-build-keystone
 clean-build-keystone:
-	make -C build-keystone clean
+	make -C $(KEYSTONE_DIR) clean
 
 .PHONY: clean
 clean:
