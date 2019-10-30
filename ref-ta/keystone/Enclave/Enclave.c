@@ -13,7 +13,7 @@
 int puts(const char *s)
 {
   size_t sz;
-  sz = ocall_print_string(s);
+  ocall_print_string(&sz, s);
   putchar('\n');
   return sz;
 }
@@ -23,7 +23,7 @@ int putchar(int c)
   char buf[2];
   buf[0] = (char)c; buf[1] = '\0';
   size_t sz;
-  sz = ocall_print_string(buf);
+  ocall_print_string(&sz, buf);
   return sz;
 }
 
@@ -36,7 +36,7 @@ int printf(const char* fmt, ...)
   vsnprintf(buf, BUFSIZ, fmt, ap);
   va_end(ap);
   size_t sz;
-  sz = ocall_print_string(buf);
+  ocall_print_string(&sz, buf);
 
   return (int)strlen(buf) + 1;
 }
