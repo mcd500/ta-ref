@@ -32,7 +32,6 @@
 #include <stdio.h>
 
 //#include "Enclave.h"
-#include "report.h"
 #include "Enclave_t.h"
 
 #define USE_CRYPTO 1
