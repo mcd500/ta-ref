@@ -74,9 +74,9 @@ endif
 endif
 
 ifeq ($(SGX_DEBUG), 1)
-        SGX_COMMON_FLAGS += -O0 -g
+        SGX_COMMON_FLAGS += -O0 -g -fno-builtin-printf
 else
-        SGX_COMMON_FLAGS += -O2
+        SGX_COMMON_FLAGS += -O2 -fno-builtin-printf
 endif
 
 SGX_COMMON_FLAGS += -Wall -Wextra -Winit-self -Wpointer-arith -Wreturn-type \
