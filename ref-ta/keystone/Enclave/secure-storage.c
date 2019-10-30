@@ -76,20 +76,13 @@ void secure_storage_test(void)
   }
 # ifdef DEBUG
   // Dump aes256_key for debug
-<<<<<<< HEAD
   printf("aes256 key\n");
-=======
   ocall_print_string("@aes256 key\n@");
->>>>>>> 31e596b74ad2704deebb1642b3976f73f335c029
   int i;
   for (i = 0; i < KEY_LENGTH; i++) {
     printf("%02x", rpt.enclave.signature[i]);
   }
-<<<<<<< HEAD
   printf("\n");
-=======
-  ocall_print_string("\n");
->>>>>>> 31e596b74ad2704deebb1642b3976f73f335c029
 # endif
   // assert(KEY_LENGTH == SIGNATURE_SIZE);
   memcpy(aes256_key, rpt.enclave.signature, KEY_LENGTH);
@@ -107,24 +100,15 @@ void secure_storage_test(void)
   ocall_open_file(&desc, "FileOne", O_WRONLY|O_CREAT|O_TRUNC);
   printf("open_file WO -> %d\n", desc);
 
-<<<<<<< HEAD
   int retval;
-=======
->>>>>>> 31e596b74ad2704deebb1642b3976f73f335c029
 #if USE_CRYPTO
   memcpy(buf, data, DATA_LENGTH);
   // Encrypt test data
   AES_init_ctx_iv(&ctx, aes256_key, iv);
   AES_CBC_encrypt_buffer(&ctx, buf, DATA_LENGTH);
-<<<<<<< HEAD
   ocall_write_file(&retval, desc, (const char *)buf, DATA_LENGTH);
 #else
   ocall_write_file(&retval, desc, (const char *)data, DATA_LENGTH);
-=======
-  ocall_write_file(desc, (const char *)buf, DATA_LENGTH);
-#else
-  ocall_write_file(desc, (const char *)data, DATA_LENGTH);
->>>>>>> 31e596b74ad2704deebb1642b3976f73f335c029
 #endif
 
   ocall_close_file(&retval, desc);
@@ -133,11 +117,7 @@ void secure_storage_test(void)
   ocall_open_file(&desc, "FileOne", O_RDONLY);
   printf("open_file RO -> %d\n", desc);
 
-<<<<<<< HEAD
   ocall_read_file(&retval, desc, (char *)buf, DATA_LENGTH);
-=======
-  ocall_read_file(desc, (char *)buf, DATA_LENGTH);
->>>>>>> 31e596b74ad2704deebb1642b3976f73f335c029
 #if USE_CRYPTO
   // Decrypt test data
   AES_init_ctx_iv(&ctx, aes256_key, iv);
@@ -146,22 +126,14 @@ void secure_storage_test(void)
 #endif
 
   // Dump read contents
-<<<<<<< HEAD
   printf("bytes read: ");
-=======
-  ocall_print_string("bytes read: ");
->>>>>>> 31e596b74ad2704deebb1642b3976f73f335c029
   for (int i = 0; i < sizeof(buf); i++) {
     printf ("%02x", buf[i]);
   }
   printf("\n");
 
   int verify_ok;
-<<<<<<< HEAD
-  verify_ok = !memcmp(buf, data, 256);
-=======
   verify_ok = !memcmp(buf, data, DATA_LENGTH);
->>>>>>> 31e596b74ad2704deebb1642b3976f73f335c029
   if (verify_ok) {
     printf("verify ok\n");
   } else {
