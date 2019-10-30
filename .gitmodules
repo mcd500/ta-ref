@@ -7,3 +7,6 @@
 [submodule "lib/ed25519"]
 	path = lib/ed25519
 	url = https://github.com/orlp/ed25519/
+[submodule "keedger8r"]
+	path = keedger8r
+	url = http://150.82.217.189/vc707/keedger8r.git

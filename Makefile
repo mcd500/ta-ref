@@ -3,12 +3,13 @@ SHELL=/bin/bash -x
 TEE_REF_TA_DIR   = $(shell pwd)
 KEYSTONE_DIR     = $(TEE_REF_TA_DIR)/build-keystone
 KEYSTONE_SDK_DIR = $(KEYSTONE_DIR)/sdk
+KEEDGER_DIR      = $(TEE_REF_TA_DIR)/keedger8r
 #PATH             = $(KEYSTONE_DIR)/riscv/bin:$(PATH)
 
 .PHONY: all
 all:
 	make -C ref-ta/sgx
-	PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make -C ref-ta/keystone KEYSTONE_DIR=$(KEYSTONE_DIR)
+	PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make -C ref-ta/keystone KEYSTONE_DIR=$(KEYSTONE_DIR) KEEDGER_DIR=$(KEEDGER_DIR)
 
 .PHONY: keystone
 keystone:
@@ -57,4 +58,4 @@ clean-build-keystone:
 .PHONY: clean
 clean:
 	make -C ref-ta/sgx clean
-	make -C ref-ta/keystone clean KEYSTONE_DIR=$(KEYSTONE_DIR)
+	make -C ref-ta/keystone clean KEYSTONE_DIR=$(KEYSTONE_DIR) KEEDGER_DIR=$(KEEDGER_DIR)
