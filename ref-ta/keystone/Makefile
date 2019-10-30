@@ -42,9 +42,12 @@ all: target
 
 target: $(App_Name) $(Enclave_Name)
 
+$(KEEDGER8R):
+	make -C $(KEEDGER_DIR)
+
 ######## App Objects ########
 
-$(App_Name):
+$(App_Name): $(KEEDGER8R)
 	make -C App EDGER=$(KEEDGER8R)
 
 ######## Enclave Objects ########
@@ -73,4 +76,5 @@ copytosdk: $(App_Name) $(Enclave_Name)
 clean:
 	make -C Enclave clean TEE_TA_DIR=$(TOPDIR) KEYSTONE_SDK_DIR=$(KEYSTONE_SDK_DIR) EDGER=$(KEEDGER8R)
 	make -C App clean EDGER=$(KEEDGER8R)
+	make -C $(KEEDGER_DIR) clean
 	rm -fr $(Enclave_Lib_Objects) $(ENCLAVE_LIB_BUILD)
