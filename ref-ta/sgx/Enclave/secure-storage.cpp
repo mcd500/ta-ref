@@ -66,7 +66,6 @@ void secure_storage_test(void)
   uint8_t aes256_key[KEY_LENGTH];
   sgx_key_request_t key_request;
   sgx_key_128bit_t report_key;
-  sgx_key_128bit_t *rpt = &report_key;
   memset(&report_key, 0, sizeof(sgx_key_128bit_t));
   memset(&key_request, 0, sizeof(sgx_key_request_t));
   key_request.key_name = SGX_KEYSELECT_REPORT;
@@ -74,11 +73,20 @@ void secure_storage_test(void)
   if(err != SGX_SUCCESS) {
     printf("sgx_get_key fails %d\n", err);
   }
-  // sgx report key is 128-bit. Fill 128-bit zero more. This is bad.
-  uint8_t *p = (uint8_t*)rpt;
+  sgx_key_128bit_t seal_key;
+  memset(&seal_key, 0, sizeof(sgx_key_128bit_t));
+  memset(&key_request, 0, sizeof(sgx_key_request_t));
+  key_request.key_name = SGX_KEYSELECT_SEAL;
+  err = sgx_get_key(&key_request, &seal_key);
+  if(err != SGX_SUCCESS) {
+    printf("sgx_get_key fails %d\n", err);
+  }
+  // sgx report key is 128-bit. Fill another 128-bit with seal key.
+  // seal key doesn't change with enclave. Better than nothing, though.
+  uint8_t *p = (uint8_t*)&report_key;
+  uint8_t *q = (uint8_t*)&seal_key;
   memcpy(aes256_key, p, sizeof(sgx_key_128bit_t));
-  memset(aes256_key + sizeof(sgx_key_128bit_t), 0,
-	 KEY_LENGTH - sizeof(sgx_key_128bit_t));
+  memcpy(aes256_key + sizeof(sgx_key_128bit_t), q, sizeof(sgx_key_128bit_t));
 # ifdef DEBUG
   // Dump aes256_key for debug
   printf("aes256 key\n");
