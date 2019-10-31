@@ -62,14 +62,23 @@ void secure_storage_test(void)
   unsigned char buf[DATA_LENGTH];
 
 #if USE_CRYPTO
+  /* 20191031: Current eyrie copy report to user with 2048 bytes anyway.
+     There is a TODO comment in eyrie/syscall.c. Here is a workaround. */
+  union {
+    struct report _rpt;
+    char buf[2048];
+  } u;
+  struct report *rpt = &u._rpt;
   struct AES_ctx ctx;
   static uint8_t iv[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
   uint8_t aes256_key[KEY_LENGTH];
-  static struct report rpt;
   int repseed = 0;
 
+  // Initalize report
+  memset(rpt, 0, sizeof(*rpt));
+
   /* Get AES key with attest_enclave */
-  int ret = attest_enclave(&rpt, &repseed, 0);
+  int ret = attest_enclave(rpt, &repseed, 0);
   if (ret) {
     printf("can't get key with attest_enclave %d\n", ret);
     return;
@@ -80,13 +89,13 @@ void secure_storage_test(void)
   ocall_print_string("@aes256 key\n@");
   int i;
   for (i = 0; i < KEY_LENGTH; i++) {
-    printf("%02x", rpt.enclave.signature[i]);
+    printf("%02x", rpt->enclave.signature[i]);
   }
   printf("\n");
 # endif
   // assert(KEY_LENGTH == SIGNATURE_SIZE);
-  memcpy(aes256_key, rpt.enclave.signature, KEY_LENGTH);
-  memset(rpt.enclave.signature, 0, SIGNATURE_SIZE);
+  memcpy(aes256_key, rpt->enclave.signature, KEY_LENGTH);
+  memset(rpt->enclave.signature, 0, SIGNATURE_SIZE);
 
 #endif
 
