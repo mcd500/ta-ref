@@ -12,6 +12,7 @@ endif
 
 ENCLAVE = enclave
 ENCLAVE_C_SRCS= Enclave.c Enclave_t.c \
+		Enclave_gp.c \
 		asymmetric_key.c \
 		message_digest.c \
 		random.c \
