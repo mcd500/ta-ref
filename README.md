@@ -23,6 +23,11 @@ sudo apt install autoconf automake autotools-dev bc bison build-essential curl e
 ## For SGX
 [Install SGX SDK and Linux driver](http://150.82.217.189/vc707/docs/blob/master/intel-sgx-remote-attestation-sample.md)
 
+Don't for get adding PATH to `~/.profile`
+```sh
+export PATH=/opt/intel/sgxsdk/bin/:${PATH}
+```
+
 
 ## For build tee-reference
 ```sh
