@@ -25,7 +25,7 @@ Enclave_C_Flags = $(CFLAGS)
 
 Enclave_ed25519_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/ed25519/,$(subst .c,.o,$(notdir $(wildcard $(TOPDIR)/lib/ed25519/src/*.c))))
 
-Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(ENCLAVE_LIB_BUILD)/tiny_sha3/sha3.o $(ENCLAVE_LIB_BUILD)/tiny-AES-c/aes.o
+Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(ENCLAVE_LIB_BUILD)/tiny_sha3/sha3.o $(ENCLAVE_LIB_BUILD)/tiny-AES-c/aes.o $(ENCLAVE_LIB_BUILD)/common/tee-internal-api.o
 
 ######## App Settings ########
 
@@ -62,6 +62,10 @@ $(ENCLAVE_LIB_BUILD)/ed25519/%.o: $(TOPDIR)/lib/ed25519/src/%.c
 
 $(ENCLAVE_LIB_BUILD)/tiny-AES-c/%.o: $(TOPDIR)/lib/tiny-AES-c/%.c
 	mkdir -p $(ENCLAVE_LIB_BUILD)/tiny-AES-c
+	$(CC) $(Enclave_C_Flags) -c $< -o $@
+
+$(ENCLAVE_LIB_BUILD)/common/%.o: $(TOPDIR)/common/%.c
+	mkdir -p $(ENCLAVE_LIB_BUILD)/common
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
 $(Enclave_Name): $(Enclave_Lib_Objects)

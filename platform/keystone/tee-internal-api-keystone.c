@@ -29,12 +29,20 @@
  */
 
 #include "tee-common.h"
+#include "tee-ta-internal.h"
+#include "Enclave_t.h"
 
 void TEE_GetREETime(TEE_Time *time)
 {
+    struct ree_time_t ree_time;
+    int retval;
+
     pr_deb("TEE_GetREETime(): start");
 
-    return 0;
+    /* REE time */
+    ocall_ree_time(&retval, &ree_time);
+
+    return retval;
 }
 
 

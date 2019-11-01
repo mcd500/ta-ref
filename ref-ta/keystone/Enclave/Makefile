@@ -18,8 +18,9 @@ ENCLAVE_C_SRCS= Enclave.c Enclave_t.c \
 		secure-storage.c \
 		symmetric_key.c \
 		time.c \
+		time_ky.c \
 		printf.c \
-		$(wildcard $(TEE_TA_DIR)/../platform/keystone/*.c)
+		$(wildcard $(TEE_TA_DIR)/platform/keystone/*.c)
 
 CC = riscv64-unknown-linux-gnu-gcc
 CFLAGS = -Wall -fno-builtin-printf
