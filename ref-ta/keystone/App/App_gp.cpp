@@ -84,7 +84,7 @@ int edge_init(Keystone* enclave)
 }
 
 /* We hardcode these for demo purposes. */
-const char* enc_path = "Enclave.eapp_riscv";
+const char* enc_path = "Enclave_gp.eapp_riscv";
 const char* runtime_path = "eyrie-rt";
 
 int main(int argc, char** argv)
@@ -96,7 +96,7 @@ int main(int argc, char** argv)
   // params.setUntrustedMem(DEFAULT_UNTRUSTED_PTR, 1024*1024);
 
   if(enclave.init(enc_path, runtime_path, params) != KEYSTONE_SUCCESS){
-    printf("App: Unable to start enclave\n");
+    printf("%s: Unable to start enclave\n", argv[0]);
     exit(-1);
   }
 

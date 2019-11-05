@@ -29,11 +29,11 @@ Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(ENCLAVE_LIB_BUILD)/tiny_sha3/
 
 ######## App Settings ########
 
-App_Name := app
+App_Name := App/app App/app_gp
 
 ######## Enclave Settings ########
 
-Enclave_Name := enclave.eapp_riscv
+Enclave_Name := Enclave/enclave.eapp_riscv Enclave/enclave_gp.eapp_riscv
 
 .PHONY: all target
 
@@ -74,7 +74,7 @@ $(Enclave_Name): $(Enclave_Lib_Objects)
 .PHONY: clean copytosdk
 
 copytosdk: $(App_Name) $(Enclave_Name)
-	cp -p App/$(App_Name) Enclave/$(Enclave_Name) $(KEYSTONE_INSTALL_DIR)
+	cp -p $^ $(KEYSTONE_INSTALL_DIR)
 	cp -p $(KEYSTONE_SDK_DIR)/rts/eyrie/eyrie-rt $(KEYSTONE_INSTALL_DIR)
 
 clean:

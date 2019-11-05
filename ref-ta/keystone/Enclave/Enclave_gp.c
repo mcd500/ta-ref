@@ -9,7 +9,7 @@
 #include "Enclave_t.h"
 //#include "hacks.h"
 
-#if 0
+#if 1
 // Compiler may replace simple printf to puts and putchar
 int puts(const char *s)
 {
@@ -51,7 +51,7 @@ void message_digest_test();
 void symmetric_key_enc_verify_test();
 void asymmetric_key_sign_test();
 
-void EAPP_ENTRY gp_eapp_entry(){
+void EAPP_ENTRY eapp_entry(){
 
   edge_init();
   magic_random_init();

@@ -12,7 +12,9 @@ expect "# " { send "sleep 1\r" }
 
 log_file -noappend  ref-ta-keystone.log
 
-expect "# " { send "cd ref-ta; ./app\r" }
+expect "# " { send "cd ref-ta\r" }
+expect "# " { send "./App.client\r" }
+expect "# " { send "./App_gp.client\r" }
 expect "# " { send "poweroff\r" }
 expect eof
 
