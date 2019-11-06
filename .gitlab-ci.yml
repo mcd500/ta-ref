@@ -42,3 +42,4 @@ test:
 
     script:
       - echo "test"
+      - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} check
