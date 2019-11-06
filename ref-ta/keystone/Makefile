@@ -33,7 +33,7 @@ App_Name := App/app App/app_gp
 
 ######## Enclave Settings ########
 
-Enclave_Name := Enclave/enclave.eapp_riscv Enclave/enclave_gp.eapp_riscv
+Enclave_Name := Enclave/Enclave.eapp_riscv Enclave/Enclave_gp.eapp_riscv
 
 .PHONY: all target
 
