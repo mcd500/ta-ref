@@ -29,25 +29,22 @@ Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(ENCLAVE_LIB_BUILD)/tiny_sha3/
 
 ######## App Settings ########
 
-App_Name := App/app App/app_gp
+App_Name := App/App.client App/App_gp.client
 
 ######## Enclave Settings ########
 
 Enclave_Name := Enclave/Enclave.eapp_riscv Enclave/Enclave_gp.eapp_riscv
 
-.PHONY: all target
+.PHONY: all app enclave
 
-all: target
-	@$(MAKE) target
-
-target: $(App_Name) $(Enclave_Name)
+all: app enclave
 
 $(KEEDGER8R):
 	make -C $(KEEDGER_DIR)
 
 ######## App Objects ########
 
-$(App_Name): $(KEEDGER8R)
+app: $(KEEDGER8R)
 	make -C App EDGER=$(KEEDGER8R)
 
 ######## Enclave Objects ########
@@ -68,7 +65,7 @@ $(ENCLAVE_LIB_BUILD)/common/%.o: $(TOPDIR)/common/%.c
 	mkdir -p $(ENCLAVE_LIB_BUILD)/common
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
-$(Enclave_Name): $(Enclave_Lib_Objects)
+enclave: $(Enclave_Lib_Objects)
 	make -C Enclave TEE_TA_DIR=$(TOPDIR) KEYSTONE_SDK_DIR=$(KEYSTONE_SDK_DIR) EDGER=$(KEEDGER8R)
 
 .PHONY: clean copytosdk
