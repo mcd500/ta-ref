@@ -122,6 +122,9 @@ void secure_storage_test(void)
 
   ocall_close_file(&retval, desc);
 
+  /* clear buf */
+  memset(buf, 0, DATA_LENGTH);
+ 
   /* read */
   ocall_open_file(&desc, "FileOne", O_RDONLY);
   printf("open_file RO -> %d\n", desc);
