@@ -40,7 +40,6 @@ Enclave_Name := Enclave/Enclave.eapp_riscv Enclave/Enclave_gp.eapp_riscv
 all: edge app enclave
 
 edge:
-	make -C $(KEEDGER_DIR) clean
 	make -C $(KEEDGER_DIR)
 
 ######## App Objects ########

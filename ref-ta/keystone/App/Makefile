@@ -39,7 +39,7 @@ $(APP_BIN): %.client : %.o $(EOBJS) $(SDK_HOST_LIB) $(SDK_EDGE_LIB) $(SDK_VERIFI
 $(OBJS): %.o: %.cpp Enclave_u.h
 	$(CXX) $(CCFLAGS) -c $<
 
-Enclave_u.c Enclave_u.h Enclave_args.h: ../Def/Enclave.edl
+Enclave_u.c Enclave_u.h Enclave_args.h: ../Def/Enclave.edl $(EDGER)
 	$(EDGER) --untrusted $<
 
 $(EOBJS): %.o: %.c ../include/edger_macros.h Enclave_u.h Enclave_args.h

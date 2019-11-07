@@ -52,7 +52,7 @@ ENCLAVE_BIN = $(patsubst %,%.eapp_riscv,$(ENCLAVE))
 
 all: $(ENCLAVE_BIN)
 
-Enclave_t.c Enclave_t.h Enclave_args.h: ../Def/Enclave.edl
+Enclave_t.c Enclave_t.h Enclave_args.h: ../Def/Enclave.edl $(EDGER)
 	$(EDGER) --trusted $<
 
 Enclave_t.o: ../include/edger_macros.h
