@@ -24,7 +24,7 @@ ENCLAVE_C_SRCS= \
 		$(wildcard $(TEE_TA_DIR)/platform/keystone/*.c)
 
 CC = riscv64-unknown-linux-gnu-gcc
-CFLAGS = -Wall -fno-builtin-printf
+CFLAGS = -Wall -fno-builtin-printf -DEDGE_IGNORE_EGDE_RETURN
 LINK = riscv64-unknown-linux-gnu-ld
 AS = riscv64-unknown-linux-gnu-as
 

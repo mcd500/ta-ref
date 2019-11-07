@@ -31,7 +31,6 @@
 #include <string.h>
 #include <stdio.h>
 
-//#include "Enclave.h"
 #include "Enclave_t.h"
 
 #include "sha3/sha3.h"

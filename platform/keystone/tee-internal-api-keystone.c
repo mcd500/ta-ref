@@ -40,7 +40,7 @@ void TEE_GetREETime(TEE_Time *time)
     pr_deb("TEE_GetREETime(): start");
 
     /* REE time */
-    ocall_ree_time(&retval, &ree_time);
+    ocall_ree_time(&ree_time);
 
     return retval;
 }

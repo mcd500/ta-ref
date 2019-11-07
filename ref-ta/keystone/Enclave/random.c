@@ -42,15 +42,15 @@ void random_test(void)
   ssize_t retval;
   size_t sz;
 
-  ocall_getrandom(&retval, rbuf, sizeof(rbuf), 0);
+  retval = ocall_getrandom(rbuf, sizeof(rbuf), 0);
 
   if (retval) {
-    ocall_print_string(&sz, "@random: ");
+    sz = ocall_print_string("@random: ");
     for (int i = 0; i < sizeof(rbuf); i++) {
       printf ("%02x", rbuf[i]);
     }
-    ocall_print_string(&sz, "\n");
+    sz = ocall_print_string("\n");
   } else {
-    ocall_print_string(&sz, "can't get random\n");
+    sz = ocall_print_string("can't get random\n");
   }
 }

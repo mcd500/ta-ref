@@ -31,7 +31,6 @@
 #include <string.h>
 #include <stdio.h>
 
-//#include "Enclave.h"
 #include "Enclave_t.h"
 
 #define USE_CRYPTO 1
@@ -106,7 +105,7 @@ void secure_storage_test(void)
 
   /* write */
   int desc;
-  ocall_open_file(&desc, "FileOne", O_WRONLY|O_CREAT|O_TRUNC);
+  desc = ocall_open_file("FileOne", O_WRONLY|O_CREAT|O_TRUNC);
   printf("open_file WO -> %d\n", desc);
 
   int retval;
@@ -115,21 +114,21 @@ void secure_storage_test(void)
   // Encrypt test data
   AES_init_ctx_iv(&ctx, aes256_key, iv);
   AES_CBC_encrypt_buffer(&ctx, buf, DATA_LENGTH);
-  ocall_write_file(&retval, desc, (const char *)buf, DATA_LENGTH);
+  retval = ocall_write_file(desc, (const char *)buf, DATA_LENGTH);
 #else
-  ocall_write_file(&retval, desc, (const char *)data, DATA_LENGTH);
+  retval = ocall_write_file(desc, (const char *)data, DATA_LENGTH);
 #endif
 
-  ocall_close_file(&retval, desc);
+  retval = ocall_close_file(desc);
 
   /* clear buf */
   memset(buf, 0, DATA_LENGTH);
  
   /* read */
-  ocall_open_file(&desc, "FileOne", O_RDONLY);
+  desc = ocall_open_file("FileOne", O_RDONLY);
   printf("open_file RO -> %d\n", desc);
 
-  ocall_read_file(&retval, desc, (char *)buf, DATA_LENGTH);
+  retval = ocall_read_file(desc, (char *)buf, DATA_LENGTH);
 #if USE_CRYPTO
   // Decrypt test data
   AES_init_ctx_iv(&ctx, aes256_key, iv);
@@ -152,5 +151,5 @@ void secure_storage_test(void)
     printf("verify fails\n");
   }
 
-  ocall_close_file(&retval, desc);
+  retval = ocall_close_file(desc);
 }

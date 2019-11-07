@@ -43,7 +43,7 @@ void ree_time_test(void)
 
   /* REE time */
   int retval;
-  ocall_ree_time(&retval, &time);
+  retval = ocall_ree_time(&time);
   printf ("@REE time %u sec %u millis\n", time.seconds, time.millis);
 }
 

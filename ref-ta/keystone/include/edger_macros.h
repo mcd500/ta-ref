@@ -170,4 +170,16 @@ edge_add_size(size_t* total, size_t size)
     } \
   } while (0)
 
+#if defined(EDGE_IGNORE_EGDE_RETURN)
+# define EDGE_RETURN_ARGP
+# define EDGE_SET_EDGE_RESULT(result)
+#else
+# define EDGE_RETURN_ARGP edge_return_t *_edge_return,
+
+# define EDGE_SET_EDGE_RESULT(result) \
+  do { \
+    *_edge_return = (result); \
+  } while (0)
+#endif
+
 #endif // EDGER_MACROS_H
