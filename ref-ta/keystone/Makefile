@@ -35,11 +35,11 @@ App_Name := App/App.client App/App_gp.client
 
 Enclave_Name := Enclave/Enclave.eapp_riscv Enclave/Enclave_gp.eapp_riscv
 
-.PHONY: all app enclave
+.PHONY: all edge app enclave
 
-all: app enclave
+all: edge app enclave
 
-$(KEEDGER8R):
+edge:
 	make -C $(KEEDGER_DIR)
 
 ######## App Objects ########
