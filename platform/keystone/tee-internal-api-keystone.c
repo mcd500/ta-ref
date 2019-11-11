@@ -130,11 +130,35 @@ void TEE_CloseObject(TEE_ObjectHandle object)
     return 0;
 }
 
+#if defined(EDGE_OUT_WITH_STRUCTURE)
+static int ocall_getrandom(char *buf, size_t len, unsigned int flags)
+{
+  int retval = 0;
+  ob16_t rret;
+  while (len > 0) {
+    rret = ocall_getrandom16(flags);
+    if (rret.ret > 0) {
+      memcpy(buf, rret.b, rret.ret);
+      retval += rret.ret;
+      buf += rret.ret;
+      len -= (rret.ret <= len ? rret.ret : len);
+    } else if (rret.ret < 0) {
+      retval = rret.ret;
+      break;
+    } else {
+      break;
+    }
+  }
+  return retval;
+}
 
+#endif
 
 void TEE_GenerateRandom(void *randomBuffer, uint32_t randomBufferLen)
 {
     pr_deb("TEE_GenerateRandom(): start");
+
+    ocall_getrandom(randomBuffer, (size_t)randomBufferLen, 0);
 
     return 0;
 }
@@ -214,7 +238,7 @@ TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
                               void *destData, uint32_t *destLen, void *tag,
                               uint32_t tagLen)
 {
-    pr_deb("TEE_AEEncryptFinal(): start");
+    pr_deb("TEE_AEDecryptFinal(): start");
 
     return 0;
 }

@@ -10,7 +10,7 @@ expect -c '
     expect "# " { send "insmod keystone-driver.ko\r" }
 
     expect "# " { send "cd edger-sample\r" }
-    expect "# " { send "./App.client  Enclave.eapp_riscv eyrie-rt\r" }
+    expect "# " { send "./App_gp.client  Enclave_gp.eapp_riscv eyrie-rt\r" }
 
     expect "# " { send "poweroff\r" }
     expect eof

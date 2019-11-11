@@ -8,6 +8,7 @@ ENCLAVE_C_SRCS= \
 		asymmetric_key.c \
 		message_digest.c \
 		random.c \
+		random_gp.c \
 		secure-storage.c \
 		symmetric_key.c \
 		time.c \

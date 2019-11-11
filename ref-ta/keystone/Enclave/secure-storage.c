@@ -62,6 +62,9 @@ int ocall_read_file(int desc, char *buf, size_t len)
       retval += rret.ret;
       buf += rret.ret;
       len -= (rret.ret <= len ? rret.ret : len);
+    } else if (rret.ret < 0) {
+      retval = rret.ret;
+      break;
     } else {
       break;
     }

@@ -55,7 +55,7 @@ void EAPP_ENTRY eapp_entry(){
 
   printf("gp ecall_ta_main() start\n");
 
-//  random_test();
+  gp_random_test();
 
   gp_ree_time_test();
 
