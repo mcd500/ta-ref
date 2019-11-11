@@ -10,6 +10,3 @@
 [submodule "keedger8r"]
 	path = keedger8r
 	url = http://150.82.217.189/vc707/keedger8r.git
-[submodule "keyedge"]
-	path = keyedge
-	url = http://150.82.217.189/vc707/keyedge.git
