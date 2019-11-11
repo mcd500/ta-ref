@@ -13,16 +13,16 @@
 #include "keystone.h"
 #include "Enclave_u.h"
 
-extern "C" {
+EDGE_EXTERNC_BEGIN
 
-size_t ocall_print_string(const char* str){
+unsigned int ocall_print_string(const char* str){
   printf("%s",str);
   return strlen(str);
 }
 
-int ocall_open_file(const char* fname, int flags)
+int ocall_open_file(const char* fname, int flags, int perm)
 {
-  int desc = open(fname, flags);
+  int desc = open(fname, flags, perm);
   printf("@[SE] open file %s flags %x -> %d\n",fname,flags,desc);
   return desc;
 }
@@ -34,12 +34,14 @@ int ocall_close_file(int fdesc)
   return rtn;
 }
 
-int ocall_write_file(int fdesc, const char *buf, size_t len)
+int ocall_write_file(int fdesc, const char *buf,  unsigned int len)
 {
   int rtn = write(fdesc, buf, len);
   printf("@[SE] write desc %d buf %x len %d-> %d\n",fdesc,buf,len,rtn);
   return rtn;
 }
+
+#if !defined(EDGE_OUT_WITH_STRUCTURE)
 
 int ocall_read_file(int fdesc, char *buf, size_t len)
 {
@@ -66,22 +68,41 @@ ssize_t ocall_getrandom(char *buf, size_t len, unsigned int flags)
   return rtn;
 }
 
-extern edge_ocall_func_t __Enclave_ocall_function_table[];
+#else
 
-};
-
-int edge_init(Keystone* enclave)
+ob256_t ocall_read_file256(int fdesc)
 {
-    enclave->registerOcallDispatch(incoming_call_dispatch);
-    edge_ocall_func_t *func = __Enclave_ocall_function_table;
-    int id = 1;
-    while (*func) {
-        register_call(id++, *func++);
-    }
-    edge_call_init_internals((uintptr_t)enclave->getSharedBuffer(),
-                             enclave->getSharedBufferSize());
-    return 0;
+  ob256_t ret;
+  int rtn = read(fdesc, ret.b, 256);
+  printf("@[SE] read desc %d buf %x len %d-> %d\n",fdesc,ret.b,256,rtn);
+  ret.ret = rtn;
+  return ret;
 }
+
+ree_time_t ocall_ree_time(void)
+{
+  struct timeval tv;
+  struct timezone tz;
+  ree_time_t ret;
+  int rtn = gettimeofday(&tv, &tz);
+  printf("@[SE] gettimeofday %d sec %d usec -> %d\n",tv.tv_sec,tv.tv_usec,rtn);
+  ret.seconds = tv.tv_sec;
+  ret.millis = tv.tv_usec / 1000;
+  return ret;
+}
+
+ob16_t ocall_getrandom16(unsigned int flags)
+{
+  ob16_t ret;
+  ssize_t rtn = getrandom(ret.b, 16, flags);
+  printf("@[SE] getrandom buf %x len %d flags %d -> %d\n",ret.b,16,flags,rtn);
+  ret.ret = rtn;
+  return ret;
+}
+
+#endif
+
+EDGE_EXTERNC_END
 
 /* We hardcode these for demo purposes. */
 const char* enc_path = "Enclave_gp.eapp_riscv";
@@ -100,7 +121,12 @@ int main(int argc, char** argv)
     exit(-1);
   }
 
-  edge_init(&enclave);
+  enclave.registerOcallDispatch(incoming_call_dispatch);
+
+  register_functions();
+        
+  edge_call_init_internals((uintptr_t)enclave.getSharedBuffer(),
+                           enclave.getSharedBufferSize());
 
   enclave.run();
 

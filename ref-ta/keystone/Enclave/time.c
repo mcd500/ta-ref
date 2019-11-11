@@ -37,6 +37,17 @@
 /* ecall_print_time:
  *   testing time functions
  */
+#if defined(EDGE_OUT_WITH_STRUCTURE)
+
+void ree_time_test(void)
+{
+  ree_time_t time;
+  time = ocall_ree_time();
+  printf ("@REE time %u sec %u millis\n", time.seconds, time.millis);
+}
+
+#else
+
 void ree_time_test(void)
 {
   struct ree_time_t time;
@@ -46,6 +57,8 @@ void ree_time_test(void)
   retval = ocall_ree_time(&time);
   printf ("@REE time %u sec %u millis\n", time.seconds, time.millis);
 }
+
+#endif
 
 /* ecall_print_time:
  *   testing time functions

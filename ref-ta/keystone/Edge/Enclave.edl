@@ -34,8 +34,8 @@ enclave {
     
     /* structure definition */
     struct ree_time_t {
-        uint32_t seconds;
-        uint32_t millis;
+        unsigned int seconds;
+        unsigned int millis;
     };
 
     /* 
@@ -44,7 +44,7 @@ enclave {
      *  [string]: specifies 'str' is a NULL terminated buffer.
      */
     untrusted {
-        size_t ocall_print_string([in, string] const char *str);
+        unsigned int ocall_print_string([in, string] const char *str);
     };
 
     /* 
@@ -53,7 +53,7 @@ enclave {
      *  [out]: return descriptor back to App.
      */
     untrusted {
-        int ocall_open_file([in, string] const char *name, int flags);
+        int ocall_open_file([in, string] const char *name, int flags, int perm);
     };
 
     /* 
@@ -80,7 +80,7 @@ enclave {
      */
     untrusted {
         int ocall_write_file(int fdesc,
-	     		     [in, size=len] const char *name, size_t len);
+	     		     [in, size=len] const char *name, unsigned int len);
     };
 
     /* 

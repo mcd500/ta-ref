@@ -39,10 +39,17 @@
 void random_test(void)
 {
   unsigned char rbuf[16];
-  ssize_t retval;
+  int retval;
   size_t sz;
 
+#if !defined(EDGE_OUT_WITH_STRUCTURE)
   retval = ocall_getrandom(rbuf, sizeof(rbuf), 0);
+#else
+  ob16_t ret;
+  ret = ocall_getrandom16(0);
+  memcpy(rbuf, ret.b, sizeof(rbuf));
+  retval = ret.ret;
+#endif
 
   if (retval) {
     sz = ocall_print_string("@random: ");

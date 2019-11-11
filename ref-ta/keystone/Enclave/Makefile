@@ -1,13 +1,5 @@
 ifndef KEYSTONE_SDK_DIR
-$(error KEYSTONE_SDK_DIR is not set)
-endif
-
-ifndef TEE_TA_DIR
-$(error TEE_TA_DIR is not set)
-endif
-
-ifndef EDGER
-$(error EDGER is not set)
+export KEYSTONE_SDK_DIR = $(KEYSTONE_DIR)/sdk
 endif
 
 ENCLAVE = Enclave Enclave_gp
@@ -24,7 +16,7 @@ ENCLAVE_C_SRCS= \
 		$(wildcard $(TEE_TA_DIR)/platform/keystone/*.c)
 
 CC = riscv64-unknown-linux-gnu-gcc
-CFLAGS = -Wall -fno-builtin-printf -DEDGE_IGNORE_EGDE_RETURN
+CFLAGS = -Wall -fno-builtin-printf -DEDGE_IGNORE_EGDE_RESULT
 LINK = riscv64-unknown-linux-gnu-ld
 AS = riscv64-unknown-linux-gnu-as
 
@@ -40,8 +32,15 @@ ED25519_OBJS = $(wildcard $(LIBBUILD_DIR)/ed25519/*.o)
 AES_OBJS = $(LIBBUILD_DIR)/tiny-AES-c/aes.o
 SHA3_OBJS = $(LIBBUILD_DIR)/tiny_sha3/sha3.o
 
+EDGER_INClUDE_DIRS = $(EDGER_DIR)
+ifneq (,$(wildcard $(EDGER_DIR)/bin/keyedge))
+EDGER_INCLUDE_DIRS += $(EDGER_DIR)/target/include $(EDGER_DIR)/flatcc/include
+EDGER_LDFLAGS = -L$(EDGER_DIR)/lib
+EXTRA_LIBS = $(EDGER_DIR)/lib/flatccrt.a
+endif
+
 LDFLAGS = -static -L$(SDK_LIB_DIR)
-CFLAGS += -I$(SDK_INCLUDE_ENCLAVE_DIR) -I$(SDK_INCLUDE_EDGE_DIR) -I../include -I. -I$(TEE_TA_INCLUDE_DIR) -I$(TEE_TA_DIR)/common
+CFLAGS += -I$(SDK_INCLUDE_ENCLAVE_DIR) -I$(SDK_INCLUDE_EDGE_DIR)  $(addprefix -I,$(EDGER_INCLUDE_DIRS)) -I../Edge -I. -I$(TEE_TA_INCLUDE_DIR) -I$(TEE_TA_DIR)/common
 
 ENCLAVE_OBJS   = $(patsubst %.c,%.o, $(ENCLAVE_SRCS))
 ENCLAVE_C_OBJS = $(patsubst %.c,%.o, $(ENCLAVE_C_SRCS))
@@ -52,21 +51,20 @@ ENCLAVE_BIN = $(patsubst %,%.eapp_riscv,$(ENCLAVE))
 
 all: $(ENCLAVE_BIN)
 
-Enclave_t.c Enclave_t.h Enclave_args.h: ../Def/Enclave.edl $(EDGER)
-	$(EDGER) --trusted $<
-
-Enclave_t.o: ../include/edger_macros.h
-
-$(ENCLAVE_OBJS): %.o: %.c Enclave_t.h
+$(ENCLAVE_OBJS): %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(ENCLAVE_C_OBJS): %.o: %.c Enclave_t.h
+$(ENCLAVE_C_OBJS): %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(ENCLAVE_BIN): %.eapp_riscv : %.o Enclave_t.o $(ENCLAVE_OBJS) $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB)
-	$(LINK) $(LDFLAGS) -o $@ $< Enclave_t.o $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB) -T $(ENCLAVE_LDS)
+$(ENCLAVE_BIN): %.eapp_riscv : %.o $(EDGECALLS)_t.o $(ENCLAVE_OBJS) $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB)
+	$(LINK) $(LDFLAGS) -o $@ $< $(EDGECALLS)_t.o $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB) $(EXTRA_LIBS) -T $(ENCLAVE_LDS)
 	chmod -x $@
 
 clean:
-	rm -f *.o $(ENCLAVE_C_OBJS) $(ENCLAVE_BIN) $(EXTRA_CLEAN) \
-		Enclave_t.h Enclave_t.c Enclave_args.h
+	rm -f *.o $(ENCLAVE_C_OBJS) $(ENCLAVE_BIN) $(EXTRA_CLEAN)
+
+.PHONY: copyto
+
+copyto:
+	cp -p $(ENCLAVE_BIN) $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample/

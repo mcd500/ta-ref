@@ -49,6 +49,27 @@
 #define KEY_LENGTH (256/8)
 #endif
 
+#if defined(EDGE_OUT_WITH_STRUCTURE)
+// ocall read with ocall_read_file256
+int ocall_read_file(int desc, char *buf, size_t len)
+{
+  int retval = 0;
+  ob256_t rret;
+  while (len > 0) {
+    rret = ocall_read_file256(desc);
+    if (rret.ret > 0) {
+      memcpy(buf, rret.b, rret.ret);
+      retval += rret.ret;
+      buf += rret.ret;
+      len -= (rret.ret <= len ? rret.ret : len);
+    } else {
+      break;
+    }
+  }
+  return retval;
+}
+#endif
+
 /* ecall_print_file:
  *   testing basic file i/o wit ocall
  */
@@ -105,7 +126,7 @@ void secure_storage_test(void)
 
   /* write */
   int desc;
-  desc = ocall_open_file("FileOne", O_WRONLY|O_CREAT|O_TRUNC);
+  desc = ocall_open_file("FileOne", O_WRONLY|O_CREAT|O_TRUNC, 0644);
   printf("open_file WO -> %d\n", desc);
 
   int retval;
@@ -125,10 +146,11 @@ void secure_storage_test(void)
   memset(buf, 0, DATA_LENGTH);
  
   /* read */
-  desc = ocall_open_file("FileOne", O_RDONLY);
+  desc = ocall_open_file("FileOne", O_RDONLY, 0644);
   printf("open_file RO -> %d\n", desc);
 
   retval = ocall_read_file(desc, (char *)buf, DATA_LENGTH);
+  
 #if USE_CRYPTO
   // Decrypt test data
   AES_init_ctx_iv(&ctx, aes256_key, iv);

@@ -34,13 +34,17 @@
 
 void TEE_GetREETime(TEE_Time *time)
 {
-    struct ree_time_t ree_time;
+    ree_time_t ree_time;
     int retval;
 
     pr_deb("TEE_GetREETime(): start");
 
     /* REE time */
+#if defined(EDGE_OUT_WITH_STRUCTURE)
+    ree_time = ocall_ree_time();
+#else
     ocall_ree_time(&ree_time);
+#endif
 
     return retval;
 }

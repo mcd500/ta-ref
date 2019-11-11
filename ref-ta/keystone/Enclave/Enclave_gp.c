@@ -50,7 +50,7 @@ void asymmetric_key_sign_test();
 
 void EAPP_ENTRY eapp_entry(){
 
-  edge_init();
+  //edge_init();
   magic_random_init();
 
   printf("gp ecall_ta_main() start\n");
