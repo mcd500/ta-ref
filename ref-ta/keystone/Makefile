@@ -6,7 +6,7 @@ $(error KEYSTONE_DIR is not set)
 endif
 ifndef EDGER_DIR
 #$(error EDGER_DIR is not set)
-EDGER_DIR=$(TOPDIR)/keedger8r
+EDGER_DIR=$(TOPDIR)/keyedge
 endif
 
 EDGER=
@@ -17,6 +17,9 @@ EDGER_TYPE=KEYEDGE
 else ifneq (,$(wildcard $(EDGER_DIR)/keedger8r))
 EDGER=$(EDGER_DIR)/keedger8r
 EDGER_TYPE=KEEDGER8R
+else
+EDGER=$(EDGER_DIR)/bin/keyedge
+EDGER_TYPE=KEYEDGE
 endif
 
 EDGE_DIR=Edge
@@ -87,12 +90,12 @@ edger $(EDGER):
 ######## Generate edge files ########
 
 ifeq ($(EDGER_TYPE), KEEDGER8R)
-gen:
+gen: $(EDGER)
 	(cd $(APP_DIR); $(EDGER) --untrusted ../$(EDGE_DIR)/$(EDGE_FILE))
 	(cd $(ENCLAVE_DIR); $(EDGER) --trusted ../$(EDGE_DIR)/$(EDGE_FILE))
 	cp $(EDGER_DIR)/edger_macros.h $(EDGE_DIR)
 else ifeq ($(EDGER_TYPE), KEYEDGE)
-gen:
+gen: $(EDGER)
 	(cd $(EDGE_DIR); KEYEDGE_DIR=$(EDGER_DIR) $(EDGER) $(EDGE_FILE))
 	(cd $(EDGE_DIR); $(EDGER_DIR)/flatcc/bin/flatcc -a $(EDGE_FILE:.h=.fbs))
 	echo -e $(ENC_T_C) > $(ENCLAVE_DIR)/$(EDGECALLS)_t.c
@@ -103,7 +106,7 @@ endif
 
 ######## App Objects ########
 
-app:
+app: gen
 	make -C $(APP_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS)
 
 ######## Enclave Objects ########
@@ -124,7 +127,7 @@ $(ENCLAVE_LIB_BUILD)/common/%.o: $(TOPDIR)/common/%.c
 	mkdir -p $(ENCLAVE_LIB_BUILD)/common
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
-enclave: $(Enclave_Lib_Objects)
+enclave: gen $(Enclave_Lib_Objects)
 	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR)
 
 .PHONY: clean cleangen
