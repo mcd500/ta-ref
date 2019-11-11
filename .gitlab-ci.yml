@@ -24,6 +24,7 @@ build:
       - shell
 
     script:
+      - rm -rf keyedge
       - git submodule update --init --recursive
       - export PATH=${PATH}:${RISCV_GCC_DIR}
       - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR}
