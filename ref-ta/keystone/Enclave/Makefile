@@ -6,6 +6,7 @@ ENCLAVE = Enclave Enclave_gp
 ENCLAVE_SRCS  = Enclave.c Enclave_gp.c
 ENCLAVE_C_SRCS= \
 		asymmetric_key.c \
+		asymmetric_key_gp.c \
 		message_digest.c \
 		message_digest_gp.c \
 		random.c \

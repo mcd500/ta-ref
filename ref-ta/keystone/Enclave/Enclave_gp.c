@@ -69,7 +69,7 @@ void EAPP_ENTRY eapp_entry(){
 
   // symmetric_key_dec_verify_test();
 
-//  asymmetric_key_sign_test();
+  gp_asymmetric_key_sign_test();
 
   // asymmetric_key_verify_test();
 #ifdef NOT_DONE

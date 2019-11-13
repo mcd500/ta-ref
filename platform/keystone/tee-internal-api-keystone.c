@@ -34,6 +34,7 @@
 #include "tee-ta-internal.h"
 #include "Enclave_t.h"
 
+
 void TEE_GetREETime(TEE_Time *time)
 {
     ree_time_t ree_time;
@@ -182,6 +183,12 @@ TEE_Result TEE_AllocateOperation(TEE_OperationHandle *operation,
       sha3_init(&(handle->ctx), SHA_LENGTH);
     } else if (mode == TEE_MODE_ENCRYPT
 	       || mode == TEE_MODE_DECRYPT) {
+      TEE_OperationHandle handle = malloc(sizeof(*handle));
+      memset(handle, 0, sizeof(*handle));
+      *operation = handle;
+      handle->mode = mode;
+    }  else if (mode == TEE_MODE_SIGN
+	       || mode == TEE_MODE_VERIFY) {
       TEE_OperationHandle handle = malloc(sizeof(*handle));
       memset(handle, 0, sizeof(*handle));
       *operation = handle;
@@ -357,7 +364,10 @@ void TEE_FreeTransientObject(TEE_ObjectHandle object)
     return 0;
 }
 
+// Test asymmetric key
+#include "test_dev_key.h"
 
+#define SIG_LENGTH 64
 
 TEE_Result TEE_AsymmetricSignDigest(TEE_OperationHandle operation,
                                     const TEE_Attribute *params,
@@ -367,6 +377,16 @@ TEE_Result TEE_AsymmetricSignDigest(TEE_OperationHandle operation,
 {
     pr_deb("TEE_AsymmetricSignDigest(): start");
 
+    if (operation->mode == TEE_MODE_SIGN) {
+      // Sign hashed data with test keys
+      ed25519_sign(signature, digest, digestLen,
+		   _sanctum_dev_public_key, _sanctum_dev_secret_key);
+      *signatureLen = SIG_LENGTH;
+    } else {
+      // TEE panic?
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+    
     return 0;
 }
 
@@ -379,5 +399,25 @@ TEE_Result TEE_AsymmetricVerifyDigest(TEE_OperationHandle operation,
 {
     pr_deb("TEE_AsymmetricVerifyDigest(): start");
 
+    if (signatureLen != SIG_LENGTH) {
+      pr_deb("TEE_AsymmetricVerifyDigest(): bad signature length");
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    if (operation->mode == TEE_MODE_VERIFY) {
+      // Sign hashed data with test keys
+      int verify_ok;
+      verify_ok = ed25519_verify(signature, digest, digestLen,
+				 _sanctum_dev_public_key);
+      if (verify_ok) {
+	return TEE_SUCCESS;
+      } else {
+	return TEE_ERROR_SIGNATURE_INVALID;
+      }
+    } else {
+      // TEE panic?
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+    
     return 0;
 }
