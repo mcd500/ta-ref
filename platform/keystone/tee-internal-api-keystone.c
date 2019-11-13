@@ -34,6 +34,8 @@
 #include "tee-ta-internal.h"
 #include "Enclave_t.h"
 
+#include "syscall.h"
+#include "report.h"
 
 void TEE_GetREETime(TEE_Time *time)
 {
@@ -76,6 +78,62 @@ TEE_Result GetRelTimeEnd(uint64_t end)
     return 0;
 }
 
+static inline int flags2flags(int flags)
+{
+#define O_RDONLY   0
+#define O_WRONLY   00001
+#define O_RDWR     00002
+#define O_CREAT	   00100
+#define O_EXCL	   00200
+#define O_TRUNC	   01000
+  int ret = 0;
+  if ((flags & TEE_DATA_FLAG_ACCESS_READ)
+      && (flags & TEE_DATA_FLAG_ACCESS_WRITE))
+    ret = O_RDWR;
+  else if (flags & TEE_DATA_FLAG_ACCESS_READ)
+    ret = O_RDONLY;
+  else if (flags & TEE_DATA_FLAG_ACCESS_WRITE)
+    ret = O_WRONLY;
+  else
+    return -1;
+  if (flags & TEE_DATA_FLAG_CREATE)
+    ret |= O_CREAT;
+  else if (flags & TEE_DATA_FLAG_EXCLUSIVE)
+    ret |= O_EXCL;
+  return ret;
+}
+
+static inline int flags2perms(int flags)
+{
+  int ret = 0;
+  if ((flags & TEE_DATA_FLAG_ACCESS_READ)
+      && (flags & TEE_DATA_FLAG_ACCESS_WRITE))
+    ret = 0600;
+  else if (flags & TEE_DATA_FLAG_ACCESS_READ)
+    ret = 0400;
+  else if (flags & TEE_DATA_FLAG_ACCESS_WRITE)
+    ret = 0200;
+  return ret;
+}
+
+static int set_object_key(unsigned char *key)
+{
+  union {
+    struct report _rpt;
+    char buf[2048];
+  } u;
+  struct report *rpt = &u._rpt;
+  int repseed = 0;
+
+  // Initalize report
+  memset(rpt, 0, sizeof(*rpt));
+  int ret = attest_enclave(rpt, &repseed, sizeof(int));
+  if (ret == 0) {
+    memcpy(key, rpt->enclave.signature, TEE_OBJECT_KEY_SIZE);
+    memset(rpt->enclave.signature, 0, TEE_OBJECT_KEY_SIZE);
+  }
+  return ret;
+}
 
 TEE_Result TEE_CreatePersistentObject(uint32_t storageID, const void *objectID,
                                       uint32_t objectIDLen, uint32_t flags,
@@ -86,6 +144,41 @@ TEE_Result TEE_CreatePersistentObject(uint32_t storageID, const void *objectID,
 {
     pr_deb("TEE_CreatePersistentObject(): start");
 
+    if (!objectID) {
+      return TEE_ERROR_ITEM_NOT_FOUND;
+    }
+
+    if (objectIDLen > TEE_OBJECT_ID_MAX_LEN) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    char *fname = malloc(objectIDLen+1);
+    if (!fname) {
+      return TEE_ERROR_OUT_OF_MEMORY;
+    }
+    memcpy(fname, objectID, objectIDLen);
+    fname[objectIDLen] = '\0';
+
+    TEE_ObjectHandle handle = malloc(sizeof(*handle));
+    if (!handle) {
+      free(fname);
+      return TEE_ERROR_OUT_OF_MEMORY;
+    }
+
+    memset(handle, 0, sizeof(*handle));
+
+    int desc = ocall_open_file(fname, flags2flags(flags)|O_CREAT,
+			       flags2perms(flags));
+    free (fname);
+
+    handle->desc = desc;
+    if (desc < 0) {
+      free(handle);
+      return TEE_ERROR_ACCESS_DENIED;
+    }
+
+    *object = handle;
+
     return 0;
 }
 
@@ -95,6 +188,41 @@ TEE_Result TEE_OpenPersistentObject(uint32_t storageID, const void *objectID,
                                     TEE_ObjectHandle *object)
 {
     pr_deb("TEE_OpenPersistentObject(): start");
+
+    if (!objectID) {
+      return TEE_ERROR_ITEM_NOT_FOUND;
+    }
+
+    if (objectIDLen > TEE_OBJECT_ID_MAX_LEN) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    char *fname = malloc(objectIDLen+1);
+    if (!fname) {
+      return TEE_ERROR_OUT_OF_MEMORY;
+    }
+    memcpy(fname, objectID, objectIDLen);
+    fname[objectIDLen] = '\0';
+
+    TEE_ObjectHandle handle = malloc(sizeof(*handle));
+    if (!handle) {
+      free(fname);
+      return TEE_ERROR_OUT_OF_MEMORY;
+    }
+
+    memset(handle, 0, sizeof(*handle));
+
+    int desc = ocall_open_file(fname, flags2flags(flags),
+			      flags2perms(flags));
+    free (fname);
+
+    handle->desc = desc;
+    if (desc < 0) {
+      free(handle);
+      return TEE_ERROR_ACCESS_DENIED;
+    }
+
+    *object = handle;
 
     return 0;
 }
@@ -108,19 +236,91 @@ TEE_Result TEE_GetObjectInfo1(TEE_ObjectHandle object, TEE_ObjectInfo *objectInf
 }
 
 
+static uint8_t iv[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
+
 TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
                                uint32_t size)
 {
     pr_deb("TEE_WriteObjectData(): start");
 
+    struct AES_ctx ctx;
+    uint8_t aes256_key[TEE_OBJECT_KEY_SIZE];
+    if (set_object_key(aes256_key) != 0) {
+      return TEE_ERROR_SECURITY;
+    }
+
+    void *data = malloc(size);
+    if (!data) {
+      return TEE_ERROR_OUT_OF_MEMORY;
+    }
+    memcpy(data, buffer, size);
+    AES_init_ctx_iv(&ctx, aes256_key, iv);
+    AES_CBC_encrypt_buffer(&ctx, data, size);
+    memset(aes256_key, 0, TEE_OBJECT_KEY_SIZE);
+    memset(&ctx, 0, sizeof(ctx));
+    int retval = ocall_write_file(object->desc, (const char *)data, size);
+    if (retval == size)
+      return TEE_SUCCESS;
+    else if (retval < 0) {
+      // TODO Interpret linux error as TEE error
+      return TEE_ERROR_GENERIC;
+    }
     return 0;
 }
 
+
+#if defined(EDGE_OUT_WITH_STRUCTURE)
+// ocall read with ocall_read_file256
+static int ocall_read_file(int desc, char *buf, size_t len)
+{
+  int retval = 0;
+  ob256_t rret;
+  while (len > 0) {
+    rret = ocall_read_file256(desc);
+    if (rret.ret > 0) {
+      memcpy(buf, rret.b, rret.ret);
+      retval += rret.ret;
+      buf += rret.ret;
+      len -= (rret.ret <= len ? rret.ret : len);
+    } else if (rret.ret < 0) {
+      retval = rret.ret;
+      break;
+    } else {
+      break;
+    }
+  }
+  return retval;
+}
+#endif
 
 TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
                               uint32_t size, uint32_t *count)
 {
     pr_deb("TEE_ReadObjectData(): start");
+
+    int retval = ocall_read_file(object->desc, (char *)buffer, size);
+    if (retval < 0) {
+      // TODO Interpret linux error as TEE error
+      return TEE_ERROR_GENERIC;
+    }
+    *count = size = retval;
+
+    if (size == 0) {
+      return TEE_SUCCESS;
+    }
+
+    struct AES_ctx ctx;
+    uint8_t aes256_key[TEE_OBJECT_KEY_SIZE];
+    if (set_object_key(aes256_key) != 0) {
+      return TEE_ERROR_SECURITY;
+    }
+
+    AES_init_ctx_iv(&ctx, aes256_key, iv);
+    AES_CBC_decrypt_buffer(&ctx, buffer, size);
+    memset(aes256_key, 0, TEE_OBJECT_KEY_SIZE);
+    memset(&ctx, 0, sizeof(ctx));
+
+    return TEE_SUCCESS;
 
     return 0;
 }
@@ -129,6 +329,8 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
 void TEE_CloseObject(TEE_ObjectHandle object)
 {
     pr_deb("TEE_CloseObject(): start");
+
+    int retval = ocall_close_file(object->desc);
 
     return 0;
 }
@@ -178,18 +380,27 @@ TEE_Result TEE_AllocateOperation(TEE_OperationHandle *operation,
 
     if (mode == TEE_MODE_DIGEST) {
       TEE_OperationHandle handle = malloc(sizeof(*handle));
+      if (!handle) {
+	return TEE_ERROR_OUT_OF_MEMORY;
+      }
       *operation = handle;
       handle->mode = mode;
       sha3_init(&(handle->ctx), SHA_LENGTH);
     } else if (mode == TEE_MODE_ENCRYPT
 	       || mode == TEE_MODE_DECRYPT) {
       TEE_OperationHandle handle = malloc(sizeof(*handle));
+      if (!handle) {
+	return TEE_ERROR_OUT_OF_MEMORY;
+      }
       memset(handle, 0, sizeof(*handle));
       *operation = handle;
       handle->mode = mode;
     }  else if (mode == TEE_MODE_SIGN
 	       || mode == TEE_MODE_VERIFY) {
       TEE_OperationHandle handle = malloc(sizeof(*handle));
+      if (!handle) {
+	return TEE_ERROR_OUT_OF_MEMORY;
+      }
       memset(handle, 0, sizeof(*handle));
       *operation = handle;
       handle->mode = mode;

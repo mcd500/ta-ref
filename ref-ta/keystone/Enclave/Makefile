@@ -12,6 +12,7 @@ ENCLAVE_C_SRCS= \
 		random.c \
 		random_gp.c \
 		secure-storage.c \
+		secure-storage_gp.c \
 		symmetric_key.c \
 		symmetric_key_gp.c \
 		time.c \

@@ -124,7 +124,9 @@ void secure_storage_test(void)
 
 #define O_RDONLY   0
 #define O_WRONLY   00001
+#define O_RDWR     00002
 #define O_CREAT	   00100
+#define O_EXCL	   00200
 #define O_TRUNC	   01000
 
   /* write */

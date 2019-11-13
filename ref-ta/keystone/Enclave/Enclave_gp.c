@@ -61,7 +61,7 @@ void EAPP_ENTRY eapp_entry(){
 
   gp_trusted_time_test();
 
-//  secure_storage_test();
+  gp_secure_storage_test();
 
   gp_message_digest_test();
 

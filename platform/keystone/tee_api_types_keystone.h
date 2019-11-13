@@ -42,4 +42,22 @@ struct __TEE_OperationHandle
   struct AES_ctx aectx;
 };
 
+#define TEE_OBJECT_KEY_SIZE 32
+
+struct __TEE_ObjectHandle
+{
+  int desc;
+};
+
+// ???
+enum Data_Flag_Constants {
+  TEE_DATA_FLAG_ACCESS_READ = 0x00000001,
+  TEE_DATA_FLAG_ACCESS_WRITE = 0x00000002,
+  //TEE_DATA_FLAG_ACCESS_WRITE_META = 0x00000004,
+  //TEE_DATA_FLAG_SHARE_READ = 0x00000010,
+  //TEE_DATA_FLAG_SHARE_WRITE = 0x00000020,
+  TEE_DATA_FLAG_CREATE = 0x00000200,
+  TEE_DATA_FLAG_EXCLUSIVE = 0x00000400
+};
+
 #endif
