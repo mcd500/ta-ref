@@ -29,6 +29,7 @@
  */
 
 #include <string.h>
+#include <stdio.h>
 
 #include "Enclave_t.h"
 
@@ -36,20 +37,39 @@
 
 #include "tee-ta-internal.h"
 
-/* ecall_print_random:
- *   testing basic random functions
+#include "test_dev_key.h"
+
+#define SHA_LENGTH (256/8)
+#define SIG_LENGTH 64
+
+/* ecall_print_digest:
+ *   testing digest-sign-verify with asymmetric key
  */
-void gp_random_test(void)
+void gp_message_digest_test(void)
 {
-  unsigned char rbuf[16];
-  int retval;
-  size_t sz;
+  static unsigned char data[256] = {
+    // 0x00,0x01,...,0xff
+#include "test.dat"
+  };
+  unsigned char hash[SHA_LENGTH];
+  unsigned char sig[SIG_LENGTH];
 
-  TEE_GenerateRandom(rbuf, sizeof(rbuf));
+  TEE_OperationHandle handle;
+  uint32_t hashlen;
 
-  sz = ocall_print_string("@GP random: ");
-  for (int i = 0; i < sizeof(rbuf); i++) {
-    printf ("%02x", rbuf[i]);
+  // Take hash of test data
+  TEE_AllocateOperation(&handle, 0/*SHA3*/, TEE_MODE_DIGEST, 0/*keysize?*/);
+
+  TEE_DigestUpdate(handle, data, sizeof(data));
+
+  TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
+
+  TEE_FreeOperation(handle);
+
+  // Dump hashed data
+  printf("hash: ");
+  for (int i = 0; i < SHA_LENGTH; i++) {
+    printf ("%02x", hash[i]);
   }
-  sz = ocall_print_string("\n");
+  printf("\n");
 }

@@ -7,10 +7,12 @@ ENCLAVE_SRCS  = Enclave.c Enclave_gp.c
 ENCLAVE_C_SRCS= \
 		asymmetric_key.c \
 		message_digest.c \
+		message_digest_gp.c \
 		random.c \
 		random_gp.c \
 		secure-storage.c \
 		symmetric_key.c \
+		symmetric_key_gp.c \
 		time.c \
 		time_gp.c \
 		printf.c \
@@ -28,6 +30,7 @@ SDK_INCLUDE_ENCLAVE_DIR = $(SDK_LIB_DIR)/app/include
 SDK_INCLUDE_EDGE_DIR = $(SDK_LIB_DIR)/edge/include
 
 TEE_TA_INCLUDE_DIR = $(TEE_TA_DIR)/include
+TEE_TA_PLATFORM_INCLUDE_DIR = $(TEE_TA_DIR)/platform/keystone
 LIBBUILD_DIR = $(shell pwd)/../libbuild
 ED25519_OBJS = $(wildcard $(LIBBUILD_DIR)/ed25519/*.o)
 AES_OBJS = $(LIBBUILD_DIR)/tiny-AES-c/aes.o
@@ -41,7 +44,7 @@ EXTRA_LIBS = $(EDGER_DIR)/lib/flatccrt.a
 endif
 
 LDFLAGS = -static -L$(SDK_LIB_DIR)
-CFLAGS += -I$(SDK_INCLUDE_ENCLAVE_DIR) -I$(SDK_INCLUDE_EDGE_DIR)  $(addprefix -I,$(EDGER_INCLUDE_DIRS)) -I../Edge -I. -I$(TEE_TA_INCLUDE_DIR) -I$(TEE_TA_DIR)/common
+CFLAGS += -I$(SDK_INCLUDE_ENCLAVE_DIR) -I$(SDK_INCLUDE_EDGE_DIR)  $(addprefix -I,$(EDGER_INCLUDE_DIRS)) -I../Edge -I. -I$(TEE_TA_PLATFORM_INCLUDE_DIR) -I$(TEE_TA_INCLUDE_DIR) -I$(TEE_TA_DIR)/common
 
 ENCLAVE_OBJS   = $(patsubst %.c,%.o, $(ENCLAVE_SRCS))
 ENCLAVE_C_OBJS = $(patsubst %.c,%.o, $(ENCLAVE_C_SRCS))

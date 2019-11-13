@@ -63,9 +63,9 @@ void EAPP_ENTRY eapp_entry(){
 
 //  secure_storage_test();
 
-//  message_digest_test();
+  gp_message_digest_test();
 
-//  symmetric_key_enc_verify_test();
+  gp_symmetric_key_enc_verify_test();
 
   // symmetric_key_dec_verify_test();
 

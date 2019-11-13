@@ -28,28 +28,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <string.h>
+#ifndef TEE_API_TYPES_KEYSTONE_H
+#define TEE_API_TYPES_KEYSTONE_H
 
-#include "Enclave_t.h"
+#include "sha3.hpp"
+#include "ed25519/ed25519.h"
+#include "aes/aes.h"
 
-#include "tee_api_types_keystone.h"
-
-#include "tee-ta-internal.h"
-
-/* ecall_print_random:
- *   testing basic random functions
- */
-void gp_random_test(void)
+struct __TEE_OperationHandle
 {
-  unsigned char rbuf[16];
-  int retval;
-  size_t sz;
+  int mode;
+  sha3_ctx_t ctx;
+  struct AES_ctx aectx;
+};
 
-  TEE_GenerateRandom(rbuf, sizeof(rbuf));
-
-  sz = ocall_print_string("@GP random: ");
-  for (int i = 0; i < sizeof(rbuf); i++) {
-    printf ("%02x", rbuf[i]);
-  }
-  sz = ocall_print_string("\n");
-}
+#endif

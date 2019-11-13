@@ -28,6 +28,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "tee_api_types_keystone.h"
+
 #include "tee-common.h"
 #include "tee-ta-internal.h"
 #include "Enclave_t.h"
@@ -164,12 +166,28 @@ void TEE_GenerateRandom(void *randomBuffer, uint32_t randomBufferLen)
 }
 
 
+#define SHA_LENGTH (256/8)
+
 
 TEE_Result TEE_AllocateOperation(TEE_OperationHandle *operation,
                                  uint32_t algorithm, uint32_t mode,
                                  uint32_t maxKeySize)
 {
     pr_deb("TEE_AllocateOperation(): start");
+
+    if (mode == TEE_MODE_DIGEST) {
+      TEE_OperationHandle handle = malloc(sizeof(*handle));
+      *operation = handle;
+      handle->mode = mode;
+      sha3_init(&(handle->ctx), SHA_LENGTH);
+    } else if (mode == TEE_MODE_ENCRYPT
+	       || mode == TEE_MODE_DECRYPT) {
+      TEE_OperationHandle handle = malloc(sizeof(*handle));
+      memset(handle, 0, sizeof(*handle));
+      *operation = handle;
+      handle->mode = mode;
+    }
+      
 
     return 0;
 }
@@ -178,6 +196,10 @@ TEE_Result TEE_AllocateOperation(TEE_OperationHandle *operation,
 void TEE_FreeOperation(TEE_OperationHandle operation)
 {
     pr_deb("TEE_FreeOperation(): start");
+
+    if (operation) {
+      free(operation);
+    }
 
     return 0;
 }
@@ -189,19 +211,34 @@ void TEE_DigestUpdate(TEE_OperationHandle operation,
 {
     pr_deb("TEE_FreeOperation(): start");
 
+    sha3_update(&(operation->ctx), chunk, chunkSize);
+
     return 0;
 }
-
 
 TEE_Result TEE_DigestDoFinal(TEE_OperationHandle operation, const void *chunk,
                              uint32_t chunkLen, void *hash, uint32_t *hashLen)
 {
     pr_deb("TEE_DigestDoFinal(): start");
 
+    if (chunk && chunkLen > 0) {
+      sha3_update(&(operation->ctx), chunk, chunkLen);
+    }
+    sha3_final(hash, &(operation->ctx));
+    if (hashLen) {
+      *hashLen = SHA_LENGTH;
+    }
+
     return 0;
 }
 
-
+// AES key for test
+static uint8_t aes256_key[] = {
+  0x60, 0x3d, 0xeb, 0x10, 0x15, 0xca, 0x71, 0xbe,
+  0x2b, 0x73, 0xae, 0xf0, 0x85, 0x7d, 0x77, 0x81,
+  0x1f, 0x35, 0x2c, 0x07, 0x3b, 0x61, 0x08, 0xd7,
+  0x2d, 0x98, 0x10, 0xa3, 0x09, 0x14, 0xdf, 0xf4
+};
 
 TEE_Result TEE_AEInit(TEE_OperationHandle operation, const void *nonce,
                       uint32_t nonceLen, uint32_t tagLen, uint32_t AADLen,
@@ -209,14 +246,37 @@ TEE_Result TEE_AEInit(TEE_OperationHandle operation, const void *nonce,
 {
     pr_deb("TEE_AEInit(): start");
 
+    if (nonceLen != 16) {
+      pr_deb("TEE_AEInit(): only 16-byte nonce is supported");
+      return TEE_ERROR_NOT_SUPPORTED;
+    }
+
+    AES_init_ctx_iv(&(operation->aectx), aes256_key, nonce);
+
     return 0;
 }
 
+#define AE_CIPHER_LENGTH 256
 
 TEE_Result TEE_AEUpdate(TEE_OperationHandle operation, const void *srcData,
                         uint32_t srcLen, void *destData, uint32_t *destLen)
 {
     pr_deb("TEE_AEUpdate(): start");
+
+    // !! Do check
+
+    if (destData != srcData)
+      memcpy(destData, srcData, srcLen);
+    if (operation->mode == TEE_MODE_ENCRYPT) {
+      AES_CBC_encrypt_buffer(&(operation->aectx), destData, srcLen);
+      *destLen = srcLen;
+    } else if (operation->mode == TEE_MODE_DECRYPT) {
+      AES_CBC_decrypt_buffer(&(operation->aectx), destData, srcLen);
+      *destLen = srcLen;
+    } else {
+      // TEE panic?
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
 
     return 0;
 }
@@ -229,6 +289,19 @@ TEE_Result TEE_AEEncryptFinal(TEE_OperationHandle operation,
 {
     pr_deb("TEE_AEEncryptFinal(): start");
 
+    // tag ignored ATM
+
+    // !! Do check
+
+    if (destData != srcData)
+      memcpy(destData, srcData, srcLen);
+    if (operation->mode == TEE_MODE_ENCRYPT) {
+      AES_CBC_encrypt_buffer(&(operation->aectx), destData, srcLen);
+    } else {
+      // TEE panic?
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+   
     return 0;
 }
 
@@ -239,6 +312,19 @@ TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
                               uint32_t tagLen)
 {
     pr_deb("TEE_AEDecryptFinal(): start");
+
+    // tag ignored ATM
+
+    // !! Do check
+
+    if (destData != srcData)
+      memcpy(destData, srcData, srcLen);
+    if (operation->mode == TEE_MODE_DECRYPT) {
+      AES_CBC_decrypt_buffer(&(operation->aectx), destData, srcLen);
+    } else {
+      // TEE panic?
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
 
     return 0;
 }

@@ -30,9 +30,12 @@
 
 #include <string.h>
 
-//#include "Enclave.h"
-#include "tee-ta-internal.h"
 #include "Enclave_t.h"
+
+#include "tee_api_types_keystone.h"
+
+#include "tee-ta-internal.h"
+
 //#include "hacks.h"
 
 /* ecall_print_time:
