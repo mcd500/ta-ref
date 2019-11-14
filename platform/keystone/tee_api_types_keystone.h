@@ -38,15 +38,22 @@
 struct __TEE_OperationHandle
 {
   int mode;
+  int flags;
   sha3_ctx_t ctx;
   struct AES_ctx aectx;
+  unsigned char aekey[32];
 };
 
 #define TEE_OBJECT_KEY_SIZE 32
+#define TEE_OBJECT_SKEY_SIZE 64
 
 struct __TEE_ObjectHandle
 {
+  int type;
+  int flags;
   int desc;
+  unsigned char public_key[TEE_OBJECT_KEY_SIZE];
+  unsigned char private_key[TEE_OBJECT_SKEY_SIZE];
 };
 
 // ???

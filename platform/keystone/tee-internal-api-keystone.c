@@ -108,16 +108,18 @@ static inline int flags2perms(int flags)
   int ret = 0;
   if ((flags & TEE_DATA_FLAG_ACCESS_READ)
       && (flags & TEE_DATA_FLAG_ACCESS_WRITE))
-    ret = 0600;
+    ret = 0600; // -rw------
   else if (flags & TEE_DATA_FLAG_ACCESS_READ)
-    ret = 0400;
+    ret = 0400; // -r-------
   else if (flags & TEE_DATA_FLAG_ACCESS_WRITE)
-    ret = 0200;
+    ret = 0200; // --w------
   return ret;
 }
 
 static int set_object_key(unsigned char *key)
 {
+  /* 20191031: Current eyrie copy report to user with 2048 bytes anyway.
+     There is a TODO comment in eyrie/syscall.c. Here is a workaround. */
   union {
     struct report _rpt;
     char buf[2048];
@@ -172,6 +174,7 @@ TEE_Result TEE_CreatePersistentObject(uint32_t storageID, const void *objectID,
     free (fname);
 
     handle->desc = desc;
+    handle->flags = TEE_HANDLE_FLAG_PERSISTENT;
     if (desc < 0) {
       free(handle);
       return TEE_ERROR_ACCESS_DENIED;
@@ -217,6 +220,7 @@ TEE_Result TEE_OpenPersistentObject(uint32_t storageID, const void *objectID,
     free (fname);
 
     handle->desc = desc;
+    handle->flags = TEE_HANDLE_FLAG_PERSISTENT;
     if (desc < 0) {
       free(handle);
       return TEE_ERROR_ACCESS_DENIED;
@@ -236,12 +240,20 @@ TEE_Result TEE_GetObjectInfo1(TEE_ObjectHandle object, TEE_ObjectInfo *objectInf
 }
 
 
+// This isn't quite right. Should be fixed bytes depending on device/SM,
+// though such values are hard to get in usual environments. Perhaps
+// some attestation report could be used as the last resort.
 static uint8_t iv[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
 
 TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
                                uint32_t size)
 {
     pr_deb("TEE_WriteObjectData(): start");
+
+    if (!object
+	|| !(object->flags & TEE_HANDLE_FLAG_PERSISTENT)) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
 
     struct AES_ctx ctx;
     uint8_t aes256_key[TEE_OBJECT_KEY_SIZE];
@@ -298,6 +310,11 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
 {
     pr_deb("TEE_ReadObjectData(): start");
 
+    if (!object
+	|| !(object->flags & TEE_HANDLE_FLAG_PERSISTENT)) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
     int retval = ocall_read_file(object->desc, (char *)buffer, size);
     if (retval < 0) {
       // TODO Interpret linux error as TEE error
@@ -320,8 +337,6 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
     memset(aes256_key, 0, TEE_OBJECT_KEY_SIZE);
     memset(&ctx, 0, sizeof(ctx));
 
-    return TEE_SUCCESS;
-
     return 0;
 }
 
@@ -330,7 +345,17 @@ void TEE_CloseObject(TEE_ObjectHandle object)
 {
     pr_deb("TEE_CloseObject(): start");
 
+    if (!object
+	|| !(object->flags & TEE_HANDLE_FLAG_PERSISTENT)) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
     int retval = ocall_close_file(object->desc);
+
+    if (retval) {
+      // TODO Interpret linux error as TEE error
+      return TEE_ERROR_GENERIC;
+    }
 
     return 0;
 }
@@ -450,13 +475,26 @@ TEE_Result TEE_DigestDoFinal(TEE_OperationHandle operation, const void *chunk,
     return 0;
 }
 
-// AES key for test
-static uint8_t aes256_key[] = {
-  0x60, 0x3d, 0xeb, 0x10, 0x15, 0xca, 0x71, 0xbe,
-  0x2b, 0x73, 0xae, 0xf0, 0x85, 0x7d, 0x77, 0x81,
-  0x1f, 0x35, 0x2c, 0x07, 0x3b, 0x61, 0x08, 0xd7,
-  0x2d, 0x98, 0x10, 0xa3, 0x09, 0x14, 0xdf, 0xf4
-};
+
+// TEE_HANDLE_FLAG_KEY_SET is used in flags fields of TEE_OperationHandle
+// and TEE_ObjectHandle.  It shows that the AES key is set already in
+// TEE_OperationHandle and is used to avoid to set key twice with
+// TEE_GenerateKey.  This won't be a good idea.
+
+TEE_Result TEE_SetOperationKey(TEE_OperationHandle operation,
+			       TEE_ObjectHandle key)
+{
+    if (!operation
+	|| !key
+	|| key->type != TEE_TYPE_AES) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    memcpy(operation->aekey, key->public_key, 32);
+    operation->flags |= TEE_HANDLE_FLAG_KEY_SET;
+
+    return 0;
+}
 
 TEE_Result TEE_AEInit(TEE_OperationHandle operation, const void *nonce,
                       uint32_t nonceLen, uint32_t tagLen, uint32_t AADLen,
@@ -469,12 +507,15 @@ TEE_Result TEE_AEInit(TEE_OperationHandle operation, const void *nonce,
       return TEE_ERROR_NOT_SUPPORTED;
     }
 
-    AES_init_ctx_iv(&(operation->aectx), aes256_key, nonce);
+    if (!(operation->flags & TEE_HANDLE_FLAG_KEY_SET)) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    AES_init_ctx_iv(&(operation->aectx), operation->aekey, nonce);
 
     return 0;
 }
 
-#define AE_CIPHER_LENGTH 256
 
 TEE_Result TEE_AEUpdate(TEE_OperationHandle operation, const void *srcData,
                         uint32_t srcLen, void *destData, uint32_t *destLen)
@@ -548,13 +589,75 @@ TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
 }
 
 
+TEE_Result TEE_GenerateKey(TEE_ObjectHandle object, uint32_t keySize,
+			   TEE_Attribute *params, uint32_t paramCount)
+{
+    pr_deb("TEE_GenerateKey(): start");
+
+    if (!object
+	|| (object->flags & TEE_HANDLE_FLAG_KEY_SET)
+	|| (!params && paramCount)
+	|| paramCount > 2) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    // For 256-bit AES key
+    if (paramCount == 1 && keySize != 32) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    unsigned char seed[32];
+    if (ocall_getrandom(seed, sizeof(seed), 0) != sizeof(seed)) {
+      return TEE_ERROR_SECURITY; // better error needed
+    }
+
+    ed25519_create_keypair(object->public_key, object->private_key, seed);
+
+    object->flags |= TEE_HANDLE_FLAG_KEY_SET;
+
+    if (!params) {
+      return TEE_SUCCESS;
+    }
+
+    if (paramCount == 1) {
+      // Generate only 256-bit key for AES
+      params[0].attributeID = TEE_ATTR_SECRET_VALUE;
+      params[0].content.ref.buffer = (void *)object->private_key;
+      params[0].content.ref.length = keySize;
+    }
+
+    params[0].attributeID = TEE_ATTR_ECC_PUBLIC_VALUE_X;
+    params[0].content.ref.buffer = (void *)object->public_key;
+    params[0].content.ref.length = TEE_OBJECT_KEY_SIZE;
+    params[1].attributeID = TEE_ATTR_ECC_PRIVATE_VALUE;
+    params[1].content.ref.buffer = (void *)object->private_key;
+    params[1].content.ref.length = TEE_OBJECT_SKEY_SIZE;
+    
+    return 0;
+}
+
 
 TEE_Result TEE_AllocateTransientObject(TEE_ObjectType objectType,
                                        uint32_t maxKeySize,
                                        TEE_ObjectHandle *object)
 {
-    pr_deb("TEE_AllocateTransientObject): start");
+    pr_deb("TEE_AllocateTransientObject(): start");
 
+    if (!(objectType == TEE_TYPE_ECDH_KEYPAIR
+	  || objectType == TEE_TYPE_AES)
+	 || maxKeySize > TEE_OBJECT_SKEY_SIZE
+	 || !object) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    TEE_ObjectHandle handle = malloc(sizeof(*handle));
+    if (!handle) {
+      return TEE_ERROR_OUT_OF_MEMORY;
+    }
+
+    memset(handle, 0, sizeof(*handle));
+    handle->type = objectType;
+    *object = handle;
     return 0;
 }
 
@@ -564,7 +667,15 @@ void TEE_InitRefAttribute(TEE_Attribute *attr, uint32_t attributeID,
 {
     pr_deb("TEE_InitRefAttribute(): start");
 
-    return 0;
+    if (!attr) {
+      return; // TEE_panic?
+    }
+
+    attr->attributeID = attributeID;
+    attr->content.ref.buffer = (void *)buffer;
+    attr->content.ref.length = length;
+
+    return;
 }
 
 
@@ -572,11 +683,21 @@ void TEE_FreeTransientObject(TEE_ObjectHandle object)
 {
     pr_deb("TEE_FreeTransientObject(): start");
 
+    if (!object) {
+      return;
+    }
+
+    if ((object->flags & TEE_HANDLE_FLAG_PERSISTENT) != 0) {
+      return; // TEE-panic?
+    }
+
+    // Clear keys
+    memset(object, 0, sizeof(*object));
+
+    free (object);
+
     return 0;
 }
-
-// Test asymmetric key
-#include "test_dev_key.h"
 
 #define SIG_LENGTH 64
 
@@ -588,15 +709,39 @@ TEE_Result TEE_AsymmetricSignDigest(TEE_OperationHandle operation,
 {
     pr_deb("TEE_AsymmetricSignDigest(): start");
 
-    if (operation->mode == TEE_MODE_SIGN) {
-      // Sign hashed data with test keys
-      ed25519_sign(signature, digest, digestLen,
-		   _sanctum_dev_public_key, _sanctum_dev_secret_key);
-      *signatureLen = SIG_LENGTH;
-    } else {
+    if (!operation
+	|| operation->mode != TEE_MODE_SIGN
+	|| !params
+	|| paramCount != 2) {
       // TEE panic?
       return TEE_ERROR_BAD_PARAMETERS;
     }
+    
+    if (params[0].attributeID != TEE_ATTR_ECC_PUBLIC_VALUE_X
+	|| params[0].content.ref.length != TEE_OBJECT_KEY_SIZE
+	|| params[1].attributeID != TEE_ATTR_ECC_PRIVATE_VALUE
+	|| params[1].content.ref.length != TEE_OBJECT_SKEY_SIZE) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    unsigned char *key = params[0].content.ref.buffer;
+    unsigned char *skey = params[1].content.ref.buffer;
+#if 0
+    printf("key: ");
+    for (int i = 0; i < 32; i++) {
+      printf ("%02x", key[i]);
+    }
+    printf("\n");
+    printf("skey: ");
+    for (int j = 0; j < 64; j++) {
+      printf ("%02x", skey[j]);
+    }
+    printf("\n");
+#endif
+
+    // Sign hashed data with keys
+    ed25519_sign(signature, digest, digestLen, key, skey);
+    *signatureLen = SIG_LENGTH;
     
     return 0;
 }
@@ -610,25 +755,28 @@ TEE_Result TEE_AsymmetricVerifyDigest(TEE_OperationHandle operation,
 {
     pr_deb("TEE_AsymmetricVerifyDigest(): start");
 
-    if (signatureLen != SIG_LENGTH) {
-      pr_deb("TEE_AsymmetricVerifyDigest(): bad signature length");
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-
-    if (operation->mode == TEE_MODE_VERIFY) {
-      // Sign hashed data with test keys
-      int verify_ok;
-      verify_ok = ed25519_verify(signature, digest, digestLen,
-				 _sanctum_dev_public_key);
-      if (verify_ok) {
-	return TEE_SUCCESS;
-      } else {
-	return TEE_ERROR_SIGNATURE_INVALID;
-      }
-    } else {
+    if (!operation
+	|| operation->mode != TEE_MODE_VERIFY
+	|| !params
+	|| paramCount != 1
+	|| signatureLen != SIG_LENGTH) {
       // TEE panic?
       return TEE_ERROR_BAD_PARAMETERS;
     }
+
+    if (params[0].attributeID != TEE_ATTR_ECC_PUBLIC_VALUE_X
+	|| params[0].content.ref.length != TEE_OBJECT_KEY_SIZE) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    unsigned char *key = params[0].content.ref.buffer;
     
-    return 0;
+    // Sign hashed data with test keys
+    int verify_ok;
+    verify_ok = ed25519_verify(signature, digest, digestLen, key);
+    if (!verify_ok) {
+      return TEE_ERROR_SIGNATURE_INVALID;
+    }
+
+    return TEE_SUCCESS;
 }

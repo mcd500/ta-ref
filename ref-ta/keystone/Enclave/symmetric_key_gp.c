@@ -59,11 +59,28 @@ void gp_symmetric_key_enc_verify_test(void)
   };
   static uint8_t iv[]  = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
 
+#if 0
+  static uint8_t aes256_key[] = {
+    0x60, 0x3d, 0xeb, 0x10, 0x15, 0xca, 0x71, 0xbe,
+    0x2b, 0x73, 0xae, 0xf0, 0x85, 0x7d, 0x77, 0x81,
+    0x1f, 0x35, 0x2c, 0x07, 0x3b, 0x61, 0x08, 0xd7,
+    0x2d, 0x98, 0x10, 0xa3, 0x09, 0x14, 0xdf, 0xf4
+  };
+#endif
+
   unsigned char out[CIPHER_LENGTH];
   uint32_t outlen;
+  TEE_ObjectHandle key;
+
+  // Generate key
+  TEE_AllocateTransientObject(TEE_TYPE_AES, 32, &key);
+
+  TEE_GenerateKey(key, 64, NULL, 0);
 
   // Encrypt test data
   TEE_AllocateOperation(&handle, 0/*AES*/, TEE_MODE_ENCRYPT, 256/*keysize?*/);
+
+  TEE_SetOperationKey(handle, key);
 
   TEE_AEInit(handle, iv, sizeof(iv), 0, 0, 0);
 
@@ -72,7 +89,7 @@ void gp_symmetric_key_enc_verify_test(void)
   TEE_FreeOperation(handle);
 
   // Dump encrypted data
-  printf("cipher: ");
+  printf("@cipher: ");
   for (int i = 0; i < CIPHER_LENGTH; i++) {
     printf ("%02x", out[i]);
   }
@@ -80,6 +97,8 @@ void gp_symmetric_key_enc_verify_test(void)
 
   // Decrypt it
   TEE_AllocateOperation(&handle, 0/*AES*/, TEE_MODE_DECRYPT, 256/*keysize?*/);
+
+  TEE_SetOperationKey(handle, key);
 
   TEE_AEInit(handle, iv, sizeof(iv), 0, 0, 0);
 

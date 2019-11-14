@@ -116,7 +116,7 @@ void secure_storage_test(void)
   }
   printf("\n");
 # endif
-  // assert(KEY_LENGTH == SIGNATURE_SIZE);
+  // assert(KEY_LENGTH <= SIGNATURE_SIZE);
   memcpy(aes256_key, rpt->enclave.signature, KEY_LENGTH);
   memset(rpt->enclave.signature, 0, SIGNATURE_SIZE);
 

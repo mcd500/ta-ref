@@ -30,7 +30,7 @@ int ocall_open_file(const char* fname, int flags, int perm)
 int ocall_close_file(int fdesc)
 {
   int rtn = close(fdesc);
-  printf("[SE] close desc %d -> %d\n",fdesc,rtn);
+  printf("@[SE] close desc %d -> %d\n",fdesc,rtn);
   return rtn;
 }
 

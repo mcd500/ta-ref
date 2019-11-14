@@ -72,16 +72,23 @@ void gp_asymmetric_key_sign_test(void)
   printf("\n");
 
   uint32_t siglen;
+  TEE_Attribute params[2];
+  TEE_ObjectHandle object;
 
-  // Sign hashed data with test keys
-  TEE_AllocateOperation(&handle, 0/*SHA3*/, TEE_MODE_SIGN, 0/*keysize?*/);
+  // Generate keypair
+  TEE_AllocateTransientObject(TEE_TYPE_ECDH_KEYPAIR, 64, &object);
 
-  TEE_AsymmetricSignDigest(handle, NULL, 0, hash, hashlen, sig, &siglen);
+  TEE_GenerateKey(object, 64, params, 2);
+
+  // Sign hashed data with the generated keys
+  TEE_AllocateOperation(&handle, 0/* SHA3 */, TEE_MODE_SIGN, 0/*keysize?*/);
+
+  TEE_AsymmetricSignDigest(handle, params, 2, hash, hashlen, sig, &siglen);
 
   TEE_FreeOperation(handle);
 
   // Dump signature
-  printf("signature: ");
+  printf("@signature: ");
   for (int i = 0; i < siglen; i++) {
     printf ("%02x", sig[i]);
   }
@@ -91,10 +98,12 @@ void gp_asymmetric_key_sign_test(void)
   TEE_AllocateOperation(&handle, 0/*SHA3*/, TEE_MODE_VERIFY, 0/*keysize?*/);
 
   TEE_Result verify_ok;
-  verify_ok = TEE_AsymmetricVerifyDigest(handle, NULL, 0, hash, hashlen, sig, siglen);
+  verify_ok = TEE_AsymmetricVerifyDigest(handle, params, 1, hash, hashlen, sig, siglen);
 
   TEE_FreeOperation(handle);
-  
+
+  TEE_FreeTransientObject(object);
+
   if (verify_ok == TEE_SUCCESS) {
     printf("verify ok\n");
   } else {
