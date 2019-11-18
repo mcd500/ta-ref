@@ -37,6 +37,8 @@
 #include "syscall.h"
 #include "report.h"
 
+#define SHA_LENGTH (256/8)
+
 void TEE_GetREETime(TEE_Time *time)
 {
     ree_time_t ree_time;
@@ -116,7 +118,7 @@ static inline int flags2perms(int flags)
   return ret;
 }
 
-static int set_object_key(unsigned char *key)
+static int set_object_key(void *id, unsigned int idlen, struct AES_ctx *aectx)
 {
   /* 20191031: Current eyrie copy report to user with 2048 bytes anyway.
      There is a TODO comment in eyrie/syscall.c. Here is a workaround. */
@@ -125,13 +127,21 @@ static int set_object_key(unsigned char *key)
     char buf[2048];
   } u;
   struct report *rpt = &u._rpt;
-  int repseed = 0;
 
   // Initalize report
   memset(rpt, 0, sizeof(*rpt));
-  int ret = attest_enclave(rpt, &repseed, sizeof(int));
+  // attest enclave with file id and its len
+  int ret = attest_enclave(rpt, id, idlen);
   if (ret == 0) {
-    memcpy(key, rpt->enclave.signature, TEE_OBJECT_KEY_SIZE);
+    unsigned char iv[TEE_OBJECT_NONCE_SIZE];
+    // We can't use random nonce for AES here because of persistency.
+    // Use the digest of attestation report as the last resort.
+    sha3_ctx_t ctx;
+    sha3_init(&ctx, TEE_OBJECT_NONCE_SIZE);
+    sha3_update(&ctx, rpt, sizeof(*rpt));
+    sha3_update(&ctx, id, idlen);
+    sha3_final(iv, &ctx);
+    AES_init_ctx_iv(aectx, rpt->enclave.signature, iv);
     memset(rpt->enclave.signature, 0, TEE_OBJECT_KEY_SIZE);
   }
   return ret;
@@ -172,6 +182,11 @@ TEE_Result TEE_CreatePersistentObject(uint32_t storageID, const void *objectID,
     int desc = ocall_open_file(fname, flags2flags(flags)|O_CREAT,
 			       flags2perms(flags));
     free (fname);
+
+    if (set_object_key(objectID, objectIDLen, &(handle->persist_ctx))) {
+      free(handle);
+      return TEE_ERROR_SECURITY; // better error needed or TEE panic?
+    }
 
     handle->desc = desc;
     handle->flags = TEE_HANDLE_FLAG_PERSISTENT;
@@ -240,11 +255,6 @@ TEE_Result TEE_GetObjectInfo1(TEE_ObjectHandle object, TEE_ObjectInfo *objectInf
 }
 
 
-// This isn't quite right. Should be fixed bytes depending on device/SM,
-// though such values are hard to get in usual environments. Perhaps
-// some attestation report could be used as the last resort.
-static uint8_t iv[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
-
 TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
                                uint32_t size)
 {
@@ -255,10 +265,11 @@ TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
-    struct AES_ctx ctx;
-    uint8_t aes256_key[TEE_OBJECT_KEY_SIZE];
-    if (set_object_key(aes256_key) != 0) {
-      return TEE_ERROR_SECURITY;
+    // Only 32x data can be read/write to the persistent objects.
+    // This is the restriction with our implemtation of persisitent object
+    // which uses block cipher.
+    if (size & (TEE_OBJECT_KEY_SIZE - 1)) {
+      return TEE_ERROR_BAD_PARAMETERS;
     }
 
     void *data = malloc(size);
@@ -266,10 +277,9 @@ TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
       return TEE_ERROR_OUT_OF_MEMORY;
     }
     memcpy(data, buffer, size);
-    AES_init_ctx_iv(&ctx, aes256_key, iv);
-    AES_CBC_encrypt_buffer(&ctx, data, size);
-    memset(aes256_key, 0, TEE_OBJECT_KEY_SIZE);
-    memset(&ctx, 0, sizeof(ctx));
+
+    AES_CBC_encrypt_buffer(&(object->persist_ctx), data, size);
+
     int retval = ocall_write_file(object->desc, (const char *)data, size);
     if (retval == size)
       return TEE_SUCCESS;
@@ -315,6 +325,13 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
+    // Only 32x data can be read/write to the persistent objects.
+    // This is the restriction with our implemtation of persisitent object
+    // which uses block cipher.
+    if (size & (TEE_OBJECT_KEY_SIZE - 1)) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
     int retval = ocall_read_file(object->desc, (char *)buffer, size);
     if (retval < 0) {
       // TODO Interpret linux error as TEE error
@@ -326,16 +343,7 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
       return TEE_SUCCESS;
     }
 
-    struct AES_ctx ctx;
-    uint8_t aes256_key[TEE_OBJECT_KEY_SIZE];
-    if (set_object_key(aes256_key) != 0) {
-      return TEE_ERROR_SECURITY;
-    }
-
-    AES_init_ctx_iv(&ctx, aes256_key, iv);
-    AES_CBC_decrypt_buffer(&ctx, buffer, size);
-    memset(aes256_key, 0, TEE_OBJECT_KEY_SIZE);
-    memset(&ctx, 0, sizeof(ctx));
+    AES_CBC_decrypt_buffer(&(object->persist_ctx), buffer, size);
 
     return 0;
 }
@@ -349,6 +357,8 @@ void TEE_CloseObject(TEE_ObjectHandle object)
 	|| !(object->flags & TEE_HANDLE_FLAG_PERSISTENT)) {
       return TEE_ERROR_BAD_PARAMETERS;
     }
+
+    memset(&(object->persist_ctx), 0, sizeof(object->persist_ctx));
 
     int retval = ocall_close_file(object->desc);
 
@@ -392,9 +402,6 @@ void TEE_GenerateRandom(void *randomBuffer, uint32_t randomBufferLen)
 
     return 0;
 }
-
-
-#define SHA_LENGTH (256/8)
 
 
 TEE_Result TEE_AllocateOperation(TEE_OperationHandle *operation,

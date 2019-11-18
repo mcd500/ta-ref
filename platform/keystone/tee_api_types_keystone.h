@@ -44,6 +44,7 @@ struct __TEE_OperationHandle
   unsigned char aekey[32];
 };
 
+#define TEE_OBJECT_NONCE_SIZE 16
 #define TEE_OBJECT_KEY_SIZE 32
 #define TEE_OBJECT_SKEY_SIZE 64
 
@@ -52,6 +53,7 @@ struct __TEE_ObjectHandle
   int type;
   int flags;
   int desc;
+  struct AES_ctx persist_ctx;
   unsigned char public_key[TEE_OBJECT_KEY_SIZE];
   unsigned char private_key[TEE_OBJECT_SKEY_SIZE];
 };
