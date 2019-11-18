@@ -52,7 +52,8 @@ void gp_secure_storage_test(void)
   TEE_ObjectHandle object;
   TEE_OpenPersistentObject(0,
                            "FileOne", strlen("FileOne"),
-                           (TEE_DATA_FLAG_ACCESS_WRITE
+                           (TEE_DATA_FLAG_ACCESS_READ
+			    | TEE_DATA_FLAG_ACCESS_WRITE
                             | TEE_DATA_FLAG_CREATE),
                            &object);
 
