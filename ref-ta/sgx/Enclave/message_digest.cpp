@@ -30,9 +30,9 @@
 
 #include <string.h>
 
-#include "sgx_trts.h"
 #include "Enclave.h"
-#include "Enclave_t.h"
+#include "tee_api_types_sgx.h"
+#include "tee-ta-internal.h"
 
 #include "sha3.hpp"
 #include "ed25519/ed25519.h"
@@ -45,9 +45,8 @@
 /* ecall_print_digest:
  *   testing digest-sign-verify with asymmetric key
  */
-void message_digest_test(void)
+void gp_message_digest_test(void)
 {
-  sha3_ctx_t ctx;
   static unsigned char data[256] = {
     // 0x00,0x01,...,0xff
 #include "test.dat"
@@ -55,18 +54,22 @@ void message_digest_test(void)
   unsigned char hash[SHA_LENGTH];
   unsigned char sig[SIG_LENGTH];
 
+  TEE_OperationHandle handle;
+  uint32_t hashlen;
+
   // Take hash of test data
-  sha3_init(&ctx, SHA_LENGTH);
+  TEE_AllocateOperation(&handle, 0/*SHA3*/, TEE_MODE_DIGEST, 0/*keysize?*/);
 
-  sha3_update(&ctx, data, sizeof(data));
+  TEE_DigestUpdate(handle, data, sizeof(data));
 
-  sha3_final(hash, &ctx);
+  TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
+
+  TEE_FreeOperation(handle);
 
   // Dump hashed data
-  unsigned int n;
-  ocall_print_string(&n, "hash: ");
+  printf("hash: ");
   for (int i = 0; i < SHA_LENGTH; i++) {
     printf ("%02x", hash[i]);
   }
-  ocall_print_string(&n, "\n");
+  printf("\n");
 }

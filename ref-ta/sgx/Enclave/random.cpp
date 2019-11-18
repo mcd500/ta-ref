@@ -30,27 +30,22 @@
 
 #include <string.h>
 
-#include "sgx_trts.h"
 #include "Enclave.h"
-#include "Enclave_t.h"
+#include "tee_api_types_sgx.h"
+#include "tee-ta-internal.h"
 
 /* ecall_print_random:
  *   testing basic random functions
  */
-void random_test(void)
+void gp_random_test(void)
 {
-  sgx_status_t rtn;
   unsigned char rbuf[16];
   unsigned int n;
 
-  rtn = sgx_read_rand(rbuf, sizeof(rbuf));
-  if (rtn == SGX_SUCCESS) {
-    ocall_print_string(&n, "random: ");
-    for (int i = 0; i < sizeof(rbuf); i++) {
-      printf ("%02x", rbuf[i]);
-    }
-    ocall_print_string(&n, "\n");
-  } else {
-    ocall_print_string(&n, "can't get random\n");
+  TEE_GenerateRandom(rbuf, sizeof(rbuf));
+  printf("random: ");
+  for (int i = 0; i < sizeof(rbuf); i++) {
+    printf ("%02x", rbuf[i]);
   }
+  printf("\n");
 }

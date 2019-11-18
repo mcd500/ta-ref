@@ -30,29 +30,17 @@
 
 #include <string.h>
 
-#include "sgx_trts.h"
-#include "sgx_utils.h"
 #include "Enclave.h"
-#include "Enclave_t.h"
-
-#define USE_CRYPTO 1
-//#define DEBUG
-
-#if USE_CRYPTO
-#include "aes/aes.hpp"
-#endif
+#include "tee_api_types_sgx.h"
+#include "tee-ta-internal.h"
 
 // data and cipher length
 #define DATA_LENGTH 256
 
-#if USE_CRYPTO
-#define KEY_LENGTH (256/8)
-#endif
-
 /* ecall_print_file:
  *   testing basic file i/o wit ocall
  */
-void secure_storage_test(void)
+void gp_secure_storage_test(void)
 {
   static unsigned char data[DATA_LENGTH] = {
     // 0x00,0x01,...,0xff
@@ -60,98 +48,45 @@ void secure_storage_test(void)
   };
   unsigned char buf[DATA_LENGTH];
 
-#if USE_CRYPTO
-  struct AES_ctx ctx;
-  static uint8_t iv[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
-  uint8_t aes256_key[KEY_LENGTH];
-  sgx_key_request_t key_request;
-  sgx_key_128bit_t report_key;
-  memset(&report_key, 0, sizeof(sgx_key_128bit_t));
-  memset(&key_request, 0, sizeof(sgx_key_request_t));
-  key_request.key_name = SGX_KEYSELECT_REPORT;
-  sgx_status_t err = sgx_get_key(&key_request, &report_key);
-  if(err != SGX_SUCCESS) {
-    printf("sgx_get_key fails %d\n", err);
-  }
-  sgx_key_128bit_t seal_key;
-  memset(&seal_key, 0, sizeof(sgx_key_128bit_t));
-  memset(&key_request, 0, sizeof(sgx_key_request_t));
-  key_request.key_name = SGX_KEYSELECT_SEAL;
-  err = sgx_get_key(&key_request, &seal_key);
-  if(err != SGX_SUCCESS) {
-    printf("sgx_get_key fails %d\n", err);
-  }
-  // sgx report key is 128-bit. Fill another 128-bit with seal key.
-  // seal key doesn't change with enclave. Better than nothing, though.
-  uint8_t *p = (uint8_t*)&report_key;
-  uint8_t *q = (uint8_t*)&seal_key;
-  memcpy(aes256_key, p, sizeof(sgx_key_128bit_t));
-  memcpy(aes256_key + sizeof(sgx_key_128bit_t), q, sizeof(sgx_key_128bit_t));
-# ifdef DEBUG
-  // Dump aes256_key for debug
-  printf("aes256 key\n");
-  int i;
-  for (i = 0; i < KEY_LENGTH; i++) {
-    printf("%02x", aes256_key[i]);
-  }
-  printf("\n");
-# endif
-#endif
-
-#define O_RDONLY   0
-#define O_WRONLY   00001
-#define O_CREAT	   00100
-#define O_TRUNC	   01000
-
-  int desc = 0;
-  unsigned int n;
-  int rtn;
-
   /* write */
-  ocall_open_file(&desc, "FileOne", O_WRONLY|O_CREAT|O_TRUNC, 0600);
-  printf("open_file WO -> %d\n", desc);
+  TEE_ObjectHandle object;
+  TEE_OpenPersistentObject(0,
+                           "FileOne", strlen("FileOne"),
+                           (TEE_DATA_FLAG_ACCESS_WRITE
+                            | TEE_DATA_FLAG_CREATE),
+                           &object);
 
-#if USE_CRYPTO
   memcpy(buf, data, DATA_LENGTH);
-  // Encrypt test data
-  AES_init_ctx_iv(&ctx, aes256_key, iv);
-  AES_CBC_encrypt_buffer(&ctx, buf, DATA_LENGTH);
-  ocall_write_file(&rtn, desc, (const char *)buf, DATA_LENGTH);
-#else
-  ocall_write_file(&rtn, desc, (const char *)data, DATA_LENGTH);
-#endif
+  TEE_WriteObjectData(object, (const char *)data, DATA_LENGTH);
 
-  ocall_close_file(&rtn, desc);
+  TEE_CloseObject(object);
 
   /* clear buf */
   memset(buf, 0, DATA_LENGTH);
-
+ 
   /* read */
-  ocall_open_file(&desc, "FileOne", O_RDONLY, 0600);
-  printf("open_file RO -> %d\n", desc);
+  TEE_OpenPersistentObject(0,
+                           "FileOne", strlen("FileOne"),
+                           TEE_DATA_FLAG_ACCESS_READ,
+                           &object);
 
-  ocall_read_file(&rtn, desc, (char *)buf, DATA_LENGTH);
-#if USE_CRYPTO
-  // Decrypt test data
-  AES_init_ctx_iv(&ctx, aes256_key, iv);
-  AES_CBC_decrypt_buffer(&ctx, buf, DATA_LENGTH);
-  memset(aes256_key, 0, KEY_LENGTH);
-#endif
+  uint32_t count;
+  TEE_ReadObjectData(object, (char *)buf, DATA_LENGTH, &count);
+  
+  TEE_CloseObject(object);
 
-  // Dump read contents
-  ocall_print_string(&n, "bytes read: ");
-  for (int i = 0; i < sizeof(buf); i++) {
+  printf("%d bytes read: ", count);
+  for (int i = 0; i < count; i++) {
     printf ("%02x", buf[i]);
   }
-  ocall_print_string(&n, "\n");
+  printf("\n");
 
   int verify_ok;
   verify_ok = !memcmp(buf, data, DATA_LENGTH);
   if (verify_ok) {
-    ocall_print_string(&n, "verify ok\n");
+    printf("verify ok\n");
   } else {
-    ocall_print_string(&n, "verify fails\n");
+    printf("verify fails\n");
   }
 
-  ocall_close_file(&rtn, desc);
 }

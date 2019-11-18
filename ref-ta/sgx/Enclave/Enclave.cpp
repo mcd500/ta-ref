@@ -42,14 +42,14 @@ int printf(const char* fmt, ...)
 {
     char buf[BUFSIZ] = { '\0' };
     va_list ap;
-    unsigned int n;
+    unsigned int retval;
 
     va_start(ap, fmt);
     vsnprintf(buf, BUFSIZ, fmt, ap);
     va_end(ap);
-    ocall_print_string(&n, buf);
+    ocall_print_string(&retval, buf);
 
-    return n;
+    return retval;
 }
 
 /* ecall_print_aes:
@@ -60,23 +60,23 @@ void ecall_ta_main(void)
 
     printf("ecall_ta_main() start\n");
 
-    random_test();
+    gp_random_test();
 
-    ree_time_test();
+    gp_ree_time_test();
 
-    trusted_time_test();
+    gp_trusted_time_test();
 
-    secure_storage_test();
+    gp_secure_storage_test();
 
-    message_digest_test();
+    gp_message_digest_test();
 
-    symmetric_key_enc_verify_test();
+    gp_symmetric_key_enc_verify_test();
 
-//    symmetric_key_dec_verify_test();
+//    gp_symmetric_key_dec_verify_test();
 
-    asymmetric_key_sign_test();
+    gp_asymmetric_key_sign_test();
 
-//    asymmetric_key_verify_test();
+//    gp_asymmetric_key_verify_test();
 #ifdef NOT_DONE
 #endif
 

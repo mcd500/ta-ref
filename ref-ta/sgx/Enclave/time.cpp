@@ -33,33 +33,33 @@
 #include "sgx_trts.h"
 #include "sgx_tae_service.h"
 #include "Enclave.h"
-#include "Enclave_t.h"
+#include "tee_api_types_sgx.h"
+#include "tee-ta-internal.h"
 
 /* ecall_print_time:
  *   testing time functions
  */
-void ree_time_test(void)
+void gp_ree_time_test(void)
 {
-  struct ree_time_t time;
-  int rtn;
+    TEE_Time time;
 
-  /* REE time */
-  ocall_ree_time(&rtn, &time);
-  printf ("REE time %u sec %u millis\n", time.seconds, time.millis);
+    /* REE time */
+    TEE_GetREETime(&time);
+    printf ("@GP REE time %u sec %u millis\n", time.seconds, time.millis);
 }
 
 /* ecall_print_time:
  *   testing time functions
  */
-void trusted_time_test(void)
+void gp_trusted_time_test(void)
 {
-  struct ree_time_t time;
+  TEE_Time time;
   sgx_status_t rtn;
   sgx_time_source_nonce_t nonce;
   sgx_time_t base;
   int busy_retry_times = 2;
-  int ret;
-  unsigned int n;
+
+  // !!! Moving this to TEE_GetSystemTime
 
   // Get trusted time
   // Unfortunatelly, trusted time doesn't work on linux. See
@@ -69,7 +69,7 @@ void trusted_time_test(void)
   } while (rtn == SGX_ERROR_BUSY && busy_retry_times--);
   if (rtn != SGX_SUCCESS) {
     printf("sgx trusted time is not supported code=0x%x\n", rtn);
-    ocall_ree_time(&ret, &time);
+    TEE_GetREETime(&time);
     printf ("Fallback to REE time %u sec %u millis\n",
 	    time.seconds, time.millis);
     return;
@@ -82,32 +82,32 @@ void trusted_time_test(void)
     case SGX_ERROR_SERVICE_UNAVAILABLE:
       /* Architecture Enclave Service Manager is not installed or not
 	 working properly.*/
-      ocall_print_string(&n, "get_trusted_time: service unavailable\n");
+      printf("get_trusted_time: service unavailable\n");
       break;
     case SGX_ERROR_SERVICE_TIMEOUT:
       /* retry the operation*/
-      ocall_print_string(&n, "get_trusted_time: service timeout\n");
+      printf("get_trusted_time: service timeout\n");
       break;
     case SGX_ERROR_BUSY:
       /* retry the operation later*/
-      ocall_print_string(&n, "get_trusted_time: service busy\n");
+      printf("get_trusted_time: service busy\n");
       break;
     default:
       /*other errors*/
-      ocall_print_string(&n, "get_trusted_time: unknown error\n");
+      printf("get_trusted_time: unknown error\n");
       break;
     }
-    ocall_ree_time(&ret, &time);
+    TEE_GetREETime(&time);
     printf ("Fallback to REE time %u sec %u millis\n",
 	    time.seconds, time.millis);
   } else {
     // sgx_time_t is unsigned 64bit
     printf ("trusted time %llu sec\n", base);
     // Dump nonce
-    ocall_print_string(&n, "nonce: ");
+    printf("nonce: ");
     for (int i = 0; i < sizeof(nonce); i++) {
       printf ("%02x", ((uint8_t *)&nonce)[i]);
     }
-    ocall_print_string(&n, "\n");
+    printf("\n");
   }
 }
