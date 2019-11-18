@@ -104,9 +104,11 @@ void secure_storage_test(void)
 #define O_TRUNC	   01000
 
   int desc = 0;
+  unsigned int n;
+  int rtn;
 
   /* write */
-  ocall_open_file("FileOne", 7, O_WRONLY|O_CREAT|O_TRUNC, &desc);
+  ocall_open_file(&desc, "FileOne", O_WRONLY|O_CREAT|O_TRUNC, 0600);
   printf("open_file WO -> %d\n", desc);
 
 #if USE_CRYPTO
@@ -114,21 +116,21 @@ void secure_storage_test(void)
   // Encrypt test data
   AES_init_ctx_iv(&ctx, aes256_key, iv);
   AES_CBC_encrypt_buffer(&ctx, buf, DATA_LENGTH);
-  ocall_write_file(desc, (const char *)buf, DATA_LENGTH);
+  ocall_write_file(&rtn, desc, (const char *)buf, DATA_LENGTH);
 #else
-  ocall_write_file(desc, (const char *)data, DATA_LENGTH);
+  ocall_write_file(&rtn, desc, (const char *)data, DATA_LENGTH);
 #endif
 
-  ocall_close_file(desc);
+  ocall_close_file(&rtn, desc);
 
   /* clear buf */
   memset(buf, 0, DATA_LENGTH);
 
   /* read */
-  ocall_open_file("FileOne", 7, O_RDONLY, &desc);
+  ocall_open_file(&desc, "FileOne", O_RDONLY, 0600);
   printf("open_file RO -> %d\n", desc);
 
-  ocall_read_file(desc, (char *)buf, DATA_LENGTH);
+  ocall_read_file(&rtn, desc, (char *)buf, DATA_LENGTH);
 #if USE_CRYPTO
   // Decrypt test data
   AES_init_ctx_iv(&ctx, aes256_key, iv);
@@ -137,19 +139,19 @@ void secure_storage_test(void)
 #endif
 
   // Dump read contents
-  ocall_print_string("bytes read: ");
+  ocall_print_string(&n, "bytes read: ");
   for (int i = 0; i < sizeof(buf); i++) {
     printf ("%02x", buf[i]);
   }
-  ocall_print_string("\n");
+  ocall_print_string(&n, "\n");
 
   int verify_ok;
   verify_ok = !memcmp(buf, data, DATA_LENGTH);
   if (verify_ok) {
-    ocall_print_string("verify ok\n");
+    ocall_print_string(&n, "verify ok\n");
   } else {
-    ocall_print_string("verify fails\n");
+    ocall_print_string(&n, "verify fails\n");
   }
 
-  ocall_close_file(desc);
+  ocall_close_file(&rtn, desc);
 }

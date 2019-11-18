@@ -278,6 +278,10 @@ Enclave/%.o: Enclave/%.cpp Enclave/Enclave_t.h
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -c $< -o $@
 	@echo "CC   <=  $<"
 
+../../platform/sgx/%.o: ../../platform/sgx/%.c Enclave/Enclave_t.h
+	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -c $< -o $@
+	@echo "CC   <=  $<"
+
 ../../lib/ed25519/src/%.o: ../../lib/ed25519/src/%.c Enclave/Enclave_t.h
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -DED25519_NO_SEED -c $< -o $@
 	@echo "CC   <=  $<"

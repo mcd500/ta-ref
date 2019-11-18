@@ -41,9 +41,10 @@
 void ree_time_test(void)
 {
   struct ree_time_t time;
+  int rtn;
 
   /* REE time */
-  ocall_ree_time(&time);
+  ocall_ree_time(&rtn, &time);
   printf ("REE time %u sec %u millis\n", time.seconds, time.millis);
 }
 
@@ -57,6 +58,8 @@ void trusted_time_test(void)
   sgx_time_source_nonce_t nonce;
   sgx_time_t base;
   int busy_retry_times = 2;
+  int ret;
+  unsigned int n;
 
   // Get trusted time
   // Unfortunatelly, trusted time doesn't work on linux. See
@@ -66,7 +69,7 @@ void trusted_time_test(void)
   } while (rtn == SGX_ERROR_BUSY && busy_retry_times--);
   if (rtn != SGX_SUCCESS) {
     printf("sgx trusted time is not supported code=0x%x\n", rtn);
-    ocall_ree_time(&time);
+    ocall_ree_time(&ret, &time);
     printf ("Fallback to REE time %u sec %u millis\n",
 	    time.seconds, time.millis);
     return;
@@ -79,32 +82,32 @@ void trusted_time_test(void)
     case SGX_ERROR_SERVICE_UNAVAILABLE:
       /* Architecture Enclave Service Manager is not installed or not
 	 working properly.*/
-      ocall_print_string("get_trusted_time: service unavailable\n");
+      ocall_print_string(&n, "get_trusted_time: service unavailable\n");
       break;
     case SGX_ERROR_SERVICE_TIMEOUT:
       /* retry the operation*/
-      ocall_print_string("get_trusted_time: service timeout\n");
+      ocall_print_string(&n, "get_trusted_time: service timeout\n");
       break;
     case SGX_ERROR_BUSY:
       /* retry the operation later*/
-      ocall_print_string("get_trusted_time: service busy\n");
+      ocall_print_string(&n, "get_trusted_time: service busy\n");
       break;
     default:
       /*other errors*/
-      ocall_print_string("get_trusted_time: unknown error\n");
+      ocall_print_string(&n, "get_trusted_time: unknown error\n");
       break;
     }
-    ocall_ree_time(&time);
+    ocall_ree_time(&ret, &time);
     printf ("Fallback to REE time %u sec %u millis\n",
 	    time.seconds, time.millis);
   } else {
     // sgx_time_t is unsigned 64bit
     printf ("trusted time %llu sec\n", base);
     // Dump nonce
-    ocall_print_string("nonce: ");
+    ocall_print_string(&n, "nonce: ");
     for (int i = 0; i < sizeof(nonce); i++) {
       printf ("%02x", ((uint8_t *)&nonce)[i]);
     }
-    ocall_print_string("\n");
+    ocall_print_string(&n, "\n");
   }
 }

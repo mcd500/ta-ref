@@ -63,29 +63,30 @@ void asymmetric_key_sign_test(void)
   sha3_final(hash, &ctx);
 
   // Dump hashed data
-  ocall_print_string("digest: ");
+  unsigned int n;
+  ocall_print_string(&n, "digest: ");
   for (int i = 0; i < SHA_LENGTH; i++) {
     printf ("%02x", hash[i]);
   }
-  ocall_print_string("\n");
+  ocall_print_string(&n, "\n");
 
   // Sign hashed data with test keys
   ed25519_sign(sig, hash, SHA_LENGTH,
 	       _sanctum_dev_public_key, _sanctum_dev_secret_key);
 
   // Dump signature
-  ocall_print_string("signature: ");
+  ocall_print_string(&n, "signature: ");
   for (int i = 0; i < SIG_LENGTH; i++) {
     printf ("%02x", sig[i]);
   }
-  ocall_print_string("\n");
+  ocall_print_string(&n, "\n");
 
   // Verify signature against hashed data
   int verify_ok;
   verify_ok = ed25519_verify(sig, hash, SHA_LENGTH, _sanctum_dev_public_key);
   if (verify_ok) {
-    ocall_print_string("verify ok\n");
+    ocall_print_string(&n, "verify ok\n");
   } else {
-    ocall_print_string("verify fails\n");
+    ocall_print_string(&n, "verify fails\n");
   }
 }

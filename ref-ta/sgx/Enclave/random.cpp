@@ -41,15 +41,16 @@ void random_test(void)
 {
   sgx_status_t rtn;
   unsigned char rbuf[16];
+  unsigned int n;
 
   rtn = sgx_read_rand(rbuf, sizeof(rbuf));
   if (rtn == SGX_SUCCESS) {
-    ocall_print_string("random: ");
+    ocall_print_string(&n, "random: ");
     for (int i = 0; i < sizeof(rbuf); i++) {
       printf ("%02x", rbuf[i]);
     }
-    ocall_print_string("\n");
+    ocall_print_string(&n, "\n");
   } else {
-    ocall_print_string("can't get random\n");
+    ocall_print_string(&n, "can't get random\n");
   }
 }

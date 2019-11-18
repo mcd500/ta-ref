@@ -42,13 +42,14 @@ int printf(const char* fmt, ...)
 {
     char buf[BUFSIZ] = { '\0' };
     va_list ap;
+    unsigned int n;
 
     va_start(ap, fmt);
     vsnprintf(buf, BUFSIZ, fmt, ap);
     va_end(ap);
-    ocall_print_string(buf);
+    ocall_print_string(&n, buf);
 
-    return (int)strnlen(buf, BUFSIZ - 1) + 1;
+    return n;
 }
 
 /* ecall_print_aes:

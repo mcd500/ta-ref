@@ -63,9 +63,10 @@ void message_digest_test(void)
   sha3_final(hash, &ctx);
 
   // Dump hashed data
-  ocall_print_string("hash: ");
+  unsigned int n;
+  ocall_print_string(&n, "hash: ");
   for (int i = 0; i < SHA_LENGTH; i++) {
     printf ("%02x", hash[i]);
   }
-  ocall_print_string("\n");
+  ocall_print_string(&n, "\n");
 }

@@ -52,6 +52,8 @@ void TEE_GetREETime(TEE_Time *time)
 #else
     ocall_ree_time(&ree_time);
 #endif
+    time->seconds = ree_time.seconds;
+    time->millis = ree_time.millis;
 
     return retval;
 }
@@ -143,6 +145,7 @@ static int set_object_key(void *id, unsigned int idlen, struct AES_ctx *aectx)
     sha3_final(iv, &ctx);
     AES_init_ctx_iv(aectx, rpt->enclave.signature, iv);
     memset(rpt->enclave.signature, 0, TEE_OBJECT_KEY_SIZE);
+    memset(iv, 0, TEE_OBJECT_NONCE_SIZE);
   }
   return ret;
 }
