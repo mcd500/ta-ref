@@ -42,7 +42,6 @@
 void TEE_GetREETime(TEE_Time *time)
 {
     ree_time_t ree_time;
-    int retval;
 
     pr_deb("TEE_GetREETime(): start");
 
@@ -55,7 +54,7 @@ void TEE_GetREETime(TEE_Time *time)
     time->seconds = ree_time.seconds;
     time->millis = ree_time.millis;
 
-    return retval;
+    return;
 }
 
 
@@ -63,7 +62,14 @@ void TEE_GetSystemTime(TEE_Time *time)
 {
     pr_deb("TEE_GetSystemTime(): start");
 
-    return 0;
+    /* We will just return cycle count for now */
+    unsigned long cycles;
+    asm volatile ("rdcycle %0" : "=r" (cycles));
+
+    time->seconds = cycles / 1000;
+    time->millis = cycles % 1000;
+
+    return;
 }
 
 

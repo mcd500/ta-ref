@@ -36,8 +36,6 @@
 
 #include "tee-ta-internal.h"
 
-//#include "hacks.h"
-
 /* ecall_print_time:
  *   testing time functions
  */
@@ -56,13 +54,7 @@ void gp_ree_time_test(void)
 void gp_trusted_time_test(void)
 {
     TEE_Time time;
-#if 0
-  struct ree_time_t time;
-  struct timeval tv;
-  struct timezone tz;
-  gettimeofday(&tv, &tz);
-  time.seconds = tv.tv_sec;
-  time.millis = 0;
-#endif
-  printf ("@time %u based on rdcycle\n", time.seconds);
+
+     TEE_GetSystemTime(&time);
+     printf ("@time %u based on rdcycle\n", time.seconds);
 }
