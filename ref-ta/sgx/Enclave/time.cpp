@@ -30,8 +30,6 @@
 
 #include <string.h>
 
-#include "sgx_trts.h"
-#include "sgx_tae_service.h"
 #include "Enclave.h"
 #include "tee_api_types_sgx.h"
 #include "tee-ta-internal.h"
@@ -53,61 +51,9 @@ void gp_ree_time_test(void)
  */
 void gp_trusted_time_test(void)
 {
-  TEE_Time time;
-  sgx_status_t rtn;
-  sgx_time_source_nonce_t nonce;
-  sgx_time_t base;
-  int busy_retry_times = 2;
+    TEE_Time time;
 
-  // !!! Moving this to TEE_GetSystemTime
-
-  // Get trusted time
-  // Unfortunatelly, trusted time doesn't work on linux. See
-  // https://software.intel.com/en-us/forums/intel-software-guard-extensions-intel-sgx/topic/820329
-  do {
-    rtn = sgx_create_pse_session();
-  } while (rtn == SGX_ERROR_BUSY && busy_retry_times--);
-  if (rtn != SGX_SUCCESS) {
-    printf("sgx trusted time is not supported code=0x%x\n", rtn);
-    TEE_GetREETime(&time);
-    printf ("Fallback to REE time %u sec %u millis\n",
-	    time.seconds, time.millis);
-    return;
-  }
-
-  rtn = sgx_get_trusted_time(&base, &nonce);
-  sgx_close_pse_session();
-  if (rtn != SGX_SUCCESS) {
-    switch (rtn) {
-    case SGX_ERROR_SERVICE_UNAVAILABLE:
-      /* Architecture Enclave Service Manager is not installed or not
-	 working properly.*/
-      printf("get_trusted_time: service unavailable\n");
-      break;
-    case SGX_ERROR_SERVICE_TIMEOUT:
-      /* retry the operation*/
-      printf("get_trusted_time: service timeout\n");
-      break;
-    case SGX_ERROR_BUSY:
-      /* retry the operation later*/
-      printf("get_trusted_time: service busy\n");
-      break;
-    default:
-      /*other errors*/
-      printf("get_trusted_time: unknown error\n");
-      break;
-    }
-    TEE_GetREETime(&time);
-    printf ("Fallback to REE time %u sec %u millis\n",
-	    time.seconds, time.millis);
-  } else {
-    // sgx_time_t is unsigned 64bit
-    printf ("trusted time %llu sec\n", base);
-    // Dump nonce
-    printf("nonce: ");
-    for (int i = 0; i < sizeof(nonce); i++) {
-      printf ("%02x", ((uint8_t *)&nonce)[i]);
-    }
-    printf("\n");
-  }
+    /* System time */
+    TEE_GetSystemTime(&time);
+    printf ("@GP System time %u sec %u millis\n", time.seconds, time.millis);
 }
