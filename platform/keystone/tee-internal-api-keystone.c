@@ -146,7 +146,7 @@ static int set_object_key(void *id, unsigned int idlen, struct AES_ctx *aectx)
     // Use the digest of attestation report as the last resort.
     sha3_ctx_t ctx;
     sha3_init(&ctx, TEE_OBJECT_NONCE_SIZE);
-    sha3_update(&ctx, rpt, sizeof(*rpt));
+    sha3_update(&ctx, rpt->enclave.signature, TEE_OBJECT_KEY_SIZE);
     sha3_update(&ctx, id, idlen);
     sha3_final(iv, &ctx);
     AES_init_ctx_iv(aectx, rpt->enclave.signature, iv);
