@@ -34,8 +34,6 @@
 #include "tee_api_types_sgx.h"
 #include "tee-ta-internal.h"
 
-#include "aes/aes.hpp"
-
 #define CIPHER_LENGTH 256
 
 /* ecall_print_aes:
@@ -54,6 +52,7 @@ void gp_symmetric_key_enc_verify_test(void)
   unsigned char out[CIPHER_LENGTH];
   uint32_t outlen;
   TEE_ObjectHandle key;
+
   // Generate key
   TEE_AllocateTransientObject(TEE_TYPE_AES, 32, &key);
 
