@@ -237,6 +237,11 @@ TEE_Result TEE_OpenPersistentObject(uint32_t storageID, const void *objectID,
 			      flags2perms(flags));
     free (fname);
 
+    if (set_object_key(objectID, objectIDLen, &(handle->persist_ctx))) {
+      free(handle);
+      return TEE_ERROR_SECURITY; // better error needed or TEE panic?
+    }
+
     handle->desc = desc;
     handle->flags = TEE_HANDLE_FLAG_PERSISTENT;
     if (desc < 0) {

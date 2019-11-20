@@ -185,6 +185,7 @@ static int set_object_key(void *id, unsigned int idlen, struct AES_ctx *aectx)
   memset(&report_key, 0, sizeof(sgx_key_128bit_t));
   memset(&key_request, 0, sizeof(sgx_key_request_t));
   key_request.key_name = SGX_KEYSELECT_REPORT;
+  key_request.key_policy = SGX_KEYPOLICY_MRENCLAVE;
   err = sgx_get_key(&key_request, &report_key);
   if(err != SGX_SUCCESS) {
     // printf("sgx_get_key fails %d\n", err);
@@ -196,6 +197,10 @@ static int set_object_key(void *id, unsigned int idlen, struct AES_ctx *aectx)
   memset(&seal_key, 0, sizeof(sgx_key_128bit_t));
   memset(&key_request, 0, sizeof(sgx_key_request_t));
   key_request.key_name = SGX_KEYSELECT_SEAL;
+  key_request.key_policy = SGX_KEYPOLICY_MRSIGNER; // Is MRSIGNER ok?
+  // Use objectID as key_id so to make the key depending it.
+  unsigned int klen = (idlen < SGX_KEYID_SIZE) ? idlen : SGX_KEYID_SIZE;
+  memcpy(key_request.key_id.id, id, klen);
   err = sgx_get_key(&key_request, &seal_key);
   if(err != SGX_SUCCESS) {
     // printf("sgx_get_key fails %d\n", err);
@@ -217,6 +222,13 @@ static int set_object_key(void *id, unsigned int idlen, struct AES_ctx *aectx)
   sha3_update(&ctx, key, TEE_OBJECT_KEY_SIZE);
   sha3_update(&ctx, id, idlen);
   sha3_final(iv, &ctx);
+#if 0
+  printf("key:");
+  for (int i = 0; i < TEE_OBJECT_KEY_SIZE; i++) {
+    printf("%02x", key[i]);
+  }
+  printf("\n");
+#endif
   AES_init_ctx_iv(aectx, key, iv);
   memset(key, 0, TEE_OBJECT_KEY_SIZE);
   memset(iv, 0, TEE_OBJECT_NONCE_SIZE);
@@ -311,6 +323,11 @@ TEE_Result TEE_OpenPersistentObject(uint32_t storageID, const void *objectID,
     int desc;
     ocall_open_file(&desc, fname, flags2flags(flags), flags2perms(flags));
     free (fname);
+
+    if (set_object_key(objectID, objectIDLen, &(handle->persist_ctx))) {
+      free(handle);
+      return TEE_ERROR_SECURITY; // better error needed or TEE panic?
+    }
 
     handle->desc = desc;
     handle->flags = TEE_HANDLE_FLAG_PERSISTENT;

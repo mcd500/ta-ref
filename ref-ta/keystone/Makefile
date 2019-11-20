@@ -121,7 +121,7 @@ $(ENCLAVE_LIB_BUILD)/ed25519/%.o: $(TOPDIR)/lib/ed25519/src/%.c
 
 $(ENCLAVE_LIB_BUILD)/tiny-AES-c/%.o: $(TOPDIR)/lib/tiny-AES-c/%.c
 	mkdir -p $(ENCLAVE_LIB_BUILD)/tiny-AES-c
-	$(CC) $(Enclave_C_Flags) -c $< -o $@
+	$(CC) $(Enclave_C_Flags) -DAES256=1 -c $< -o $@
 
 $(ENCLAVE_LIB_BUILD)/common/%.o: $(TOPDIR)/common/%.c
 	mkdir -p $(ENCLAVE_LIB_BUILD)/common

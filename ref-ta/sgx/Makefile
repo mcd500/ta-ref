@@ -287,7 +287,7 @@ Enclave/%.o: Enclave/%.cpp Enclave/Enclave_t.h
 	@echo "CC   <=  $<"
 
 ../../lib/tiny-AES-c/%.o: ../../lib/tiny-AES-c/%.c Enclave/Enclave_t.h
-	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -c $< -o $@
+	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -DAES256=1 -c $< -o $@
 	@echo "CC   <=  $<"
 
 $(Enclave_Name): Enclave/Enclave_t.o $(Enclave_Cpp_Objects) $(Enclave_C_Objects)

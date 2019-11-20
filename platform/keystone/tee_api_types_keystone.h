@@ -33,6 +33,7 @@
 
 #include "sha3.hpp"
 #include "ed25519/ed25519.h"
+#define AES256 1
 #include "aes/aes.h"
 
 struct __TEE_OperationHandle
