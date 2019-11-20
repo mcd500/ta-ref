@@ -34,6 +34,7 @@
 //#include "Enclave.h"
 #include "Enclave_t.h"
 
+#define AES256 1
 #include "aes/aes.h"
 
 //#include "aes/test_aes_key.h"

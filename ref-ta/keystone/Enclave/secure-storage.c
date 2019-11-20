@@ -39,6 +39,7 @@
 #if USE_CRYPTO
 #include "syscall.h"
 #include "report.h"
+#define AES256 1
 #include "aes/aes.h"
 #endif
 
