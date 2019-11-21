@@ -542,11 +542,18 @@ TEE_Result TEE_SetOperationKey(TEE_OperationHandle operation,
 {
     if (!operation
 	|| !key
-	|| key->type != TEE_TYPE_AES) {
+	|| (key->type != TEE_TYPE_AES
+	    && key->type != TEE_TYPE_ECDH_KEYPAIR)) {
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
-    memcpy(operation->aekey, key->public_key, 32);
+    if (key->type == TEE_TYPE_AES) {
+      memcpy(operation->aekey, key->public_key, 32);
+    } else if (key->type == TEE_TYPE_ECDH_KEYPAIR) {
+      memcpy(operation->pubkey, key->public_key, TEE_OBJECT_KEY_SIZE);
+      memcpy(operation->prikey, key->private_key, TEE_OBJECT_SKEY_SIZE);
+    }
+
     operation->flags |= TEE_HANDLE_FLAG_KEY_SET;
 
     return 0;
@@ -651,14 +658,7 @@ TEE_Result TEE_GenerateKey(TEE_ObjectHandle object, uint32_t keySize,
     pr_deb("TEE_GenerateKey(): start");
 
     if (!object
-	|| (object->flags & TEE_HANDLE_FLAG_KEY_SET)
-	|| (!params && paramCount)
-	|| paramCount > 2) {
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-
-    // For 256-bit AES key
-    if (paramCount == 1 && keySize != 32) {
+	|| (object->flags & TEE_HANDLE_FLAG_KEY_SET)) {
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
@@ -671,23 +671,10 @@ TEE_Result TEE_GenerateKey(TEE_ObjectHandle object, uint32_t keySize,
 
     object->flags |= TEE_HANDLE_FLAG_KEY_SET;
 
-    if (!params) {
-      return TEE_SUCCESS;
-    }
-
-    if (paramCount == 1) {
+    if (object->type == TEE_TYPE_AES) {
       // Generate only 256-bit key for AES
-      params[0].attributeID = TEE_ATTR_SECRET_VALUE;
-      params[0].content.ref.buffer = (void *)object->private_key;
-      params[0].content.ref.length = keySize;
+      memset(object->private_key, 0, TEE_OBJECT_SKEY_SIZE);
     }
-
-    params[0].attributeID = TEE_ATTR_ECC_PUBLIC_VALUE_X;
-    params[0].content.ref.buffer = (void *)object->public_key;
-    params[0].content.ref.length = TEE_OBJECT_KEY_SIZE;
-    params[1].attributeID = TEE_ATTR_ECC_PRIVATE_VALUE;
-    params[1].content.ref.buffer = (void *)object->private_key;
-    params[1].content.ref.length = TEE_OBJECT_SKEY_SIZE;
 
     return 0;
 }
@@ -766,22 +753,17 @@ TEE_Result TEE_AsymmetricSignDigest(TEE_OperationHandle operation,
     pr_deb("TEE_AsymmetricSignDigest(): start");
 
     if (!operation
-	|| operation->mode != TEE_MODE_SIGN
-	|| !params
-	|| paramCount != 2) {
+	|| operation->mode != TEE_MODE_SIGN) {
       // TEE panic?
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
-    if (params[0].attributeID != TEE_ATTR_ECC_PUBLIC_VALUE_X
-	|| params[0].content.ref.length != TEE_OBJECT_KEY_SIZE
-	|| params[1].attributeID != TEE_ATTR_ECC_PRIVATE_VALUE
-	|| params[1].content.ref.length != TEE_OBJECT_SKEY_SIZE) {
+    if (!(operation->flags & TEE_HANDLE_FLAG_KEY_SET)) {
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
-    unsigned char *key = params[0].content.ref.buffer;
-    unsigned char *skey = params[1].content.ref.buffer;
+    unsigned char *key = operation->pubkey;
+    unsigned char *skey = operation->prikey;
 #if 0
     printf("key: ");
     for (int i = 0; i < 32; i++) {
@@ -813,19 +795,16 @@ TEE_Result TEE_AsymmetricVerifyDigest(TEE_OperationHandle operation,
 
     if (!operation
 	|| operation->mode != TEE_MODE_VERIFY
-	|| !params
-	|| paramCount != 1
 	|| signatureLen != SIG_LENGTH) {
       // TEE panic?
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
-    if (params[0].attributeID != TEE_ATTR_ECC_PUBLIC_VALUE_X
-	|| params[0].content.ref.length != TEE_OBJECT_KEY_SIZE) {
+    if (!(operation->flags & TEE_HANDLE_FLAG_KEY_SET)) {
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
-    unsigned char *key = params[0].content.ref.buffer;
+    unsigned char *key = operation->pubkey;
 
     // Sign hashed data with test keys
     int verify_ok;

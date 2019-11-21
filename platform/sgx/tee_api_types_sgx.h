@@ -36,6 +36,10 @@
 #define AES256 1
 #include "aes/aes.h"
 
+#define TEE_OBJECT_NONCE_SIZE 16
+#define TEE_OBJECT_KEY_SIZE 32
+#define TEE_OBJECT_SKEY_SIZE 64
+
 struct __TEE_OperationHandle
 {
   int mode;
@@ -43,11 +47,9 @@ struct __TEE_OperationHandle
   sha3_ctx_t ctx;
   struct AES_ctx aectx;
   unsigned char aekey[32];
+  unsigned char pubkey[TEE_OBJECT_KEY_SIZE];
+  unsigned char prikey[TEE_OBJECT_SKEY_SIZE];
 };
-
-#define TEE_OBJECT_NONCE_SIZE 16
-#define TEE_OBJECT_KEY_SIZE 32
-#define TEE_OBJECT_SKEY_SIZE 64
 
 struct __TEE_ObjectHandle
 {
