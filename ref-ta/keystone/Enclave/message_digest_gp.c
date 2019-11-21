@@ -58,7 +58,7 @@ void gp_message_digest_test(void)
   uint32_t hashlen;
 
   // Take hash of test data
-  TEE_AllocateOperation(&handle, 0/*SHA3*/, TEE_MODE_DIGEST, 0/*keysize?*/);
+  TEE_AllocateOperation(&handle, TEE_ALG_SHA256/*SHA3*/, TEE_MODE_DIGEST,  SHA_LENGTH/*keysize?*/);
 
   TEE_DigestUpdate(handle, data, sizeof(data));
 

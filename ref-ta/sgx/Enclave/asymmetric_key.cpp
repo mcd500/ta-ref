@@ -53,7 +53,7 @@ void gp_asymmetric_key_sign_test(void)
   uint32_t hashlen;
 
   // Take hash of test data
-  TEE_AllocateOperation(&handle, 0/*SHA3*/, TEE_MODE_DIGEST, 0/*keysize?*/);
+  TEE_AllocateOperation(&handle, TEE_ALG_SHA256/*SHA3*/, TEE_MODE_DIGEST, SHA_LENGTH/*keysize?*/);
 
   TEE_DigestUpdate(handle, data, sizeof(data));
 
@@ -69,17 +69,19 @@ void gp_asymmetric_key_sign_test(void)
   printf("\n");
 
   uint32_t siglen;
-  TEE_Attribute params[2];
-  TEE_ObjectHandle object;
-  // Generate keypair
-  TEE_AllocateTransientObject(TEE_TYPE_ECDH_KEYPAIR, 64, &object);
-
-  TEE_GenerateKey(object, 64, params, 2);
+  TEE_ObjectHandle keypair;
 
   // Sign hashed data with the generated keys
-  TEE_AllocateOperation(&handle, 0/* SHA3 */, TEE_MODE_SIGN, 0/*keysize?*/);
+  TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, 256);
 
-  TEE_AsymmetricSignDigest(handle, params, 2, hash, hashlen, sig, &siglen);
+  // Generate keypair
+  TEE_AllocateTransientObject(TEE_TYPE_ECDH_KEYPAIR, 64, &keypair);
+
+  TEE_GenerateKey(keypair, 64, NULL, 0);
+
+  TEE_SetOperationKey(handle, keypair);
+
+  TEE_AsymmetricSignDigest(handle, NULL, 0, hash, hashlen, sig, &siglen);
 
   TEE_FreeOperation(handle);
 
@@ -91,14 +93,16 @@ void gp_asymmetric_key_sign_test(void)
   printf("\n");
 
   // Verify signature against hashed data
-  TEE_AllocateOperation(&handle, 0/*SHA3*/, TEE_MODE_VERIFY, 0/*keysize?*/);
+  TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_VERIFY, 256);
+
+  TEE_SetOperationKey(handle, keypair);
 
   TEE_Result verify_ok;
-  verify_ok = TEE_AsymmetricVerifyDigest(handle, params, 1, hash, hashlen, sig, siglen);
+  verify_ok = TEE_AsymmetricVerifyDigest(handle, NULL, 0, hash, hashlen, sig, siglen);
 
   TEE_FreeOperation(handle);
 
-  TEE_FreeTransientObject(object);
+  TEE_FreeTransientObject(keypair);
 
   if (verify_ok == TEE_SUCCESS) {
     printf("verify ok\n");
