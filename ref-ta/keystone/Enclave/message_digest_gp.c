@@ -57,12 +57,16 @@ void gp_message_digest_test(void)
   TEE_OperationHandle handle;
   uint32_t hashlen;
 
+  TEE_Result rv;
+
   // Take hash of test data
-  TEE_AllocateOperation(&handle, TEE_ALG_SHA256/*SHA3*/, TEE_MODE_DIGEST,  SHA_LENGTH/*keysize?*/);
+  rv = TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
+  GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
   TEE_DigestUpdate(handle, data, sizeof(data));
 
-  TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
+  rv = TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
+  GP_ASSERT(rv, "TEE_DigestDoFinal fails");
 
   TEE_FreeOperation(handle);
 

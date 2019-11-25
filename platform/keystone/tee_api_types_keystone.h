@@ -72,4 +72,12 @@ enum Data_Flag_Constants {
   TEE_DATA_FLAG_EXCLUSIVE = 0x00000400
 };
 
+// Move this to the better place
+#define GP_ASSERT(rv,msg) \
+  do { \
+    if ((rv)) { \
+      printf("%s:%d %s (%x)\n", __FUNCTION__, __LINE__, (msg), rv); return; \
+    } \
+  } while(0)
+
 #endif

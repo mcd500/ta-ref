@@ -53,21 +53,29 @@ void gp_symmetric_key_enc_verify_test(void)
   uint32_t outlen;
   TEE_ObjectHandle key;
 
-  // Generate key
-  TEE_AllocateTransientObject(TEE_TYPE_AES, 32, &key);
+  TEE_Result rv;
 
-  TEE_GenerateKey(key, 64, NULL, 0);
+  // Generate key
+  rv = TEE_AllocateTransientObject(TEE_TYPE_AES, 32, &key);
+  GP_ASSERT(rv, "TEE_AllocateTransientObject fails");
+
+  rv = TEE_GenerateKey(key, 64, NULL, 0);
+  GP_ASSERT(rv, "TEE_GenerateKey fails");
 
   // Encrypt test data
-  TEE_AllocateOperation(&handle, 0/*AES*/, TEE_MODE_ENCRYPT, 256/*keysize?*/);
+  rv = TEE_AllocateOperation(&handle, TEE_ALG_AES_CBC_NOPAD, TEE_MODE_ENCRYPT, 256);
+  GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
-  TEE_SetOperationKey(handle, key);
+  rv = TEE_SetOperationKey(handle, key);
+  GP_ASSERT(rv, "TEE_SetOperationKey fails");
 
   TEE_GenerateRandom(iv, sizeof(iv));
 
-  TEE_AEInit(handle, iv, sizeof(iv), 0, 0, 0);
+  rv = TEE_AEInit(handle, iv, sizeof(iv), 0, 0, 0);
+  GP_ASSERT(rv, "TEE_AEInit fails");
 
-  TEE_AEEncryptFinal(handle, data, CIPHER_LENGTH, out, &outlen, NULL, 0);
+  rv = TEE_AEEncryptFinal(handle, data, CIPHER_LENGTH, out, &outlen, NULL, 0);
+  GP_ASSERT(rv, "TEE_AEEncryptFinal fails");
 
   TEE_FreeOperation(handle);
 
@@ -79,13 +87,17 @@ void gp_symmetric_key_enc_verify_test(void)
   printf("\n");
 
   // Decrypt it
-  TEE_AllocateOperation(&handle, 0/*AES*/, TEE_MODE_DECRYPT, 256/*keysize?*/);
+  rv= TEE_AllocateOperation(&handle, TEE_ALG_AES_CBC_NOPAD, TEE_MODE_DECRYPT, 256);
+  GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
-  TEE_SetOperationKey(handle, key);
+  rv = TEE_SetOperationKey(handle, key);
+  GP_ASSERT(rv, "TEE_SetOperationKey fails");
 
-  TEE_AEInit(handle, iv, sizeof(iv), 0, 0, 0);
+  rv = TEE_AEInit(handle, iv, sizeof(iv), 0, 0, 0);
+  GP_ASSERT(rv, "TEE_AEInit fails");
 
-  TEE_AEDecryptFinal(handle, out, CIPHER_LENGTH, out, &outlen, NULL, 0);
+  rv = TEE_AEDecryptFinal(handle, out, CIPHER_LENGTH, out, &outlen, NULL, 0);
+  GP_ASSERT(rv, "TEE_AEDecryptFinal fails");
 
   TEE_FreeOperation(handle);
 

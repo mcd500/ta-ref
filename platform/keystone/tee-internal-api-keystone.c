@@ -369,7 +369,7 @@ void TEE_CloseObject(TEE_ObjectHandle object)
 
     if (!object
 	|| !(object->flags & TEE_HANDLE_FLAG_PERSISTENT)) {
-      return TEE_ERROR_BAD_PARAMETERS;
+      return; // TEE_ERROR_BAD_PARAMETERS; TEE panic?
     }
 
     memset(&(object->persist_ctx), 0, sizeof(object->persist_ctx));
@@ -377,8 +377,7 @@ void TEE_CloseObject(TEE_ObjectHandle object)
     int retval = ocall_close_file(object->desc);
 
     if (retval) {
-      // TODO Interpret linux error as TEE error
-      return TEE_ERROR_GENERIC;
+      return; // TEE_ERROR_GENERIC; TEE panic?
     }
 
     return 0;
@@ -508,13 +507,15 @@ TEE_Result TEE_SetOperationKey(TEE_OperationHandle operation,
     if (!operation
 	|| !key
 	|| (key->type != TEE_TYPE_AES
-	    && key->type != TEE_TYPE_ECDH_KEYPAIR)) {
+	    && key->type != TEE_TYPE_ECDH_KEYPAIR
+	    && key->type != TEE_TYPE_ECDSA_KEYPAIR)) {
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
     if (key->type == TEE_TYPE_AES) {
       memcpy(operation->aekey, key->public_key, 32);
-    } else if (key->type == TEE_TYPE_ECDH_KEYPAIR) {
+    } else if (key->type == TEE_TYPE_ECDH_KEYPAIR
+	       || key->type == TEE_TYPE_ECDSA_KEYPAIR) {
       memcpy(operation->pubkey, key->public_key, TEE_OBJECT_KEY_SIZE);
       memcpy(operation->prikey, key->private_key, TEE_OBJECT_SKEY_SIZE);
     }
@@ -652,6 +653,7 @@ TEE_Result TEE_AllocateTransientObject(TEE_ObjectType objectType,
     pr_deb("TEE_AllocateTransientObject(): start");
 
     if (!(objectType == TEE_TYPE_ECDH_KEYPAIR
+	  || objectType == TEE_TYPE_ECDSA_KEYPAIR
 	  || objectType == TEE_TYPE_AES)
 	 || maxKeySize > TEE_OBJECT_SKEY_SIZE
 	 || !object) {

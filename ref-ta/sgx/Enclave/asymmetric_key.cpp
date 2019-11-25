@@ -52,12 +52,16 @@ void gp_asymmetric_key_sign_test(void)
   TEE_OperationHandle handle;
   uint32_t hashlen;
 
+  TEE_Result rv;
+  
   // Take hash of test data
-  TEE_AllocateOperation(&handle, TEE_ALG_SHA256/*SHA3*/, TEE_MODE_DIGEST, SHA_LENGTH/*keysize?*/);
+  rv = TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
+  GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
   TEE_DigestUpdate(handle, data, sizeof(data));
 
-  TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
+  rv = TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
+  GP_ASSERT(rv, "TEE_DigestDoFinal fails");
 
   TEE_FreeOperation(handle);
 
@@ -72,16 +76,21 @@ void gp_asymmetric_key_sign_test(void)
   TEE_ObjectHandle keypair;
 
   // Sign hashed data with the generated keys
-  TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, 256);
+  rv = TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, 256);
+  GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
   // Generate keypair
-  TEE_AllocateTransientObject(TEE_TYPE_ECDH_KEYPAIR, 64, &keypair);
+  rv = TEE_AllocateTransientObject(TEE_TYPE_ECDH_KEYPAIR, 64, &keypair);
+  GP_ASSERT(rv, "TEE_AllocateTransientObject fails");
 
-  TEE_GenerateKey(keypair, 64, NULL, 0);
+  rv = TEE_GenerateKey(keypair, 64, NULL, 0);
+  GP_ASSERT(rv, "TEE_GenerateKey fails");
 
-  TEE_SetOperationKey(handle, keypair);
+  rv = TEE_SetOperationKey(handle, keypair);
+  GP_ASSERT(rv, "TEE_SetOperationKey fails");
 
-  TEE_AsymmetricSignDigest(handle, NULL, 0, hash, hashlen, sig, &siglen);
+  rv = TEE_AsymmetricSignDigest(handle, NULL, 0, hash, hashlen, sig, &siglen);
+  GP_ASSERT(rv, "TEE_AsymmetricSignDigest fails");
 
   TEE_FreeOperation(handle);
 
@@ -93,9 +102,11 @@ void gp_asymmetric_key_sign_test(void)
   printf("\n");
 
   // Verify signature against hashed data
-  TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_VERIFY, 256);
+  rv = TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_VERIFY, 256);
+  GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
-  TEE_SetOperationKey(handle, keypair);
+  rv = TEE_SetOperationKey(handle, keypair);
+  GP_ASSERT(rv, "TEE_SetOperationKey fails");
 
   TEE_Result verify_ok;
   verify_ok = TEE_AsymmetricVerifyDigest(handle, NULL, 0, hash, hashlen, sig, siglen);
