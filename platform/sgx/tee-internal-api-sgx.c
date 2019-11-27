@@ -519,7 +519,16 @@ TEE_Result TEE_DigestDoFinal(TEE_OperationHandle operation, const void *chunk,
 {
     pr_deb("TEE_DigestDoFinal(): start");
 
-    if (chunk && chunkLen > 0) {
+    if ((chunkLen > 0 && !chunk)
+	|| !hash) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    if (hashLen < SHA_LENGTH) {
+      return TEE_ERROR_SHORT_BUFFER;
+    }
+
+    if (chunkLen > 0) {
       sha3_update(&(operation->ctx), chunk, chunkLen);
     }
     sha3_final(hash, &(operation->ctx));

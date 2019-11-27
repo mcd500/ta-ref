@@ -43,7 +43,7 @@ void gp_random_test(void)
   unsigned int n;
 
   TEE_GenerateRandom(rbuf, sizeof(rbuf));
-  printf("random: ");
+  printf("@random: ");
   for (int i = 0; i < sizeof(rbuf); i++) {
     printf ("%02x", rbuf[i]);
   }

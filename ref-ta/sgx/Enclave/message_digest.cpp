@@ -50,7 +50,7 @@ void gp_message_digest_test(void)
   unsigned char sig[SIG_LENGTH];
 
   TEE_OperationHandle handle;
-  uint32_t hashlen;
+  uint32_t hashlen = SHA_LENGTH;
 
   TEE_Result rv;
 
