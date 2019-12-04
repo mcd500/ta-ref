@@ -662,6 +662,50 @@ TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
 }
 
 
+void TEE_CipherInit(TEE_OperationHandle operation, const void *nonce,
+		    uint32_t nonceLen)
+{
+    pr_deb("TEE_CipherInit(): start");
+
+    if (nonceLen != 16) {
+      pr_deb("TEE_CipherInit(): only 16-byte nonce is supported");
+      return; // TEE panic?
+    }
+
+    if (!(operation->flags & TEE_HANDLE_FLAG_KEY_SET)) {
+      return; // TEE panic?
+    }
+
+    AES_init_ctx_iv(&(operation->aectx), operation->aekey, nonce);
+
+    return;
+}
+
+
+TEE_Result TEE_CipherUpdate(TEE_OperationHandle operation, const void *srcData,
+                        uint32_t srcLen, void *destData, uint32_t *destLen)
+{
+    pr_deb("TEE_CipherUpdate(): start");
+
+    // !! Do check
+
+    if (destData != srcData)
+      memcpy(destData, srcData, srcLen);
+    if (operation->mode == TEE_MODE_ENCRYPT) {
+      AES_CBC_encrypt_buffer(&(operation->aectx), destData, srcLen);
+      *destLen = srcLen;
+    } else if (operation->mode == TEE_MODE_DECRYPT) {
+      AES_CBC_decrypt_buffer(&(operation->aectx), destData, srcLen);
+      *destLen = srcLen;
+    } else {
+      // TEE panic?
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    return 0;
+}
+
+
 TEE_Result TEE_GenerateKey(TEE_ObjectHandle object, uint32_t keySize,
 			   TEE_Attribute *params, uint32_t paramCount)
 {
@@ -699,7 +743,7 @@ TEE_Result TEE_AllocateTransientObject(TEE_ObjectType objectType,
     if (!(objectType == TEE_TYPE_ECDH_KEYPAIR
 	  || objectType == TEE_TYPE_ECDSA_KEYPAIR
 	  || objectType == TEE_TYPE_AES)
-	 || maxKeySize > TEE_OBJECT_SKEY_SIZE
+	 || maxKeySize > TEE_OBJECT_SKEY_SIZE*8
 	 || !object) {
       return TEE_ERROR_BAD_PARAMETERS;
     }

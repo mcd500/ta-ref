@@ -59,10 +59,10 @@ void gp_symmetric_key_enc_verify_test(void)
   TEE_Result rv;
 
   // Generate key
-  rv = TEE_AllocateTransientObject(TEE_TYPE_AES, 32, &key);
+  rv = TEE_AllocateTransientObject(TEE_TYPE_AES, 256, &key);
   GP_ASSERT(rv, "TEE_AllocateTransientObject fails");
 
-  rv = TEE_GenerateKey(key, 64, NULL, 0);
+  rv = TEE_GenerateKey(key, 256, NULL, 0);
   GP_ASSERT(rv, "TEE_GenerateKey fails");
 
   // Encrypt test data
@@ -74,11 +74,11 @@ void gp_symmetric_key_enc_verify_test(void)
 
   TEE_GenerateRandom(iv, sizeof(iv));
 
-  rv = TEE_AEInit(handle, iv, sizeof(iv), 0, 0, 0);
-  GP_ASSERT(rv, "TEE_AEInit fails");
+  TEE_CipherInit(handle, iv, sizeof(iv));
 
-  rv = TEE_AEEncryptFinal(handle, data, CIPHER_LENGTH, out, &outlen, NULL, 0);
-  GP_ASSERT(rv, "TEE_AEEncryptFinal fails");
+  outlen = CIPHER_LENGTH;
+  rv = TEE_CipherUpdate(handle, data, CIPHER_LENGTH, out, &outlen);
+  GP_ASSERT(rv, "TEE_CipherUpdate fails");
 
   TEE_FreeOperation(handle);
 
@@ -96,13 +96,15 @@ void gp_symmetric_key_enc_verify_test(void)
   rv = TEE_SetOperationKey(handle, key);
   GP_ASSERT(rv, "TEE_SetOperationKey fails");
 
-  rv = TEE_AEInit(handle, iv, sizeof(iv), 0, 0, 0);
-  GP_ASSERT(rv, "TEE_AEInit fails");
+  TEE_CipherInit(handle, iv, sizeof(iv));
 
-  rv = TEE_AEDecryptFinal(handle, out, CIPHER_LENGTH, out, &outlen, NULL, 0);
-  GP_ASSERT(rv, "TEE_AEDecryptFinal fails");
+  outlen = CIPHER_LENGTH;
+  rv = TEE_CipherUpdate(handle, out, CIPHER_LENGTH, out, &outlen);
+  GP_ASSERT(rv, "TEE_CipherUpdate fails");
 
   TEE_FreeOperation(handle);
+
+  TEE_FreeTransientObject(key);
 
   // Dump data
   printf("decrypted to: ");

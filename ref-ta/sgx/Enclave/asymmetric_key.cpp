@@ -50,7 +50,7 @@ void gp_asymmetric_key_sign_test(void)
   unsigned char sig[SIG_LENGTH];
 
   TEE_OperationHandle handle;
-  uint32_t hashlen;
+  uint32_t hashlen = SHA_LENGTH;
 
   TEE_Result rv;
   
@@ -72,7 +72,7 @@ void gp_asymmetric_key_sign_test(void)
   }
   printf("\n");
 
-  uint32_t siglen;
+  uint32_t siglen = SIG_LENGTH;
   TEE_ObjectHandle keypair;
 
   // Sign hashed data with the generated keys
@@ -80,10 +80,10 @@ void gp_asymmetric_key_sign_test(void)
   GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
   // Generate keypair
-  rv = TEE_AllocateTransientObject(TEE_TYPE_ECDH_KEYPAIR, 64, &keypair);
+  rv = TEE_AllocateTransientObject(TEE_TYPE_ECDSA_KEYPAIR, 256, &keypair);
   GP_ASSERT(rv, "TEE_AllocateTransientObject fails");
 
-  rv = TEE_GenerateKey(keypair, 64, NULL, 0);
+  rv = TEE_GenerateKey(keypair, 256, NULL, 0);
   GP_ASSERT(rv, "TEE_GenerateKey fails");
 
   rv = TEE_SetOperationKey(handle, keypair);

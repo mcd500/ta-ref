@@ -162,6 +162,15 @@ TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
                               void *destData, uint32_t *destLen, void *tag,
                               uint32_t tagLen);
 
+/// Crypto, Authenticated Encryption with Symmetric key Verification Functions
+/** Supports TEE_ALG_AES_CBC. */
+void TEE_CipherInit(TEE_OperationHandle operation, const void *nonce,
+		   uint32_t nonceLen);
+/// Crypto, Authenticated Encryption with Symmetric key Verification Functions
+/** Supports TEE_ALG_AES_CBC. */
+TEE_Result TEE_CipherUpdate(TEE_OperationHandle operation, const void *srcData,
+			    uint32_t srcLen, void *destData, uint32_t *destLen);
+
 /// Crypto, Asymmetric key Verification Functions
 /** Generate asymmetric keypair.  */
 TEE_Result TEE_GenerateKey(TEE_ObjectHandle object, uint32_t keySize,
