@@ -61,15 +61,19 @@ struct __TEE_ObjectHandle
   unsigned char private_key[TEE_OBJECT_SKEY_SIZE];
 };
 
-// ???
+// Minimal constant definitions
+
+#define TEE_HANDLE_NULL 0
+
+#define TEE_STORAGE_PRIVATE 1
+
 enum Data_Flag_Constants {
   TEE_DATA_FLAG_ACCESS_READ = 0x00000001,
   TEE_DATA_FLAG_ACCESS_WRITE = 0x00000002,
   //TEE_DATA_FLAG_ACCESS_WRITE_META = 0x00000004,
   //TEE_DATA_FLAG_SHARE_READ = 0x00000010,
   //TEE_DATA_FLAG_SHARE_WRITE = 0x00000020,
-  TEE_DATA_FLAG_CREATE = 0x00000200,
-  TEE_DATA_FLAG_EXCLUSIVE = 0x00000400
+  TEE_DATA_FLAG_OVERWRITE = 0x00000400
 };
 
 // Move this to the better place

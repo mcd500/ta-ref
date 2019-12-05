@@ -156,10 +156,8 @@ static inline int flags2flags(int flags)
     ret = O_WRONLY;
   else
     return -1;
-  if (flags & TEE_DATA_FLAG_CREATE)
-    ret |= O_CREAT;
-  else if (flags & TEE_DATA_FLAG_EXCLUSIVE)
-    ret |= O_EXCL;
+  if (flags & TEE_DATA_FLAG_OVERWRITE)
+    ret |= O_TRUNC;
   return ret;
 }
 

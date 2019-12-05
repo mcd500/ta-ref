@@ -56,13 +56,15 @@ void gp_secure_storage_test(void)
 
   /* write */
   TEE_ObjectHandle object;
-  rv = TEE_OpenPersistentObject(0,
-				"FileOne", strlen("FileOne"),
-				(TEE_DATA_FLAG_ACCESS_READ
-				 | TEE_DATA_FLAG_ACCESS_WRITE
-				 | TEE_DATA_FLAG_CREATE),
-				&object);
-  GP_ASSERT(rv, "TEE_OpenPersistentObject fails");
+  rv = TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
+				  "FileOne", strlen("FileOne"),
+				  (TEE_DATA_FLAG_ACCESS_READ
+				   | TEE_DATA_FLAG_ACCESS_WRITE
+				   | TEE_DATA_FLAG_OVERWRITE),
+				  TEE_HANDLE_NULL,
+				  NULL, 0,
+				  &object);
+  GP_ASSERT(rv, "TEE_CreatePersistentObject fails");
   
   memcpy(buf, data, DATA_LENGTH);
   rv = TEE_WriteObjectData(object, (const char *)data, DATA_LENGTH);
