@@ -143,4 +143,4 @@ endif
 
 .PHONY: copyto
 copyto:
-	cp -p $(BINARY).ta $(OPTEE_DIR)/out-br/target/lib/optee_armtz/
+	install -c -m 0444 $(BINARY).ta $(OPTEE_DIR)/out-br/target/lib/optee_armtz/

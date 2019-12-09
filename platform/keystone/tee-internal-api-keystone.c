@@ -33,9 +33,16 @@
 #include "tee-common.h"
 #include "tee-ta-internal.h"
 #include "Enclave_t.h"
+#include "eapp_utils.h"
 
 #include "syscall.h"
 #include "report.h"
+
+static inline void __attribute__((noreturn)) TEE_Panic(unsigned long code)
+{
+    for(;;)
+      EAPP_RETURN(0xfffe0000 + (code & 0x1ffff));
+}
 
 #define SHA_LENGTH (256/8)
 
@@ -632,11 +639,11 @@ void TEE_CipherInit(TEE_OperationHandle operation, const void *nonce,
 
     if (nonceLen != 16) {
       pr_deb("TEE_CipherInit(): only 16-byte nonce is supported");
-      return; // TEE panic?
+      TEE_Panic(0);
     }
 
     if (!(operation->flags & TEE_HANDLE_FLAG_KEY_SET)) {
-      return; // TEE panic?
+      TEE_Panic(0);
     }
 
     AES_init_ctx_iv(&(operation->aectx), operation->aekey, nonce);
@@ -729,7 +736,7 @@ void TEE_InitRefAttribute(TEE_Attribute *attr, uint32_t attributeID,
     pr_deb("TEE_InitRefAttribute(): start");
 
     if (!attr) {
-      return; // TEE_panic?
+      TEE_Panic(0);
     }
 
     attr->attributeID = attributeID;
@@ -749,7 +756,7 @@ void TEE_FreeTransientObject(TEE_ObjectHandle object)
     }
 
     if ((object->flags & TEE_HANDLE_FLAG_PERSISTENT) != 0) {
-      return; // TEE-panic?
+      TEE_Panic(0);
     }
 
     // Clear keys

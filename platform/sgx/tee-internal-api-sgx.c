@@ -38,6 +38,11 @@
 #include "sgx_utils.h"
 #include "Enclave_t.h"
 
+static inline void __attribute__((noreturn)) TEE_Panic(unsigned long ec)
+{
+    abort();
+}
+
 #define SHA_LENGTH (256/8)
 
 void TEE_GetREETime(TEE_Time *time)
@@ -426,7 +431,7 @@ void TEE_CloseObject(TEE_ObjectHandle object)
 
     if (!object
 	|| !(object->flags & TEE_HANDLE_FLAG_PERSISTENT)) {
-      return; // TEE_ERROR_BAD_PARAMETERS; TEE panic?
+      TEE_Panic(0);
     }
 
     memset(&(object->persist_ctx), 0, sizeof(object->persist_ctx));
@@ -435,7 +440,7 @@ void TEE_CloseObject(TEE_ObjectHandle object)
     ocall_close_file(&retval, object->desc);
 
     if (retval) {
-      return; // TEE_ERROR_GENERIC; TEE panic?
+      TEE_Panic(0);
     }
 
     return 0;
@@ -667,11 +672,11 @@ void TEE_CipherInit(TEE_OperationHandle operation, const void *nonce,
 
     if (nonceLen != 16) {
       pr_deb("TEE_CipherInit(): only 16-byte nonce is supported");
-      return; // TEE panic?
+      TEE_Panic(0);
     }
 
     if (!(operation->flags & TEE_HANDLE_FLAG_KEY_SET)) {
-      return; // TEE panic?
+      TEE_Panic(0);
     }
 
     AES_init_ctx_iv(&(operation->aectx), operation->aekey, nonce);
@@ -764,7 +769,7 @@ void TEE_InitRefAttribute(TEE_Attribute *attr, uint32_t attributeID,
     pr_deb("TEE_InitRefAttribute(): start");
 
     if (!attr) {
-      return; // TEE_panic?
+      TEE_Panic(0);
     }
 
     attr->attributeID = attributeID;
