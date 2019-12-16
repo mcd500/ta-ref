@@ -289,7 +289,7 @@ Enclave/%.o: Enclave/%.cpp Enclave/Enclave_t.h
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -c $< -o $@
 	@echo "CC   <=  $<"
 
-../../platform/sgx/%.o: ../../platform/sgx/%.c Enclave/Enclave_t.h
+../../platform/sgx/%.o: ../../platform/sgx/%.c Enclave/Enclave_t.h ../../common/tee-internal-api-cryptlib.impl
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -c $< -o $@
 	@echo "CC   <=  $<"
 
