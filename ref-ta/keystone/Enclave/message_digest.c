@@ -52,7 +52,6 @@ void message_digest_test(void)
 #include "test.dat"
   };
   unsigned char hash[SHA_LENGTH];
-  unsigned char sig[SIG_LENGTH];
 
   // Take hash of test data
   sha3_init(&ctx, SHA_LENGTH);

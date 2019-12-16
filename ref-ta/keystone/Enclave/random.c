@@ -64,7 +64,6 @@ void random_test(void)
 {
   unsigned char rbuf[16];
   int retval;
-  size_t sz;
 
   retval = ocall_getrandom(rbuf, sizeof(rbuf), 0);
 

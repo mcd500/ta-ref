@@ -42,7 +42,7 @@ int printf(const char* fmt, ...)
   va_start(ap, fmt);
   vsnprintf(buf, BUFSIZ, fmt, ap);
   va_end(ap);
-  size_t sz = ocall_print_string(buf);
+  ocall_print_string(buf);
 
   return (int)strlen(buf) + 1;
 #else
@@ -50,13 +50,13 @@ int printf(const char* fmt, ...)
 #endif
 }
 
-void random_test();
-void ree_time_test();
-void trusted_time_test();
-void secure_storage_test();
-void message_digest_test();
-void symmetric_key_enc_verify_test();
-void asymmetric_key_sign_test();
+void gp_random_test();
+void gp_ree_time_test();
+void gp_trusted_time_test();
+void gp_secure_storage_test();
+void gp_message_digest_test();
+void gp_symmetric_key_enc_verify_test();
+void gp_asymmetric_key_sign_test();
 
 void gp_symmetric_key_gcm_verify_test();
 

@@ -81,11 +81,11 @@ void gp_secure_storage_test(void)
   uint32_t count;
   rv = TEE_ReadObjectData(object, (char *)buf, DATA_LENGTH, &count);
   GP_ASSERT(rv, "TEE_ReadObjectData fails");
-  
+
   TEE_CloseObject(object);
 
   printf("%d bytes read: ", count);
-  for (int i = 0; i < count; i++) {
+  for (uint32_t i = 0; i < count; i++) {
     printf ("%02x", buf[i]);
   }
   printf("\n");

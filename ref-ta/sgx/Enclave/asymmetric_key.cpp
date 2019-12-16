@@ -67,7 +67,7 @@ void gp_asymmetric_key_sign_test(void)
 
   // Dump hashed data
   printf("digest: ");
-  for (int i = 0; i < SHA_LENGTH; i++) {
+  for (unsigned int i = 0; i < SHA_LENGTH; i++) {
     printf ("%02x", hash[i]);
   }
   printf("\n");
@@ -96,7 +96,7 @@ void gp_asymmetric_key_sign_test(void)
 
   // Dump signature
   printf("@signature: ");
-  for (int i = 0; i < siglen; i++) {
+  for (uint32_t i = 0; i < siglen; i++) {
     printf ("%02x", sig[i]);
   }
   printf("\n");

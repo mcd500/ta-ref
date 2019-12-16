@@ -180,4 +180,5 @@ void secure_storage_test(void)
   }
 
   retval = ocall_close_file(desc);
+  (void)retval;
 }
