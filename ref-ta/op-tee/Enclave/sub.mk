@@ -5,6 +5,7 @@ srcs-y += \
 	time.c \
 	message_digest.c \
 	symmetric_key.c \
+	symmetric_key_gcm.c \
 	asymmetric_key.c \
 	secure_storage.c
 

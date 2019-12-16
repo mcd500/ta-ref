@@ -41,7 +41,6 @@
 void gp_random_test(void)
 {
     unsigned char rbuf[16];
-    unsigned int n;
 
     TEE_GenerateRandom(rbuf, sizeof(rbuf));
     tee_printf("@random: ");

@@ -17,4 +17,4 @@ copyto:
 	make -C $(OPTEE_DIR)/build buildroot
 
 run:
-	echo "Notyet"
+	./run-apps.sh

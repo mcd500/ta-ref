@@ -15,6 +15,7 @@ ENCLAVE_C_SRCS= \
 		secure-storage_gp.c \
 		symmetric_key.c \
 		symmetric_key_gp.c \
+		symmetric_key_gcm.c \
 		time.c \
 		time_gp.c \
 		printf.c \
@@ -33,9 +34,11 @@ SDK_INCLUDE_EDGE_DIR = $(SDK_LIB_DIR)/edge/include
 
 TEE_TA_INCLUDE_DIR = $(TEE_TA_DIR)/include
 TEE_TA_PLATFORM_INCLUDE_DIR = $(TEE_TA_DIR)/platform/keystone
+AESGCM_INCLUDE_DIR = $(TEE_TA_DIR)/lib/mbed-crypto/include
 LIBBUILD_DIR = $(shell pwd)/../libbuild
 ED25519_OBJS = $(wildcard $(LIBBUILD_DIR)/ed25519/*.o)
 AES_OBJS = $(LIBBUILD_DIR)/tiny-AES-c/aes.o
+AESGCM_OBJS = $(wildcard $(LIBBUILD_DIR)/mbed-crypto/*.o)
 SHA3_OBJS = $(LIBBUILD_DIR)/tiny_sha3/sha3.o
 
 EDGER_INClUDE_DIRS = $(EDGER_DIR)
@@ -46,7 +49,7 @@ EXTRA_LIBS = $(EDGER_DIR)/lib/flatccrt.a
 endif
 
 LDFLAGS = -static -L$(SDK_LIB_DIR)
-CFLAGS += -I$(SDK_INCLUDE_ENCLAVE_DIR) -I$(SDK_INCLUDE_EDGE_DIR)  $(addprefix -I,$(EDGER_INCLUDE_DIRS)) -I../Edge -I. -I$(TEE_TA_PLATFORM_INCLUDE_DIR) -I$(TEE_TA_INCLUDE_DIR) -I$(TEE_TA_DIR)/common
+CFLAGS += -I$(SDK_INCLUDE_ENCLAVE_DIR) -I$(SDK_INCLUDE_EDGE_DIR)  $(addprefix -I,$(EDGER_INCLUDE_DIRS)) -I../Edge -I. -I$(TEE_TA_PLATFORM_INCLUDE_DIR) -I$(AESGCM_INCLUDE_DIR) -I$(TEE_TA_INCLUDE_DIR) -I$(TEE_TA_DIR)/common $(ENCLAVE_QUIET)
 
 ENCLAVE_OBJS   = $(patsubst %.c,%.o, $(ENCLAVE_SRCS))
 ENCLAVE_C_OBJS = $(patsubst %.c,%.o, $(ENCLAVE_C_SRCS))
@@ -63,8 +66,8 @@ $(ENCLAVE_OBJS): %.o: %.c $(EDGECALLS)_t.h
 $(ENCLAVE_C_OBJS): %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(ENCLAVE_BIN): %.eapp_riscv : %.o $(EDGECALLS)_t.o $(ENCLAVE_OBJS) $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB)
-	$(LINK) $(LDFLAGS) -o $@ $< $(EDGECALLS)_t.o $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB) $(EXTRA_LIBS) -T $(ENCLAVE_LDS)
+$(ENCLAVE_BIN): %.eapp_riscv : %.o $(EDGECALLS)_t.o $(ENCLAVE_OBJS) $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(AESGCM_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB)
+	$(LINK) $(LDFLAGS) -o $@ $< $(EDGECALLS)_t.o $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(AESGCM_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB) $(EXTRA_LIBS) -T $(ENCLAVE_LDS)
 	chmod -x $@
 
 clean:

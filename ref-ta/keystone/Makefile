@@ -42,15 +42,23 @@ Enclave_C_Flags = $(CFLAGS)
 
 Enclave_ed25519_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/ed25519/,$(subst .c,.o,$(notdir $(wildcard $(TOPDIR)/lib/ed25519/src/*.c))))
 
-Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(ENCLAVE_LIB_BUILD)/tiny_sha3/sha3.o $(ENCLAVE_LIB_BUILD)/tiny-AES-c/aes.o $(ENCLAVE_LIB_BUILD)/common/tee-internal-api.o
+Enclave_mbed_crypto_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/mbed-crypto/,aes.o gcm.o cipher.o cipher_wrap.o platform_util.o)
+
+Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(ENCLAVE_LIB_BUILD)/tiny_sha3/sha3.o $(ENCLAVE_LIB_BUILD)/tiny-AES-c/aes.o $(Enclave_mbed_crypto_Objects) $(ENCLAVE_LIB_BUILD)/common/tee-internal-api.o
 
 ######## App Settings ########
 
 App_Name := App/App.client App/App_gp.client
 
+App_Verbose = -DAPP_VERBOSE
+#App_Verbose=
+
 ######## Enclave Settings ########
 
 Enclave_Name := Enclave/Enclave.eapp_riscv Enclave/Enclave_gp.eapp_riscv
+
+Enclave_Quiet=
+#Enclave_Quiet = -DENCLAVE_QUIET
 
 EDGECALLS=Enclave
 
@@ -107,7 +115,7 @@ endif
 ######## App Objects ########
 
 app: gen
-	make -C $(APP_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS)
+	make -C $(APP_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) APP_VERBOSE=$(App_Verbose)
 
 ######## Enclave Objects ########
 
@@ -123,12 +131,16 @@ $(ENCLAVE_LIB_BUILD)/tiny-AES-c/%.o: $(TOPDIR)/lib/tiny-AES-c/%.c
 	mkdir -p $(ENCLAVE_LIB_BUILD)/tiny-AES-c
 	$(CC) $(Enclave_C_Flags) -DAES256=1 -c $< -o $@
 
+$(ENCLAVE_LIB_BUILD)/mbed-crypto/%.o: $(TOPDIR)/lib/mbed-crypto/library/%.c
+	mkdir -p $(ENCLAVE_LIB_BUILD)/mbed-crypto
+	$(CC) $(Enclave_C_Flags) -I$(TOPDIR)/platform/keystone -DMBEDTLS_CONFIG_FILE="\"mbed-crypto-config.h\"" -c $< -o $@
+
 $(ENCLAVE_LIB_BUILD)/common/%.o: $(TOPDIR)/common/%.c
 	mkdir -p $(ENCLAVE_LIB_BUILD)/common
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
 enclave: gen $(Enclave_Lib_Objects)
-	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR)
+	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet)
 
 .PHONY: clean cleangen
 

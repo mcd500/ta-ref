@@ -34,13 +34,18 @@ include ../../common.mk
 # Using SIM as defualt during development, comment out when it is ready
 SGX_MODE=SIM
 
+AESGCM_C_Files = aes.c gcm.c cipher.c cipher_wrap.c platform_util.c
+
 SGX_COMMON_CFLAGS     += $(CFLAGS) -DED25519_NO_SEED=1
 SGX_COMMON_CXXFLAGS   += $(CXXFLAGS)
 Enclave_Include_Paths += $(CFLAGS)
 Enclave_C_Files       += $(wildcard ../../platform/sgx/*.c) \
                          $(wildcard ../../lib/tiny_sha3/sha*.c) \
                          $(wildcard ../../lib/ed25519/src/*.c) \
-                         $(wildcard ../../lib/tiny-AES-c/aes.c)
+                         $(wildcard ../../lib/tiny-AES-c/aes.c) \
+			 $(addprefix ../../lib/mbed-crypto/library/,$(AESGCM_C_Files))
+
+
 
 ######## SGX SDK Settings ########
 
@@ -94,10 +99,13 @@ else
 	Urts_Library_Name := sgx_urts
 endif
 
+App_Verbose=-DAPP_VERBOSE
+#App_Verbose=
+
 App_Cpp_Files := App/App.cpp $(wildcard App/Edger8rSyntax/*.cpp) $(wildcard App/TrustedLibrary/*.cpp)
 App_Include_Paths := -IInclude -IApp -I$(SGX_SDK)/include
 
-App_C_Flags := -fPIC -Wno-attributes $(App_Include_Paths)
+App_C_Flags := -fPIC -Wno-attributes $(App_Include_Paths) $(App_Verbose)
 
 # Three configuration modes - Debug, prerelease, release
 #   Debug - Macro DEBUG enabled.
@@ -135,11 +143,14 @@ else
 endif
 Crypto_Library_Name := sgx_tcrypto
 
+#Enclave_Quiet=-DENCLAVE_QUIET
+Enclave_Quiet=
+
 Enclave_C_Files :=  $(Enclave_C_Files)
 Enclave_Cpp_Files := Enclave/Enclave.cpp $(wildcard Enclave/*.cpp) $(wildcard Enclave/Edger8rSyntax/*.cpp) $(wildcard Enclave/TrustedLibrary/*.cpp) $(Enclave_Cpp_Files)
 Enclave_Include_Paths := -IInclude -IEnclave -I$(SGX_SDK)/include -I$(SGX_SDK)/include/tlibc -I$(SGX_SDK)/include/libcxx $(Enclave_Include_Paths) -I../../platform/sgx
 
-Enclave_C_Flags := $(Enclave_Include_Paths) -nostdinc -fvisibility=hidden -fpie -ffunction-sections -fdata-sections
+Enclave_C_Flags := $(Enclave_Include_Paths) -nostdinc -fvisibility=hidden -fpie -ffunction-sections -fdata-sections $(Enclave_Quiet)
 CC_BELOW_4_9 := $(shell expr "`$(CC) -dumpversion`" \< "4.9")
 ifeq ($(CC_BELOW_4_9), 1)
 	Enclave_C_Flags += -fstack-protector
@@ -288,6 +299,10 @@ Enclave/%.o: Enclave/%.cpp Enclave/Enclave_t.h
 
 ../../lib/tiny-AES-c/%.o: ../../lib/tiny-AES-c/%.c Enclave/Enclave_t.h
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -DAES256=1 -c $< -o $@
+	@echo "CC   <=  $<"
+
+../../lib/mbed-crypto/library/%.o: ../../lib/mbed-crypto/library/%.c Enclave/Enclave_t.h
+	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -I../../lib/mbed-crypto/include -DMBEDTLS_CONFIG_FILE="\"mbed-crypto-config.h\"" -c $< -o $@
 	@echo "CC   <=  $<"
 
 $(Enclave_Name): Enclave/Enclave_t.o $(Enclave_Cpp_Objects) $(Enclave_C_Objects)

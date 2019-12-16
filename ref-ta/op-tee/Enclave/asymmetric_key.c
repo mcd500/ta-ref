@@ -102,7 +102,7 @@ void gp_asymmetric_key_sign_test(void)
 
     // Dump signature
     tee_printf("@signature: ");
-    for (int i = 0; i < siglen; i++) {
+    for (uint32_t i = 0; i < siglen; i++) {
       tee_printf ("%02x", sig[i]);
     }
     tee_printf("\n");

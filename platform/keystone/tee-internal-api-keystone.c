@@ -38,6 +38,9 @@
 #include "syscall.h"
 #include "report.h"
 
+#include <string.h>
+#include <stdlib.h>
+
 static inline void __attribute__((noreturn)) TEE_Panic(unsigned long code)
 {
     for(;;)
@@ -197,7 +200,7 @@ TEE_Result TEE_CreatePersistentObject(uint32_t storageID, const void *objectID,
 			       flags2perms(flags));
     free (fname);
 
-    if (set_object_key(objectID, objectIDLen, &(handle->persist_ctx))) {
+    if (set_object_key((void*)objectID, objectIDLen, &(handle->persist_ctx))) {
       free(handle);
       return TEE_ERROR_SECURITY; // better error needed or TEE panic?
     }
@@ -374,7 +377,7 @@ void TEE_CloseObject(TEE_ObjectHandle object)
 
     if (!object
 	|| !(object->flags & TEE_HANDLE_FLAG_PERSISTENT)) {
-      return; // TEE_ERROR_BAD_PARAMETERS; TEE panic?
+      TEE_Panic(0);
     }
 
     memset(&(object->persist_ctx), 0, sizeof(object->persist_ctx));
@@ -382,10 +385,10 @@ void TEE_CloseObject(TEE_ObjectHandle object)
     int retval = ocall_close_file(object->desc);
 
     if (retval) {
-      return; // TEE_ERROR_GENERIC; TEE panic?
+      TEE_Panic(0);
     }
 
-    return 0;
+    return;
 }
 
 #if defined(EDGE_OUT_WITH_STRUCTURE)
@@ -416,423 +419,13 @@ void TEE_GenerateRandom(void *randomBuffer, uint32_t randomBufferLen)
 {
     pr_deb("TEE_GenerateRandom(): start");
 
-    ocall_getrandom(randomBuffer, (size_t)randomBufferLen, 0);
-
-    return 0;
-}
-
-
-TEE_Result TEE_AllocateOperation(TEE_OperationHandle *operation,
-                                 uint32_t algorithm, uint32_t mode,
-                                 uint32_t maxKeySize)
-{
-    pr_deb("TEE_AllocateOperation(): start");
-
-    if (mode == TEE_MODE_DIGEST) {
-      TEE_OperationHandle handle = malloc(sizeof(*handle));
-      if (!handle) {
-	return TEE_ERROR_OUT_OF_MEMORY;
-      }
-      *operation = handle;
-      handle->mode = mode;
-      sha3_init(&(handle->ctx), SHA_LENGTH);
-    } else if (mode == TEE_MODE_ENCRYPT
-	       || mode == TEE_MODE_DECRYPT) {
-      TEE_OperationHandle handle = malloc(sizeof(*handle));
-      if (!handle) {
-	return TEE_ERROR_OUT_OF_MEMORY;
-      }
-      memset(handle, 0, sizeof(*handle));
-      *operation = handle;
-      handle->mode = mode;
-    }  else if (mode == TEE_MODE_SIGN
-	       || mode == TEE_MODE_VERIFY) {
-      TEE_OperationHandle handle = malloc(sizeof(*handle));
-      if (!handle) {
-	return TEE_ERROR_OUT_OF_MEMORY;
-      }
-      memset(handle, 0, sizeof(*handle));
-      *operation = handle;
-      handle->mode = mode;
-    }
-      
-
-    return 0;
-}
-
-
-void TEE_FreeOperation(TEE_OperationHandle operation)
-{
-    pr_deb("TEE_FreeOperation(): start");
-
-    if (operation) {
-      free(operation);
-    }
-
-    return 0;
-}
-
-
-
-void TEE_DigestUpdate(TEE_OperationHandle operation,
-                      const void *chunk, uint32_t chunkSize)
-{
-    pr_deb("TEE_FreeOperation(): start");
-
-    sha3_update(&(operation->ctx), chunk, chunkSize);
-
-    return 0;
-}
-
-TEE_Result TEE_DigestDoFinal(TEE_OperationHandle operation, const void *chunk,
-                             uint32_t chunkLen, void *hash, uint32_t *hashLen)
-{
-    pr_deb("TEE_DigestDoFinal(): start");
-
-    if ((chunkLen > 0 && !chunk)
-	|| !hash) {
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-
-    if (hashLen < SHA_LENGTH) {
-      return TEE_ERROR_SHORT_BUFFER;
-    }
-
-    if (chunkLen > 0) {
-      sha3_update(&(operation->ctx), chunk, chunkLen);
-    }
-    sha3_final(hash, &(operation->ctx));
-    if (hashLen) {
-      *hashLen = SHA_LENGTH;
-    }
-
-    return 0;
-}
-
-
-// TEE_HANDLE_FLAG_KEY_SET is used in flags fields of TEE_OperationHandle
-// and TEE_ObjectHandle.  It shows that the AES key is set already in
-// TEE_OperationHandle and is used to avoid to set key twice with
-// TEE_GenerateKey.  This won't be a good idea.
-
-TEE_Result TEE_SetOperationKey(TEE_OperationHandle operation,
-			       TEE_ObjectHandle key)
-{
-    if (!operation
-	|| !key
-	|| (key->type != TEE_TYPE_AES
-	    && key->type != TEE_TYPE_ECDH_KEYPAIR
-	    && key->type != TEE_TYPE_ECDSA_KEYPAIR)) {
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-
-    if (key->type == TEE_TYPE_AES) {
-      memcpy(operation->aekey, key->public_key, 32);
-    } else if (key->type == TEE_TYPE_ECDH_KEYPAIR
-	       || key->type == TEE_TYPE_ECDSA_KEYPAIR) {
-      memcpy(operation->pubkey, key->public_key, TEE_OBJECT_KEY_SIZE);
-      memcpy(operation->prikey, key->private_key, TEE_OBJECT_SKEY_SIZE);
-    }
-
-    operation->flags |= TEE_HANDLE_FLAG_KEY_SET;
-
-    return 0;
-}
-
-TEE_Result TEE_AEInit(TEE_OperationHandle operation, const void *nonce,
-                      uint32_t nonceLen, uint32_t tagLen, uint32_t AADLen,
-                      uint32_t payloadLen)
-{
-    pr_deb("TEE_AEInit(): start");
-
-    if (nonceLen != 16) {
-      pr_deb("TEE_AEInit(): only 16-byte nonce is supported");
-      return TEE_ERROR_NOT_SUPPORTED;
-    }
-
-    if (!(operation->flags & TEE_HANDLE_FLAG_KEY_SET)) {
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-
-    AES_init_ctx_iv(&(operation->aectx), operation->aekey, nonce);
-
-    return 0;
-}
-
-
-TEE_Result TEE_AEUpdate(TEE_OperationHandle operation, const void *srcData,
-                        uint32_t srcLen, void *destData, uint32_t *destLen)
-{
-    pr_deb("TEE_AEUpdate(): start");
-
-    // !! Do check
-
-    if (destData != srcData)
-      memcpy(destData, srcData, srcLen);
-    if (operation->mode == TEE_MODE_ENCRYPT) {
-      AES_CBC_encrypt_buffer(&(operation->aectx), destData, srcLen);
-      *destLen = srcLen;
-    } else if (operation->mode == TEE_MODE_DECRYPT) {
-      AES_CBC_decrypt_buffer(&(operation->aectx), destData, srcLen);
-      *destLen = srcLen;
-    } else {
-      // TEE panic?
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-
-    return 0;
-}
-
-
-TEE_Result TEE_AEEncryptFinal(TEE_OperationHandle operation,
-                              const void *srcData, uint32_t srcLen,
-                              void *destData, uint32_t *destLen, void *tag,
-                              uint32_t *tagLen)
-{
-    pr_deb("TEE_AEEncryptFinal(): start");
-
-    // tag ignored ATM
-
-    // !! Do check
-
-    if (destData != srcData)
-      memcpy(destData, srcData, srcLen);
-    if (operation->mode == TEE_MODE_ENCRYPT) {
-      AES_CBC_encrypt_buffer(&(operation->aectx), destData, srcLen);
-    } else {
-      // TEE panic?
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-   
-    return 0;
-}
-
-
-TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
-                              const void *srcData, uint32_t srcLen,
-                              void *destData, uint32_t *destLen, void *tag,
-                              uint32_t tagLen)
-{
-    pr_deb("TEE_AEDecryptFinal(): start");
-
-    // tag ignored ATM
-
-    // !! Do check
-
-    if (destData != srcData)
-      memcpy(destData, srcData, srcLen);
-    if (operation->mode == TEE_MODE_DECRYPT) {
-      AES_CBC_decrypt_buffer(&(operation->aectx), destData, srcLen);
-    } else {
-      // TEE panic?
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-
-    return 0;
-}
-
-
-void TEE_CipherInit(TEE_OperationHandle operation, const void *nonce,
-		    uint32_t nonceLen)
-{
-    pr_deb("TEE_CipherInit(): start");
-
-    if (nonceLen != 16) {
-      pr_deb("TEE_CipherInit(): only 16-byte nonce is supported");
+    int ret = ocall_getrandom(randomBuffer, (size_t)randomBufferLen, 0);
+    if (ret != randomBufferLen) {
       TEE_Panic(0);
     }
-
-    if (!(operation->flags & TEE_HANDLE_FLAG_KEY_SET)) {
-      TEE_Panic(0);
-    }
-
-    AES_init_ctx_iv(&(operation->aectx), operation->aekey, nonce);
 
     return;
 }
 
 
-TEE_Result TEE_CipherUpdate(TEE_OperationHandle operation, const void *srcData,
-                        uint32_t srcLen, void *destData, uint32_t *destLen)
-{
-    pr_deb("TEE_CipherUpdate(): start");
-
-    // !! Do check
-
-    if (destData != srcData)
-      memcpy(destData, srcData, srcLen);
-    if (operation->mode == TEE_MODE_ENCRYPT) {
-      AES_CBC_encrypt_buffer(&(operation->aectx), destData, srcLen);
-      *destLen = srcLen;
-    } else if (operation->mode == TEE_MODE_DECRYPT) {
-      AES_CBC_decrypt_buffer(&(operation->aectx), destData, srcLen);
-      *destLen = srcLen;
-    } else {
-      // TEE panic?
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-
-    return 0;
-}
-
-
-TEE_Result TEE_GenerateKey(TEE_ObjectHandle object, uint32_t keySize,
-			   TEE_Attribute *params, uint32_t paramCount)
-{
-    pr_deb("TEE_GenerateKey(): start");
-
-    if (!object
-	|| (object->flags & TEE_HANDLE_FLAG_KEY_SET)) {
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-
-    unsigned char seed[32];
-    if (ocall_getrandom(seed, sizeof(seed), 0) != sizeof(seed)) {
-      return TEE_ERROR_SECURITY; // better error needed
-    }
-
-    ed25519_create_keypair(object->public_key, object->private_key, seed);
-
-    object->flags |= TEE_HANDLE_FLAG_KEY_SET;
-
-    if (object->type == TEE_TYPE_AES) {
-      // Generate only 256-bit key for AES
-      memset(object->private_key, 0, TEE_OBJECT_SKEY_SIZE);
-     }
-
-    return 0;
-}
-
-
-TEE_Result TEE_AllocateTransientObject(TEE_ObjectType objectType,
-                                       uint32_t maxKeySize,
-                                       TEE_ObjectHandle *object)
-{
-    pr_deb("TEE_AllocateTransientObject(): start");
-
-    if (!(objectType == TEE_TYPE_ECDH_KEYPAIR
-	  || objectType == TEE_TYPE_ECDSA_KEYPAIR
-	  || objectType == TEE_TYPE_AES)
-	 || maxKeySize > TEE_OBJECT_SKEY_SIZE*8
-	 || !object) {
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-
-    TEE_ObjectHandle handle = malloc(sizeof(*handle));
-    if (!handle) {
-      return TEE_ERROR_OUT_OF_MEMORY;
-    }
-
-    memset(handle, 0, sizeof(*handle));
-    handle->type = objectType;
-    *object = handle;
-    return 0;
-}
-
-
-void TEE_InitRefAttribute(TEE_Attribute *attr, uint32_t attributeID,
-                          const void *buffer, uint32_t length)
-{
-    pr_deb("TEE_InitRefAttribute(): start");
-
-    if (!attr) {
-      TEE_Panic(0);
-    }
-
-    attr->attributeID = attributeID;
-    attr->content.ref.buffer = (void *)buffer;
-    attr->content.ref.length = length;
-
-    return;
-}
-
-
-void TEE_FreeTransientObject(TEE_ObjectHandle object)
-{
-    pr_deb("TEE_FreeTransientObject(): start");
-
-    if (!object) {
-      return;
-    }
-
-    if ((object->flags & TEE_HANDLE_FLAG_PERSISTENT) != 0) {
-      TEE_Panic(0);
-    }
-
-    // Clear keys
-    memset(object, 0, sizeof(*object));
-
-    free (object);
-
-    return 0;
-}
-
-#define SIG_LENGTH 64
-
-TEE_Result TEE_AsymmetricSignDigest(TEE_OperationHandle operation,
-                                    const TEE_Attribute *params,
-                                    uint32_t paramCount, const void *digest,
-                                    uint32_t digestLen, void *signature,
-                                    uint32_t *signatureLen)
-{
-    pr_deb("TEE_AsymmetricSignDigest(): start");
-
-    if (!operation
-	|| operation->mode != TEE_MODE_SIGN) {
-      // TEE panic?
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-    
-    unsigned char *key = operation->pubkey;
-    unsigned char *skey = operation->prikey;
-#if 0
-    printf("key: ");
-    for (int i = 0; i < 32; i++) {
-      printf ("%02x", key[i]);
-    }
-    printf("\n");
-    printf("skey: ");
-    for (int j = 0; j < 64; j++) {
-      printf ("%02x", skey[j]);
-    }
-    printf("\n");
-#endif
-
-    // Sign hashed data with keys
-    ed25519_sign(signature, digest, digestLen, key, skey);
-    *signatureLen = SIG_LENGTH;
-    
-    return 0;
-}
-
-
-TEE_Result TEE_AsymmetricVerifyDigest(TEE_OperationHandle operation,
-                                      const TEE_Attribute *params,
-                                      uint32_t paramCount, const void *digest,
-                                      uint32_t digestLen, const void *signature,
-                                      uint32_t signatureLen)
-{
-    pr_deb("TEE_AsymmetricVerifyDigest(): start");
-
-    if (!operation
-	|| operation->mode != TEE_MODE_VERIFY
-	|| signatureLen != SIG_LENGTH) {
-      // TEE panic?
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-
-    if (!(operation->flags & TEE_HANDLE_FLAG_KEY_SET)) {
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-
-    unsigned char *key = operation->pubkey;
-    
-    // Sign hashed data with test keys
-    int verify_ok;
-    verify_ok = ed25519_verify(signature, digest, digestLen, key);
-    if (!verify_ok) {
-      return TEE_ERROR_SIGNATURE_INVALID;
-    }
-
-    return TEE_SUCCESS;
-}
+#include "../../common/tee-internal-api-cryptlib.impl"

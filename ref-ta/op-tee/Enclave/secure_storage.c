@@ -87,7 +87,7 @@ void gp_secure_storage_test(void)
     TEE_CloseObject(object);
 
     tee_printf("%d bytes read: ", count);
-    for (int i = 0; i < count; i++) {
+    for (uint32_t i = 0; i < count; i++) {
       tee_printf ("%02x", buf[i]);
     }
     tee_printf("\n");

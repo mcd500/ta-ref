@@ -69,12 +69,12 @@ void random_test(void)
   retval = ocall_getrandom(rbuf, sizeof(rbuf), 0);
 
   if (retval) {
-    sz = ocall_print_string("@random: ");
+    printf("@random: ");
     for (int i = 0; i < sizeof(rbuf); i++) {
       printf ("%02x", rbuf[i]);
     }
-    sz = ocall_print_string("\n");
+    printf("\n");
   } else {
-    sz = ocall_print_string("can't get random\n");
+    printf("can't get random\n");
   }
 }

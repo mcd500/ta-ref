@@ -9,25 +9,33 @@
 #include "Enclave_t.h"
 //#include "hacks.h"
 
-#if 1
 // Compiler may replace simple printf to puts and putchar
 int puts(const char *s)
 {
+#ifndef ENCLAVE_QUIET
   size_t sz = ocall_print_string(s);
   putchar('\n');
   return sz;
+#else
+  return 0;
+#endif
 }
 
 int putchar(int c)
 {
+#ifndef ENCLAVE_QUIET
   char buf[2];
   buf[0] = (char)c; buf[1] = '\0';
   size_t sz = ocall_print_string(buf);
   return sz;
+#else
+  return 0;
+#endif
 }
 
 int printf(const char* fmt, ...)
 {
+#ifndef ENCLAVE_QUIET
   char buf[BUFSIZ] = { '\0' };
   va_list ap;
 
@@ -37,8 +45,10 @@ int printf(const char* fmt, ...)
   size_t sz = ocall_print_string(buf);
 
   return (int)strlen(buf) + 1;
-}
+#else
+  return 0;
 #endif
+}
 
 void random_test();
 void ree_time_test();
@@ -47,6 +57,8 @@ void secure_storage_test();
 void message_digest_test();
 void symmetric_key_enc_verify_test();
 void asymmetric_key_sign_test();
+
+void gp_symmetric_key_gcm_verify_test();
 
 void EAPP_ENTRY eapp_entry(){
 
@@ -67,6 +79,7 @@ void EAPP_ENTRY eapp_entry(){
 
   gp_symmetric_key_enc_verify_test();
 
+  gp_symmetric_key_gcm_verify_test();
   // symmetric_key_dec_verify_test();
 
   gp_asymmetric_key_sign_test();

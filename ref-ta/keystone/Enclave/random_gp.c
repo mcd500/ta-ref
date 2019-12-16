@@ -42,14 +42,12 @@
 void gp_random_test(void)
 {
   unsigned char rbuf[16];
-  int retval;
-  size_t sz;
 
   TEE_GenerateRandom(rbuf, sizeof(rbuf));
 
-  sz = ocall_print_string("@GP random: ");
+  printf("@GP random: ");
   for (int i = 0; i < sizeof(rbuf); i++) {
     printf ("%02x", rbuf[i]);
   }
-  sz = ocall_print_string("\n");
+  printf("\n");
 }

@@ -94,6 +94,8 @@ TEE_Result TA_OpenSessionEntryPoint(uint32_t param_types,
 
     gp_symmetric_key_enc_verify_test();
 
+    gp_symmetric_key_gcm_verify_test();
+
     gp_asymmetric_key_sign_test();
 
     IMSG("ecall_ta_main() end\n");

@@ -47,7 +47,6 @@ void gp_message_digest_test(void)
 #include "test.dat"
   };
   unsigned char hash[SHA_LENGTH];
-  unsigned char sig[SIG_LENGTH];
 
   TEE_OperationHandle handle;
   uint32_t hashlen = SHA_LENGTH;

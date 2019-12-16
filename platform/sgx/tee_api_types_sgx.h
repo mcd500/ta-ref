@@ -35,17 +35,25 @@
 #include "ed25519/ed25519.h"
 #define AES256 1
 #include "aes/aes.h"
+#define MBEDTLS_CONFIG_FILE "mbed-crypto-config.h"
+#include "mbedtls/gcm.h"
 
 #define TEE_OBJECT_NONCE_SIZE 16
 #define TEE_OBJECT_KEY_SIZE 32
 #define TEE_OBJECT_SKEY_SIZE 64
+#define TEE_OBJECT_AAD_SIZE 16
+#define TEE_OBJECT_TAG_SIZE 16
 
 struct __TEE_OperationHandle
 {
   int mode;
   int flags;
+  int alg;
   sha3_ctx_t ctx;
   struct AES_ctx aectx;
+  mbedtls_gcm_context aegcmctx;
+  int aegcm_state;
+  unsigned char aegcm_iv[TEE_OBJECT_NONCE_SIZE];
   unsigned char aekey[32];
   unsigned char pubkey[TEE_OBJECT_KEY_SIZE];
   unsigned char prikey[TEE_OBJECT_SKEY_SIZE];
@@ -53,7 +61,7 @@ struct __TEE_OperationHandle
 
 struct __TEE_ObjectHandle
 {
-  int type;
+  unsigned int type;
   int flags;
   int desc;
   struct AES_ctx persist_ctx;
@@ -64,8 +72,6 @@ struct __TEE_ObjectHandle
 // Minimal constant definitions
 
 #define TEE_HANDLE_NULL 0
-
-#define TEE_STORAGE_PRIVATE 1
 
 enum Data_Flag_Constants {
   TEE_DATA_FLAG_ACCESS_READ = 0x00000001,

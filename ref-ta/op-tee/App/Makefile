@@ -37,4 +37,4 @@ clean:
 
 .PHONY: copyto
 copyto:
-	cp -p $(BINARY) $(OPTEE_DIR)/out-br/target/usr/bin
+	install -m 0755 $(BINARY) $(OPTEE_DIR)/out-br/target/usr/bin

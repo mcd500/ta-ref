@@ -44,11 +44,14 @@ int printf(const char* fmt, ...)
     va_list ap;
     unsigned int retval;
 
+#ifndef ENCLAVE_QUIET
     va_start(ap, fmt);
     vsnprintf(buf, BUFSIZ, fmt, ap);
     va_end(ap);
     ocall_print_string(&retval, buf);
-
+#else
+    retval = 0;
+#endif
     return retval;
 }
 
@@ -71,6 +74,8 @@ void ecall_ta_main(void)
     gp_message_digest_test();
 
     gp_symmetric_key_enc_verify_test();
+
+    gp_symmetric_key_gcm_verify_test();
 
 //    gp_symmetric_key_dec_verify_test();
 
