@@ -10,9 +10,9 @@
 [submodule "keedger8r"]
 	path = keedger8r
 	url = http://192.168.100.100/vc707/keedger8r.git
-[submodule "keyedge"]
-	path = keyedge
-	url = http://192.168.100.100/vc707/keyedge.git
 [submodule "lib/mbed-crypto"]
 	path = lib/mbed-crypto
 	url = http://192.168.100.100/vc707/mbed-crypto.git
+[submodule "keyedge"]
+	path = keyedge
+	url = http://192.168.100.100/vc707/keyedge.git
