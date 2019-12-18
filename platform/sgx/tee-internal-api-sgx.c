@@ -176,9 +176,9 @@ static inline int flags2perms(int flags)
       && (flags & TEE_DATA_FLAG_ACCESS_WRITE))
     ret = 0600; // -rw------
   else if (flags & TEE_DATA_FLAG_ACCESS_READ)
-    ret = 0400; // -r-------
+    ret = 0400; // -r------- Perhaps no real use.
   else if (flags & TEE_DATA_FLAG_ACCESS_WRITE)
-    ret = 0200; // --w------
+    ret = 0600; // -rw------ To emulate secure storage
   return ret;
 }
 
