@@ -33,7 +33,7 @@ $ make run
 
 Prerequisites: optee directory _path_to_optee_ which is already built with qemu.
 See [prerequisites](https://optee.readthedocs.io/en/latest/building/prerequisites.html) and [build instruction](https://optee.readthedocs.io/en/latest/building/gits/build.html) of optee and follows the build steps in the latter.
-Perhaps you need to install some missing python library:
+Perhaps you need to install some missing python libraries:
 ```
 $ pip3 install cryptodomex
 ```
