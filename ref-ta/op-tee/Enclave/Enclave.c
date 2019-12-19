@@ -80,7 +80,7 @@ TEE_Result TA_OpenSessionEntryPoint(uint32_t param_types,
     (void)&params;
     (void)&sess_ctx;
 
-    IMSG("ecall_ta_main() start\n");
+    tee_printf("ecall_ta_main() start\n");
 
     gp_random_test();
 
@@ -98,7 +98,7 @@ TEE_Result TA_OpenSessionEntryPoint(uint32_t param_types,
 
     gp_asymmetric_key_sign_test();
 
-    IMSG("ecall_ta_main() end\n");
+    tee_printf("ecall_ta_main() end\n");
 
     /* If return value != TEE_SUCCESS the session will not be created. */
     return TEE_SUCCESS;

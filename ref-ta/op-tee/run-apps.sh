@@ -1,7 +1,7 @@
 #!/bin/bash
 
 xterm -e ./run-record.sh&
-sleep 5
+sleep 2
 
 expect -c '
     set timeout 50
