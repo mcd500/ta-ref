@@ -18,9 +18,10 @@ Unimplemented yet.
 Persistent objects are implemented with REE(Linux) files. The contents are ciphered with CBC mode AES. It means that there are restrictions with read/write objects.
 
 * It can't be opened with the append mode. If you want to append something to the object, you have to read all content and write the appended one.
-* Read/write is permitted only when the data size is a multiple of 32.
+* Read/write is permitted only when the data size is a multiple of 16.
+* Open with RW mode isn't supported. Storage(persistent object) should be opened with write-only mode or read-only mode.
 
-The key and initial vector (iv) cause other implementation issue.  The ideal key and initial vector are hard to get in the usual keystone environment.  We use attestation report as the last resort.  SGX has sgx_get_key function which is essentially EGETKEY/EREPORT wrapper and use it for file encryption.  Keystone/SGX report is enclave/system invariant which depends on some given data.  With using objectID (file name) as the given data, it returns enclave/system/objectID invariant.  We deduce the key and the initial vector from this invariant.
+The key and initial vector (iv) cause other implementation issue.  The ideal key and initial vector are hard to get in the usual keystone environment.  We use attestation report as the last resort.  SGX has sgx_get_key function which is essentially EGETKEY/EREPORT wrapper and use it for file encryption.  Keystone/SGX report is enclave/system invariant which depends on some given data.  With using objectID (file name) as the given data, it returns an enclave/system/objectID invariant.  We deduce the key and the initial vector from this invariant.
 We use the signature part of the report as key and the iv is got as a digest of the report.  It means that the iv correlates with the key.  This will reduce the endurance against the brute force, though the iv changes with the enclave and objectID.
 Those keys add another constraints on Persistent objects. 
 
