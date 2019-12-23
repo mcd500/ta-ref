@@ -121,7 +121,8 @@ static inline int flags2flags(int flags)
 // Always use permission -rw------ to emulate secure storage
 #define FPERMS 0600
 
-static int set_object_key(void *id, unsigned int idlen, struct AES_ctx *aectx)
+static int set_object_key(void *id, unsigned int idlen,
+			  TEE_ObjectHandle object)
 {
   /* 20191031: Current eyrie copy report to user with 2048 bytes anyway.
      There is a TODO comment in eyrie/syscall.c. Here is a workaround. */
@@ -144,8 +145,20 @@ static int set_object_key(void *id, unsigned int idlen, struct AES_ctx *aectx)
     sha3_update(&ctx, rpt->enclave.signature, TEE_OBJECT_KEY_SIZE);
     sha3_update(&ctx, id, idlen);
     sha3_final(iv, &ctx);
-    AES_init_ctx_iv(aectx, rpt->enclave.signature, iv);
-    memset(rpt->enclave.signature, 0, TEE_OBJECT_KEY_SIZE);
+
+    unsigned char *key = rpt->enclave.signature;
+#ifdef MBEDTLS_CIPHER_MODE_CBC
+    mbedtls_aes_init(&(object->persist_ctx));
+    if (object->flags & TEE_DATA_FLAG_ACCESS_WRITE) {
+      mbedtls_aes_setkey_enc(&(object->persist_ctx), key, 256);
+    } else { // TEE_DATA_FLAG_ACCESS_READ
+      mbedtls_aes_setkey_dec(&(object->persist_ctx), key, 256);
+    }
+    memcpy(object->persist_iv, iv, TEE_OBJECT_NONCE_SIZE);
+#else
+    AES_init_ctx_iv(&(object->persist_ctx), key, iv);
+#endif
+    memset(key, 0, TEE_OBJECT_KEY_SIZE);
     memset(iv, 0, TEE_OBJECT_NONCE_SIZE);
   }
   return ret;
@@ -205,7 +218,7 @@ TEE_Result OpenPersistentObject(uint32_t storageID, const void *objectID,
       return TEE_ERROR_ACCESS_DENIED;
     }
 
-    if (set_object_key(objectID, objectIDLen, &(handle->persist_ctx))) {
+    if (set_object_key(objectID, objectIDLen, handle)) {
       free(handle);
       return TEE_ERROR_SECURITY; // better error needed or TEE panic?
     }
@@ -260,10 +273,10 @@ TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
-    // Only 32x data can be read/write to the persistent objects.
+    // Only 16x data can be read/write to the persistent objects.
     // This is the restriction with our implemtation of persisitent object
     // which uses block cipher.
-    if (size & (TEE_OBJECT_KEY_SIZE - 1)) {
+    if (size & (16 - 1)) {
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
@@ -271,11 +284,18 @@ TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
     if (!data) {
       return TEE_ERROR_OUT_OF_MEMORY;
     }
-    memcpy(data, buffer, size);
 
+#ifdef MBEDTLS_CIPHER_MODE_CBC
+    mbedtls_aes_crypt_cbc(&(object->persist_ctx), MBEDTLS_AES_ENCRYPT, size,
+                         object->persist_iv, buffer, data);
+#else
+    memcpy(data, buffer, size);
     AES_CBC_encrypt_buffer(&(object->persist_ctx), data, size);
+#endif
 
     int retval = ocall_write_file(object->desc, (const char *)data, size);
+    free(data);
+
     if (retval == size)
       return TEE_SUCCESS;
     else if (retval < 0) {
@@ -320,10 +340,10 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
-    // Only 32x data can be read/write to the persistent objects.
+    // Only 16x data can be read/write to the persistent objects.
     // This is the restriction with our implemtation of persisitent object
     // which uses block cipher.
-    if (size & (TEE_OBJECT_KEY_SIZE - 1)) {
+    if (size & (16 - 1)) {
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
@@ -338,7 +358,18 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
       return TEE_SUCCESS;
     }
 
+#ifdef MBEDTLS_CIPHER_MODE_CBC
+    void *data = malloc(size);
+    if (!data) {
+      return TEE_ERROR_OUT_OF_MEMORY;
+    }
+    mbedtls_aes_crypt_cbc(&(object->persist_ctx), MBEDTLS_AES_DECRYPT, size,
+                         object->persist_iv, buffer, data);
+    memcpy(buffer, data, size);
+    free(data);
+#else
     AES_CBC_decrypt_buffer(&(object->persist_ctx), buffer, size);
+#endif
 
     return 0;
 }
@@ -353,7 +384,11 @@ void TEE_CloseObject(TEE_ObjectHandle object)
       TEE_Panic(0);
     }
 
+#ifdef MBEDTLS_CIPHER_MODE_CBC
+    mbedtls_aes_free(&(object->persist_ctx));
+#else
     memset(&(object->persist_ctx), 0, sizeof(object->persist_ctx));
+#endif
 
     int retval = ocall_close_file(object->desc);
 

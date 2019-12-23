@@ -37,6 +37,7 @@
 #include "aes/aes.h"
 #define MBEDTLS_CONFIG_FILE "mbed-crypto-config.h"
 #include "mbedtls/gcm.h"
+#include "mbedtls/aes.h"
 
 #define TEE_OBJECT_NONCE_SIZE 16
 #define TEE_OBJECT_KEY_SIZE 32
@@ -50,7 +51,11 @@ struct __TEE_OperationHandle
   int flags;
   int alg;
   sha3_ctx_t ctx;
+#ifdef MBEDTLS_CIPHER_MODE_CBC
+  mbedtls_aes_context aectx;
+#else
   struct AES_ctx aectx;
+#endif
   mbedtls_gcm_context aegcmctx;
   int aegcm_state;
   unsigned char aegcm_iv[TEE_OBJECT_NONCE_SIZE];
@@ -64,7 +69,12 @@ struct __TEE_ObjectHandle
   unsigned int type;
   int flags;
   int desc;
+#ifdef MBEDTLS_CIPHER_MODE_CBC
+  mbedtls_aes_context persist_ctx;
+  unsigned char persist_iv[TEE_OBJECT_NONCE_SIZE];
+#else
   struct AES_ctx persist_ctx;
+#endif
   unsigned char public_key[TEE_OBJECT_KEY_SIZE];
   unsigned char private_key[TEE_OBJECT_SKEY_SIZE];
 };
