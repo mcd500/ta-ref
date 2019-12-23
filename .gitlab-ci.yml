@@ -1,5 +1,5 @@
 variables:
-    GITLAB_URL: http://150.82.217.189
+    GITLAB_URL: http://192.168.100.100
     GITLAB_USER: vc707
     RISCV_GCC_DIR: /home/user/projects/keystone/riscv/bin
     KEYSTONE_DIR: /home/user/projects/keystone
