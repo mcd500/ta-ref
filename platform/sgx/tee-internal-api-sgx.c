@@ -155,13 +155,10 @@ static inline int flags2flags(int flags)
 #define O_EXCL	   00200
 #define O_TRUNC	   01000
   int ret = 0;
-  if ((flags & TEE_DATA_FLAG_ACCESS_READ)
-      && (flags & TEE_DATA_FLAG_ACCESS_WRITE))
-    ret = O_RDWR;
+  if (flags & TEE_DATA_FLAG_ACCESS_WRITE)
+    ret = O_WRONLY;
   else if (flags & TEE_DATA_FLAG_ACCESS_READ)
     ret = O_RDONLY;
-  else if (flags & TEE_DATA_FLAG_ACCESS_WRITE)
-    ret = O_WRONLY;
   else
     return -1;
   if (flags & TEE_DATA_FLAG_OVERWRITE)
@@ -169,18 +166,8 @@ static inline int flags2flags(int flags)
   return ret;
 }
 
-static inline int flags2perms(int flags)
-{
-  int ret = 0;
-  if ((flags & TEE_DATA_FLAG_ACCESS_READ)
-      && (flags & TEE_DATA_FLAG_ACCESS_WRITE))
-    ret = 0600; // -rw------
-  else if (flags & TEE_DATA_FLAG_ACCESS_READ)
-    ret = 0400; // -r------- Perhaps no real use.
-  else if (flags & TEE_DATA_FLAG_ACCESS_WRITE)
-    ret = 0600; // -rw------ To emulate secure storage
-  return ret;
-}
+// Always use permission -rw------ to emulate secure storage
+#define FPERMS 0600
 
 static int set_object_key(const void *id, unsigned int idlen, struct AES_ctx *aectx)
 {
@@ -242,6 +229,72 @@ static int set_object_key(const void *id, unsigned int idlen, struct AES_ctx *ae
   return 0;
 }
 
+
+static
+TEE_Result OpenPersistentObject(uint32_t storageID, const void *objectID,
+				uint32_t objectIDLen, uint32_t flags,
+				TEE_ObjectHandle *object, int ocreat)
+{
+    if (!objectID) {
+      return TEE_ERROR_ITEM_NOT_FOUND;
+    }
+
+    if (objectIDLen > TEE_OBJECT_ID_MAX_LEN) {
+      return TEE_ERROR_BAD_PARAMETERS;
+    }
+
+    // RW mode should be inhibitted because of encryption
+    if ((flags & TEE_DATA_FLAG_ACCESS_READ)
+	&& (flags & TEE_DATA_FLAG_ACCESS_WRITE)) {
+      return TEE_ERROR_NOT_SUPPORTED;
+    }
+
+    char *fname = malloc(objectIDLen+1);
+    if (!fname) {
+      return TEE_ERROR_OUT_OF_MEMORY;
+    }
+    memcpy(fname, objectID, objectIDLen);
+    fname[objectIDLen] = '\0';
+
+    TEE_ObjectHandle handle = malloc(sizeof(*handle));
+    if (!handle) {
+      free(fname);
+      return TEE_ERROR_OUT_OF_MEMORY;
+    }
+
+    memset(handle, 0, sizeof(*handle));
+
+    int desc;
+    int oflags = flags2flags((int)flags);
+    if (ocreat) {
+      oflags |= O_CREAT;
+    }
+    ocall_open_file(&desc, fname, oflags, FPERMS);
+    free (fname);
+
+    handle->desc = desc;
+    handle->flags = TEE_HANDLE_FLAG_PERSISTENT;
+    if (flags & TEE_DATA_FLAG_ACCESS_WRITE) {
+      handle->flags |=  TEE_DATA_FLAG_ACCESS_WRITE;
+    } else if (flags & TEE_DATA_FLAG_ACCESS_READ) {
+      handle->flags |=  TEE_DATA_FLAG_ACCESS_READ;
+    }
+    if (desc < 0) {
+      free(handle);
+      return TEE_ERROR_ACCESS_DENIED;
+    }
+
+    if (set_object_key(objectID, objectIDLen, &(handle->persist_ctx))) {
+      free(handle);
+      return TEE_ERROR_SECURITY; // better error needed or TEE panic?
+    }
+
+    *object = handle;
+
+    return 0;
+}
+
+
 TEE_Result TEE_CreatePersistentObject(uint32_t storageID, const void *objectID,
                                       uint32_t objectIDLen, uint32_t flags,
                                       TEE_ObjectHandle attributes,
@@ -251,49 +304,10 @@ TEE_Result TEE_CreatePersistentObject(uint32_t storageID, const void *objectID,
 {
     pr_deb("TEE_CreatePersistentObject(): start");
 
-    if (!objectID) {
-      return TEE_ERROR_ITEM_NOT_FOUND;
-    }
+    // Not yet attribtes, initialData adn initialDataLen support
 
-    if (objectIDLen > TEE_OBJECT_ID_MAX_LEN) {
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-
-    char *fname = malloc(objectIDLen+1);
-    if (!fname) {
-      return TEE_ERROR_OUT_OF_MEMORY;
-    }
-    memcpy(fname, objectID, objectIDLen);
-    fname[objectIDLen] = '\0';
-
-    TEE_ObjectHandle handle = malloc(sizeof(*handle));
-    if (!handle) {
-      free(fname);
-      return TEE_ERROR_OUT_OF_MEMORY;
-    }
-
-    memset(handle, 0, sizeof(*handle));
-
-    int desc;
-    ocall_open_file(&desc, fname, flags2flags((int)flags)|O_CREAT,
-		    flags2perms((int)flags));
-    free (fname);
-
-    if (set_object_key(objectID, objectIDLen, &(handle->persist_ctx))) {
-      free(handle);
-      return TEE_ERROR_SECURITY; // better error needed or TEE panic?
-    }
-
-    handle->desc = desc;
-    handle->flags = TEE_HANDLE_FLAG_PERSISTENT;
-    if (desc < 0) {
-      free(handle);
-      return TEE_ERROR_ACCESS_DENIED;
-    }
-
-    *object = handle;
-
-    return 0;
+    return OpenPersistentObject(storageID, objectID, objectIDLen,
+				flags, object, 1);
 }
 
 
@@ -303,49 +317,8 @@ TEE_Result TEE_OpenPersistentObject(uint32_t storageID, const void *objectID,
 {
     pr_deb("TEE_OpenPersistentObject(): start");
 
-    if (!objectID) {
-      return TEE_ERROR_ITEM_NOT_FOUND;
-    }
-
-    if (objectIDLen > TEE_OBJECT_ID_MAX_LEN) {
-      return TEE_ERROR_BAD_PARAMETERS;
-    }
-
-    char *fname = malloc(objectIDLen+1);
-    if (!fname) {
-      return TEE_ERROR_OUT_OF_MEMORY;
-    }
-    memcpy(fname, objectID, objectIDLen);
-    fname[objectIDLen] = '\0';
-
-    TEE_ObjectHandle handle = malloc(sizeof(*handle));
-    if (!handle) {
-      free(fname);
-      return TEE_ERROR_OUT_OF_MEMORY;
-    }
-
-    memset(handle, 0, sizeof(*handle));
-
-    int desc;
-    ocall_open_file(&desc, fname, flags2flags((int)flags),
-		    flags2perms((int)flags));
-    free (fname);
-
-    if (set_object_key(objectID, objectIDLen, &(handle->persist_ctx))) {
-      free(handle);
-      return TEE_ERROR_SECURITY; // better error needed or TEE panic?
-    }
-
-    handle->desc = desc;
-    handle->flags = TEE_HANDLE_FLAG_PERSISTENT;
-    if (desc < 0) {
-      free(handle);
-      return TEE_ERROR_ACCESS_DENIED;
-    }
-
-    *object = handle;
-
-    return 0;
+    return OpenPersistentObject(storageID, objectID, objectIDLen,
+				flags, object, 0);
 }
 
 
