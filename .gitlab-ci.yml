@@ -19,7 +19,6 @@ build:
     stage: build
     only:
       - master
-      - with-build-keystone
     tags:
       - shell
 
@@ -36,7 +35,6 @@ test:
     stage: test
     only:
       - master
-      - with-build-keystone
     tags:
       - shell
 
