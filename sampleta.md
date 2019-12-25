@@ -21,9 +21,9 @@ There are several exhaustive trusted application APIs. [GlobalPlatform API](http
 [Open Enclave SDK](https://openenclave.io/sdk/) defines TEE API which is independent to the base TEEs.
 [Google Asylo](https://asylo.dev/) has another portable TEE API.
 
-The implementation of GlobalPlatform API on TrustZone is based on trusted os called OPTEE os. SGX and Keystone<sup>[1](#myfootnote1)</sup> uses very thin runtimes instead of full os.
+The implementation of GlobalPlatform API on TrustZone is based on trusted os called OPTEE os. SGX and Keystone uses very thin runtimes instead of full os.
 
-<a name="myfootnote1">1</a>: Keystone uses a thin runtime "Eyrie" as its standard runtime, though it can be replaced with more rich one, for example, SeL4. See https://github.com/keystone-enclave/keystone-seL4.
+(Keystone uses a thin runtime "Eyrie" as its standard runtime, though it can be replaced with more rich one, for example, SeL4. See https://github.com/keystone-enclave/keystone-seL4.)
 
 This design choice effects how trusted computation should be done and their attack surfaces, though both will play essentially same role.
 Usually trusted os has rich set of the cryptographic and other functions and has exclusive access rights to security critical resources including special hardware. On the other hand, thin runtimes give some basic functions only. In the latter case, cryptographic functions are processed with enclave itself, not with trusted os calls.
