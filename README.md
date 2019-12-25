@@ -22,7 +22,7 @@ sudo apt install autoconf automake autotools-dev bc bison build-essential curl e
 
 ## For keyedge
 ```sh
-sudo apt install clang-tools-6.0 libclang-6.0-dev
+sudo apt install clang-tools-6.0 libclang-6.0-dev cmake
 ```
 
 ## For SGX
