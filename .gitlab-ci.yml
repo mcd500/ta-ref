@@ -24,8 +24,8 @@ build:
       - git submodule update --init --recursive
       - export PATH=${PATH}:${RISCV_GCC_DIR}
       - . env-keystone.sh
-      - mkdir ${KEYSTONE_DIR} | true
-      - rmdir ${KEYSTONE_DIR} | true
+      - mkdir ${KEYSTONE_DIR} || true
+      - rmdir ${KEYSTONE_DIR} || true
       - ./unpack-prebuilt-keystone.sh 2> /dev/null
       - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} keystone
       - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR}
@@ -44,7 +44,7 @@ test:
     script:
       - echo "test"
       - . env-keystone.sh
-      - mkdir ${KEYSTONE_DIR} | true
-      - rmdir ${KEYSTONE_DIR} | true
+      - mkdir ${KEYSTONE_DIR} || true
+      - rmdir ${KEYSTONE_DIR} || true
       - ./unpack-prebuilt-keystone.sh 2> /dev/null
       - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} check
