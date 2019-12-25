@@ -26,6 +26,7 @@ build:
       - git submodule update --init --recursive
       - export PATH=${PATH}:${RISCV_GCC_DIR}
       - . env-keystone.sh
+      - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} keystone
       - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR}
       - make doc
     artifacts:
