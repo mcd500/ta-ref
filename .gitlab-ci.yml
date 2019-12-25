@@ -2,8 +2,8 @@ variables:
     GITLAB_URL: http://192.168.100.100
     GITLAB_USER: vc707
     RISCV_GCC_DIR: /home/user/projects/keystone/riscv/bin
-    KEYSTONE_DIR: /home/user/projects/keystone
-    KEYSTONE_SDK_DIR: /home/user/projects/keystone/sdk
+#    KEYSTONE_DIR: /home/user/projects/keystone
+#    KEYSTONE_SDK_DIR: /home/user/projects/keystone/sdk
 
 before_script:
 
@@ -40,4 +40,4 @@ test:
 
     script:
       - echo "test"
-      - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} check
+      - . env-keystone.sh; make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} check
