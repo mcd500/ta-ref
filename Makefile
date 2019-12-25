@@ -13,6 +13,8 @@ all:
 
 .PHONY: keystone
 keystone:
+	rmdir $(KEYSTONE_DIR) || true
+	./unpack-prebuilt-keystone.sh 2> /dev/null
 	cd $(KEYSTONE_DIR); ./aist-setup.sh
 	cd $(KEYSTONE_DIR); PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make run-tests KEYSTONE_SDK_DIR=$(KEYSTONE_DIR)/sdk KEYSTONE_DIR=$(KEYSTONE_DIR)
 
