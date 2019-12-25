@@ -56,7 +56,7 @@ These wrapper codes have rather fixed pattern and usually generated with some to
 ```
 
 
-Keyedge uses the LLVM infrastructure to analyze syntax and the flatcc to serialize/deserialize data. edger8r/oeedger8r is written by ocalm and has its own analyzer/serializer/deserializer. All edgers generate wrapper codes which sanitize arguments and results, though there maybe yet unknown issues as "A Tale of..." caveats.
+Keyedge uses the LLVM infrastructure to analyze syntax and the flatcc to serialize/deserialize data. edger8r/oeedger8r is written by ocalm and has its own analyzer/serializer/deserializer. edger8r is relatively easy to port for other system. oeedger8r is an example and we also have ported it to Keystone and used it internally before keyedge is released. All edgers generate wrapper codes which sanitize arguments and results, though there maybe yet unknown issues as "A Tale of..." caveats.
 
 ## Emulation of secure storage
 
@@ -70,7 +70,7 @@ The one problematic API is the secure storage API. OPTEE assumes the existence o
 * Read/write is permitted only when the data size is a multiple of 16.
 * Open with RW mode isn't supported. Storage(persistent object) should be opened with write-only mode or read-only mode.
 
-The key and initial vector (iv) cause other implementation issue.  The ideal key and initial vector are hard to get in the usual keystone environment.  We use attestation report as the last resort.  SGX has sgx_get_key function which is essentially EGETKEY/EREPORT wrapper and use it for file encryption.  Keystone/SGX report is enclave/system invariant which depends on some given data.  With using objectID (file name) as the given data, it returns an enclave/system/objectID invariant.  We deduce the key and the initial vector from this invariant.
+The key and initial vector (iv) cause other implementation issue.  The ideal key and initial vector are hard to get in the usual Keystone environment.  We use attestation report as the last resort.  SGX has sgx_get_key function which is essentially EGETKEY/EREPORT wrapper and use it for file encryption.  Keystone/SGX report is enclave/system invariant which depends on some given data.  With using objectID (file name) as the given data, it returns an enclave/system/objectID invariant.  We deduce the key and the initial vector from this invariant.
 We use the signature part of the report as key and the iv is got as a digest of the report.  It means that the iv correlates with the key.  This will reduce the endurance against the brute force, though the iv changes with the enclave and objectID.
 Those keys add another constraints on Persistent objects. 
 
