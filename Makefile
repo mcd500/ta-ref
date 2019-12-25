@@ -8,7 +8,6 @@ KEEDGER_DIR      = $(TEE_REF_TA_DIR)/keedger8r
 
 .PHONY: all
 all:
-	rmdir $(KEYSTONE_DIR) | true
 	make -C ref-ta/sgx
 	PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make -C ref-ta/keystone KEYSTONE_DIR=$(KEYSTONE_DIR) KEEDGER_DIR=$(KEEDGER_DIR)
 
