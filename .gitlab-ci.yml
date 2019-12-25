@@ -21,7 +21,6 @@ build:
       - shell
 
     script:
-      - git submodule update --init --recursive
       - export PATH=${PATH}:${RISCV_GCC_DIR}
       - . env-keystone.sh
       - rmdir ${KEYSTONE_DIR} || true
