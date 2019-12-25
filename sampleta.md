@@ -64,7 +64,7 @@ Our example enclave gives minimal interfaces which are common for OPTEE, SGX and
 
 OPTEE gives random number and time functions with its standard API. SGX defines these functions in the standard library, though the secure time function can work only on Windows system at the moment. Keystone has no secure random and time functions yet.
 
-The one problematic API is the secure storage API. OPTEE assumes the existence of real secure storage supported by hardware. We use encrypted normal files to emulate the secure storage for SGX and Keystone because we couldn't assume such hardware for them. This gives many restrictions and some issues on secure storage API. The file contents are encrypted with AES CBC. The key should be persistent and unpredictable. Such key isn't easy to get in Keystone enclave. As a last resort, we construct a key from the data given by "report" system call function.
+The one problematic API is the secure storage API. OPTEE assumes the existence of real secure storage supported by hardware. We use encrypted normal files to emulate the secure storage for SGX and Keystone because we couldn't assume such hardware for them. The file contents are encrypted with AES CBC. The key should be persistent and unpredictable. We construct a key from the data given by report system call function. This scheme gives many restrictions and some issues on API.
 
 * It can't be opened with the append mode. If you want to append something to the object, you have to read all content and write the appended one.
 * Read/write is permitted only when the data size is a multiple of 16.
