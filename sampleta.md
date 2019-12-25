@@ -16,14 +16,14 @@ In our case, there is no such special hardware and we use the functions given by
 
 ## Trusted application API
 
-There are several exhaustive trusted application APIs. [GlobalPlatform API](https://globalplatform.org/document_types/api/) is the well-known API for mainly ARM TrustZone.
+There are several exhaustive trusted application APIs. [GlobalPlatform API](https://globalplatform.org/document_types/api/) is the well-known API and [OP-TEE](https://www.op-tee.org/) is an implementation of GlobalPlatform API on ARM TrustZone.
 [Intel SGX SDK](https://software.intel.com/en-us/sgx/sdk) gives their API for Intel CPU with Software Guard Extensions.
 [Open Enclave SDK](https://openenclave.io/sdk/) defines TEE API which is independent to the base TEEs.
 [Google Asylo](https://asylo.dev/) has another portable TEE API.
 
-The implementation of GlobalPlatform API on TrustZone is based on trusted os called OPTEE os. SGX and Keystone uses very thin runtimes instead of full os.
+The implementation of GlobalPlatform API on TrustZone is based on trusted os called OPTEE os. SGX and Keystone<sup>[1](#myfootnote1)</sup> uses very thin runtimes instead of full os.
 
-(Annotation: Keystone uses a thin runtime "Eyrie" as its standard runtime, though it can be replaced with more rich one, for example, SeL4. See https://github.com/keystone-enclave/keystone-seL4)
+<a name="myfootnote1">1</a>: Keystone uses a thin runtime "Eyrie" as its standard runtime, though it can be replaced with more rich one, for example, SeL4. See https://github.com/keystone-enclave/keystone-seL4.
 
 This design choice effects how trusted computation should be done and their attack surfaces, though both will play essentially same role.
 Usually trusted os has rich set of the cryptographic and other functions and has exclusive access rights to security critical resources including special hardware. On the other hand, thin runtimes give some basic functions only. In the latter case, cryptographic functions are processed with enclave itself, not with trusted os calls.
@@ -56,7 +56,7 @@ These wrapper codes have rather fixed patterns and usually are generated with so
 ```
 
 
-Keyedge uses the LLVM infrastructure to analyze syntax and the flatcc library to serialize/deserialize data. edger8r/oeedger8r is written by ocalm and has its own analyzer/serializer/deserializer. edger8r is relatively easy to port for other systems. oeedger8r is an example and we also have ported it to Keystone and used it internally before keyedge was released. All edgers generate wrapper codes which sanitize arguments and results, though there maybe yet unknown issues as "A Tale of..." caveats.
+Keyedge uses the LLVM infrastructure to analyze syntax and the flatcc library to serialize/deserialize data. edger8r/oeedger8r is written by ocalm and has its own analyzer/serializer/deserializer. edger8r is relatively easy to port for other systems. oeedger8r is an example and we also have ported it to Keystone and used it internally before keyedge was released. All edgers generate wrapper codes which sanitize arguments and results, though there maybe yet unknown issues as "A Tale of..." shows.
 
 ## Emulation of secure storage
 
@@ -82,3 +82,28 @@ Changes of BIOS (SGX) or Secure Monitor (Keystone) will give the different signa
 Rollback attack is the another issue. There is no mechanism to avoid rollback attack with our current implementation. The user must update ObjectID or some data in the enclave like the version id explicitly for the new contents. This mitigates rollback attack because key/iv are ObjectID/enclave invariant.
 
 ## Performance measurement
+
+
+
+
+
+
+
+## Reference
+
+[ ] Bailleu, Maurice & Dragoti, Donald & Bhatotia, Pramod & Fetzer, Christof. (2019). TEE-Perf: A Profiler for Trusted Execution Environments. 414-421. 10.1109/DSN.2019.00050.
+
+[ ] Google. 2019. Asylo: An open and flexible framework for enclave applications. online, accessed 2019-06-12: https://asylo.dev/. (2019).
+
+[ ] Intel. 2019. Software Guard Extensions SDK. online accessed 2019-06-17: https://software.intel.com/en-us/sgx/sdk/. (2019).
+
+[ ] D. Lee, D. Kohlbrenner, S. Shinde, D. Song, and K. Asanović. 2019. Keystone: AFramework for Architecting TEEs.arXiv preprint arXiv:1907.10119(2019).
+
+[ ] Global Platform. 2019, GlobalPlatform API Archives. online accessed 2019-12-25: https://globalplatform.org/document_types/api/
+
+[ ] Microsoft. 2019. Open Enclave SDK. online, accessed 2019-10-10: https://openenclave.io/sdk/. (2019).
+
+[ ] Jo Van Bulck, David Oswald, Eduard Marin, Abdulla Aldoseri, Flavio D.Garcia, and Frank Piessens. 2019. A Tale of Two Worlds: Assessing the Vul-nerability of Enclave Shielding Runtimes. In2019 ACM SIGSAC Conferenceon Computer and Communications Security (CCS ’19), November 11–15, 2019, London, UK.ACM, New York, NY, USA, 18 pages. https://doi.org/10.1145/3319535.3363206
+
+[ ] OP-TEE.org. 2019. OP-TEE. online, accessed 2019-11-21: https://github.com/OP-TEE/.
+
