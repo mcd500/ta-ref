@@ -29,7 +29,7 @@ This design choice effects how trusted computation should be done and their atta
 Usually trusted os has rich set of the cryptographic and other functions and has exclusive access rights to security critical resources including special hardware. On the other hand, thin runtimes give some basic functions only. In the latter case, cryptographic functions are processed with enclave itself, not with trusted os calls.
 Generally, the attack surface of cryptographic computation is in the trusted os on the former system and in the enclave on the latter.
 
-It affects also the number of context switches required when some operation is done, though this won't be a problem if the functions given by trusted os are relatively heavy.
+It affects also the number of context switches and data copy required when some operation is done. Generally trusted os doesn't context switch between trusted and untrusted worlds and has some advantages in this regard. See next section for detail. This won't be a problem if the operation to be done is relatively heavy. On the other hand, if all computations are done in enclave instead of the trusted os calls, it's more efficient than the computation using trusted os call. So for thin runtime case, it would be better to compute in enclave and reduce OCALLs as much as possible.
 
 ## OCALL
 
@@ -70,7 +70,7 @@ The one problematic API is the secure storage API. OPTEE assumes the existence o
 * Open with RW mode isn't supported. Storage(persistent object) should be opened with write-only mode or read-only mode.
 * It can't be opened with the append mode. If you want to append something to the object, you have to read all content and write the appended one.
 
-The key and initial vector (iv) cause other implementation issue. The ideal key and initial vector are hard to get in the usual Keystone environment. We use attestation report as the last resort. SGX has sgx_get_key function which is essentially EGETKEY/EREPORT wrapper and uses it for file encryption. Keystone/SGX report is enclave/system invariant which depends on some given data. With using objectID (file name) as the given data, it returns an enclave/system/objectID invariant. We deduce the key and the initial vector from this invariant.
+The key and initial vector (iv) cause other implementation issue. The ideal key and initial vector are hard to get in the usual Keystone environment. We use attestation report as the last resort. SGX has sgx_get_key function which is essentially a wrapper of EGETKEY/EREPORT instruction and uses it for file encryption. Keystone/SGX report is enclave/system invariant which depends on some given data. With using objectID (file name) as that data, it returns an enclave/system/objectID invariant. We deduce the key and the initial vector from this invariant.
 We use the signature part of the report as key and the iv is got as a digest of the report. It means that the iv correlates with the key. This will reduce the endurance against the brute force, though the iv changes with the enclave and objectID.
 Those keys add another constraints on Persistent objects. 
 
@@ -79,7 +79,7 @@ Those keys add another constraints on Persistent objects.
 
 Changes of BIOS (SGX) or Secure Monitor (Keystone) will give the different signature even for same enclave.
 
-Rollback attack is the another issue. There is no mechanism to avoid rollback attack with our current implementation. The user must update ObjectID or some data in the enclave like the version id explicitly for the new contents. This mitigates rollback attack because key/iv are ObjectID/enclave invariant.
+Rollback attack is the another issue. There is no mechanism to avoid rollback attack with our current implementation. The user must update ObjectID or some data in the enclave like the version id explicitly for the new contents. This mitigates rollback attack because key/iv are ObjectID/enclave invariants.
 
 ## Performance measurement
 
