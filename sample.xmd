@@ -12,16 +12,16 @@ Our example includes some typical functions like:
 * sign/verify with asymmetric keys
 
 Generally, some of these functions may be implemented with the help of the hardware like random number generator, real time clock, secure storage and some special cryptographic accelerators which can be accessed only with the enclaves to avoid security issues.
-In our case, there is no such special hardware and we use the functions given by the rich os via OCALL if needed. As a result, some functions are restrictive compared with the hardware supports and should be carefully handled.
+In our case, there is no such special hardware and we use the functions given by the cryptographic libraries in enclave and by the rich os via OCALL if needed. As a result, some functions are restrictive compared with the hardware supports and should be carefully handled.
 
 ## Trusted application API
 
-There are several exhaustive trusted application APIs. [GlobalPlatform API](https://globalplatform.org/document_types/api/) is the well-known API and [OP-TEE](https://www.op-tee.org/) is an implementation of GlobalPlatform API on ARM TrustZone.
+There are several exhaustive trusted application APIs. [GlobalPlatform API](https://globalplatform.org/document_types/api/) is the well-known API and [OP-TEE](https://www.op-tee.org/) is an implementation of the GlobalPlatform API on ARM TrustZone.
 [Intel SGX SDK](https://software.intel.com/en-us/sgx/sdk) gives their API for Intel CPU with Software Guard Extensions.
 [Open Enclave SDK](https://openenclave.io/sdk/) defines TEE API which is independent to the base TEEs.
 [Google Asylo](https://asylo.dev/) has another portable TEE API.
 
-The implementation of GlobalPlatform API on TrustZone is based on trusted os called OPTEE os. SGX and Keystone<sup>[1](#myfootnote1)</sup> uses very thin runtimes instead of the trused os with the ample functions.
+The implementation of GlobalPlatform API on TrustZone is based on the trusted os called OPTEE os. SGX and Keystone<sup>[1](#myfootnote1)</sup> uses very thin runtimes instead of the trused os with the ample functions.
 
 <a name="myfootnote1">1</a>: Keystone uses a thin runtime 'Eyrie' as its standard runtime, though it can be replaced with more rich one, for example, SeL4. See https://github.com/keystone-enclave/keystone-seL4.
 
@@ -29,20 +29,22 @@ This design choice effects how the trusted computation should be done and their 
 Usually trusted os has the rich set of the cryptographic and other functions and has exclusive access rights to security critical resources including special hardwares. On the other hand, thin runtimes give some basic functions only. In the latter case, cryptographic functions will be processed with the enclave itself, not with the trusted os calls.
 Generally, the attack surface of the cryptographic computation is in the trusted os on the former system and in the enclave on the latter.
 
-It affects also the number of context switches and data copy required when an operation is done. Generally trusted os doesn't require context switch between the trusted and untrusted worlds and has some advantages in this regard. See the next section OCALL for details. This won't be a problem if the operation to be done is relatively heavy. On the other hand, if all computations are done in the enclave instead of the trusted os calls, it's more efficient than the computation using trusted os call. So for the thin runtime case, it would be better to compute in the enclave and reduce OCALLs as much as possible.
+It affects also the number of context switches and data copy required when an operation is done. Generally trusted os doesn't require context switch between the trusted and untrusted worlds and has some advantages in this regard. See the next section OCALL for details. This won't be a problem if the operation to be done is relatively heavy. For the thin runtime case, it would be better to compute in the enclave and reduce OCALLs as much as possible.
 
 ## OCALL
 
-There are several forms of communication between normal applications and enclaves. OCALL which means 'out call' is a typical one with some function call like interface that an enclaves can call some normal world function. There are systems which have functions with the inverse direction. SGX's normal application can call an enclave function with ECALL. [Fig.1](http://192.168.100.100/vc707/junkyard/blob/master/ocall-howto.pdf) shows how OCALL works in Keystone with a simple example.
+There are several forms of communication between normal applications and enclaves. OCALL which means 'out call' is a typical one with the function call like interface that an enclaves can call some normal world function. There are systems which have functions with the inverse direction. SGX's normal application can call an enclave function with ECALL.
+
+[Fig.1](http://192.168.100.100/vc707/junkyard/blob/master/ocall-howto.pdf) shows how OCALL works in Keystone with a simple example.
 
 There are two glue codes both in the application and the enclave.
 Each glue code wraps the edge/boundary system call and serializes/deserializes the arguments/results. These wrapper codes should be crafted very carefully because they are put at the attack surfaces. See [A Tale of Two Worlds: Assessing the Vulnerability of Enclave Shielding Runtimes](https://people.cs.kuleuven.be/~jo.vanbulck/ccs19-tale.pdf).
 
-These wrapper codes have rather fixed patterns and usually are generated with the tool called edger. SGX has edger8r as its edger tool and Open Enclave uses oeedger8r which is a modified version of edger8r. Recently, Keystone adds keyedge as its edger. All edgers generate glue codes from annotated function. edger8r/oeedger defines Enclave Definition Language (EDL) for this purpose. Keyedge uses simple annotations which will be ignored with the normal compilation.
+These wrapper codes have rather fixed patterns and usually are generated with the tool called edger. SGX has edger8r as its edger tool and Open Enclave uses oeedger8r which is a modified version of edger8r. Recently, Keystone adds keyedge as its edger. All edgers generate glue codes from the annotated function. edger8r/oeedger8r defines Enclave Definition Language (EDL) for this purpose. Keyedge uses simple annotations which will be ignored with the normal compilation.
 
 
 ```
-  [edger8r syntax in .edle]
+  [edger8r syntax in .edl]
 
     untrusted {
         unsigned int ocall_print_string([in, string] const char *str);
@@ -58,17 +60,43 @@ These wrapper codes have rather fixed patterns and usually are generated with th
 
 Keyedge uses the LLVM infrastructure to analyze the syntax and the flatcc library to serialize/deserialize the data. edger8r/oeedger8r is written by ocalm and has its own analyzer/serializer/deserializer. edger8r is relatively easy to port for the other systems. oeedger8r is an example and we also have ported it to Keystone and used it internally before keyedge was released. All edgers generate wrapper codes which sanitize the arguments and the results, though there maybe yet unknown issues as "A Tale of..." shows.
 
-## Emulation of secure storage
+## List of example API
 
-Our example enclave gives minimal and typical interfaces which are common for OPTEE, SGX and Keystone. Supported cryptographic operations are 256bit AES CBC/GCM, SHA3 digest and ed25519 sign/verify only. OPTEE gives these functions with their API. For Keystone and SGX, we use cryptographic libraries, though SGX prepares some of these functions in SDK.
+Our example enclave gives the minimal and typical interfaces which are common for OPTEE, SGX and Keystone. Supported cryptographic operations are 256bit AES CBC/GCM, SHA3 digest and ed25519 sign/verify only. OPTEE gives these functions with their API. For Keystone and SGX, we use cryptographic libraries, though SGX prepares some of these functions in SDK. 
+
+```
+// List of API
+// Random number
+TEE_GenerateRandom
+// Time
+TEE_GetREETime, TEE_GetSystemTime, GetRelTimeStart, GetRelTimeEnd,
+// secure storage
+TEE_OpenPersistentObject, TEE_CreatePersistentObject, TEE_OpenPersistentObject,
+TEE_WriteObjectData, TEE_ReadObjectData, TEE_CloseObject,
+// Cryptographic operation
+TEE_AllocateOperation, TEE_FreeOperation
+// Message digest
+TEE_DigestUpdate, TEE_DigestDoFinal
+// Key
+TEE_AllocateTransientObject, TEE_InitRefAttribute, TEE_FreeTransientObject,
+TEE_SetOperationKey
+// AES GCM
+TEE_AEInit, TEE_AEUpdateAAD, TEE_AEUpdate, TEE_AEEncryptFinal, TEE_AEDecryptFinal
+// AES CBC
+TEE_CipherInit, TEE_CipherUpdate, TEE_CipherDoFinal
+// Sign/Verify digest with asymmetric keys
+TEE_AsymmetricSignDigest, TEE_AsymmetricVerifyDigest
+```
 
 OPTEE gives random number and time functions with its standard API. SGX defines these functions in the standard library, though the secure time function can work only on Windows system at the moment. Keystone has no secure random and time functions yet.
 
+## Emulation of secure storage
+
 The one problematic API is the secure storage API. OPTEE assumes the existence of real secure storage supported by hardware. We use encrypted normal files to emulate the secure storage for SGX and Keystone because we couldn't assume such hardware for them. The file contents are encrypted with AES CBC. The file i/o operations are done with OCALLs. The AES key should be persistent and unpredictable. This scheme gives many restrictions and some issues on API.
 
+* No random access is allowed.
 * Read/write is permitted only when the data size is a multiple of 16.
 * Open with RW mode isn't supported. Storage(persistent object) should be opened with write-only mode or read-only mode.
-* It can't be opened with the append mode. If you want to append something to the object, you have to read all content and write the appended one.
 
 The key and initial vector (iv) cause other implementation issue. The ideal key and initial vector are hard to get in the usual Keystone environment. We use attestation report as the last resort. SGX has sgx_get_key function which is essentially a wrapper of EGETKEY/EREPORT instruction and uses it for file encryption. Keystone/SGX report is enclave/system invariant which depends on some given data. With using objectID (file name) as that data, it returns an enclave/system/objectID invariant. We deduce the key and the initial vector from this invariant.
 We use the signature part of the report as key and the iv is got as a digest of the report. It means that the iv correlates with the key. This will reduce the endurance against the brute force, though the iv changes with the enclave and objectID.
