@@ -12,7 +12,7 @@ Our example includes some typical functions like:
 * sign/verify with asymmetric keys
 
 Generally, some of these functions may be implemented with the help of the hardware like random number generator, real time clock, secure storage and some special cryptographic accelerators which can be accessed only with the enclaves to avoid security issues.
-In our case, there is no such special hardware and we use the functions given by the cryptographic libraries in enclave and by the rich os via OCALL if needed. As a result, some functions are restrictive compared with the hardware supports and should be carefully handled.
+In our case, there is no such special hardware and we use the functions given by the cryptographic libraries in the enclave and by the rich os if needed. As a result, some functions are restrictive compared with the hardware supports and should be carefully handled.
 
 ## Trusted application API
 
@@ -25,15 +25,15 @@ The implementation of GlobalPlatform API on TrustZone is based on the trusted os
 
 <a name="myfootnote1">1</a>: Keystone uses a thin runtime 'Eyrie' as its standard runtime, though it can be replaced with more rich one, for example, SeL4. See https://github.com/keystone-enclave/keystone-seL4.
 
-This design choice effects how the trusted computation should be done and their attack surfaces, though both will play essentially same role.
+This design choice effects how the trusted computation should be done and their attack surfaces, though both the trusted os and the thin runtime will play essentially same role.
 Usually trusted os has the rich set of the cryptographic and other functions and has exclusive access rights to security critical resources including special hardwares. On the other hand, thin runtimes give some basic functions only. In the latter case, cryptographic functions will be processed with the enclave itself, not with the trusted os calls.
 Generally, the attack surface of the cryptographic computation is in the trusted os on the former system and in the enclave on the latter.
 
-It affects also the number of context switches and data copy required when an operation is done. Generally trusted os doesn't require context switch between the trusted and untrusted worlds and has some advantages in this regard. See the next section OCALL for details. This won't be a problem if the operation to be done is relatively heavy. For the thin runtime case, it would be better to compute in the enclave and reduce OCALLs as much as possible.
+It affects also the number of context switches and data copy required when an operation is done. Generally trusted os doesn't require context switches between the trusted and the untrusted worlds and has some advantages in this regard. See the next section OCALL for details. This won't be a problem if the operation to be done is relatively intensive. For the thin runtime case, it would be better to reduce OCALLs as much as possible.
 
 ## OCALL
 
-There are several forms of communication between normal applications and enclaves. OCALL which means 'out call' is a typical one with the function call like interface that an enclaves can call some normal world function. There are systems which have functions with the inverse direction. SGX's normal application can call an enclave function with ECALL.
+There are several forms of the communication between normal applications and enclaves. OCALL which means 'out call' is a typical one with the function call interface that an enclaves can call some normal world function. There are systems which have functions with the inverse direction. SGX's normal application can call an enclave function with ECALL.
 
 [Fig.1](http://192.168.100.100/vc707/junkyard/blob/master/ocall-howto.pdf) shows how OCALL works in Keystone with a simple example.
 
@@ -58,11 +58,11 @@ These wrapper codes have rather fixed patterns and usually are generated with th
 ```
 
 
-Keyedge uses the LLVM infrastructure to analyze the syntax and the flatcc library to serialize/deserialize the data. edger8r/oeedger8r is written by ocalm and has its own analyzer/serializer/deserializer. edger8r is relatively easy to port for the other systems. oeedger8r is an example and we also have ported it to Keystone and used it internally before keyedge was released. All edgers generate wrapper codes which sanitize the arguments and the results, though there maybe yet unknown issues as "A Tale of..." shows.
+Keyedge uses the LLVM infrastructure to analyze the syntax and the flatcc library to serialize/deserialize data. edger8r/oeedger8r is written by ocaml and has its own analyzer/serializer/deserializer. edger8r is relatively easy to port for the other systems. oeedger8r is an example and we also have ported it to Keystone and used it internally before keyedge was released. All edgers generate wrapper codes which sanitize the arguments and the results, though there maybe yet unknown issues as "A Tale of..." shows.
 
 ## List of example API
 
-Our example enclave gives the minimal and typical interfaces which are common for OPTEE, SGX and Keystone. Supported cryptographic operations are 256bit AES CBC/GCM, SHA3 digest and ed25519 sign/verify only. OPTEE gives these functions with their API. For Keystone and SGX, we use cryptographic libraries, though SGX prepares some of these functions in SDK. 
+Our example trusted application API gives the minimal and typical interfaces which are common for OPTEE, SGX and Keystone. It can be considered as a minimal subset of GlobalPlatform API. Supported cryptographic operations are 256bit AES CBC/GCM, SHA3 digest and ed25519 sign/verify only. OPTEE gives these functions with their API. For Keystone and SGX, we use cryptographic libraries, though SGX prepares some of these functions in SDK. 
 
 ```
 // List of API
@@ -107,7 +107,7 @@ Those keys add another constraints on Persistent objects.
 
 Changes of BIOS (SGX) or Secure Monitor (Keystone) will give the different signature even for same enclave.
 
-Rollback attack is the another issue. There is no mechanism to avoid rollback attack with our current implementation. The user must update ObjectID or some data in the enclave like the version id explicitly for the new contents. This mitigates rollback attack because key/iv are ObjectID/enclave invariants.
+Rollback attack is the another issue. There is no automatic mechanism to avoid rollback attack with our current implementation. The user must update ObjectID or some data in the enclave like the version id explicitly for the new contents. This mitigates rollback attack because key/iv are ObjectID/enclave invariants.
 
 ## Performance measurement
 
