@@ -47,6 +47,6 @@ test:
       - rmdir ${KEYSTONE_DIR} || true
       - ./unpack-prebuilt-keystone.sh 2> /dev/null
       - git submodule update --init --recursive
-      - cd ${KEYSTONE_DIR}; ./aist-setup.sh; cd ..
+      - cd ${KEYSTONE_DIR}; ./aist-setup.sh; make -j `nproc` run-tests; cd ..
 #      - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} keystone
       - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} check
