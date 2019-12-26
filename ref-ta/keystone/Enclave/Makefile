@@ -19,6 +19,7 @@ ENCLAVE_C_SRCS= \
 		time.c \
 		time_gp.c \
 		printf.c \
+		strcmp.c \
 		$(wildcard $(TEE_TA_DIR)/platform/keystone/*.c)
 
 CC = riscv64-unknown-linux-gnu-gcc

@@ -21,9 +21,9 @@ There are several exhaustive trusted application APIs. [GlobalPlatform API](http
 [Open Enclave SDK](https://openenclave.io/sdk/) defines TEE API which is independent to the base TEEs.
 [Google Asylo](https://asylo.dev/) has another portable TEE API.
 
-The implementation of GlobalPlatform API on TrustZone is based on the trusted os called OPTEE os. SGX and Keystone<sup>[1](#myfootnote1)</sup> uses very thin runtimes instead of the trused os with the ample functions.
+The implementation of GlobalPlatform API on TrustZone is based on the trusted os called OPTEE os. SGX and Keystone<sup>[1](#myfootnote1)</sup> uses very thin runtimes instead of the trusted os with the ample functions.
 
-<a name="myfootnote1">1</a>: Keystone uses a thin runtime 'Eyrie' as its standard runtime, though it can be replaced with more rich one, for example, SeL4. See https://github.com/keystone-enclave/keystone-seL4.
+<a name="myfootnote1">1</a>: Keystone uses a thin runtime 'Eyrie' as its standard runtime, though it can be replaced with more rich one, for example, seL4. See https://github.com/keystone-enclave/keystone-seL4.
 
 This design choice effects how the trusted computation should be done and their attack surfaces, though both the trusted os and the thin runtime will play essentially same role.
 Usually trusted os has the rich set of the cryptographic and other functions and has exclusive access rights to security critical resources including special hardwares. On the other hand, thin runtimes give some basic functions only. In the latter case, cryptographic functions will be processed with the enclave itself, not with the trusted os calls.
@@ -98,16 +98,16 @@ The one problematic API is the secure storage API. OPTEE assumes the existence o
 * Read/write is permitted only when the data size is a multiple of 16.
 * Open with RW mode isn't supported. Storage(persistent object) should be opened with write-only mode or read-only mode.
 
-The key and initial vector (iv) cause other implementation issue. The ideal key and initial vector are hard to get in the usual Keystone environment. We use attestation report as the last resort. SGX has sgx_get_key function which is essentially a wrapper of EGETKEY/EREPORT instruction and uses it for file encryption. Keystone/SGX report is enclave/system invariant which depends on some given data. With using objectID (file name) as that data, it returns an enclave/system/objectID invariant. We deduce the key and the initial vector from this invariant.
-We use the signature part of the report as key and the iv is got as a digest of the report. It means that the iv correlates with the key. This will reduce the endurance against the brute force, though the iv changes with the enclave and objectID.
+The key and the initial vector (iv) of AES cause other implementation issues. The ideal key and initial vector are hard to get in the usual Keystone environment. We use attestation report as the last resort. SGX has sgx_get_key function which is essentially a wrapper of EGETKEY/EREPORT instruction and uses it for protected_fs library in SDK. Keystone's report is an enclave/system invariant which depends on some given data. With using objectID (file name) as that data, it returns an enclave/system/objectID invariant. We deduce the key and the initial vector from this invariant.
+We use the signature part of the report as the key and the iv is got as a digest of the report. It means that the iv correlates with the key. This will reduce the endurance against the brute force, though the iv changes with the enclave and the objectID.
 Those keys add another constraints on Persistent objects. 
 
-* An object can be accessed with only one enclave.
+* An object can be accessed from only one enclave.
 * Changes of system could make all persistent objects obsolete.
 
 Changes of BIOS (SGX) or Secure Monitor (Keystone) will give the different signature even for same enclave.
 
-Rollback attack is the another issue. There is no automatic mechanism to avoid rollback attack with our current implementation. The user must update ObjectID or some data in the enclave like the version id explicitly for the new contents. This mitigates rollback attack because key/iv are ObjectID/enclave invariants.
+Rollback attack is the another issue. There is no automatic mechanism to avoid rollback attack with our current implementation. The user must update ObjectID or some data in the enclave like the version id explicitly for the new contents. This will mitigate rollback attack because key/iv are ObjectID/enclave invariants.
 
 ## Performance measurement
 
