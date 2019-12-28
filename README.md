@@ -39,14 +39,22 @@ export PATH=/opt/intel/sgxsdk/bin/:${PATH}
 sudo apt install makeself screen
 ```
 
-# Generate PDF doc
-
+# clone sources
 ```sh
-$ make doc
+git clone http://192.168.100.100/vc707/tee-ta-reference.git
+cd tee-ta-reference
+git submodule update --init --recursive
 ```
 
 # Build
 
 ```sh
+$ export PATH=$PATH:{path_to_riscv64-unknown-linux-gnu-gcc}
 $ make
+```
+
+# Generate PDF doc
+
+```sh
+$ make doc
 ```
