@@ -39,14 +39,34 @@ export PATH=/opt/intel/sgxsdk/bin/:${PATH}
 sudo apt install makeself screen
 ```
 
-# Generate PDF doc
-
+# Clone sources
 ```sh
-$ make doc
+git clone http://192.168.100.100/vc707/tee-ta-reference.git
+cd tee-ta-reference
+git submodule update --init --recursive
+```
+
+# Prepare keystone
+```sh
+git clone http://192.168.100.100/vc707/keystone.git build-keystone
+cd build-keystone
+git checkout dev-gp-tee
+git submodule update --init --recursive
+./aist-setup.sh
+. source.sh
+make -j `nproc` run-tests
+cd ..
 ```
 
 # Build
 
 ```sh
-$ make
+. env-keystone.sh
+make
+```
+
+# Generate PDF doc
+
+```sh
+$ make doc
 ```
