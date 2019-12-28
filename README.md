@@ -61,8 +61,8 @@ cd ..
 # Build
 
 ```sh
-$ export PATH=$PATH:{path_to_riscv64-unknown-linux-gnu-gcc}
-$ make
+. env-keystone.sh
+make
 ```
 
 # Generate PDF doc
