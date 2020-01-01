@@ -26,7 +26,7 @@ sudo apt install clang-tools-6.0 libclang-6.0-dev cmake
 ```
 
 ## For SGX
-[Install SGX SDK and Linux driver](http://150.82.217.189/vc707/docs/blob/master/intel-sgx-remote-attestation-sample.md)
+[Install SGX SDK and Linux driver](http://192.168.100.100/vc707/docs/blob/master/intel-sgx-remote-attestation-sample.md)
 
 Don't for get adding PATH to `~/.profile`
 ```sh
@@ -39,14 +39,34 @@ export PATH=/opt/intel/sgxsdk/bin/:${PATH}
 sudo apt install makeself screen
 ```
 
-# Generate PDF doc
-
+# Clone sources
 ```sh
-$ make doc
+git clone http://192.168.100.100/vc707/tee-ta-reference.git
+cd tee-ta-reference
+git submodule update --init --recursive
+```
+
+# Prepare keystone
+```sh
+git clone http://192.168.100.100/vc707/keystone.git build-keystone
+cd build-keystone
+git checkout dev-gp-tee
+git submodule update --init --recursive
+./aist-setup.sh
+. source.sh
+make -j `nproc` run-tests
+cd ..
 ```
 
 # Build
 
 ```sh
-$ make
+. env-keystone.sh
+make
+```
+
+# Generate PDF doc
+
+```sh
+$ make doc
 ```
