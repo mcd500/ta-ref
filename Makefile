@@ -60,5 +60,6 @@ clean-build-keystone:
 
 .PHONY: clean
 clean:
+	make -C keyedge clean
 	make -C ref-ta/sgx clean
 	make -C ref-ta/keystone clean KEYSTONE_DIR=$(KEYSTONE_DIR) KEEDGER_DIR=$(KEEDGER_DIR)
