@@ -60,7 +60,43 @@ void gp_asymmetric_key_sign_test();
 
 void gp_symmetric_key_gcm_verify_test();
 
+//#define TEST_INITFINI
+
+#ifdef TEST_INITFINI
+static void
+init ()
+{
+  printf ("init_array\n");
+}
+
+static void (*const init_array []) ()
+  __attribute__ ((section (".init_array"), aligned (sizeof (void *))))
+  = { init };
+
+static void
+fini ()
+{
+  printf ("fini_array\n");
+}
+
+static void (*const fini_array []) ()
+  __attribute__ ((section (".fini_array"), aligned (sizeof (void *))))
+  = { fini };
+
+extern void (*__init_array_start []) (void) __attribute__((weak));
+extern void (*__init_array_end []) (void) __attribute__((weak));
+extern void (*__fini_array_start []) (void) __attribute__((weak));
+extern void (*__fini_array_end []) (void) __attribute__((weak));
+#endif
+
 void EAPP_ENTRY eapp_entry(){
+
+#ifdef TEST_INITFINI
+  if (__init_array_start && __init_array_end) {
+    for (void (**fp)() = __init_array_start; fp < __init_array_end; ++fp)
+      (**fp)();
+  }
+#endif
 
   //edge_init();
   magic_random_init();
@@ -88,7 +124,14 @@ void EAPP_ENTRY eapp_entry(){
 #ifdef NOT_DONE
 #endif
 
+#ifdef TEST_INITFINI
   printf("gp ecall_ta_main() end\n");
+
+  if (__fini_array_start && __fini_array_end) {
+    for (void (**fp)() = __fini_array_end - 1; __fini_array_start <= fp; --fp)
+      (**fp)();
+  }
+#endif
 
   EAPP_RETURN(0);
 }
