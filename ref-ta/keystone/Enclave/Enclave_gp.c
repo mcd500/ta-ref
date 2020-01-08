@@ -124,9 +124,9 @@ void EAPP_ENTRY eapp_entry(){
 #ifdef NOT_DONE
 #endif
 
-#ifdef TEST_INITFINI
   printf("gp ecall_ta_main() end\n");
 
+#ifdef TEST_INITFINI
   if (__fini_array_start && __fini_array_end) {
     for (void (**fp)() = __fini_array_end - 1; __fini_array_start <= fp; --fp)
       (**fp)();
