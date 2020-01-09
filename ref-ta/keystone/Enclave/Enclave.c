@@ -89,7 +89,7 @@ extern void (*__fini_array_start []) (void) __attribute__((weak));
 extern void (*__fini_array_end []) (void) __attribute__((weak));
 #endif
 
-void EAPP_ENTRY eapp_entry(){
+int _main(void) {
 
 #ifdef TEST_INITFINI
   if (__init_array_start && __init_array_end) {
