@@ -66,7 +66,7 @@ void gp_symmetric_key_gcm_verify_test();
 static void
 init ()
 {
-  printf ("init_array\n");
+  printf ("prepare keyperf\n");
 }
 
 static void (*const init_array []) ()
@@ -76,7 +76,7 @@ static void (*const init_array []) ()
 static void
 fini ()
 {
-  printf ("fini_array\n");
+  printf ("finalize keyperf\n");
 }
 
 static void (*const fini_array []) ()
