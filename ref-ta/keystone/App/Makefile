@@ -25,8 +25,8 @@ EDGER_LDFLAGS = -L$(EDGER_DIR)/lib
 EXTRA_LIBS = $(EDGER_DIR)/lib/flatccrt.a
 endif
 
-APP = App App_gp
-OBJS = App.o App_gp.o
+APP = App
+OBJS =App.o
 EOBJS = $(EDGECALLS)_u.o
 
 CCFLAGS += -I$(SDK_INCLUDE_HOST_DIR) -I$(SDK_INCLUDE_EDGE_DIR) -I$(SDK_INCLUDE_VERIFIER_DIR) $(addprefix -I,$(EDGER_INCLUDE_DIRS)) -I../Edge -I./ $(APP_VERBOSE)

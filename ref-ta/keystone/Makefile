@@ -59,6 +59,8 @@ Enclave_Name := Enclave/Enclave.eapp_riscv Enclave/Enclave_gp.eapp_riscv
 
 Enclave_Quiet=
 #Enclave_Quiet = -DENCLAVE_QUIET
+#Enclave_Perf=
+Enclave_Perf = -DENCLAVE_PERF
 
 EDGECALLS=Enclave
 
@@ -140,7 +142,7 @@ $(ENCLAVE_LIB_BUILD)/common/%.o: $(TOPDIR)/common/%.c
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
 enclave: gen $(Enclave_Lib_Objects)
-	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet)
+	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet) ENCLAVE_PERF=$(Enclave_Perf) 
 
 .PHONY: clean cleangen
 

@@ -33,8 +33,9 @@
 
 #include "Enclave_t.h"
 
-#include "sha3.hpp"
-#include "ed25519/ed25519.h"
+#include "tee_api_types_keystone.h"
+
+#include "tee-ta-internal.h"
 
 #include "test_dev_key.h"
 
@@ -44,21 +45,29 @@
 /* ecall_print_digest:
  *   testing digest-sign-verify with asymmetric key
  */
-void message_digest_test(void)
+void gp_message_digest_test(void)
 {
-  sha3_ctx_t ctx;
   static unsigned char data[256] = {
     // 0x00,0x01,...,0xff
 #include "test.dat"
   };
   unsigned char hash[SHA_LENGTH];
 
+  TEE_OperationHandle handle;
+  uint32_t hashlen = SHA_LENGTH;
+
+  TEE_Result rv;
+
   // Take hash of test data
-  sha3_init(&ctx, SHA_LENGTH);
+  rv = TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
+  GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
-  sha3_update(&ctx, data, sizeof(data));
+  TEE_DigestUpdate(handle, data, sizeof(data));
 
-  sha3_final(hash, &ctx);
+  rv = TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
+  GP_ASSERT(rv, "TEE_DigestDoFinal fails");
+
+  TEE_FreeOperation(handle);
 
   // Dump hashed data
   printf("hash: ");

@@ -30,46 +30,32 @@
 
 #include <string.h>
 
-//#include "Enclave.h"
 #include "Enclave_t.h"
 #include "hacks.h"
 
-/* ecall_print_time:
- *   testing time functions
- */
-#if defined(EDGE_OUT_WITH_STRUCTURE)
+#include "tee_api_types_keystone.h"
 
-void ree_time_test(void)
-{
-  ree_time_t time;
-  time = ocall_ree_time();
-  printf ("@REE time %u sec %u millis\n", time.seconds, time.millis);
-}
-
-#else
-
-void ree_time_test(void)
-{
-  struct ree_time_t time;
-
-  /* REE time */
-  int retval;
-  retval = ocall_ree_time(&time);
-  printf ("@REE time %u sec %u millis\n", time.seconds, time.millis);
-}
-
-#endif
+#include "tee-ta-internal.h"
 
 /* ecall_print_time:
  *   testing time functions
  */
-void trusted_time_test(void)
+void gp_ree_time_test(void)
 {
-  struct ree_time_t time;
-  struct timeval tv;
-  struct timezone tz;
-  gettimeofday(&tv, &tz);
-  time.seconds = tv.tv_sec;
-  time.millis = 0;
-  printf ("@time %u based on rdcycle\n", time.seconds);
+    TEE_Time time;
+
+    /* REE time */
+    TEE_GetREETime(&time);
+    printf ("@GP REE time %u sec %u millis\n", time.seconds, time.millis);
+}
+
+/* ecall_print_time:
+ *   testing time functions
+ */
+void gp_trusted_time_test(void)
+{
+    TEE_Time time;
+
+     TEE_GetSystemTime(&time);
+     printf ("@time %u based on rdcycle\n", time.seconds);
 }

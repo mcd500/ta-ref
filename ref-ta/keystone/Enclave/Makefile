@@ -2,22 +2,16 @@ ifndef KEYSTONE_SDK_DIR
 export KEYSTONE_SDK_DIR = $(KEYSTONE_DIR)/sdk
 endif
 
-ENCLAVE = Enclave Enclave_gp
-ENCLAVE_SRCS  = Enclave.c Enclave_gp.c
+ENCLAVE = Enclave
+ENCLAVE_SRCS  = Enclave.c
 ENCLAVE_C_SRCS= \
 		asymmetric_key.c \
-		asymmetric_key_gp.c \
 		message_digest.c \
-		message_digest_gp.c \
 		random.c \
-		random_gp.c \
 		secure-storage.c \
-		secure-storage_gp.c \
 		symmetric_key.c \
-		symmetric_key_gp.c \
 		symmetric_key_gcm.c \
 		time.c \
-		time_gp.c \
 		printf.c \
 		strcmp.c \
 		$(wildcard $(TEE_TA_DIR)/platform/keystone/*.c)
@@ -50,7 +44,9 @@ EXTRA_LIBS = $(EDGER_DIR)/lib/flatccrt.a
 endif
 
 LDFLAGS = -static -L$(SDK_LIB_DIR)
-CFLAGS += -I$(SDK_INCLUDE_ENCLAVE_DIR) -I$(SDK_INCLUDE_EDGE_DIR)  $(addprefix -I,$(EDGER_INCLUDE_DIRS)) -I../Edge -I. -I$(TEE_TA_PLATFORM_INCLUDE_DIR) -I$(AESGCM_INCLUDE_DIR) -I$(TEE_TA_INCLUDE_DIR) -I$(TEE_TA_DIR)/common $(ENCLAVE_QUIET)
+CFLAGS += -I$(SDK_INCLUDE_ENCLAVE_DIR) -I$(SDK_INCLUDE_EDGE_DIR)  $(addprefix -I,$(EDGER_INCLUDE_DIRS)) -I../Edge -I. -I$(TEE_TA_PLATFORM_INCLUDE_DIR) -I$(AESGCM_INCLUDE_DIR) -I$(TEE_TA_INCLUDE_DIR) -I$(TEE_TA_DIR)/common $(Enclave_Quiet)
+
+CFLAGS_PERF += $(ENCLAVE_PERF)
 
 ENCLAVE_OBJS   = $(patsubst %.c,%.o, $(ENCLAVE_SRCS))
 ENCLAVE_C_OBJS = $(patsubst %.c,%.o, $(ENCLAVE_C_SRCS))
@@ -65,7 +61,7 @@ $(ENCLAVE_OBJS): %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(ENCLAVE_C_OBJS): %.o: %.c $(EDGECALLS)_t.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(CFLAGS_PERF) -c $< -o $@
 
 $(ENCLAVE_BIN): %.eapp_riscv : %.o $(EDGECALLS)_t.o $(ENCLAVE_OBJS) $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(AESGCM_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB)
 	$(LINK) $(LDFLAGS) -o $@ $< $(EDGECALLS)_t.o $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(AESGCM_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB) $(EXTRA_LIBS) -T $(ENCLAVE_LDS)

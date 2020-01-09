@@ -33,10 +33,9 @@
 
 #include "Enclave_t.h"
 
-#include "sha3/sha3.h"
-#include "ed25519/ed25519.h"
+#include "tee_api_types_keystone.h"
 
-#include "test_dev_key.h"
+#include "tee-ta-internal.h"
 
 #define SHA_LENGTH (256/8)
 #define SIG_LENGTH 64
@@ -44,9 +43,8 @@
 /* ecall_print_digest:
  *   testing digest-sign-verify with asymmetric key
  */
-void asymmetric_key_sign_test(void)
+void gp_asymmetric_key_sign_test(void)
 {
-  sha3_ctx_t ctx;
   static unsigned char data[256] = {
     // 0x00,0x01,...,0xff
 #include "test.dat"
@@ -54,12 +52,21 @@ void asymmetric_key_sign_test(void)
   unsigned char hash[SHA_LENGTH];
   unsigned char sig[SIG_LENGTH];
 
+  TEE_OperationHandle handle;
+  uint32_t hashlen = SHA_LENGTH;;
+
+  TEE_Result rv;
+  
   // Take hash of test data
-  sha3_init(&ctx, SHA_LENGTH);
+  rv = TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
+  GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
-  sha3_update(&ctx, data, sizeof(data));
+  TEE_DigestUpdate(handle, data, sizeof(data));
 
-  sha3_final(hash, &ctx);
+  rv = TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
+  GP_ASSERT(rv, "TEE_DigestDoFinal fails");
+
+  TEE_FreeOperation(handle);
 
   // Dump hashed data
   printf("digest: ");
@@ -68,21 +75,50 @@ void asymmetric_key_sign_test(void)
   }
   printf("\n");
 
-  // Sign hashed data with test keys
-  ed25519_sign(sig, hash, SHA_LENGTH,
-	       _sanctum_dev_public_key, _sanctum_dev_secret_key);
+  uint32_t siglen = SIG_LENGTH;
+  TEE_ObjectHandle keypair;
+
+  // Sign hashed data with the generated keys
+  rv = TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, 256);
+  GP_ASSERT(rv, "TEE_AllocateOperation fails");
+
+  // Generate keypair
+  rv = TEE_AllocateTransientObject(TEE_TYPE_ECDSA_KEYPAIR, 256, &keypair);
+  GP_ASSERT(rv, "TEE_AllocateTransientObject fails");
+
+  rv = TEE_GenerateKey(keypair, 256, NULL, 0);
+  GP_ASSERT(rv, "TEE_GenerateKey fails");
+
+  rv = TEE_SetOperationKey(handle, keypair);
+  GP_ASSERT(rv, "TEE_SetOperationKey fails");
+
+  rv = TEE_AsymmetricSignDigest(handle, NULL, 0, hash, hashlen, sig, &siglen);
+  GP_ASSERT(rv, "TEE_AsymmetricSignDigest fails");
+
+  TEE_FreeOperation(handle);
 
   // Dump signature
-  printf("signature: ");
-  for (int i = 0; i < SIG_LENGTH; i++) {
+  printf("@signature: ");
+  for (int i = 0; i < siglen; i++) {
     printf ("%02x", sig[i]);
   }
   printf("\n");
 
   // Verify signature against hashed data
-  int verify_ok;
-  verify_ok = ed25519_verify(sig, hash, SHA_LENGTH, _sanctum_dev_public_key);
-  if (verify_ok) {
+  rv = TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_VERIFY, 256);
+  GP_ASSERT(rv, "TEE_AllocateOperation fails");
+
+  rv = TEE_SetOperationKey(handle, keypair);
+  GP_ASSERT(rv, "TEE_SetOperationKey fails");
+
+  TEE_Result verify_ok;
+  verify_ok = TEE_AsymmetricVerifyDigest(handle, NULL, 0, hash, hashlen, sig, siglen);
+
+  TEE_FreeOperation(handle);
+
+  TEE_FreeTransientObject(keypair);
+
+  if (verify_ok == TEE_SUCCESS) {
     printf("verify ok\n");
   } else {
     printf("verify fails\n");

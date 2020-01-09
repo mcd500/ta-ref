@@ -42,7 +42,7 @@ int printf(const char* fmt, ...)
   va_start(ap, fmt);
   vsnprintf(buf, BUFSIZ, fmt, ap);
   va_end(ap);
-  size_t sz = ocall_print_string(buf);
+  ocall_print_string(buf);
 
   return (int)strlen(buf) + 1;
 #else
@@ -50,42 +50,88 @@ int printf(const char* fmt, ...)
 #endif
 }
 
-void random_test();
-void ree_time_test();
-void trusted_time_test();
-void secure_storage_test();
-void message_digest_test();
-void symmetric_key_enc_verify_test();
-void asymmetric_key_sign_test();
+void gp_random_test();
+void gp_ree_time_test();
+void gp_trusted_time_test();
+void gp_secure_storage_test();
+void gp_message_digest_test();
+void gp_symmetric_key_enc_verify_test();
+void gp_asymmetric_key_sign_test();
+
+void gp_symmetric_key_gcm_verify_test();
+
+//#define TEST_INITFINI
+
+#ifdef TEST_INITFINI
+static void
+init ()
+{
+  printf ("init_array\n");
+}
+
+static void (*const init_array []) ()
+  __attribute__ ((section (".init_array"), aligned (sizeof (void *))))
+  = { init };
+
+static void
+fini ()
+{
+  printf ("fini_array\n");
+}
+
+static void (*const fini_array []) ()
+  __attribute__ ((section (".fini_array"), aligned (sizeof (void *))))
+  = { fini };
+
+extern void (*__init_array_start []) (void) __attribute__((weak));
+extern void (*__init_array_end []) (void) __attribute__((weak));
+extern void (*__fini_array_start []) (void) __attribute__((weak));
+extern void (*__fini_array_end []) (void) __attribute__((weak));
+#endif
 
 void EAPP_ENTRY eapp_entry(){
 
-  //  edge_init();
+#ifdef TEST_INITFINI
+  if (__init_array_start && __init_array_end) {
+    for (void (**fp)() = __init_array_start; fp < __init_array_end; ++fp)
+      (**fp)();
+  }
+#endif
+
+  //edge_init();
   magic_random_init();
 
-  printf("ecall_ta_main() start\n");
+  printf("gp ecall_ta_main() start\n");
 
-  random_test();
+  gp_random_test();
 
-  ree_time_test();
+  gp_ree_time_test();
 
-  trusted_time_test();
+  gp_trusted_time_test();
 
-  secure_storage_test();
+  gp_secure_storage_test();
 
-  message_digest_test();
+  gp_message_digest_test();
 
-  symmetric_key_enc_verify_test();
+  gp_symmetric_key_enc_verify_test();
 
+  gp_symmetric_key_gcm_verify_test();
   // symmetric_key_dec_verify_test();
 
-  asymmetric_key_sign_test();
+  gp_asymmetric_key_sign_test();
 
   // asymmetric_key_verify_test();
 #ifdef NOT_DONE
 #endif
 
-  printf("ecall_ta_main() end\n");
+  printf("gp ecall_ta_main() end\n");
+
+#ifdef TEST_INITFINI
+  if (__fini_array_start && __fini_array_end) {
+    for (void (**fp)() = __fini_array_end - 1; __fini_array_start <= fp; --fp)
+      (**fp)();
+  }
+#endif
 
   EAPP_RETURN(0);
 }
