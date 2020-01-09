@@ -25,6 +25,7 @@ endif
 EDGE_DIR=Edge
 ENCLAVE_DIR=Enclave
 APP_DIR=App
+PROFILER_DIR=profiler
 
 KEYSTONE_SDK_DIR = $(KEYSTONE_DIR)/sdk
 KEYSTONE_INSTALL_DIR = $(KEYSTONE_DIR)/buildroot_overlay/root/tests
@@ -59,8 +60,6 @@ Enclave_Name := Enclave/Enclave.eapp_riscv Enclave/Enclave_gp.eapp_riscv
 
 Enclave_Quiet=
 #Enclave_Quiet = -DENCLAVE_QUIET
-#Enclave_Perf=
-Enclave_Perf = -DENCLAVE_PERF
 
 EDGECALLS=Enclave
 
@@ -89,9 +88,13 @@ GENFILES=$(ENCLAVE_DIR)/$(EDGECALLS)_t.c $(ENCLAVE_DIR)/$(EDGECALLS)_t.h \
 	$(EDGE_DIR)/flatbuffers_common_reader.h
 endif
 
-.PHONY: all edger gen app enclave
+.PHONY: all edger profiler gen app enclave
 
-all: gen app enclave
+all: gen profiler app enclave
+
+####### profiler #######
+profiler:
+	make -C $(PROFILER_DIR)
 
 ######## Edger ########
 edger $(EDGER):
@@ -142,7 +145,7 @@ $(ENCLAVE_LIB_BUILD)/common/%.o: $(TOPDIR)/common/%.c
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
 enclave: gen $(Enclave_Lib_Objects)
-	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet) ENCLAVE_PERF=$(Enclave_Perf) 
+	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet)
 
 .PHONY: clean cleangen
 
@@ -150,6 +153,7 @@ cleangen:
 	rm -rf $(GENFILES)
 
 clean:
+	make -C $(PROFILER_DIR) clean
 	make -C $(APP_DIR) clean EDGECALLS=$(EDGECALLS)
 	make -C $(ENCLAVE_DIR) clean EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR)
 	rm -rf $(GENFILES)
