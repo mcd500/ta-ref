@@ -123,7 +123,7 @@ ob16_t ocall_getrandom16(unsigned int flags)
 EDGE_EXTERNC_END
 
 /* We hardcode these for demo purposes. */
-const char* enc_path = "Enclave_gp.eapp_riscv";
+const char* enc_path = "Enclave.eapp_riscv";
 const char* runtime_path = "eyrie-rt";
 
 int main(int argc, char** argv)
