@@ -7,7 +7,7 @@ void PERF_METHOD_ATTRIBUTE __attribute__((used)) __cyg_profile_func_exit(void * 
 
 static unsigned int __profiler_map_size = 0;
 static struct __profiler_header * __profiler_head = NULL;
-//static void PERF_METHOD_ATTRIBUTE __profiler_set_multithreaded(void);
+static void PERF_METHOD_ATTRIBUTE __profiler_set_multithreaded(void);
 static void PERF_METHOD_ATTRIBUTE __profiler_unset_multithreaded(void);
 static void PERF_METHOD_ATTRIBUTE __profiler_set_direction(uint64_t * const dir, enum direction_t const val);
 static void PERF_METHOD_ATTRIBUTE __profiler_write_entry(void * const this_fn, enum direction_t const val, uint64_t const threadID);
@@ -66,16 +66,19 @@ void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
 void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(void) {
 	if (__profiler_head != NULL) {
 		void * ptr = (void *)__profiler_head;
-		unsigned int const sz = __profiler_map_size;
+		unsigned int sz = __profiler_map_size;
 		__profiler_head = NULL;
 		__profiler_map_size = 0;
         int fd = ocall_open_file(SHARED_FILE, O_RDWR | O_CREAT, (mode_t)0600);
         if(fd == -1) return;
         size_t res;
-        if((res = ocall_write_file(fd, ptr, sz)) <= 0) {
-            // char err[] = "something wrong while writing file\n";
-            // ocall_print_buffer2(err, sizeof(err));
-            return;
+
+        while(sz > 0) {
+            if((res = ocall_write_file(fd, ptr, 4096)) <= 0) {
+                return;
+            }
+            ptr = ((char*)ptr + 4096);
+            sz -= 4096;
         }
         if(ocall_close_file(fd) == -1) {
             return;

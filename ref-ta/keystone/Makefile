@@ -90,7 +90,7 @@ endif
 
 .PHONY: all edger profiler gen app enclave
 
-all: gen profiler app enclave
+all: clean gen profiler app enclave
 
 ####### profiler #######
 profiler:

@@ -71,7 +71,7 @@ init ()
 
 static void (*const init_array []) ()
   __attribute__ ((section (".init_array"), aligned (sizeof (void *))))
-  = { init };
+  = { init, __profiler_map_info };
 
 static void
 fini ()
@@ -81,7 +81,7 @@ fini ()
 
 static void (*const fini_array []) ()
   __attribute__ ((section (".fini_array"), aligned (sizeof (void *))))
-  = { fini };
+  = { fini, __profiler_unmap_info };
 
 extern void (*__init_array_start []) (void) __attribute__((weak));
 extern void (*__init_array_end []) (void) __attribute__((weak));
@@ -89,15 +89,13 @@ extern void (*__fini_array_start []) (void) __attribute__((weak));
 extern void (*__fini_array_end []) (void) __attribute__((weak));
 #endif
 
-int _main(void) {
-
+void EAPP_ENTRY eapp_entry(){
 #ifdef TEST_INITFINI
   if (__init_array_start && __init_array_end) {
     for (void (**fp)() = __init_array_start; fp < __init_array_end; ++fp)
       (**fp)();
   }
 #endif
-
   //edge_init();
   magic_random_init();
 

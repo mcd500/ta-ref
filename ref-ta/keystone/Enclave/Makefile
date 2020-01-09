@@ -59,7 +59,7 @@ ENCLAVE_BIN = $(patsubst %,%.eapp_riscv,$(ENCLAVE))
 all: $(ENCLAVE_BIN)
 
 $(ENCLAVE_OBJS): %.o: %.c $(EDGECALLS)_t.h
-	$(CC) $(CFLAGS) -c -finstrument-functions $< -o $@
+	$(CC) $(CFLAGS) -c -finstrument-functions --include ../profiler/profiler.h $< -o $@
 
 $(ENCLAVE_C_OBJS): %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -c $< -o $@
