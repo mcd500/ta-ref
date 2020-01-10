@@ -7,10 +7,11 @@
 #include <stdio.h> /* vsnprintf */
 
 #include "Enclave_t.h"
+
 //#include "hacks.h"
 
 // Compiler may replace simple printf to puts and putchar
-int puts(const char *s)
+int __attribute__((no_instrument_function,hot)) puts(const char *s)
 {
 #ifndef ENCLAVE_QUIET
   size_t sz = ocall_print_string(s);
@@ -21,7 +22,7 @@ int puts(const char *s)
 #endif
 }
 
-int putchar(int c)
+int __attribute__((no_instrument_function,hot)) putchar(int c)
 {
 #ifndef ENCLAVE_QUIET
   char buf[2];
@@ -33,7 +34,7 @@ int putchar(int c)
 #endif
 }
 
-int printf(const char* fmt, ...)
+int __attribute__((no_instrument_function,hot)) printf(const char* fmt, ...)
 {
 #ifndef ENCLAVE_QUIET
   char buf[BUFSIZ] = { '\0' };
@@ -60,7 +61,7 @@ void gp_asymmetric_key_sign_test();
 
 void gp_symmetric_key_gcm_verify_test();
 
-//#define TEST_INITFINI
+#define TEST_INITFINI
 
 #ifdef TEST_INITFINI
 static void

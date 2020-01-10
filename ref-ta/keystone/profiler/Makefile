@@ -7,8 +7,8 @@ SDK_INCLUDE_APP_DIR = $(SDK_LIB_DIR)/app/include
 EDGE_DIR = $(shell pwd)/../edge
 OBJS = profiler.o # wrapper.o
 
-.PHONY: all clean
-all: libprofiler.a
+.PHONY: all clean analyzer
+all: libprofiler.a analyzer
 
 libprofiler.a: $(OBJS)
 	$(AR) $(ARFLAGS) $@ $^

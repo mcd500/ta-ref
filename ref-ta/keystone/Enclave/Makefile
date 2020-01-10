@@ -4,17 +4,17 @@ endif
 
 ENCLAVE = Enclave
 ENCLAVE_SRCS  = Enclave.c
-ENCLAVE_C_SRCS= \
+ENCLAVE_LIBSRCS = printf.c time.c
+ENCLAVE_C_TESTS= \
 		asymmetric_key.c \
 		message_digest.c \
 		random.c \
 		secure-storage.c \
 		symmetric_key.c \
 		symmetric_key_gcm.c \
-		time.c \
-		printf.c \
 		strcmp.c \
 		$(wildcard $(TEE_TA_DIR)/platform/keystone/*.c)
+ENCLAVE_C_SRCS = $(ENCLAVE_LIBSRCS) $(ENCLAVE_C_TESTS)
 
 CC = riscv64-unknown-linux-gnu-gcc
 CFLAGS = -Wall -fno-builtin-printf -DEDGE_IGNORE_EGDE_RESULT
@@ -51,6 +51,8 @@ LDFLAGS = -static -L$(SDK_LIB_DIR) -L$(PROFILER_DIR)
 CFLAGS += -I$(SDK_INCLUDE_ENCLAVE_DIR) -I$(SDK_INCLUDE_EDGE_DIR)  $(addprefix -I,$(EDGER_INCLUDE_DIRS)) -I../Edge -I. -I$(TEE_TA_PLATFORM_INCLUDE_DIR) -I$(AESGCM_INCLUDE_DIR) -I$(TEE_TA_INCLUDE_DIR) -I$(TEE_TA_DIR)/common $(ENCLAVE_QUIET)
 
 ENCLAVE_OBJS   = $(patsubst %.c,%.o, $(ENCLAVE_SRCS))
+ENCLAVE_C_TESTOBJS = $(patsubst %.c,%.o, $(ENCLAVE_C_TESTS))
+ENCLAVE_C_LIBOBJS = $(patsubst %.c,%.o, $(ENCLAVE_C_LIBSRCS))
 ENCLAVE_C_OBJS = $(patsubst %.c,%.o, $(ENCLAVE_C_SRCS))
 ENCLAVE_A_OBJS = $(patsubst %.s,%.o, $(ENCLAVE_A_SRCS))
 ENCLAVE_LDS ?= ./Enclave.lds
@@ -69,8 +71,11 @@ enclave_nm: $(ENCLAVE_BIN)
 $(ENCLAVE_OBJS): %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -c -finstrument-functions --include ../profiler/profiler.h $< -o $@
 
-$(ENCLAVE_C_OBJS): %.o: %.c $(EDGECALLS)_t.h
+$(ENCLAVE_C_TESTOBJS): %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -c -finstrument-functions $< -o $@
+
+$(ENCLAVE_C_LIBOBJS): %.o: %.c $(EDGECALLS)_t.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(ENCLAVE_BIN): %.eapp_riscv : %.o $(EDGECALLS)_t.o $(ENCLAVE_OBJS) $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(AESGCM_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB)
 	$(LINK) $(LDFLAGS) -o $@ $< $(EDGECALLS)_t.o $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(AESGCM_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB) $(EXTRA_LIBS) -T $(ENCLAVE_LDS)
@@ -78,8 +83,6 @@ $(ENCLAVE_BIN): %.eapp_riscv : %.o $(EDGECALLS)_t.o $(ENCLAVE_OBJS) $(ENCLAVE_C_
 
 clean:
 	rm -f *.o $(ENCLAVE_C_OBJS) $(ENCLAVE_BIN) $(EXTRA_CLEAN)
-
-.PHONY: copyto
 
 copyto:
 	cp -p $(ENCLAVE_BIN) $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample/
