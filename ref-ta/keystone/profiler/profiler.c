@@ -1,5 +1,7 @@
+#include <fcntl.h>
 #include "profiler.h"
 #include "profiler_data.h"
+#include "ocalls.h"
 #include "malloc.h"
 
 void PERF_METHOD_ATTRIBUTE __attribute__((used)) __cyg_profile_func_enter(void * this_fn, void * call_site);
@@ -60,9 +62,6 @@ void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
     __profiler_head->nsec = 0;
     __profiler_head->start = __rdtsc();
 }
-
-#include <fcntl.h>
-#include "ocalls.h"
 
 void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(void) {
 	if (__profiler_head != NULL) {
