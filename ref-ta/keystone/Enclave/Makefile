@@ -4,7 +4,11 @@ endif
 
 ENCLAVE = Enclave
 ENCLAVE_SRCS  = Enclave.c
-ENCLAVE_LIBSRCS = printf.c time.c
+ENCLAVE_LIBSRCS = \
+		printf.c \
+		time.c \
+		tools.c \
+		startup.c
 ENCLAVE_C_TESTS= \
 		asymmetric_key.c \
 		message_digest.c \
@@ -48,7 +52,7 @@ EXTRA_LIBS = $(EDGER_DIR)/lib/flatccrt.a $(PROFILER_LIB)
 endif
 
 LDFLAGS = -static -L$(SDK_LIB_DIR) -L$(PROFILER_DIR)
-CFLAGS += -I$(SDK_INCLUDE_ENCLAVE_DIR) -I$(SDK_INCLUDE_EDGE_DIR)  $(addprefix -I,$(EDGER_INCLUDE_DIRS)) -I../Edge -I. -I$(TEE_TA_PLATFORM_INCLUDE_DIR) -I$(AESGCM_INCLUDE_DIR) -I$(TEE_TA_INCLUDE_DIR) -I$(TEE_TA_DIR)/common $(ENCLAVE_QUIET)
+CFLAGS += -I$(SDK_INCLUDE_ENCLAVE_DIR) -I$(SDK_INCLUDE_EDGE_DIR)  $(addprefix -I,$(EDGER_INCLUDE_DIRS)) -I../Edge -I. -I$(TEE_TA_PLATFORM_INCLUDE_DIR) -I$(AESGCM_INCLUDE_DIR) -I$(TEE_TA_INCLUDE_DIR) -I$(TEE_TA_DIR)/common $(ENCLAVE_QUIET) -I$(PROFILER_DIR)
 
 ENCLAVE_OBJS   = $(patsubst %.c,%.o, $(ENCLAVE_SRCS))
 ENCLAVE_C_TESTOBJS = $(patsubst %.c,%.o, $(ENCLAVE_C_TESTS))
@@ -69,7 +73,7 @@ enclave_nm: $(ENCLAVE_BIN)
 
 
 $(ENCLAVE_OBJS): %.o: %.c $(EDGECALLS)_t.h
-	$(CC) $(CFLAGS) -c -finstrument-functions --include ../profiler/profiler.h $< -o $@
+	$(CC) $(CFLAGS) -c -finstrument-functions $< -o $@
 
 $(ENCLAVE_C_TESTOBJS): %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -c -finstrument-functions $< -o $@
