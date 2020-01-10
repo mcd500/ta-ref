@@ -23,6 +23,7 @@ static void PERF_METHOD_ATTRIBUTE __profiler_set_version(uint16_t version);
 
 void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
     char *ptr = malloc(BUF_SIZE);
+    memset(ptr, 0, BUF_SIZE);
     if(!ptr) return;
 
 #if defined(PROFILER_WARP_AROUND) || defined(PROFILER_LOOP_AROUND)

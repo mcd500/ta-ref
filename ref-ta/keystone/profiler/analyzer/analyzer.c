@@ -8,8 +8,10 @@
 #include "profiler_data.h"
 #include "stack.h"
 #include "analyzer.h"
+#include "nm_parse.h"
 
 #define BUF_MAX 65536
+#define NM_MAX 524288*10
 
 int main(int argc, char *argv[]) {
     static char buf[BUF_MAX];
@@ -17,7 +19,7 @@ int main(int argc, char *argv[]) {
     struct __profiler_data * data;
     uint64_t count;
     uint64_t i;
-    if(argc<2) return 0;
+    if(argc<3) return 0;
     int fd = open(argv[1], O_RDONLY, (mode_t)0600);
     if(fd < 0) {
         perror("file couldn't open");
@@ -28,6 +30,12 @@ int main(int argc, char *argv[]) {
         return 0;
     }
     close(fd);
+
+    static struct nm_info info[NM_MAX];
+    if(parse_nm(argv[2], info, NM_MAX) != 0) {
+        fprintf(stderr, "parse_nm failed\n");
+        return 0;
+    }
 
     header = (struct __profiler_header*)buf;
     data = ((struct __profiler_data *)(header + 1));
@@ -49,7 +57,11 @@ int main(int argc, char *argv[]) {
                 res = pop();
                 res.end = nsec;
                 __profiler_nsec_t duration = res.end - res.start;
-                printf("%03ld %*c[%8p] : %lu (%lu, %lu)\n", res.depth, (int)res.depth*2, ' ', res.callee, duration, res.start, res.end);
+                unsigned long addr = (unsigned long)res.callee;
+                printf("%03ld %*c[%10p(%s)] : %lu (%lu, %lu)\n",
+                        res.depth, (int)res.depth*2, ' ',
+                        res.callee, info[addr].func_name,
+                        duration, res.start, res.end);
                 break;
             default:
                 fprintf(stderr, "dir is something wrong!\n");

@@ -37,6 +37,7 @@ AESGCM_OBJS = $(wildcard $(LIBBUILD_DIR)/mbed-crypto/*.o)
 SHA3_OBJS = $(LIBBUILD_DIR)/tiny_sha3/sha3.o
 
 PROFILER_DIR = $(shell pwd)/../profiler
+ANALYZER_DIR = $(PROFILER_DIR)/analyzer
 PROFILER_LIB = $(PROFILER_DIR)/libprofiler.a
 
 EDGER_INClUDE_DIRS = $(EDGER_DIR)
@@ -56,13 +57,20 @@ ENCLAVE_LDS ?= ./Enclave.lds
 
 ENCLAVE_BIN = $(patsubst %,%.eapp_riscv,$(ENCLAVE))
 
-all: $(ENCLAVE_BIN)
+.PHONY: copyto enclave_nm
+
+all: clean $(ENCLAVE_BIN) enclave_nm
+
+enclave_nm: $(ENCLAVE_BIN)
+	nm $(ENCLAVE_BIN) > $(ANALYZER_DIR)/enclave_nm
+
+
 
 $(ENCLAVE_OBJS): %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -c -finstrument-functions --include ../profiler/profiler.h $< -o $@
 
 $(ENCLAVE_C_OBJS): %.o: %.c $(EDGECALLS)_t.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c -finstrument-functions $< -o $@
 
 $(ENCLAVE_BIN): %.eapp_riscv : %.o $(EDGECALLS)_t.o $(ENCLAVE_OBJS) $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(AESGCM_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB)
 	$(LINK) $(LDFLAGS) -o $@ $< $(EDGECALLS)_t.o $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(AESGCM_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB) $(EXTRA_LIBS) -T $(ENCLAVE_LDS)

@@ -1,10 +1,11 @@
 CC = gcc
+CFLAGS=-I../
 .PHONY: analyzer
 
 all: analyzer
 
-analyzer: analyzer.c
-	$(CC) $(EXTRA_FLAGS) -I../ -g $< -o $@ -Wall -Wpedantic
+analyzer: analyzer.o nm_parse.o
+	$(CC) $(EXTRA_FLAGS) -g $^ -o $@ -Wall -Wpedantic
 
 clean:
-	$(RM) *.o
+	$(RM) *.o analyzer
