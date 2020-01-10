@@ -5,21 +5,21 @@
 void PERF_METHOD_ATTRIBUTE __attribute__((used)) __cyg_profile_func_enter(void * this_fn, void * call_site);
 void PERF_METHOD_ATTRIBUTE __attribute__((used)) __cyg_profile_func_exit(void * this_fn, void * call_site);
 
-static unsigned int __profiler_map_size = 0;
-static struct __profiler_header * __profiler_head = NULL;
-static void PERF_METHOD_ATTRIBUTE __profiler_set_multithreaded(void);
-static void PERF_METHOD_ATTRIBUTE __profiler_unset_multithreaded(void);
-static void PERF_METHOD_ATTRIBUTE __profiler_set_direction(uint64_t * const dir, enum direction_t const val);
-static void PERF_METHOD_ATTRIBUTE __profiler_write_entry(void * const this_fn, enum direction_t const val, uint64_t const threadID);
-//static void PERF_METHOD_ATTRIBUTE __profiler_write_activation_record(enum direction_t const val);
-static void PERF_METHOD_ATTRIBUTE __profiler_activate_trace(void);
-static int PERF_METHOD_ATTRIBUTE __profiler_is_active();
-static uint64_t PERF_METHOD_ATTRIBUTE __profiler_get_thread_id();
-static void PERF_METHOD_ATTRIBUTE __profiler_get_time(__profiler_nsec_t * const nsec);
-static struct __profiler_data * const PERF_METHOD_ATTRIBUTE __profiler_get_data_ptr(void);
-static void PERF_METHOD_ATTRIBUTE __profiler_set_thread(struct __profiler_data * const data, uint64_t const threadID);
-static uint64_t __rdtsc(void);
-static void PERF_METHOD_ATTRIBUTE __profiler_set_version(uint16_t version);
+static inline unsigned int __profiler_map_size = 0;
+static inline struct __profiler_header * __profiler_head = NULL;
+static inline void PERF_METHOD_ATTRIBUTE __profiler_set_multithreaded(void);
+static inline void PERF_METHOD_ATTRIBUTE __profiler_unset_multithreaded(void);
+static inline void PERF_METHOD_ATTRIBUTE __profiler_set_direction(uint64_t * const dir, enum direction_t const val);
+static inline void PERF_METHOD_ATTRIBUTE __profiler_write_entry(void * const this_fn, enum direction_t const val, uint64_t const threadID);
+//static inline void PERF_METHOD_ATTRIBUTE __profiler_write_activation_record(enum direction_t const val);
+static inline void PERF_METHOD_ATTRIBUTE __profiler_activate_trace(void);
+static inline int PERF_METHOD_ATTRIBUTE __profiler_is_active();
+static inline uint64_t PERF_METHOD_ATTRIBUTE __profiler_get_thread_id();
+static inline void PERF_METHOD_ATTRIBUTE __profiler_get_time(__profiler_nsec_t * const nsec);
+static inline struct __profiler_data * const PERF_METHOD_ATTRIBUTE __profiler_get_data_ptr(void);
+static inline void PERF_METHOD_ATTRIBUTE __profiler_set_thread(struct __profiler_data * const data, uint64_t const threadID);
+static inline uint64_t __rdtsc(void);
+static inline void PERF_METHOD_ATTRIBUTE __profiler_set_version(uint16_t version);
 
 void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
     char *ptr = malloc(BUF_SIZE);
@@ -88,7 +88,7 @@ void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(void) {
 	}
 }
 
-static void
+static inline void
 PERF_METHOD_ATTRIBUTE
 __cyg_profile_func(void * const this_fn, enum direction_t const dir) {
 	if (__profiler_head == NULL || !__profiler_is_active())
@@ -115,45 +115,45 @@ __cyg_profile_func_exit(void * this_fn, void * call_site) {
 	__cyg_profile_func(this_fn, RET);
 }
 
-static uint64_t __rdtsc(void)
+static inline uint64_t __rdtsc(void)
 {
     unsigned long cycles;
     asm volatile ("rdcycle %0" : "=r" (cycles));
     return cycles;
 }
 
-static uint64_t
+static inline uint64_t
 PERF_METHOD_ATTRIBUTE
 __profiler_get_thread_id() {
     return 0;
 }
 
-static struct __profiler_data * const
+static inline struct __profiler_data * const
 PERF_METHOD_ATTRIBUTE
 __profiler_get_data_ptr(void) {
     struct __profiler_data * res = ((struct __profiler_data *)(__profiler_head + 1) + __profiler_head->idx++);
 	return res;
 }
 
-static void
+static inline void
 PERF_METHOD_ATTRIBUTE
 __profiler_get_time(__profiler_nsec_t * const nsec) {
     *nsec = __profiler_head->nsec;
 }
 
-static void PERF_METHOD_ATTRIBUTE
+static inline void PERF_METHOD_ATTRIBUTE
 __profiler_set_direction(uint64_t * const dir, enum direction_t const val) {
 	*dir = (uint64_t)val << 63 | (*dir & (((uint64_t)1 << 63) - 1));
 }
 
-static void
+static inline void
 PERF_METHOD_ATTRIBUTE
 __profiler_set_thread(struct __profiler_data * const data, uint64_t const threadID) {
     (void) data;
     (void) threadID;
 }
 
-static void
+static inline void
 PERF_METHOD_ATTRIBUTE
 __profiler_write_entry(void * const this_fn, enum direction_t const val, uint64_t const threadID) {
     struct __profiler_data * const data = __profiler_get_data_ptr();
@@ -163,13 +163,13 @@ __profiler_write_entry(void * const this_fn, enum direction_t const val, uint64_
     __profiler_set_thread(data, threadID);
 }
 
-static void PERF_METHOD_ATTRIBUTE
+static inline void PERF_METHOD_ATTRIBUTE
 __profiler_set_version(uint16_t version) {
     __profiler_head->flags = (__profiler_head->flags &(~0xFFFF)) | version;
 }
 
 
-static int PERF_METHOD_ATTRIBUTE __profiler_is_active() {
+static inline int PERF_METHOD_ATTRIBUTE __profiler_is_active() {
     uint32_t res;
     res = __profiler_head->flags >> 32;
     // asm volatile (
@@ -184,15 +184,15 @@ static int PERF_METHOD_ATTRIBUTE __profiler_is_active() {
     return res & (1 << 31);
 }
 
-static void PERF_METHOD_ATTRIBUTE __profiler_set_multithreaded() {
+static inline void PERF_METHOD_ATTRIBUTE __profiler_set_multithreaded() {
     __profiler_head->flags |= ((uint64_t)1) << 16;
 }
 
-static void PERF_METHOD_ATTRIBUTE __profiler_unset_multithreaded() {
+static inline void PERF_METHOD_ATTRIBUTE __profiler_unset_multithreaded() {
     __profiler_head->flags &= ~(((uint64_t)1) << 16);
 }
 
-static void PERF_METHOD_ATTRIBUTE __profiler_activate_trace() {
+static inline void PERF_METHOD_ATTRIBUTE __profiler_activate_trace() {
     if (__profiler_head == NULL)
         return;
     __profiler_head->flags |= (uint64_t)1 << 63;
