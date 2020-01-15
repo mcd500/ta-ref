@@ -94,7 +94,7 @@ all: clean gen profiler app enclave
 
 ####### profiler #######
 profiler:
-	make -C $(PROFILER_DIR)
+	make -C $(PROFILER_DIR) EDGER_DIR=$(EDGER_DIR) KEYSTONE_SDK_DIR=$(KEYSTONE_SDK_DIR)
 
 ######## Edger ########
 edger $(EDGER):
