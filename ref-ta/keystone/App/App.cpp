@@ -24,7 +24,7 @@ int ocall_open_file(const char* fname, int flags, int perm)
 {
   int desc = open(fname, flags, perm);
 #ifdef APP_VERBOSE
-  printf("@[SE] open file %s flags %x -> %d\n",fname,flags,desc);
+  printf("@[SE] open file %s flags %x -> %d (%d)\n",fname,flags,desc,errno);
 #endif
   return desc;
 }
