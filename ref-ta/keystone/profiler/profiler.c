@@ -2,7 +2,9 @@
 #include "profiler.h"
 #include "profiler_data.h"
 #include "ocalls.h"
-#include "malloc.h"
+
+#define PERF_SIZE 65536
+static char PERF_SECTION perf_buffer[PERF_SIZE];
 
 void PERF_METHOD_ATTRIBUTE __attribute__((used)) __cyg_profile_func_enter(void * this_fn, void * call_site);
 void PERF_METHOD_ATTRIBUTE __attribute__((used)) __cyg_profile_func_exit(void * this_fn, void * call_site);
@@ -24,9 +26,6 @@ static inline uint64_t __rdtsc(void);
 static inline void PERF_METHOD_ATTRIBUTE __profiler_set_version(uint16_t version);
 
 void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
-    char *ptr = malloc(BUF_SIZE);
-    memset(ptr, 0, BUF_SIZE);
-    if(!ptr) return;
 
 #if defined(PROFILER_WARP_AROUND) || defined(PROFILER_LOOP_AROUND)
     {
@@ -42,7 +41,7 @@ void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
     }
 #endif //defined(PROFILER_WARP_AROUND) || defined(PROFILER_LOOP_AROUND)
 
-	__profiler_head = (struct __profiler_header *)ptr;
+	__profiler_head = (struct __profiler_header *)perf_buffer;
 
 	__profiler_head->flags = 0;
 	__profiler_set_version(1);
@@ -55,8 +54,8 @@ void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
 #endif //defined(__PROFILER_MULTITHREADED)
     __profiler_activate_trace();
 	__profiler_head->self = __profiler_head;
-	__profiler_map_size = BUF_SIZE;
-    __profiler_head->size = BUF_SIZE;
+	__profiler_map_size = PERF_SIZE;
+    __profiler_head->size = PERF_SIZE;
     __profiler_head->idx = 0;
 	__profiler_head->__profiler_mem_location = (uintptr_t)&__profiler_map_info;
     __profiler_head->nsec = 0;
@@ -71,19 +70,12 @@ void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(void) {
 		__profiler_map_size = 0;
         int fd = ocall_open_file(SHARED_FILE, O_RDWR | O_CREAT, (mode_t)0600);
         if(fd == -1) return;
-        size_t res;
-
-        while(sz > 0) {
-            if((res = ocall_write_file(fd, ptr, 4096)) <= 0) {
-                return;
-            }
-            ptr = ((char*)ptr + 4096);
-            sz -= 4096;
+        if(ocall_write_file(fd, ptr, sz) <= 0) {
+            return;
         }
         if(ocall_close_file(fd) == -1) {
             return;
         }
-        free(ptr);
 	}
 }
 

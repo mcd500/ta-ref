@@ -1,7 +1,9 @@
 #pragma once
 
-#define BUF_SIZE 4096*15
 #define SHARED_FILE "/root/edger-sample/shared_mem"
+#ifndef NULL
+#define NULL 0
+#endif
 
 typedef unsigned long uint64_t;
 typedef unsigned long uintptr_t;

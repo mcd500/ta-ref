@@ -33,8 +33,14 @@ SECTIONS
   . = ALIGN(0x1000);
   .malloc_region : {
     __malloc_start = .;
-    . = . + 4096*128;
+    . = . + 4096*4;
     __malloc_zone_stop = .;
+  }
+  . = ALIGN(0x1000);
+  .perf_region : {
+    __perf_start = .;
+    . = . + 4096*128;
+    __perf_zone_stop = .;
   }
 
   _end = .;
