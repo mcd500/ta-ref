@@ -131,8 +131,8 @@ int main(int argc, char** argv)
   Keystone enclave;
   Params params;
 
-  // params.setFreeMemSize(1024*1024);
-  // params.setUntrustedMem(DEFAULT_UNTRUSTED_PTR, 1024*1024);
+  params.setFreeMemSize(1024*1024);
+  params.setUntrustedMem(DEFAULT_UNTRUSTED_PTR, 1024*1024);
 
   if(enclave.init(enc_path, runtime_path, params) != KEYSTONE_SUCCESS){
     printf("%s: Unable to start enclave\n", argv[0]);
