@@ -1,6 +1,8 @@
 #pragma once
 
-#define SHARED_FILE "/root/edger-sample/shared_mem"
+#ifndef LOG_FILE
+#define LOG_FILE "/root"
+#endif
 #ifndef NULL
 #define NULL 0
 #endif
