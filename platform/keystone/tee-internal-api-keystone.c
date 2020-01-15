@@ -137,15 +137,11 @@ static int set_object_key(void *id, unsigned int idlen,
   // attest enclave with file id and its len
   int ret = attest_enclave(rpt, id, idlen);
   if (ret == 0) {
-    unsigned char iv[TEE_OBJECT_NONCE_SIZE];
-    // We can't use random nonce for AES here because of persistency.
-    // Use the digest of attestation report as the last resort.
-    sha3_ctx_t ctx;
-    sha3_init(&ctx, TEE_OBJECT_NONCE_SIZE);
-    sha3_update(&ctx, rpt->enclave.signature, TEE_OBJECT_KEY_SIZE);
-    sha3_update(&ctx, id, idlen);
-    sha3_final(iv, &ctx);
-
+#if TEE_OBJECT_KEY_SIZE + TEE_OBJECT_NONCE_SIZE > SIGNATURE_SIZE
+#error Signature is too short
+#else
+    unsigned char *iv = rpt->enclave.signature + TEE_OBJECT_KEY_SIZE;
+#endif
     unsigned char *key = rpt->enclave.signature;
 #ifdef MBEDTLS_CIPHER_MODE_CBC
     mbedtls_aes_init(&(object->persist_ctx));
