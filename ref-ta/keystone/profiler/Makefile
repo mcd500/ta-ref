@@ -6,6 +6,7 @@ SDK_LIB_DIR =$(KEYSTONE_SDK_DIR)/lib
 SDK_INCLUDE_APP_DIR = $(SDK_LIB_DIR)/app/include
 EDGE_DIR = $(shell pwd)/../Edge
 OBJS = profiler.o # wrapper.o
+LOG_FILE = "/root/edger-sample/shared_mem"
 
 .PHONY: all clean analyzer
 all: libprofiler.a analyzer
@@ -15,6 +16,7 @@ libprofiler.a: $(OBJS)
 
 profiler.o: profiler.c
 	$(CC) $(EXTRA_FLAGS) \
+	-DLOG_FILE=\"$(LOG_FILE)\" \
 	-I$(SDK_INCLUDE_APP_DIR) \
 	-I$(EDGE_DIR) \
 	-I$(KEYEDGE_TARGET_DIR) \

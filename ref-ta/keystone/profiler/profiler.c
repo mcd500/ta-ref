@@ -68,7 +68,7 @@ void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(void) {
 		unsigned int sz = __profiler_map_size;
 		__profiler_head = NULL;
 		__profiler_map_size = 0;
-        int fd = ocall_open_file(SHARED_FILE, O_RDWR | O_CREAT, (mode_t)0600);
+        int fd = ocall_open_file(LOG_FILE, O_RDWR | O_CREAT, (mode_t)0600);
         if(fd == -1) return;
         if(ocall_write_file(fd, ptr, sz) <= 0) {
             return;
