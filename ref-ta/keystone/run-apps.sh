@@ -1,9 +1,10 @@
 #!/bin/bash
 
 expect -c '
-    set timeout 60
+    set timeout 180
     cd $::env(KEYSTONE_DIR)
-    spawn ./scripts/run-qemu.sh
+    set env(HOST_PORT) 3396
+    spawn "./scripts/run-qemu.sh"
     expect "*?ogin" { send "root\r" }
     expect "*?assword" { send "sifive\r" }
 
@@ -11,7 +12,7 @@ expect -c '
 
     expect "# " { send "cd edger-sample\r" }
     expect "# " { send "./App.client  Enclave.eapp_riscv eyrie-rt\r" }
-
-    expect "# " { send "poweroff\r" }
+    expect "# " { send "ls -ls .\r" }
+    expect "# " { send "xxd -l12000 shared_mem\r" }
     expect eof
     '
