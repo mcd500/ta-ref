@@ -36,16 +36,4 @@
 #include "Enclave.h"
 #include "Enclave_t.h"
 
-// random
-
-void gp_random_test(void)
-{
-    unsigned char rbuf[16];
-
-    TEE_GenerateRandom(rbuf, sizeof(rbuf));
-    tee_printf("@random: ");
-    for (int i = 0; i < sizeof(rbuf); i++) {
-        tee_printf ("%02x", rbuf[i]);
-    }
-    tee_printf("\n");
-}
+#include "random.impl"

@@ -34,29 +34,6 @@
 #include "tee_api_types_sgx.h"
 #include "tee-ta-internal.h"
 
-/* ecall_print_time:
- *   testing time functions
- */
-void gp_ree_time_test(void)
-{
-    TEE_Time time;
+#define tee_printf printf
 
-    /* REE time */
-    TEE_GetREETime(&time);
-    printf ("@GP REE time %u sec %u millis\n", time.seconds, time.millis);
-}
-
-/* ecall_print_time:
- *   testing time functions
- */
-void gp_trusted_time_test(void)
-{
-    TEE_Time time;
-
-    /* System time */
-    // Unfortunatelly, sgx trusted time doesn't work on linux ATM. See
-    // the comment in TEE_GetSystemTime(). So this fallbacks to
-    // TEE_GetREETime now.
-    TEE_GetSystemTime(&time);
-    printf ("@GP System time %u sec %u millis\n", time.seconds, time.millis);
-}
+#include "time.impl"

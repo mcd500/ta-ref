@@ -170,3 +170,6 @@ copyto:
 
 run:
 	./run-apps.sh
+
+perf:
+	./run-apps.sh perf

@@ -36,18 +36,7 @@
 
 #include "tee-ta-internal.h"
 
-/* ecall_print_random:
- *   testing basic random functions
- */
-void gp_random_test(void)
-{
-  unsigned char rbuf[16];
+#define tee_printf printf
 
-  TEE_GenerateRandom(rbuf, sizeof(rbuf));
-
-  printf("@GP random: ");
-  for (int i = 0; i < sizeof(rbuf); i++) {
-    printf ("%02x", rbuf[i]);
-  }
-  printf("\n");
-}
+// Common implementation
+#include "random.impl"

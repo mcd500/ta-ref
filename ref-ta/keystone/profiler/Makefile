@@ -4,7 +4,7 @@ ARFLAGS = rcs
 KEYEDGE_TARGET_DIR=$(EDGER_DIR)/target/include
 SDK_LIB_DIR =$(KEYSTONE_SDK_DIR)/lib
 SDK_INCLUDE_APP_DIR = $(SDK_LIB_DIR)/app/include
-EDGE_DIR = $(shell pwd)/../edge
+EDGE_DIR = $(shell pwd)/../Edge
 OBJS = profiler.o # wrapper.o
 
 .PHONY: all clean analyzer

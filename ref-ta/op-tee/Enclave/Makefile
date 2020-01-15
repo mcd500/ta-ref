@@ -67,7 +67,7 @@ cflags$(sm)    := $($(sm)-platform-cflags) $(CFLAGS_$(sm))
 
 cppflags$(sm) += -DTRACE_LEVEL=$(CFG_TEE_TA_LOG_LEVEL)
 
-cppflags$(sm) += -I. -I$(ta-dev-kit-dir$(sm))/include
+cppflags$(sm) += -I. -I$(ta-dev-kit-dir$(sm))/include -I../../common/Enclave
 
 ifeq ($(CFG_TA_MCOUNT),y)
 cppflags$(sm) += -pg

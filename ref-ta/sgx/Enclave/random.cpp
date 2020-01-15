@@ -34,17 +34,6 @@
 #include "tee_api_types_sgx.h"
 #include "tee-ta-internal.h"
 
-/* ecall_print_random:
- *   testing basic random functions
- */
-void gp_random_test(void)
-{
-  unsigned char rbuf[16];
+#define tee_printf printf
 
-  TEE_GenerateRandom(rbuf, sizeof(rbuf));
-  printf("@random: ");
-  for (unsigned int i = 0; i < sizeof(rbuf); i++) {
-    printf ("%02x", rbuf[i]);
-  }
-  printf("\n");
-}
+#include "random.impl"

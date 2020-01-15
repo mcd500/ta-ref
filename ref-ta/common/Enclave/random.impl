@@ -28,13 +28,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <tee_internal_api.h>
-#include <tee_internal_api_extensions.h>
+// random
 
-#include <string.h>
-#include <string_ext.h>
+void gp_random_test(void)
+{
+    unsigned char rbuf[16];
 
-#include "Enclave.h"
-#include "Enclave_t.h"
-
-#include "secure_storage.impl"
+    TEE_GenerateRandom(rbuf, sizeof(rbuf));
+    tee_printf("@random: ");
+    for (int i = 0; i < sizeof(rbuf); i++) {
+        tee_printf ("%02x", rbuf[i]);
+    }
+    tee_printf("\n");
+}

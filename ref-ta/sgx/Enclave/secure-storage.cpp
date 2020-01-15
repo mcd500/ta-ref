@@ -34,67 +34,6 @@
 #include "tee_api_types_sgx.h"
 #include "tee-ta-internal.h"
 
-// data and cipher length
-#define DATA_LENGTH 256
+#define tee_printf printf
 
-/* ecall_print_file:
- *   testing basic file i/o wit ocall
- */
-void gp_secure_storage_test(void)
-{
-  static unsigned char data[DATA_LENGTH] = {
-    // 0x00,0x01,...,0xff
-#include "test.dat"
-  };
-  unsigned char buf[DATA_LENGTH];
-
-  TEE_Result rv;
-
-  /* write */
-  TEE_ObjectHandle object;
-  rv = TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
-				  "FileOne", strlen("FileOne"),
-				  (TEE_DATA_FLAG_ACCESS_WRITE
-				   | TEE_DATA_FLAG_OVERWRITE),
-				  TEE_HANDLE_NULL,
-				  NULL, 0,
-				  &object);
-  GP_ASSERT(rv, "TEE_CreatePersistentObject fails");
-  
-  memcpy(buf, data, DATA_LENGTH);
-  rv = TEE_WriteObjectData(object, (const char *)data, DATA_LENGTH);
-  GP_ASSERT(rv, "TEE_WriteObjectData fails");
-
-  TEE_CloseObject(object);
-
-  /* clear buf */
-  memset(buf, 0, DATA_LENGTH);
- 
-  /* read */
-  rv = TEE_OpenPersistentObject(0,
-				"FileOne", strlen("FileOne"),
-				TEE_DATA_FLAG_ACCESS_READ,
-				&object);
-  GP_ASSERT(rv, "TEE_OpenPersistentObject fails");
-
-  uint32_t count;
-  rv = TEE_ReadObjectData(object, (char *)buf, DATA_LENGTH, &count);
-  GP_ASSERT(rv, "TEE_ReadObjectData fails");
-
-  TEE_CloseObject(object);
-
-  printf("%d bytes read: ", count);
-  for (uint32_t i = 0; i < count; i++) {
-    printf ("%02x", buf[i]);
-  }
-  printf("\n");
-
-  int verify_ok;
-  verify_ok = !memcmp(buf, data, DATA_LENGTH);
-  if (verify_ok) {
-    printf("verify ok\n");
-  } else {
-    printf("verify fails\n");
-  }
-
-}
+#include "secure_storage.impl"

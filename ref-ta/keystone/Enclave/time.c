@@ -37,25 +37,7 @@
 
 #include "tee-ta-internal.h"
 
-/* ecall_print_time:
- *   testing time functions
- */
-void gp_ree_time_test(void)
-{
-    TEE_Time time;
+#define tee_printf printf
 
-    /* REE time */
-    TEE_GetREETime(&time);
-    printf ("@GP REE time %u sec %u millis\n", time.seconds, time.millis);
-}
-
-/* ecall_print_time:
- *   testing time functions
- */
-void gp_trusted_time_test(void)
-{
-    TEE_Time time;
-
-     TEE_GetSystemTime(&time);
-     printf ("@time %u based on rdcycle\n", time.seconds);
-}
+// Common implementation
+#include "time.impl"

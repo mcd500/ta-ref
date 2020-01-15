@@ -148,7 +148,7 @@ Enclave_Quiet=
 
 Enclave_C_Files :=  $(Enclave_C_Files)
 Enclave_Cpp_Files := Enclave/Enclave.cpp $(wildcard Enclave/*.cpp) $(wildcard Enclave/Edger8rSyntax/*.cpp) $(wildcard Enclave/TrustedLibrary/*.cpp) $(Enclave_Cpp_Files)
-Enclave_Include_Paths := -IInclude -IEnclave -I$(SGX_SDK)/include -I$(SGX_SDK)/include/tlibc -I$(SGX_SDK)/include/libcxx $(Enclave_Include_Paths) -I../../platform/sgx -I../../include
+Enclave_Include_Paths := -IInclude -IEnclave -I$(SGX_SDK)/include -I$(SGX_SDK)/include/tlibc -I$(SGX_SDK)/include/libcxx $(Enclave_Include_Paths) -I../../platform/sgx -I../../ref-ta/common/Enclave -I../../include
 
 Enclave_C_Flags := $(Enclave_Include_Paths) -nostdinc -fvisibility=hidden -fpie -ffunction-sections -fdata-sections $(Enclave_Quiet)
 CC_BELOW_4_9 := $(shell expr "`$(CC) -dumpversion`" \< "4.9")
