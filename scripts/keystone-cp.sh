@@ -2,9 +2,7 @@
 
 PACKAGE_FILES=" \
 		${TEE_REF_TA_DIR}/ref-ta/keystone/App/App.client \
-		${TEE_REF_TA_DIR}/ref-ta/keystone/App/App_gp.client \
 		${TEE_REF_TA_DIR}/ref-ta/keystone/Enclave/Enclave.eapp_riscv \
-		${TEE_REF_TA_DIR}/ref-ta/keystone/Enclave/Enclave_gp.eapp_riscv \
 		${KEYSTONE_SDK_DIR}/rts/eyrie/eyrie-rt"
 
 OUTPUT_DIR=${KEYSTONE_DIR}/buildroot_overlay/root/ref-ta

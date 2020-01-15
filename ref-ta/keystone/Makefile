@@ -49,7 +49,7 @@ Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(ENCLAVE_LIB_BUILD)/tiny_sha3/
 
 ######## App Settings ########
 
-App_Name := App/App.client App/App_gp.client
+App_Name := App/App.client
 
 App_Verbose = -DAPP_VERBOSE
 #App_Verbose=
