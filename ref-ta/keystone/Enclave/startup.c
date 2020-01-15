@@ -8,25 +8,13 @@
 int main(void);
 
 #ifdef TEST_INITFINI
-static void
-init ()
-{
-  printf ("prepare keyperf\n");
-}
-
 static void (*const init_array []) ()
   __attribute__ ((section (".init_array"), aligned (sizeof (void *))))
-  = { init, __profiler_map_info };
-
-static void
-fini ()
-{
-  printf ("finalize keyperf\n");
-}
+  = { __profiler_map_info };
 
 static void (*const fini_array []) ()
   __attribute__ ((section (".fini_array"), aligned (sizeof (void *))))
-  = { fini, __profiler_unmap_info };
+  = { __profiler_unmap_info };
 
 extern void (*__init_array_start []) (void) __attribute__((weak));
 extern void (*__init_array_end []) (void) __attribute__((weak));
