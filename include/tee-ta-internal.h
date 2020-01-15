@@ -185,6 +185,10 @@ TEE_Result TEE_AllocateTransientObject(TEE_ObjectType objectType,
 void TEE_InitRefAttribute(TEE_Attribute *attr, uint32_t attributeID,
                           const void *buffer, uint32_t length);
 /// Crypto, Asymmetric key Verification Functions
+/** Storing asymmetric key. */
+void TEE_InitValueAttribute(TEE_Attribute *attr, uint32_t attributeID,
+			    uint32_t a, uint32_t b);
+/// Crypto, Asymmetric key Verification Functions
 /** Destroy object storing asymmetric key. */
 void TEE_FreeTransientObject(TEE_ObjectHandle object);
 

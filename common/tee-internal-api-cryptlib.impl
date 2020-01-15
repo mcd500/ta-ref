@@ -355,8 +355,8 @@ TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
-    // Only support 128-bit tag
-    if (!tag || tagLen != 128) {
+    // Only support 16-byte (128-bit) tag
+    if (!tag || tagLen != 16) {
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
@@ -517,6 +517,23 @@ void TEE_InitRefAttribute(TEE_Attribute *attr, uint32_t attributeID,
     attr->attributeID = attributeID;
     attr->content.ref.buffer = (void *)buffer;
     attr->content.ref.length = length;
+
+    return;
+}
+
+
+void TEE_InitValueAttribute(TEE_Attribute *attr, uint32_t attributeID,
+                           uint32_t a, uint32_t b)
+{
+    pr_deb("TEE_InitRefAttribute(): start");
+
+    if (!attr) {
+      TEE_Panic(0);
+    }
+
+    attr->attributeID = attributeID;
+    attr->content.value.a = a;
+    attr->content.value.b = b;
 
     return;
 }
