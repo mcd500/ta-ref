@@ -525,7 +525,7 @@ void TEE_InitRefAttribute(TEE_Attribute *attr, uint32_t attributeID,
 void TEE_InitValueAttribute(TEE_Attribute *attr, uint32_t attributeID,
                            uint32_t a, uint32_t b)
 {
-    pr_deb("TEE_InitRefAttribute(): start");
+    pr_deb("TEE_InitValueAttribute(): start");
 
     if (!attr) {
       TEE_Panic(0);
