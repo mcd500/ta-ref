@@ -40,7 +40,7 @@
 
 #define BUFSIZ 1024
 
-static int __printf(1, 2) tee_printf(const char* fmt, ...)
+static int __attribute__((format(printf, 1, 2),no_instrument_function,hot)) tee_printf(const char* fmt, ...)
 {
     unsigned int retval = 0;
 

@@ -28,9 +28,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config_ref_ta.h"
-
 // asymmetric sign/verify
+//
+#include "config_ref_ta.h"
+#include "tee_wrapper.h"
+
+
 
 #define SHA_LENGTH (256/8)
 #define SIG_LENGTH 64
@@ -49,18 +52,18 @@ void gp_asymmetric_key_sign_test(void)
 
     TEE_Result rv;
   
-    /* Get hash of test data */
-    rv = TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
+    // Take hash of test data
+    rv = _TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
     GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
-    TEE_DigestUpdate(handle, data, sizeof(data));
+    _TEE_DigestUpdate(handle, data, sizeof(data));
 
-    rv = TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
+    rv = _TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
     GP_ASSERT(rv, "TEE_DigestDoFinal fails");
 
-    TEE_FreeOperation(handle);
+    _TEE_FreeOperation(handle);
 
-    /* Dump hash data */
+    // Dump hashed data
     tee_printf("@digest: ");
     for (int i = 0; i < SHA_LENGTH; i++) {
       tee_printf ("%02x", hash[i]);
@@ -70,50 +73,51 @@ void gp_asymmetric_key_sign_test(void)
     uint32_t siglen = SIG_LENGTH;
     TEE_ObjectHandle keypair;
 
-    /* Sign hash data with the generated keys */
-    rv = TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, 256);
+    // Sign hashed data with the generated keys
+    rv = _TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, 256);
     GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
-    /* Generate keypair */
-    rv = TEE_AllocateTransientObject(TEE_TYPE_ECDSA_KEYPAIR, 256, &keypair);
+    // Generate keypair
+    rv = _TEE_AllocateTransientObject(TEE_TYPE_ECDSA_KEYPAIR, 256, &keypair);
     GP_ASSERT(rv, "TEE_AllocateTransientObject fails");
 
     TEE_Attribute attr;
-    TEE_InitValueAttribute(&attr,
+    _TEE_InitValueAttribute(&attr,
 			   TEE_ATTR_ECC_CURVE,
 			   TEE_ECC_CURVE_NIST_P256,
 			   256);
-    rv = TEE_GenerateKey(keypair, 256, &attr, 1);
+    rv = _TEE_GenerateKey(keypair, 256, &attr, 1);
     GP_ASSERT(rv, "TEE_GenerateKey fails");
 
-    rv = TEE_SetOperationKey(handle, keypair);
+    rv = _TEE_SetOperationKey(handle, keypair);
     GP_ASSERT(rv, "TEE_SetOperationKey fails");
 
-    rv = TEE_AsymmetricSignDigest(handle, NULL, 0, hash, hashlen, sig, &siglen);
+    rv = _TEE_AsymmetricSignDigest(handle, NULL, 0, hash, hashlen, sig, &siglen);
     GP_ASSERT(rv, "TEE_AsymmetricSignDigest fails");
 
-    TEE_FreeOperation(handle);
+    _TEE_FreeOperation(handle);
 
-    /* Dump signature */
+    // Dump signature
     tee_printf("@signature: ");
     for (uint32_t i = 0; i < siglen; i++) {
       tee_printf ("%02x", sig[i]);
     }
     tee_printf("\n");
 
-    /* Verify signature of hash data */
-    rv = TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_VERIFY, 256);
+    // Verify signature against hashed data
+    rv = _TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_VERIFY, 256);
     GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
-    rv = TEE_SetOperationKey(handle, keypair);
+    rv = _TEE_SetOperationKey(handle, keypair);
     GP_ASSERT(rv, "TEE_SetOperationKey fails");
 
     TEE_Result verify_ok;
-    verify_ok = TEE_AsymmetricVerifyDigest(handle, NULL, 0, hash, hashlen, sig, siglen);
+    verify_ok = _TEE_AsymmetricVerifyDigest(handle, NULL, 0, hash, hashlen, sig, siglen);
 
-    TEE_FreeOperation(handle);
+    _TEE_FreeOperation(handle);
+    tee_printf("@@_TEE_FreeOperation: \n");
 
-    TEE_FreeTransientObject(keypair);
+    _TEE_FreeTransientObject(keypair);
 
     if (verify_ok == TEE_SUCCESS) {
       printf("verify ok\n");
