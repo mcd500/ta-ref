@@ -34,7 +34,7 @@ ENCLAVE_LIB_BUILD = ./libbuild
 
 CC = riscv64-unknown-linux-gnu-gcc
 CXX = riscv64-unknown-linux-gnu-g++
-CFLAGS += -Wall
+CFLAGS += -Os -Wall
 LINK = riscv64-unknown-linux-gnu-ld
 AS = riscv64-unknown-linux-gnu-as
 
