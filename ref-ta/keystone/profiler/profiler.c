@@ -1,7 +1,7 @@
 #include <fcntl.h>
 #include "profiler.h"
 #include "profiler_data.h"
-#include "ocalls.h"
+#include "Enclave_t.h"
 
 #define PERF_SIZE 65536
 static char PERF_SECTION perf_buffer[PERF_SIZE];
