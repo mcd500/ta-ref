@@ -34,10 +34,12 @@
 #include "sha3.hpp"
 #include "ed25519/ed25519.h"
 #define AES256 1
-#include "aes/aes.h"
 #define MBEDTLS_CONFIG_FILE "mbed-crypto-config.h"
 #include "mbedtls/gcm.h"
 #include "mbedtls/aes.h"
+#ifndef MBEDTLS_CIPHER_MODE_CBC
+#include "aes/aes.h"
+#endif
 
 #define TEE_OBJECT_NONCE_SIZE 16
 #define TEE_OBJECT_KEY_SIZE 32
@@ -58,7 +60,7 @@ struct __TEE_OperationHandle
 #endif
   mbedtls_gcm_context aegcmctx;
   int aegcm_state;
-  unsigned char aegcm_iv[TEE_OBJECT_NONCE_SIZE];
+  unsigned char aeiv[TEE_OBJECT_NONCE_SIZE];
   unsigned char aekey[32];
   unsigned char pubkey[TEE_OBJECT_KEY_SIZE];
   unsigned char prikey[TEE_OBJECT_SKEY_SIZE];

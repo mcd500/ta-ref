@@ -219,7 +219,7 @@ TEE_Result TEE_AEInit(TEE_OperationHandle operation, const void *nonce,
       TEE_Panic(0);
     }
 
-    memcpy(operation->aegcm_iv, nonce, TEE_OBJECT_NONCE_SIZE);
+    memcpy(operation->aeiv, nonce, TEE_OBJECT_NONCE_SIZE);
     operation->aegcm_state = GCM_ST_INIT;
 
     return 0;
@@ -243,7 +243,7 @@ void TEE_AEUpdateAAD(TEE_OperationHandle operation, const void *AADdata,
     int mode = ((operation->mode == TEE_MODE_ENCRYPT) ?
 		MBEDTLS_GCM_ENCRYPT : MBEDTLS_GCM_DECRYPT);
     rv = mbedtls_gcm_starts(&(operation->aegcmctx), mode,
-			    operation->aegcm_iv, TEE_OBJECT_NONCE_SIZE,
+			    operation->aeiv, TEE_OBJECT_NONCE_SIZE,
 			    AADdata, AADdataLen);
     if (rv) {
       TEE_Panic(0);
@@ -410,7 +410,19 @@ void TEE_CipherInit(TEE_OperationHandle operation, const void *nonce,
       TEE_Panic(0);
     }
 
+#ifdef MBEDTLS_CIPHER_MODE_CBC
+    mbedtls_aes_init(&(operation->aectx));
+    memcpy(operation->aeiv, nonce, nonceLen);
+    if (operation->mode == TEE_MODE_ENCRYPT) {
+      mbedtls_aes_setkey_enc(&(operation->aectx), operation->aekey, 256);
+    } else if (operation->mode == TEE_MODE_DECRYPT) {
+      mbedtls_aes_setkey_dec(&(operation->aectx), operation->aekey, 256);
+    } else {
+      TEE_Panic(0);
+    }
+#else
     AES_init_ctx_iv(&(operation->aectx), operation->aekey, nonce);
+#endif
 
     return;
 }
@@ -428,6 +440,17 @@ TEE_Result TEE_CipherUpdate(TEE_OperationHandle operation, const void *srcData,
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
+
+#ifdef MBEDTLS_CIPHER_MODE_CBC
+    if (operation->mode == TEE_MODE_ENCRYPT) {
+      mbedtls_aes_crypt_cbc(&(operation->aectx), MBEDTLS_AES_ENCRYPT,
+			    srcLen, operation->aeiv, srcData, destData);
+      *destLen = srcLen;
+    } else if (operation->mode == TEE_MODE_DECRYPT) {
+      mbedtls_aes_crypt_cbc(&(operation->aectx), MBEDTLS_AES_DECRYPT,
+			    srcLen, operation->aeiv, srcData, destData);
+      *destLen = srcLen;
+#else
     if (destData != srcData)
       memcpy(destData, srcData, srcLen);
     if (operation->mode == TEE_MODE_ENCRYPT) {
@@ -436,6 +459,7 @@ TEE_Result TEE_CipherUpdate(TEE_OperationHandle operation, const void *srcData,
     } else if (operation->mode == TEE_MODE_DECRYPT) {
       AES_CBC_decrypt_buffer(&(operation->aectx), destData, srcLen);
       *destLen = srcLen;
+#endif
     } else {
       // TEE panic?
       return TEE_ERROR_BAD_PARAMETERS;
