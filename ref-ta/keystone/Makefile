@@ -22,6 +22,8 @@ EDGER=$(EDGER_DIR)/bin/keyedge
 EDGER_TYPE=KEYEDGE
 endif
 
+PROFILER=OFF
+
 EDGE_DIR=Edge
 ENCLAVE_DIR=Enclave
 APP_DIR=App
@@ -51,15 +53,21 @@ Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(ENCLAVE_LIB_BUILD)/tiny_sha3/
 
 App_Name := App/App.client
 
+ifeq ($(PROFILER),ON)
+App_Verbose=
+else
 App_Verbose = -DAPP_VERBOSE
-#App_Verbose=
+endif
 
 ######## Enclave Settings ########
 
 Enclave_Name := Enclave/Enclave.eapp_riscv Enclave/Enclave_gp.eapp_riscv
 
+ifeq ($(PROFILER),ON)
+Enclave_Quiet = -DENCLAVE_QUIET
+else
 Enclave_Quiet=
-#Enclave_Quiet = -DENCLAVE_QUIET
+endif
 
 EDGECALLS=Enclave
 
