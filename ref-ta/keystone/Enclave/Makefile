@@ -73,6 +73,8 @@ enclave_nm: $(ENCLAVE_BIN)
 	nm $(ENCLAVE_BIN) > $(ANALYZER_DIR)/enclave_nm
 
 
+$(EDGECALLS)_t.o: %.o: %.c $(EDGECALLS)_t.h
+	$(CC) $(CFLAGS) -Os -c $< -o $@
 
 $(ENCLAVE_OBJS): %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -c -finstrument-functions $< -o $@
