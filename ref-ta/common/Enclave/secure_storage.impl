@@ -82,6 +82,7 @@ void gp_secure_storage_test(void)
     }
     tee_printf("\n");
 
+    /* Compare read data with written data */
     int verify_ok;
     verify_ok = !memcmp(buf, data, DATA_LENGTH);
     if (verify_ok) {
