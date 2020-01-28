@@ -403,10 +403,11 @@ static int ocall_getrandom(char *buf, size_t len, unsigned int flags)
   while (len > 0) {
     rret = ocall_getrandom16(flags);
     if (rret.ret > 0) {
-      memcpy(buf, rret.b, rret.ret);
-      retval += rret.ret;
-      buf += rret.ret;
-      len -= (rret.ret <= len ? rret.ret : len);
+      int n = (rret.ret <= len ? rret.ret : len);
+      memcpy(buf, rret.b, n);
+      retval += n;
+      buf += n;
+      len -= n;
     } else if (rret.ret < 0) {
       retval = rret.ret;
       break;
