@@ -1,7 +1,6 @@
 sleep 1
 # cd ref-ta
 # ./App.client
-NOT USING REAL RANDOMNESS: TEST ONLY
 gp ecall_ta_main() start
 TIME
 TIME
