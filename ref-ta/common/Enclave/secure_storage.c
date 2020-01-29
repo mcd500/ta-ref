@@ -28,6 +28,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "config_ref_ta.h"
+
 // secure storage
 
 // data and cipher length

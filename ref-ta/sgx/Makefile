@@ -146,9 +146,10 @@ Crypto_Library_Name := sgx_tcrypto
 #Enclave_Quiet=-DENCLAVE_QUIET
 Enclave_Quiet=
 
-Enclave_C_Files :=  $(Enclave_C_Files)
+Enclave_Common_C_Files := $(wildcard ../common/Enclave/*.c)
+Enclave_C_Files :=  $(Enclave_C_Files) #$(wildcard ../common/Enclave/*.c)
 Enclave_Cpp_Files := Enclave/Enclave.cpp $(wildcard Enclave/*.cpp) $(wildcard Enclave/Edger8rSyntax/*.cpp) $(wildcard Enclave/TrustedLibrary/*.cpp) $(Enclave_Cpp_Files)
-Enclave_Include_Paths := -IInclude -IEnclave -I$(SGX_SDK)/include -I$(SGX_SDK)/include/tlibc -I$(SGX_SDK)/include/libcxx $(Enclave_Include_Paths) -I../../platform/sgx -I../../ref-ta/common/Enclave -I../../include
+Enclave_Include_Paths := -IInclude -IEnclave -I$(SGX_SDK)/include -I$(SGX_SDK)/include/tlibc -I$(SGX_SDK)/include/libcxx $(Enclave_Include_Paths) -I../../platform/sgx -I../../ref-ta/common/Enclave -I../../include -I
 
 Enclave_C_Flags := $(Enclave_Include_Paths) -nostdinc -fvisibility=hidden -fpie -ffunction-sections -fdata-sections $(Enclave_Quiet)
 CC_BELOW_4_9 := $(shell expr "`$(CC) -dumpversion`" \< "4.9")
@@ -179,7 +180,8 @@ Enclave_Link_Flags := $(Enclave_Security_Link_Flags) \
 	-Wl,--defsym,__ImageBase=0 -Wl,--gc-sections   \
 	-Wl,--version-script=Enclave/Enclave.lds
 
-Enclave_Cpp_Objects := $(sort $(Enclave_Cpp_Files:.cpp=.o))
+Enclave_Cpp_Objects := $(sort $(Enclave_Cpp_Files:.cpp=.o) \
+	$(subst .c,.o,$(subst ../common/,./,$(Enclave_Common_C_Files))))
 Enclave_C_Objects := $(sort $(Enclave_C_Files:.c=.o))
 
 Enclave_Name := enclave.so
@@ -276,6 +278,10 @@ Enclave/Enclave_t.c: Enclave/Enclave_t.h
 Enclave/Enclave_t.o: Enclave/Enclave_t.c
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -c $< -o $@
 	@echo "CC   <=  $<"
+
+Enclave/%.o: ../common/Enclave/%.c
+	@$(CXX) $(SGX_COMMON_CXXFLAGS) $(Enclave_Cpp_Flags) -c $< -o $@
+	@echo "CXX  <=  $<"
 
 Enclave/%.o: Enclave/%.cpp Enclave/Enclave_t.h
 	@$(CXX) $(SGX_COMMON_CXXFLAGS) $(Enclave_Cpp_Flags) -c $< -o $@

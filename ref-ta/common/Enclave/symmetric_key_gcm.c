@@ -28,6 +28,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "config_ref_ta.h"
+
 // asymmetric key verification with AES GCM
 
 #define CIPHER_LENGTH 256

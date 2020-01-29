@@ -28,12 +28,41 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <string.h>
+#include "config_ref_ta.h"
 
-#include "Enclave.h"
-#include "tee_api_types_sgx.h"
-#include "tee-ta-internal.h"
+// message digest
 
-#define tee_printf printf
+#define SHA_LENGTH (256/8)
+#define SIG_LENGTH 64
 
-#include "secure_storage.impl"
+void gp_message_digest_test(void)
+{
+    static unsigned char data[256] = {
+        // 0x00,0x01,...,0xff
+#include "test.dat"
+    };
+    unsigned char hash[SHA_LENGTH];
+
+    TEE_OperationHandle handle;
+    uint32_t hashlen = SHA_LENGTH;
+
+    TEE_Result rv;
+
+    // Take hash of test data
+    rv = TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
+    GP_ASSERT(rv, "TEE_AllocateOperation fails");
+
+    TEE_DigestUpdate(handle, data, sizeof(data));
+
+    rv = TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
+    GP_ASSERT(rv, "TEE_DigestDoFinal fails");
+
+    TEE_FreeOperation(handle);
+
+    // Dump hashed data
+    tee_printf("hash: ");
+    for (int i = 0; i < SHA_LENGTH; i++) {
+      tee_printf ("%02x", hash[i]);
+    }
+    tee_printf("\n");
+}

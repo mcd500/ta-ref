@@ -14,7 +14,7 @@ void gp_symmetric_key_gcm_verify_test();
 
 int main(void) {
   //edge_init();
-  magic_random_init();
+  //magic_random_init();
 
   printf("gp ecall_ta_main() start\n");
 

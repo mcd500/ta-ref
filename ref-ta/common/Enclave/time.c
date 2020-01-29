@@ -28,12 +28,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <string.h>
+// time
 
-#include "Enclave.h"
-#include "tee_api_types_sgx.h"
-#include "tee-ta-internal.h"
+#include "config_ref_ta.h"
 
-#define tee_printf printf
+void gp_ree_time_test(void)
+{
+    TEE_Time time;
 
-#include "time.impl"
+    /* REE time */
+    TEE_GetREETime(&time);
+    tee_printf ("@GP REE time %u sec %u millis\n", time.seconds, time.millis);
+}
+
+void gp_trusted_time_test(void)
+{
+    TEE_Time time;
+
+    /* System time */
+    TEE_GetSystemTime(&time);
+    tee_printf ("@GP System time %u sec %u millis\n", time.seconds, time.millis);
+}

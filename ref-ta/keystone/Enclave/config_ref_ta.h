@@ -28,7 +28,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef _CONFIG_REF_TA_H
+#define _CONFIG_REF_TA_H
+
 #include <string.h>
+#include <stdio.h>
 
 #include "Enclave_t.h"
 
@@ -38,5 +42,4 @@
 
 #define tee_printf printf
 
-// Common implementation
-#include "random.impl"
+#endif

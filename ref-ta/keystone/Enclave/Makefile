@@ -6,17 +6,11 @@ ENCLAVE = Enclave
 ENCLAVE_SRCS  = Enclave.c
 ENCLAVE_LIBSRCS = \
 		printf.c \
-		time.c \
 		tools.c \
+		strcmp.c \
 		startup.c
 ENCLAVE_C_TESTS= \
-		asymmetric_key.c \
-		message_digest.c \
-		random.c \
-		secure-storage.c \
-		symmetric_key.c \
-		symmetric_key_gcm.c \
-		strcmp.c \
+		$(wildcard $(TEE_TA_DIR)/ref-ta/common/Enclave/*.c) \
 		$(wildcard $(TEE_TA_DIR)/platform/keystone/*.c)
 ENCLAVE_C_SRCS = $(ENCLAVE_LIBSRCS) $(ENCLAVE_C_TESTS)
 

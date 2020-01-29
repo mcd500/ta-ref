@@ -28,16 +28,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef _CONFIG_REF_TA_H
+#define _CONFIG_REF_TA_H
+
 #include <string.h>
 
-#include "Enclave_t.h"
-#include "hacks.h"
-
-#include "tee_api_types_keystone.h"
-
+#include "Enclave.h"
+#include "tee_api_types_sgx.h"
 #include "tee-ta-internal.h"
 
 #define tee_printf printf
 
-// Common implementation
-#include "time.impl"
+#endif
