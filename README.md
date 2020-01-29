@@ -27,7 +27,8 @@ sudo apt install clang-tools-6.0 libclang-6.0-dev cmake
 
 ## For SGX
 Install sgx SDK from the following link. Do not have to install Linux driver, only sgx SDK is fine.
-[Install SGX SDK and Linux driver](http://192.168.100.100/vc707/docs/blob/master/intel-sgx-remote-attestation-sample.md)
+
+[Install sgx instruction](http://192.168.100.100/vc707/docs/blob/master/intel-sgx-remote-attestation-sample.md)
 
 Don't for get adding PATH to `~/.profile`
 ```sh
