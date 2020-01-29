@@ -48,7 +48,7 @@ void gp_message_digest_test(void)
 
     TEE_Result rv;
 
-    // Take hash of test data
+    /* Get hash of test data */
     rv = TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
     GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
@@ -59,7 +59,7 @@ void gp_message_digest_test(void)
 
     TEE_FreeOperation(handle);
 
-    // Dump hashed data
+    /* Dump hashed data */
     tee_printf("hash: ");
     for (int i = 0; i < SHA_LENGTH; i++) {
       tee_printf ("%02x", hash[i]);
