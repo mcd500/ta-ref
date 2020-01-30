@@ -331,7 +331,7 @@ else ifeq ($(CRYPTLIB),WOLFCRYPT)
 	@echo "CC   <=  $<"
 endif
 
-$(Enclave_Name): Enclave/Enclave_t.o $(Enclave_Cpp_Objects) $(Enclave_C_Objects)
+$(Enclave_Name): $(Crypt_extra_Files) Enclave/Enclave_t.o $(Enclave_Cpp_Objects) $(Enclave_C_Objects)
 	echo Enclave_Cpp_Objects=$(Enclave_Cpp_Objects)
 	echo Enclave_C_Objects=$(Enclave_C_Objects)
 	@$(CXX) $^ -o $@ $(Enclave_Link_Flags)
