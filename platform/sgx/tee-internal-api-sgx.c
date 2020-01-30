@@ -223,7 +223,7 @@ static int set_object_key(const void *id, unsigned int idlen,
   }
   printf("\n");
 #endif
-#ifdef MBEDTLS_CIPHER_MODE_CBC
+#if CRYPTLIB==MBEDCRYPT
   mbedtls_aes_init(&(object->persist_ctx));
   if (object->flags & TEE_DATA_FLAG_ACCESS_WRITE) {
     mbedtls_aes_setkey_enc(&(object->persist_ctx), key, 256);
@@ -231,6 +231,15 @@ static int set_object_key(const void *id, unsigned int idlen,
     mbedtls_aes_setkey_dec(&(object->persist_ctx), key, 256);
   }
   memcpy(object->persist_iv, iv, TEE_OBJECT_NONCE_SIZE);
+#elif CRYPTLIB==WOLFCRYPT
+    wc_AesInit(&(object->persist_ctx), NULL, 0);
+    if (object->flags & TEE_DATA_FLAG_ACCESS_WRITE) {
+      wc_AesSetKey(&(object->persist_ctx), key, AES_256_KEY_SIZE, iv,
+		   AES_ENCRYPTION);
+    } else { // TEE_DATA_FLAG_ACCESS_READ
+      wc_AesSetKey(&(object->persist_ctx), key, AES_256_KEY_SIZE, iv,
+		   AES_DECRYPTION);
+    }
 #else
   AES_init_ctx_iv(&(object->persist_ctx), key, iv);
 #endif
@@ -363,9 +372,11 @@ TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
       return TEE_ERROR_OUT_OF_MEMORY;
     }
 
-#ifdef MBEDTLS_CIPHER_MODE_CBC
+#if CRYPTLIB==MBEDCRYPT
     mbedtls_aes_crypt_cbc(&(object->persist_ctx), MBEDTLS_AES_ENCRYPT, size,
-			  object->persist_iv, buffer, data);
+                         object->persist_iv, buffer, data);
+#elif CRYPTLIB==WOLFCRYPT
+    wc_AesCbcEncrypt(&(object->persist_ctx), data, buffer, size);
 #else
     memcpy(data, buffer, size);
     AES_CBC_encrypt_buffer(&(object->persist_ctx), data, size);
@@ -414,13 +425,21 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
       return TEE_SUCCESS;
     }
 
-#ifdef MBEDTLS_CIPHER_MODE_CBC
+#if CRYPTLIB==MBEDCRYPT
     void *data = malloc(size);
     if (!data) {
       return TEE_ERROR_OUT_OF_MEMORY;
     }
     mbedtls_aes_crypt_cbc(&(object->persist_ctx), MBEDTLS_AES_DECRYPT, size,
-			  object->persist_iv, buffer, data);
+                         object->persist_iv, buffer, data);
+    memcpy(buffer, data, size);
+    free(data);
+#elif CRYPTLIB==WOLFCRYPT
+    void *data = malloc(size);
+    if (!data) {
+      return TEE_ERROR_OUT_OF_MEMORY;
+    }
+    wc_AesCbcDecrypt(&(object->persist_ctx), data, buffer, size);
     memcpy(buffer, data, size);
     free(data);
 #else
@@ -440,8 +459,10 @@ void TEE_CloseObject(TEE_ObjectHandle object)
       TEE_Panic(0);
     }
 
-#ifdef MBEDTLS_CIPHER_MODE_CBC
+#if CRYPTLIB==MBEDCRYPT
     mbedtls_aes_free(&(object->persist_ctx));
+#elif CRYPTLIB==WOLFCRYPT
+    wc_AesFree(&(object->persist_ctx));
 #else
     memset(&(object->persist_ctx), 0, sizeof(object->persist_ctx));
 #endif

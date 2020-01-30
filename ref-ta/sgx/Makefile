@@ -34,7 +34,16 @@ include ../../common.mk
 # Using SIM as defualt during development, comment out when it is ready
 SGX_MODE=SIM
 
-AESGCM_C_Files = aes.c gcm.c cipher.c cipher_wrap.c platform_util.c
+CRYPTLIB=WOLFCRYPT
+#CRYPTLIB=MBEDCRYPT
+
+ifeq ($(CRYPTLIB),MBEDCRYPT)
+Crypt_C_Files = $(addprefix ../../lib/mbed-crypto/library/,aes.c gcm.c cipher.c cipher_wrap.c platform_util.c)
+Crypt_Include_Paths = ../../lib/mbed-crypto/include
+else ifeq ($(CRYPTLIB),WOLFCRYPT)
+Crypt_C_Files = $(addprefix ../../lib/wolfssl/wolfcrypt/src/,aes.c)
+Crypt_Include_Paths = ../../lib/wolfssl
+endif
 
 SGX_COMMON_CFLAGS     += $(CFLAGS) -DED25519_NO_SEED=1
 SGX_COMMON_CXXFLAGS   += $(CXXFLAGS)
@@ -43,7 +52,7 @@ Enclave_C_Files       += $(wildcard ../../platform/sgx/*.c) \
                          $(wildcard ../../lib/tiny_sha3/sha*.c) \
                          $(wildcard ../../lib/ed25519/src/*.c) \
                          $(wildcard ../../lib/tiny-AES-c/aes.c) \
-			 $(addprefix ../../lib/mbed-crypto/library/,$(AESGCM_C_Files))
+			 $(Crypt_C_Files)
 
 
 
@@ -149,9 +158,9 @@ Enclave_Quiet=
 Enclave_Common_C_Files := $(wildcard ../common/Enclave/*.c)
 Enclave_C_Files :=  $(Enclave_C_Files) #$(wildcard ../common/Enclave/*.c)
 Enclave_Cpp_Files := Enclave/Enclave.cpp $(wildcard Enclave/*.cpp) $(wildcard Enclave/Edger8rSyntax/*.cpp) $(wildcard Enclave/TrustedLibrary/*.cpp) $(Enclave_Cpp_Files)
-Enclave_Include_Paths := -IInclude -IEnclave -I$(SGX_SDK)/include -I$(SGX_SDK)/include/tlibc -I$(SGX_SDK)/include/libcxx $(Enclave_Include_Paths) -I../../platform/sgx -I../../ref-ta/common/Enclave -I../../include -I
+Enclave_Include_Paths := -IInclude -IEnclave -I$(SGX_SDK)/include -I$(SGX_SDK)/include/tlibc -I$(SGX_SDK)/include/libcxx $(Enclave_Include_Paths) -I../../platform/sgx -I../../ref-ta/common/Enclave -I../../include -I$(Crypt_Include_Paths)
 
-Enclave_C_Flags := $(Enclave_Include_Paths) -nostdinc -fvisibility=hidden -fpie -ffunction-sections -fdata-sections $(Enclave_Quiet)
+Enclave_C_Flags := $(Enclave_Include_Paths) -nostdinc -fvisibility=hidden -fpie -ffunction-sections -fdata-sections $(Enclave_Quiet) -DCRYPTLIB=$(CRYPTLIB)
 CC_BELOW_4_9 := $(shell expr "`$(CC) -dumpversion`" \< "4.9")
 ifeq ($(CC_BELOW_4_9), 1)
 	Enclave_C_Flags += -fstack-protector
@@ -307,9 +316,15 @@ Enclave/%.o: Enclave/%.cpp Enclave/Enclave_t.h
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -DAES256=1 -c $< -o $@
 	@echo "CC   <=  $<"
 
+ifeq ($(CRYPTLIB),MBEDCRYPT)
 ../../lib/mbed-crypto/library/%.o: ../../lib/mbed-crypto/library/%.c Enclave/Enclave_t.h
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -I../../lib/mbed-crypto/include -DMBEDTLS_CONFIG_FILE="\"mbed-crypto-config.h\"" -c $< -o $@
 	@echo "CC   <=  $<"
+else ifeq ($(CRYPTLIB),WOLFCRYPT)
+../../lib/wolfssl/wolfcrypt/src/%.o: ../../lib/wolfssl/wolfcrypt/src/%.c
+	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -I../../lib/wolfssl -DWC_NO_RNG -DHAVE_AESGCM -DHAVE_AES_CBC -DHAVE_AES_DECRYPT -DHAVE_FIPS -DHAVE_FIPS_VERSION=2 -DWOLF_CRYPT_PORT_H -c $< -o $@
+	@echo "CC   <=  $<"
+endif
 
 $(Enclave_Name): Enclave/Enclave_t.o $(Enclave_Cpp_Objects) $(Enclave_C_Objects)
 	echo Enclave_Cpp_Objects=$(Enclave_Cpp_Objects)

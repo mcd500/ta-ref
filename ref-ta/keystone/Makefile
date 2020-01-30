@@ -32,6 +32,9 @@ PROFILER_DIR=profiler
 KEYSTONE_SDK_DIR = $(KEYSTONE_DIR)/sdk
 KEYSTONE_INSTALL_DIR = $(KEYSTONE_DIR)/buildroot_overlay/root/tests
 
+#CRYPTLIB=WOLFCRYPT
+CRYPTLIB=MBEDCRYPT
+
 ENCLAVE_LIB_BUILD = ./libbuild
 
 CC = riscv64-unknown-linux-gnu-gcc
@@ -45,9 +48,13 @@ Enclave_C_Flags = $(CFLAGS)
 
 Enclave_ed25519_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/ed25519/,$(subst .c,.o,$(notdir $(wildcard $(TOPDIR)/lib/ed25519/src/*.c))))
 
-Enclave_mbed_crypto_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/mbed-crypto/,aes.o gcm.o cipher.o cipher_wrap.o platform_util.o)
+ifeq ($(CRYPTLIB),MBEDCRYPT)
+Enclave_cryptlib_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/cryptlib/,aes.o gcm.o cipher.o cipher_wrap.o platform_util.o)
+else ifeq ($(CRYPTLIB),WOLFCRYPT)
+Enclave_cryptlib_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/cryptlib/,aes.o random.o sha256.o)
+endif
 
-Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(ENCLAVE_LIB_BUILD)/tiny_sha3/sha3.o $(ENCLAVE_LIB_BUILD)/tiny-AES-c/aes.o $(Enclave_mbed_crypto_Objects) $(ENCLAVE_LIB_BUILD)/common/tee-internal-api.o
+Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(ENCLAVE_LIB_BUILD)/tiny_sha3/sha3.o $(ENCLAVE_LIB_BUILD)/tiny-AES-c/aes.o $(Enclave_cryptlib_Objects) $(ENCLAVE_LIB_BUILD)/common/tee-internal-api.o
 
 ######## App Settings ########
 
@@ -61,7 +68,7 @@ endif
 
 ######## Enclave Settings ########
 
-Enclave_Name := Enclave/Enclave.eapp_riscv Enclave/Enclave_gp.eapp_riscv
+Enclave_Name := Enclave/Enclave.eapp_riscv
 
 ifeq ($(PROFILER),ON)
 Enclave_Quiet = -DENCLAVE_QUIET
@@ -144,16 +151,23 @@ $(ENCLAVE_LIB_BUILD)/tiny-AES-c/%.o: $(TOPDIR)/lib/tiny-AES-c/%.c
 	mkdir -p $(ENCLAVE_LIB_BUILD)/tiny-AES-c
 	$(CC) $(Enclave_C_Flags) -DAES256=1 -c $< -o $@
 
-$(ENCLAVE_LIB_BUILD)/mbed-crypto/%.o: $(TOPDIR)/lib/mbed-crypto/library/%.c
-	mkdir -p $(ENCLAVE_LIB_BUILD)/mbed-crypto
+ifeq ($(CRYPTLIB),MBEDCRYPT)
+$(ENCLAVE_LIB_BUILD)/cryptlib/%.o: $(TOPDIR)/lib/mbed-crypto/library/%.c
+	mkdir -p $(ENCLAVE_LIB_BUILD)/cryptlib
 	$(CC) $(Enclave_C_Flags) -I$(TOPDIR)/platform/keystone -DMBEDTLS_CONFIG_FILE="\"mbed-crypto-config.h\"" -c $< -o $@
+else ifeq ($(CRYPTLIB),WOLFCRYPT)
+$(ENCLAVE_LIB_BUILD)/cryptlib/%.o: $(TOPDIR)/lib/wolfssl/wolfcrypt/src/%.c
+	touch $(TOPDIR)/lib/wolfssl/wolfssl/wolfcrypt/fips.h
+	mkdir -p $(ENCLAVE_LIB_BUILD)/cryptlib
+	$(CC) $(Enclave_C_Flags) -I$(TOPDIR)/lib/wolfssl -DHAVE_AESGCM -DHAVE_AES_CBC -DHAVE_AES_DECRYPT -DHAVE_FIPS -DHAVE_FIPS_VERSION=2 -DCUSTOM_RAND_GENERATE_SEED=wc_ocall_genseed -c $< -o $@
+endif
 
 $(ENCLAVE_LIB_BUILD)/common/%.o: $(TOPDIR)/common/%.c
 	mkdir -p $(ENCLAVE_LIB_BUILD)/common
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
 enclave: gen $(Enclave_Lib_Objects)
-	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet)
+	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet) CRYPTLIB=$(CRYPTLIB)
 
 .PHONY: clean cleangen
 

@@ -1,3 +1,4 @@
+/* -*- mode:c -*- */
 /*
  * SPDX-License-Identifier: BSD-2-Clause
  *
@@ -28,6 +29,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#if CRYPTLIB==WOLFCRYPT
+void wolfSSL_Free(void *p)
+{
+  free(p);
+}
+
+void *wolfSSL_Malloc(size_t n)
+{
+  return malloc(n);
+}
+#endif
+
 // Common implementation of crypt-related APIs based on ctypt libraries.
 // This will be included by sgx and keystone platforms.
 
@@ -54,6 +67,11 @@ TEE_Result TEE_AllocateOperation(TEE_OperationHandle *operation,
       if (algorithm != TEE_ALG_AES_CBC_NOPAD
 	  && algorithm != TEE_ALG_AES_GCM) {
 	return TEE_ERROR_NOT_SUPPORTED;
+      }
+      if (algorithm == TEE_ALG_AES_GCM) {
+#if (CRYPTLIB!=MBEDCRYPT && CRYPTLIB!=WOLFCRYPT)
+	return TEE_ERROR_NOT_SUPPORTED;
+#endif
       }
       TEE_OperationHandle handle = malloc(sizeof(*handle));
       if (!handle) {
@@ -89,6 +107,24 @@ void TEE_FreeOperation(TEE_OperationHandle operation)
     pr_deb("TEE_FreeOperation(): start");
 
     if (operation) {
+      int mode = operation->mode;
+      int alg = operation->alg;
+      if (mode == TEE_MODE_ENCRYPT || mode == TEE_MODE_DECRYPT) {
+	if (alg == TEE_ALG_AES_CBC_NOPAD) {
+#if CRYPTLIB==MBEDCRYPT
+          mbedtls_aes_free(&(operation->aectx));
+#elif CRYPTLIB==WOLFCRYPT
+	  wc_AesFree(&(operation->aectx));
+#endif
+	} else if (alg == TEE_ALG_AES_GCM) {
+#if CRYPTLIB==MBEDCRYPT
+          mbedtls_gcm_free(&(operation->aegcmctx));
+#elif CRYPTLIB==WOLFCRYPT
+	  wc_AesFree(&(operation->aegcmctx));
+#endif
+	}
+      }
+
       free(operation);
     }
 
@@ -210,11 +246,20 @@ TEE_Result TEE_AEInit(TEE_OperationHandle operation, const void *nonce,
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
+#if CRYPTLIB==MBEDCRYPT
     mbedtls_gcm_init(&(operation->aegcmctx));
+#elif CRYPTLIB==WOLFCRYPT
+    wc_AesInit(&(operation->aegcmctx), NULL, 0);
+#endif
 
     int rv;
+#if CRYPTLIB==MBEDCRYPT
     rv = mbedtls_gcm_setkey(&(operation->aegcmctx), MBEDTLS_CIPHER_ID_AES,
 			    operation->aekey, 256);
+#elif CRYPTLIB==WOLFCRYPT
+    rv = wc_AesGcmSetKey(&(operation->aegcmctx), operation->aekey,
+			 TEE_OBJECT_KEY_SIZE);
+#endif
     if (rv) {
       TEE_Panic(0);
     }
@@ -240,6 +285,7 @@ void TEE_AEUpdateAAD(TEE_OperationHandle operation, const void *AADdata,
     }
 
     int rv;
+#if CRYPTLIB==MBEDCRYPT
     int mode = ((operation->mode == TEE_MODE_ENCRYPT) ?
 		MBEDTLS_GCM_ENCRYPT : MBEDTLS_GCM_DECRYPT);
     rv = mbedtls_gcm_starts(&(operation->aegcmctx), mode,
@@ -248,6 +294,13 @@ void TEE_AEUpdateAAD(TEE_OperationHandle operation, const void *AADdata,
     if (rv) {
       TEE_Panic(0);
     }
+#elif CRYPTLIB==WOLFCRYPT
+    if (AADdataLen > 0) {
+      memcpy(operation->aegcm_aad, AADdata, AADdataLen);
+    }
+    operation->aegcm_aadsz = AADdataLen;
+
+#endif
 
     operation->aegcm_state = GCM_ST_AAD;
 }
@@ -276,7 +329,17 @@ TEE_Result TEE_AEUpdate(TEE_OperationHandle operation, const void *srcData,
     }
 
     int rv;
+#if CRYPTLIB==MBEDCRYPT
     rv = mbedtls_gcm_update(&(operation->aegcmctx), srcLen, srcData, destData);
+#elif CRYPTLIB==WOLFCRYPT
+    // Use wc_AesGcmEncrypt anyway and ignore tag output
+    // wc_AesGcmEncrypt doesn't permit 0 length tag
+    uint8_t tag[16];
+    rv = wc_AesGcmEncrypt(&(operation->aegcmctx), destData, srcData, srcLen,
+                         operation->aeiv, 16,
+                         tag, 16,
+                         operation->aegcm_aad, operation->aegcm_aadsz);
+#endif
     if (rv) {
       TEE_Panic(0);
     }
@@ -321,12 +384,19 @@ TEE_Result TEE_AEEncryptFinal(TEE_OperationHandle operation,
     }
 
     int rv;
+#if CRYPTLIB==MBEDCRYPT
     rv = mbedtls_gcm_update(&(operation->aegcmctx), srcLen, srcData, destData);
     if (rv) {
       TEE_Panic(0);
     }
 
     rv = mbedtls_gcm_finish(&(operation->aegcmctx), tag, 16);
+#elif CRYPTLIB==WOLFCRYPT
+    rv = wc_AesGcmEncrypt(&(operation->aegcmctx), destData, srcData, srcLen,
+                         operation->aeiv, 16,
+                         tag, 16,
+                         operation->aegcm_aad, operation->aegcm_aadsz);
+#endif
     if (rv) {
       TEE_Panic(0);
     }
@@ -369,6 +439,7 @@ TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
     }
 
     int rv;
+#if CRYPTLIB==MBEDCRYPT
     rv = mbedtls_gcm_update(&(operation->aegcmctx), srcLen, srcData, destData);
     if (rv) {
       TEE_Panic(0);
@@ -383,6 +454,15 @@ TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
     if (memcmp(tag, check_tag, 16) != 0) {
       return TEE_ERROR_MAC_INVALID;
     }
+#elif CRYPTLIB==WOLFCRYPT
+    rv = wc_AesGcmDecrypt(&(operation->aegcmctx), destData, srcData, srcLen,
+                         operation->aeiv, 16,
+                         tag, 16,
+                         operation->aegcm_aad, operation->aegcm_aadsz);
+    if (rv) {
+      return TEE_ERROR_MAC_INVALID;
+    }
+#endif
 
     *destLen = srcLen;
     operation->aegcm_state = GCM_ST_FINAL;
@@ -410,13 +490,24 @@ void TEE_CipherInit(TEE_OperationHandle operation, const void *nonce,
       TEE_Panic(0);
     }
 
-#ifdef MBEDTLS_CIPHER_MODE_CBC
+#if CRYPTLIB==MBEDCRYPT
     mbedtls_aes_init(&(operation->aectx));
     memcpy(operation->aeiv, nonce, nonceLen);
     if (operation->mode == TEE_MODE_ENCRYPT) {
       mbedtls_aes_setkey_enc(&(operation->aectx), operation->aekey, 256);
     } else if (operation->mode == TEE_MODE_DECRYPT) {
       mbedtls_aes_setkey_dec(&(operation->aectx), operation->aekey, 256);
+    } else {
+      TEE_Panic(0);
+    }
+#elif CRYPTLIB==WOLFCRYPT
+    wc_AesInit(&(operation->aectx), NULL, 0);
+    if (operation->mode == TEE_MODE_ENCRYPT) {
+      wc_AesSetKey(&(operation->aectx), operation->aekey, AES_256_KEY_SIZE,
+		   nonce, AES_ENCRYPTION);
+    } else if (operation->mode == TEE_MODE_DECRYPT) {
+      wc_AesSetKey(&(operation->aectx), operation->aekey, AES_256_KEY_SIZE,
+		   nonce, AES_DECRYPTION);
     } else {
       TEE_Panic(0);
     }
@@ -441,7 +532,7 @@ TEE_Result TEE_CipherUpdate(TEE_OperationHandle operation, const void *srcData,
     }
 
 
-#ifdef MBEDTLS_CIPHER_MODE_CBC
+#if CRYPTLIB==MBEDCRYPT
     if (operation->mode == TEE_MODE_ENCRYPT) {
       mbedtls_aes_crypt_cbc(&(operation->aectx), MBEDTLS_AES_ENCRYPT,
 			    srcLen, operation->aeiv, srcData, destData);
@@ -449,6 +540,13 @@ TEE_Result TEE_CipherUpdate(TEE_OperationHandle operation, const void *srcData,
     } else if (operation->mode == TEE_MODE_DECRYPT) {
       mbedtls_aes_crypt_cbc(&(operation->aectx), MBEDTLS_AES_DECRYPT,
 			    srcLen, operation->aeiv, srcData, destData);
+      *destLen = srcLen;
+#elif CRYPTLIB==WOLFCRYPT
+    if (operation->mode == TEE_MODE_ENCRYPT) {
+      wc_AesCbcEncrypt(&(operation->aectx), destData, srcData, srcLen);
+      *destLen = srcLen;
+    } else if (operation->mode == TEE_MODE_DECRYPT) {
+      wc_AesCbcDecrypt(&(operation->aectx), destData, srcData, srcLen);
       *destLen = srcLen;
 #else
     if (destData != srcData)
