@@ -2,9 +2,9 @@ ifndef OPTEE_DIR
 $(error OPTEE_DIR is not set)
 endif
 
-CROSS_COMPILE=$(OPTEE_DIR)/out-br/host/bin/aarch64-linux-gnu-
+CROSS_COMPILE=$(OPTEE_DIR)/toolchains/aarch64/bin/aarch64-linux-gnu-
 
-TEEC_EXPORT=$(OPTEE_DIR)/out-br/host/aarch64-buildroot-linux-gnu/sysroot/usr
+TEEC_EXPORT=$(OPTEE_DIR)/toolchains/aarch64
 
 CC      = $(CROSS_COMPILE)gcc
 LD      = $(CROSS_COMPILE)ld

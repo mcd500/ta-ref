@@ -3,7 +3,7 @@ $(error OPTEE_DIR is not set)
 endif
 
 TA_DEV_KIT_DIR=$(OPTEE_DIR)/optee_os/ta
-CROSS_COMPILE=$(OPTEE_DIR)/out-br/host/bin/aarch64-linux-gnu-
+CROSS_COMPILE=$(OPTEE_DIR)/toolchains/aarch64/bin/aarch64-linux-gnu-
 LDFLAGS=
 
 CFG_TEE_TA_LOG_LEVEL ?= 4
