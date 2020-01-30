@@ -67,6 +67,26 @@ cd ..
 make
 ```
 
+# Run Enclaves
+
+## SGX
+
+```sh
+cd ref-ta/sgx/
+./app
+```
+
+## op-tee
+
+`Not completed`
+
+## keystone
+
+```sh
+cd ref-ta/keystone
+make run
+```
+
 # Generate PDF doc
 
 ```sh
