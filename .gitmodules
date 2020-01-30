@@ -16,3 +16,6 @@
 [submodule "keyedge"]
 	path = keyedge
 	url = http://192.168.100.100/vc707/keyedge.git
+[submodule "lib/wolfssl"]
+	path = lib/wolfssl
+	url = http://192.168.100.100/vc707/wolfssl.git

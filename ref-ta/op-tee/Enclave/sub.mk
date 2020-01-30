@@ -1,13 +1,13 @@
 global-incdirs-y += include
 srcs-y += \
 	Enclave.c \
-	random.c \
-	time.c \
-	message_digest.c \
-	symmetric_key.c \
-	symmetric_key_gcm.c \
-	asymmetric_key.c \
-	secure_storage.c
+	../../common/Enclave/random.c \
+	../../common/Enclave/time.c \
+	../../common/Enclave/message_digest.c \
+	../../common/Enclave/symmetric_key.c \
+	../../common/Enclave/symmetric_key_gcm.c \
+	../../common/Enclave/asymmetric_key.c \
+	../../common/Enclave/secure_storage.c
 
 # To remove a certain compiler flag, add a line like this
 #cflags-template_ta.c-y += -Wno-strict-prototypes

@@ -28,6 +28,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#ifndef _CONFIG_REF_TA_H
+#define _CONFIG_REF_TA_H
+
 #include <tee_internal_api.h>
 #include <tee_internal_api_extensions.h>
 
@@ -37,4 +40,4 @@
 #include "Enclave.h"
 #include "Enclave_t.h"
 
-#include "secure_storage.impl"
+#endif
