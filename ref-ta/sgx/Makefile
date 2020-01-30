@@ -40,9 +40,11 @@ CRYPTLIB=WOLFCRYPT
 ifeq ($(CRYPTLIB),MBEDCRYPT)
 Crypt_C_Files = $(addprefix ../../lib/mbed-crypto/library/,aes.c gcm.c cipher.c cipher_wrap.c platform_util.c)
 Crypt_Include_Paths = ../../lib/mbed-crypto/include
+Crypt_extra_Files =
 else ifeq ($(CRYPTLIB),WOLFCRYPT)
 Crypt_C_Files = $(addprefix ../../lib/wolfssl/wolfcrypt/src/,aes.c)
 Crypt_Include_Paths = ../../lib/wolfssl
+Crypt_extra_Files = ../../lib/wolfssl/wolfssl/wolfcrypt/fips.h
 endif
 
 SGX_COMMON_CFLAGS     += $(CFLAGS) -DED25519_NO_SEED=1
@@ -304,7 +306,10 @@ Enclave/%.o: Enclave/%.cpp Enclave/Enclave_t.h
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -c $< -o $@
 	@echo "CC   <=  $<"
 
-../../platform/sgx/%.o: ../../platform/sgx/%.c Enclave/Enclave_t.h ../../common/tee-internal-api-cryptlib.impl
+$(Crypt_extra_Files):
+	@touch $@
+
+../../platform/sgx/%.o: ../../platform/sgx/%.c Enclave/Enclave_t.h ../../common/tee-internal-api-cryptlib.impl $(Crypt_extra_Files)
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -c $< -o $@
 	@echo "CC   <=  $<"
 
@@ -321,7 +326,7 @@ ifeq ($(CRYPTLIB),MBEDCRYPT)
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -I../../lib/mbed-crypto/include -DMBEDTLS_CONFIG_FILE="\"mbed-crypto-config.h\"" -c $< -o $@
 	@echo "CC   <=  $<"
 else ifeq ($(CRYPTLIB),WOLFCRYPT)
-../../lib/wolfssl/wolfcrypt/src/%.o: ../../lib/wolfssl/wolfcrypt/src/%.c
+../../lib/wolfssl/wolfcrypt/src/%.o: ../../lib/wolfssl/wolfcrypt/src/%.c  $(Crypt_extra_Files)
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -I../../lib/wolfssl -DWC_NO_RNG -DHAVE_AESGCM -DHAVE_AES_CBC -DHAVE_AES_DECRYPT -DHAVE_FIPS -DHAVE_FIPS_VERSION=2 -DWOLF_CRYPT_PORT_H -c $< -o $@
 	@echo "CC   <=  $<"
 endif
