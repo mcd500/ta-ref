@@ -1,16 +1,34 @@
 SHELL=/bin/bash -x
 
-TEE_REF_TA_DIR   = $(shell pwd)
+TEE_REF_TA_DIR   =  $(shell pwd)
 KEYSTONE_DIR     ?= $(TEE_REF_TA_DIR)/build-keystone
 KEYSTONE_SDK_DIR ?= $(KEYSTONE_DIR)/sdk
-KEEDGER_DIR      = $(TEE_REF_TA_DIR)/keedger8r
-#PATH             = $(KEYSTONE_DIR)/riscv/bin:$(PATH)
+KEEDGER_DIR      =  $(TEE_REF_TA_DIR)/keedger8r
+OPTEE_DIR        ?= $(TEE_REF_TA_DIR)/build-optee
+#PATH      =  $(KEYSTONE_DIR)/riscv/bin:$${PATH}
 
 .PHONY: all
-all:
-	make -C keyedge
+all: ref-sgx ref-keystone ref-optee
+
+.PHONY: ref-sgx
+ref-sgx:
+	PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make -C keyedge
 	make -C ref-ta/sgx
+
+.PHONY: ref-keystone
+ref-keystone:
 	PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make -C ref-ta/keystone KEYSTONE_DIR=$(KEYSTONE_DIR) KEEDGER_DIR=$(KEEDGER_DIR)
+
+.PHONY: ref-optee
+ref-optee:
+	make -C ref-ta/op-tee OPTEE_DIR=$(OPTEE_DIR)
+
+.PHONY: optee
+optee:
+	rmfir $(OPTEE_DIR) || true
+	./unpack-prebuilt-optee.sh
+	cd $(OPTEE_DIR)/build; ../../unpack-optee-toolchain.sh
+	cd $(OPTEE_DIR)/build; make -j `nproc`; make -j `nproc` run
 
 .PHONY: keystone
 keystone:
@@ -62,4 +80,5 @@ clean-build-keystone:
 clean:
 	make -C keyedge clean
 	make -C ref-ta/sgx clean
-	make -C ref-ta/keystone clean KEYSTONE_DIR=$(KEYSTONE_DIR) KEEDGER_DIR=$(KEEDGER_DIR)
+	make -C ref-ta/keystone KEYSTONE_DIR=$(KEYSTONE_DIR) KEEDGER_DIR=$(KEEDGER_DIR) clean
+	make -C ref-ta/op-tee OPTEE_DIR=$(OPTEE_DIR) clean
