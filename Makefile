@@ -70,7 +70,7 @@ keystone-test:
 	$(TEE_REF_TA_DIR)/scripts/keystone-check.sh
 
 .PHONY: check
-check: all keystone-test
+check: keystone-test
 
 .PHONY: doc
 doc: clean-doc
