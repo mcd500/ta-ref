@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash -xe
 
 URL=http://192.168.100.100
 
@@ -6,14 +6,14 @@ mkdir -p toolchains/aarch32 toolchains/aarch64
 
 cd toolchains
 
-wget http://${RUL}/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf.tar.xz
-wget http://${RUL}/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz
+wget http://${URL}/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf.tar.xz
+wget http://${URL}/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz
 
 cd aarch32
-tar xf ../gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf.tar.xz
+tar xf ../gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf.tar.xz || exit 1
 cd ..
 
 cd aarch64
-tar xf ../gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz
+tar xf ../gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz || exit 1
 cd ..
 
