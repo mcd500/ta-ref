@@ -1,4 +1,4 @@
-CC = gcc
+CC = riscv64-unknown-linux-gnu-gcc
 CFLAGS=-I../
 .PHONY: analyzer
 

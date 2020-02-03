@@ -63,14 +63,11 @@ ENCLAVE_A_OBJS = $(patsubst %.s,%.o, $(ENCLAVE_A_SRCS))
 ENCLAVE_LDS ?= ./Enclave.lds
 
 ENCLAVE_BIN = $(patsubst %,%.eapp_riscv,$(ENCLAVE))
+ENCLAVE_NM = $(patsubst %,%.nm,$(ENCLAVE))
 
-.PHONY: copyto enclave_nm
+.PHONY: copyto
 
-all: clean $(ENCLAVE_BIN) enclave_nm
-
-enclave_nm: $(ENCLAVE_BIN)
-	nm $(ENCLAVE_BIN) > $(ANALYZER_DIR)/enclave_nm
-
+all: clean $(ENCLAVE_BIN)
 
 $(EDGECALLS)_t.o: %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -Os -c $< -o $@
@@ -89,7 +86,9 @@ $(ENCLAVE_BIN): %.eapp_riscv : %.o $(EDGECALLS)_t.o $(ENCLAVE_OBJS) $(ENCLAVE_C_
 	chmod -x $@
 
 clean:
-	rm -f *.o $(ENCLAVE_C_OBJS) $(ENCLAVE_BIN) $(EXTRA_CLEAN)
+	rm -f *.o $(ENCLAVE_C_OBJS) $(ENCLAVE_BIN) $(EXTRA_CLEAN) $(ENCLAVE_NM)
 
 copyto:
+	nm $(ENCLAVE_BIN) > $(ENCLAVE_NM)
+	install -m 0444 $(ENCLAVE_NM) $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample
 	cp -p $(ENCLAVE_BIN) $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample/

@@ -35,6 +35,9 @@ profiler.o: profiler.c
 analyzer:
 	make -C analyzer
 
+copyto:
+	install -m 0744 analyzer/analyzer $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample/
+
 clean:
 	make clean -C analyzer
 	$(RM) *.o libprofiler.a
