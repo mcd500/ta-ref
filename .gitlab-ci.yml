@@ -27,6 +27,8 @@ build:
       - ./unpack-prebuilt-keystone.sh 2> /dev/null
       - cd ${KEYSTONE_DIR}; ./aist-setup.sh; cd ..
       - git submodule update --init --recursive
+      - ./unpack-prebuilt-optee.sh
+      - cd build-optee/build; unpack-optee-toolchain.sh; cd ../..
 #      - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} keystone
 #      - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR}
       - make
