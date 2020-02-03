@@ -18,6 +18,7 @@ before_script:
       - rmdir ${KEYSTONE_DIR} || true
       - ./unpack-prebuilt-keystone.sh 2> /dev/null
       - cd ${KEYSTONE_DIR}; ./aist-setup.sh; cd ..
+      - rm -fr ${OPTEE_DIR} || true
       - ./unpack-prebuilt-optee.sh 2> /dev/null
       - cd build-optee; ../unpack-optee-toolchain.sh 2> /dev/null ; cd ..
 
