@@ -3,4 +3,5 @@ if [ -z "$GITLAB_HOST" ]; then
 fi
 export KEYSTONE_DIR=`pwd`/build-keystone
 export KEYSTONE_SDK_DIR=${KEYSTONE_DIR}/sdk
-export PATH=${PATH}:${KEYSTONE_DIR}/riscv/bin
+export OPTEE_DIR=`pwd`/build-optee
+export PATH=${PATH}:${KEYSTONE_DIR}/riscv/bin:${OPTEE_DIR}/toolchains/aarch64/bin
