@@ -2,6 +2,8 @@ ifndef OPTEE_DIR
 $(error OPTEE_DIR is not set)
 endif
 
+export user-ta-version=1
+
 .PHONY: all copyto run clean
 all:
 	make -C Enclave
