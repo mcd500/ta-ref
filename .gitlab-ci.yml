@@ -18,6 +18,8 @@ before_script:
       - rmdir ${KEYSTONE_DIR} || true
       - ./unpack-prebuilt-keystone.sh 2> /dev/null
       - cd ${KEYSTONE_DIR}; ./aist-setup.sh; cd ..
+      - ./unpack-prebuilt-optee.sh 2> /dev/null
+      - cd build-optee; ../unpack-optee-toolchain.sh 2> /dev/null ; cd ..
 
 cache:
     untracked: true
@@ -37,8 +39,6 @@ build:
     script:
       - export PATH=${PATH}:${RISCV_GCC_DIR}
       - . env-keystone.sh
-      - ./unpack-prebuilt-optee.sh 2> /dev/null
-      - cd build-optee; ../unpack-optee-toolchain.sh 2> /dev/null ; cd ..
       - make
       - make doc
     artifacts:
