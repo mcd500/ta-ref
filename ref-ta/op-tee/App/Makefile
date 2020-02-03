@@ -2,9 +2,9 @@ ifndef OPTEE_DIR
 $(error OPTEE_DIR is not set)
 endif
 
-CROSS_COMPILE=$(OPTEE_DIR)/toolchains/aarch64/bin/aarch64-linux-gnu-
+CROSS_COMPILE=$(OPTEE_DIR)/out-br/host/bin/aarch64-linux-gnu-
 
-TEEC_EXPORT=$(OPTEE_DIR)/toolchains/aarch64
+TEEC_EXPORT=$(OPTEE_DIR)/out-br/host/aarch64-buildroot-linux-gnu/sysroot/usr
 
 CC      = $(CROSS_COMPILE)gcc
 LD      = $(CROSS_COMPILE)ld
@@ -16,9 +16,9 @@ READELF = $(CROSS_COMPILE)readelf
 
 OBJS = main.o
 
-CFLAGS += -Wall -I../Enclave -I$(TEEC_EXPORT)/include -I./include
+CFLAGS += -Wall -I../Enclave -I$(TEEC_EXPORT)/include -I./include -I$(OPTEE_DIR)/optee_client/public
 #Add/link other required libraries here
-LDADD += -lteec -L$(TEEC_EXPORT)/lib
+LDADD += -lteec -L$(TEEC_EXPORT)/lib -L$(TEEC_EXPORT)
 
 BINARY = optee_ref_ta
 
