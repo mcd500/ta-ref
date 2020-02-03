@@ -21,12 +21,12 @@ build:
       - shell
 
     script:
+      - git submodule update --init --recursive
       - export PATH=${PATH}:${RISCV_GCC_DIR}
       - . env-keystone.sh
       - rmdir ${KEYSTONE_DIR} || true
       - ./unpack-prebuilt-keystone.sh 2> /dev/null
       - cd ${KEYSTONE_DIR}; ./aist-setup.sh; cd ..
-      - git submodule update --init --recursive
       - ./unpack-prebuilt-optee.sh 2> /dev/null
       - echo pwd=`pwd`
       - cd build-optee; ../unpack-optee-toolchain.sh; cd ..
