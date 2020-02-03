@@ -48,6 +48,16 @@ keystone-qemu:
 	make -C hifive-work/buildroot_initramfs; \
 	make -f hifive.mk
 
+.PHONY: sgx-thinkpad-test
+sgx-test:
+	# scp binaries to thinkpad
+	# run ref-ta on thinkpad
+
+.PHONY: optee-rpi3-test
+optee-test:
+	# scp binaries to rpi3
+	# run ref-ta on rpi3
+
 .PHONY: keystone-test
 keystone-test:
 	set -e; cd $(KEYSTONE_DIR); \
