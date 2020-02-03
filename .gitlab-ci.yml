@@ -29,7 +29,7 @@ build:
       - cd ${KEYSTONE_DIR}; ./aist-setup.sh; cd ..
       - ./unpack-prebuilt-optee.sh 2> /dev/null
       - echo pwd=`pwd`
-      - cd build-optee; ../unpack-optee-toolchain.sh 2> /dev/null ; cd ..
+      - cd build-optee; ../unpack-optee-toolchain.sh; cd ..
 #      - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} keystone
 #      - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR}
       - make
