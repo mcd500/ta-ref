@@ -18,5 +18,5 @@ copyto:
 	make -C App copyto
 	make -C $(OPTEE_DIR)/build buildroot
 
-run:
+run: copyto
 	./run-apps.sh
