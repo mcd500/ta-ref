@@ -5,6 +5,7 @@ variables:
 
 before_script:
       - git submodule update --init --recursive
+      - . env-keystone.sh
       - yes "" | sudo apt-get install android-tools-adb android-tools-fastboot autoconf \
         automake bc bison build-essential ccache cscope curl device-tree-compiler \
         expect flex ftp-upload gdisk iasl libattr1-dev libc6:i386 libcap-dev \
