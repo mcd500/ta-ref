@@ -50,6 +50,7 @@ int main(int argc, char *argv[]) {
             case CALL:
                 res.callee = data->callee;
                 res.start = nsec; res.end = 0;
+                res.idx = i;
                 push(res);
                 break;
             case RET:
@@ -58,10 +59,7 @@ int main(int argc, char *argv[]) {
                 res.end = nsec;
                 __profiler_nsec_t duration = res.end - res.start;
                 unsigned long addr = (unsigned long)res.callee;
-                printf("%03ld %*c[%10p(%s)] : %lu (%lu, %lu)\n",
-                        res.depth, (int)res.depth*2, ' ',
-                        res.callee, get_func_name(table, addr),
-                        duration, res.start, res.end);
+                printf("%ld,%ld,%s,%ld\n", res.idx, res.depth, get_func_name(table, addr), duration);
                 break;
             default:
                 fprintf(stderr, "dir is something wrong!\n");

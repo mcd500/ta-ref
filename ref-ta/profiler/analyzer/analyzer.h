@@ -3,6 +3,7 @@
 
 
 struct result {
+    size_t idx;
     void* callee;
     __profiler_nsec_t start;
     __profiler_nsec_t end;
