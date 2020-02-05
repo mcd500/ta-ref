@@ -21,7 +21,7 @@ EDGER_INClUDE_DIRS = $(EDGER_DIR)
 
 ifneq (,$(wildcard $(EDGER_DIR)/bin/keyedge))
 EDGER_INCLUDE_DIRS += $(EDGER_DIR)/target/include $(EDGER_DIR)/flatcc/include
-EDGER_LDFLAGS = -L$(EDGER_DIR)/lib
+EDGER_LDFLAGS = -L$(EDGER_DIR)/lib -static
 EXTRA_LIBS = $(EDGER_DIR)/lib/flatccrt.a
 endif
 

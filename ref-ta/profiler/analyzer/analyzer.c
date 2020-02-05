@@ -11,7 +11,6 @@
 #include "nm_parse.h"
 
 #define BUF_MAX 65536
-#define NM_MAX 524288*10
 
 int main(int argc, char *argv[]) {
     static char buf[BUF_MAX];
@@ -19,6 +18,7 @@ int main(int argc, char *argv[]) {
     struct __profiler_data * data;
     uint64_t count;
     uint64_t i;
+    struct list *table;
     if(argc<3) return 0;
     int fd = open(argv[1], O_RDONLY, (mode_t)0600);
     if(fd < 0) {
@@ -31,8 +31,7 @@ int main(int argc, char *argv[]) {
     }
     close(fd);
 
-    static struct nm_info info[NM_MAX];
-    if(parse_nm(argv[2], info, NM_MAX) != 0) {
+    if(!(table = parse_nm(argv[2]))) {
         fprintf(stderr, "parse_nm failed\n");
         return 0;
     }
@@ -44,6 +43,7 @@ int main(int argc, char *argv[]) {
     for(i = 0; i < count; i++, data++) {
         uint64_t dir;
         struct result res;
+        char *name;
         __profiler_nsec_t nsec;
         get_direction_nsec(data->nsec, &dir, &nsec);
         switch(dir) {
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
                 unsigned long addr = (unsigned long)res.callee;
                 printf("%03ld %*c[%10p(%s)] : %lu (%lu, %lu)\n",
                         res.depth, (int)res.depth*2, ' ',
-                        res.callee, info[addr].func_name,
+                        res.callee, get_func_name(table, addr),
                         duration, res.start, res.end);
                 break;
             default:

@@ -5,8 +5,8 @@ KEYEDGE_TARGET_DIR=$(EDGER_DIR)/target/include
 SDK_LIB_DIR =$(KEYSTONE_SDK_DIR)/lib
 SDK_INCLUDE_APP_DIR = $(SDK_LIB_DIR)/app/include
 SDK_INCLUDE_EDGE_DIR = $(SDK_LIB_DIR)/edge/include
-EDGE_DIR = $(shell pwd)/../Edge
-ENCLAVE_DIR = $(shell pwd)/../Enclave
+EDGE_DIR = $(shell pwd)/../keystone/Edge
+ENCLAVE_DIR = $(shell pwd)/../keystone/Enclave
 OBJS = profiler.o # wrapper.o
 # This should be ok, but gitlab CI test fails with ENOENT
 #LOG_FILE = "/root/edger-sample/shared_mem"
