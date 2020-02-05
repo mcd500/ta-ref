@@ -5,6 +5,7 @@ KEYSTONE_DIR     ?= $(TEE_REF_TA_DIR)/build-keystone
 KEYSTONE_SDK_DIR ?= $(KEYSTONE_DIR)/sdk
 KEEDGER_DIR      =  $(TEE_REF_TA_DIR)/keedger8r
 OPTEE_DIR        ?= $(TEE_REF_TA_DIR)/build-optee
+export CFLAGS    += -Wno-unused-parameter
 #PATH      =  $(KEYSTONE_DIR)/riscv/bin:$${PATH}
 
 .PHONY: all
