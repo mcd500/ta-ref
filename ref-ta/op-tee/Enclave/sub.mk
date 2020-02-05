@@ -1,4 +1,4 @@
-global-incdirs-y += include
+global-incdirs-y += .
 srcs-y += \
 	Enclave.c \
 	../../common/Enclave/random.c \

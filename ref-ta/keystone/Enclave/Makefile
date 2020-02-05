@@ -9,11 +9,9 @@ ENCLAVE_LIBSRCS = \
 		tools.c \
 		strcmp.c \
 		startup.c
-ENCLAVE_C_TESTS= \
-		$(wildcard $(TEE_TA_DIR)/ref-ta/common/Enclave/*.c)
-ENCLAVE_C_SRCS = \
-		$(ENCLAVE_LIBSRCS) \
-		$(wildcard $(TEE_TA_DIR)/platform/keystone/*.c)
+ENCLAVE_C_TESTS= $(wildcard $(TEE_TA_DIR)/ref-ta/common/Enclave/*.c)
+ENCLAVE_C_SRCS = $(ENCLAVE_LIBSRCS)
+ENCLAVE_API_SRCS = $(wildcard $(TEE_TA_DIR)/platform/keystone/*.c)
 
 CC = riscv64-unknown-linux-gnu-gcc
 CFLAGS = -Wall -fno-builtin-printf -DEDGE_IGNORE_EGDE_RESULT
@@ -58,6 +56,7 @@ CFLAGS += -I$(SDK_INCLUDE_ENCLAVE_DIR) -I$(SDK_INCLUDE_EDGE_DIR)  $(addprefix -I
 
 ENCLAVE_C_TESTOBJS = $(notdir $(patsubst %.c,%.o, $(ENCLAVE_C_TESTS)))
 ENCLAVE_C_LIBOBJS = $(patsubst %.c,%.o, $(ENCLAVE_C_LIBSRCS))
+ENCLAVE_API_OBJS = $(patsubst %.c,%.o, $(ENCLAVE_API_SRCS))
 ENCLAVE_C_OBJS = $(patsubst %.c,%.o, $(ENCLAVE_C_SRCS))
 ENCLAVE_A_OBJS = $(patsubst %.s,%.o, $(ENCLAVE_A_SRCS))
 ENCLAVE_LDS ?= ./Enclave.lds
@@ -72,7 +71,7 @@ all: clean $(ENCLAVE_BIN)
 $(EDGECALLS)_t.o: %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -Os -c $< -o $@
 
-$(ENCLAVE_OBJS): %.o: %.c $(EDGECALLS)_t.h
+$(ENCLAVE_API_OBJS): %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -c -finstrument-functions $< -o $@
 
 $(ENCLAVE_C_TESTOBJS): %.o: $(TEE_TA_REF_ENCLAVE_COMMON_DIR)/%.c $(EDGECALLS)_t.h
@@ -81,8 +80,8 @@ $(ENCLAVE_C_TESTOBJS): %.o: $(TEE_TA_REF_ENCLAVE_COMMON_DIR)/%.c $(EDGECALLS)_t.
 $(ENCLAVE_C_LIBOBJS): %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(ENCLAVE_BIN): %.eapp_riscv : %.o $(EDGECALLS)_t.o $(ENCLAVE_C_TESTOBJS) $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(AESGCM_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB) $(EXTRA_LIBS)
-	$(LINK) $(LDFLAGS) -o $@ $< $(EDGECALLS)_t.o $(ENCLAVE_C_TESTOBJS) $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(AESGCM_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB) $(EXTRA_LIBS) -T $(ENCLAVE_LDS)
+$(ENCLAVE_BIN): %.eapp_riscv : %.o $(EDGECALLS)_t.o $(ENCLAVE_API_OBJS) $(ENCLAVE_C_TESTOBJS) $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(AESGCM_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB) $(EXTRA_LIBS)
+	$(LINK) $(LDFLAGS) -o $@ $< $(EDGECALLS)_t.o $(ENCLAVE_API_OBJS) $(ENCLAVE_C_TESTOBJS) $(ENCLAVE_C_OBJS) $(ENCLAVE_A_OBJS) $(AES_OBJS) $(AESGCM_OBJS) $(ED25519_OBJS) $(SHA3_OBJS) $(SDK_ENCLAVE_LIB) $(SDK_EDGE_LIB) $(EXTRA_LIBS) -T $(ENCLAVE_LDS)
 	chmod -x $@
 
 clean:
