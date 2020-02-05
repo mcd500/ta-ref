@@ -40,7 +40,7 @@ endif
 AES_OBJS = $(LIBBUILD_DIR)/tiny-AES-c/aes.o
 SHA3_OBJS = $(LIBBUILD_DIR)/tiny_sha3/sha3.o
 
-PROFILER_DIR = $(shell pwd)/../profiler
+PROFILER_DIR = $(shell pwd)/../../profiler
 ANALYZER_DIR = $(PROFILER_DIR)/analyzer
 PROFILER_LIB = $(PROFILER_DIR)/libprofiler.a
 
