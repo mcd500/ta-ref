@@ -4,7 +4,7 @@
 
 #define BUF_SIZE 512
 #define POOL_SIZE 30000
-#define MAX_ADDR 524280
+#define MAX_ADDR 0xFFFFFF
 static struct nm_info nm_pool[POOL_SIZE];
 static int idx = 0;
 
@@ -58,7 +58,7 @@ struct list* parse_nm(const char *fname) {
         char func_name[256];
         sscanf(line, "%16lx %c %s", &addr, &type, func_name);
         if(addr >= MAX_ADDR) {
-            fprintf(stderr, "too big addr\n");
+            fprintf(stderr, "too big addr %10x, %s\n", addr, func_name);
             return NULL;
         }
         nm_pool[idx].type = type;
