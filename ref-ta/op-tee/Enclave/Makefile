@@ -121,7 +121,7 @@ endif
 
 SCRIPTS_DIR := $(ta-dev-kit-dir)/scripts
 include  $(ta-dev-kit-dir$(sm))/mk/$(COMPILER_$(sm)).mk
-include  ./compile.mk
+include  $(ta-dev-kit-dir$(sm))/mk/compile.mk
 
 ifneq ($(user-ta-uuid),)
 include  $(ta-dev-kit-dir$(sm))/mk/link.mk
