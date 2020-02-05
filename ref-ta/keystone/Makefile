@@ -54,7 +54,7 @@ else ifeq ($(CRYPTLIB),WOLFCRYPT)
 Enclave_cryptlib_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/cryptlib/,aes.o random.o sha256.o)
 endif
 
-Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(ENCLAVE_LIB_BUILD)/tiny_sha3/sha3.o $(ENCLAVE_LIB_BUILD)/tiny-AES-c/aes.o $(Enclave_cryptlib_Objects) $(ENCLAVE_LIB_BUILD)/common/tee-internal-api.o
+Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(ENCLAVE_LIB_BUILD)/tiny_sha3/sha3.o $(ENCLAVE_LIB_BUILD)/tiny-AES-c/aes.o $(Enclave_cryptlib_Objects)
 
 ######## App Settings ########
 
