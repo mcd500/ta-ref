@@ -1,4 +1,4 @@
-TOPDIR=$(shell pwd)/../..
+TOPDIR=$(CURDIR)/../..
 include $(TOPDIR)/common.mk
 
 ifndef KEYSTONE_DIR
@@ -27,7 +27,7 @@ PROFILER=OFF
 EDGE_DIR=Edge
 ENCLAVE_DIR=Enclave
 APP_DIR=App
-PROFILER_DIR=$(shell pwd)/../profiler
+PROFILER_DIR=$(CURDIR)/../profiler
 
 KEYSTONE_SDK_DIR = $(KEYSTONE_DIR)/sdk
 KEYSTONE_INSTALL_DIR = $(KEYSTONE_DIR)/buildroot_overlay/root/tests
