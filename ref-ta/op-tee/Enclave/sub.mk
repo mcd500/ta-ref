@@ -1,5 +1,6 @@
 global-incdirs-y += .
-srcs-y += \
+spec-out-dir := .
+spec-srcs += \
 	Enclave.c \
 	../../common/Enclave/random.c \
 	../../common/Enclave/time.c \
