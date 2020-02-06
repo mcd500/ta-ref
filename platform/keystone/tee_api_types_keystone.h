@@ -34,22 +34,35 @@
 #define MBEDCRYPT 1
 #define WOLFCRYPT 2
 
-#include "sha3.hpp"
-#include "ed25519/ed25519.h"
-#define AES256 1
 #if CRYPTLIB==MBEDCRYPT
 # define MBEDTLS_CONFIG_FILE "mbed-crypto-config.h"
 # include "mbedtls/gcm.h"
 # include "mbedtls/aes.h"
+# include "sha3.hpp"
+# include "ed25519/ed25519.h"
+#define AES256 1
 #elif CRYPTLIB==WOLFCRYPT
 # define HAVE_AESGCM 1
 # define HAVE_AES_CBC 1
 # define HAVE_AES_DECRYPT 1
 # define HAVE_FIPS 1
 # define HAVE_FIPS_VERSION 2
+# define HAVE_ED25519 1
+# define HAVE_ED25519_SIGN 1
+# define HAVE_ED25519_VERIFY 1
+# define WOLFSSL_SHA512 1
+# define WOLFSSL_SHA3 1
+# define WOLFSSL_SHA3_SMALL 1
+# define WOLFCRYPT_ONLY 1
 # define WOLF_CRYPT_PORT_H
+# include "wolfssl/wolfcrypt/sha3.h"
 # include "wolfssl/wolfcrypt/aes.h"
+# include "wolfssl/wolfcrypt/sha512.h"
+# include "wolfssl/wolfcrypt/ed25519.h"
 #else
+#include "sha3.hpp"
+#include "ed25519/ed25519.h"
+#define AES256 1
 # include "aes/aes.h"
 #endif
 
@@ -64,16 +77,19 @@ struct __TEE_OperationHandle
   int mode;
   int flags;
   int alg;
-  sha3_ctx_t ctx;
 #if CRYPTLIB==MBEDCRYPT
+  sha3_ctx_t ctx;
   mbedtls_aes_context aectx;
   mbedtls_gcm_context aegcmctx;
 #elif CRYPTLIB==WOLFCRYPT
+  wc_Sha3 ctx;
   Aes aectx;
   Aes aegcmctx;
   unsigned int aegcm_aadsz;
   unsigned char aegcm_aad[TEE_OBJECT_AAD_SIZE];
+  ed25519_key key;
 #else
+  sha3_ctx_t ctx;
   struct AES_ctx aectx;
 #endif
   int aegcm_state;
@@ -94,6 +110,7 @@ struct __TEE_ObjectHandle
 #elif CRYPTLIB==WOLFCRYPT
   Aes persist_ctx;
   unsigned char persist_iv[TEE_OBJECT_NONCE_SIZE];
+  ed25519_key key;
 #else
   struct AES_ctx persist_ctx;
 #endif

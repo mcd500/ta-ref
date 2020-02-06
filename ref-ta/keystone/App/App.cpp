@@ -118,6 +118,17 @@ ob16_t ocall_getrandom16(unsigned int flags)
   return ret;
 }
 
+ob196_t ocall_getrandom196(unsigned int flags)
+{
+  ob196_t ret;
+  ssize_t rtn = getrandom(ret.b, 196, flags);
+#ifdef APP_VERBOSE
+  printf("@[SE] getrandom buf %x len %d flags %d -> %d\n",ret.b,196,flags,rtn);
+#endif
+  ret.ret = rtn;
+  return ret;
+}
+
 #endif
 
 EDGE_EXTERNC_END

@@ -42,7 +42,7 @@ Crypt_C_Files = $(addprefix ../../lib/mbed-crypto/library/,aes.c gcm.c cipher.c 
 Crypt_Include_Paths = ../../lib/mbed-crypto/include
 Crypt_extra_Files =
 else ifeq ($(CRYPTLIB),WOLFCRYPT)
-Crypt_C_Files = $(addprefix ../../lib/wolfssl/wolfcrypt/src/,aes.c)
+Crypt_C_Files = $(addprefix ../../lib/wolfssl/wolfcrypt/src/,aes.c ed25519.c sha512.c sha256.c random.c hash.c fe_operations.c ge_operations.c sha3.c)
 Crypt_Include_Paths = ../../lib/wolfssl
 Crypt_extra_Files = ../../lib/wolfssl/wolfssl/wolfcrypt/fips.h
 endif
@@ -51,11 +51,13 @@ SGX_COMMON_CFLAGS     += $(CFLAGS) -DED25519_NO_SEED=1
 SGX_COMMON_CXXFLAGS   += $(CXXFLAGS)
 Enclave_Include_Paths += $(CFLAGS)
 Enclave_C_Files       += $(wildcard ../../platform/sgx/*.c) \
-                         $(wildcard ../../lib/tiny_sha3/sha*.c) \
-                         $(wildcard ../../lib/ed25519/src/*.c) \
-                         $(wildcard ../../lib/tiny-AES-c/aes.c) \
 			 $(Crypt_C_Files)
 
+ifneq ($(CRYPTLIB),WOLFCRYPT)
+Enclave_C_Files       += $(wildcard ../../lib/ed25519/src/*.c) \
+                         $(wildcard ../../lib/tiny_sha3/sha*.c) \
+                         $(wildcard ../../lib/tiny-AES-c/aes.c)
+endif
 
 
 ######## SGX SDK Settings ########
@@ -327,7 +329,7 @@ ifeq ($(CRYPTLIB),MBEDCRYPT)
 	@echo "CC   <=  $<"
 else ifeq ($(CRYPTLIB),WOLFCRYPT)
 ../../lib/wolfssl/wolfcrypt/src/%.o: ../../lib/wolfssl/wolfcrypt/src/%.c  $(Crypt_extra_Files)
-	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -I../../lib/wolfssl -DWC_NO_RNG -DHAVE_AESGCM -DHAVE_AES_CBC -DHAVE_AES_DECRYPT -DHAVE_FIPS -DHAVE_FIPS_VERSION=2 -DWOLF_CRYPT_PORT_H -c $< -o $@
+	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -I../../lib/wolfssl -DHAVE_AESGCM -DHAVE_AES_CBC -DHAVE_AES_DECRYPT -DHAVE_FIPS -DHAVE_FIPS_VERSION=2 -DWOLF_CRYPT_PORT_H -DHAVE_ED25519 -DHAVE_ED25519_SIGN -DHAVE_ED25519_VERIFY -DWOLFSSL_SHA512 -DWOLFSSL_SHA3 -DWOLFSSL_SHA3_SMALL -DWOLFSSL_SGX -c $< -o $@
 	@echo "CC   <=  $<"
 endif
 

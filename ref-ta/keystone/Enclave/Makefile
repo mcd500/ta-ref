@@ -34,12 +34,12 @@ CRYPT_OBJS += $(wildcard $(LIBBUILD_DIR)/ed25519/*.o)
 ifeq ($(CRYPTLIB),MBEDCRYPT)
 CRYPT_INCLUDE += -I$(TEE_TA_DIR)/lib/mbed-crypto/include
 CRYPT_OBJS += $(wildcard $(LIBBUILD_DIR)/cryptlib/*.o)
+CRYPT_OBJS += $(LIBBUILD_DIR)/tiny-AES-c/aes.o
+CRYPT_OBJS += $(LIBBUILD_DIR)/tiny_sha3/sha3.o
 else ifeq ($(CRYPTLIB),WOLFCRYPT)
 CRYPT_INCLUDE += -I$(TEE_TA_DIR)/lib/wolfssl
 CRYPT_OBJS += $(wildcard $(LIBBUILD_DIR)/cryptlib/*.o)
 endif
-CRYPT_OBJS += $(LIBBUILD_DIR)/tiny-AES-c/aes.o
-CRYPT_OBJS += $(LIBBUILD_DIR)/tiny_sha3/sha3.o
 
 PROFILER_DIR = $(shell pwd)/../../profiler
 ANALYZER_DIR = $(PROFILER_DIR)/analyzer

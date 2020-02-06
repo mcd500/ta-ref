@@ -46,15 +46,17 @@ AS = riscv64-unknown-linux-gnu-as
 
 Enclave_C_Flags = $(CFLAGS)
 
-Enclave_ed25519_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/ed25519/,$(subst .c,.o,$(notdir $(wildcard $(TOPDIR)/lib/ed25519/src/*.c))))
-
 ifeq ($(CRYPTLIB),MBEDCRYPT)
-Enclave_cryptlib_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/cryptlib/,aes.o gcm.o cipher.o cipher_wrap.o platform_util.o)
+Enclave_ed25519_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/ed25519/,$(subst .c,.o,$(notdir $(wildcard $(TOPDIR)/lib/ed25519/src/*.c))))
+Enclave_cryptlib_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/cryptlib/,aes.o gcm.o cipher.o cipher_wrap.o platform_util.o) $(ENCLAVE_LIB_BUILD)/tiny_sha3/sha3.o $(ENCLAVE_LIB_BUILD)/tiny-AES-c/aes.o
+
 else ifeq ($(CRYPTLIB),WOLFCRYPT)
-Enclave_cryptlib_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/cryptlib/,aes.o random.o sha256.o)
+Enclave_ed25519_Objects =
+Enclave_cryptlib_Objects = $(addprefix $(ENCLAVE_LIB_BUILD)/cryptlib/,aes.o random.o sha256.o ed25519.o sha512.o hash.o fe_operations.o ge_operations.o sha3.o)
 endif
 
-Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(ENCLAVE_LIB_BUILD)/tiny_sha3/sha3.o $(ENCLAVE_LIB_BUILD)/tiny-AES-c/aes.o $(Enclave_cryptlib_Objects)
+Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(Enclave_cryptlib_Objects)
+
 
 ######## App Settings ########
 
@@ -159,7 +161,7 @@ else ifeq ($(CRYPTLIB),WOLFCRYPT)
 $(ENCLAVE_LIB_BUILD)/cryptlib/%.o: $(TOPDIR)/lib/wolfssl/wolfcrypt/src/%.c
 	touch $(TOPDIR)/lib/wolfssl/wolfssl/wolfcrypt/fips.h
 	mkdir -p $(ENCLAVE_LIB_BUILD)/cryptlib
-	$(CC) $(Enclave_C_Flags) -I$(TOPDIR)/lib/wolfssl -DHAVE_AESGCM -DHAVE_AES_CBC -DHAVE_AES_DECRYPT -DHAVE_FIPS -DHAVE_FIPS_VERSION=2 -DCUSTOM_RAND_GENERATE_SEED=wc_ocall_genseed -c $< -o $@
+	$(CC) $(Enclave_C_Flags) -I$(TOPDIR)/lib/wolfssl -DHAVE_AESGCM -DHAVE_AES_CBC -DHAVE_AES_DECRYPT -DHAVE_FIPS -DHAVE_FIPS_VERSION=2 -DCUSTOM_RAND_GENERATE_SEED=wc_ocall_genseed -DHAVE_ED25519 -DHAVE_ED25519_SIGN -DHAVE_ED25519_VERIFY -DWOLFSSL_SHA512 -DWOLFSSL_SHA3 -DWOLFSSL_SHA3_SMALL -DNO_MD5 -DNO_SHA -DWOLFCRYPT_ONLY -c $< -o $@
 endif
 
 $(ENCLAVE_LIB_BUILD)/common/%.o: $(TOPDIR)/common/%.c
