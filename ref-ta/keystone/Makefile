@@ -187,7 +187,7 @@ clean:
 
 copyto:
 	mkdir -p $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample
-	make -C $(PROFILER_DIR) copyto
+	make -C $(PROFILER_DIR) $(PROFILER_TYPE) copyto
 	make -C $(APP_DIR) copyto KEYSTONE_DIR=$(KEYSTONE_DIR)
 	make -C $(ENCLAVE_DIR) copyto KEYSTONE_DIR=$(KEYSTONE_DIR)
 	cp -p $(KEYSTONE_DIR)/sdk/rts/eyrie/eyrie-rt $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample/

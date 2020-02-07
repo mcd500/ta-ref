@@ -20,6 +20,7 @@ libprofiler.a: $(OBJS)
 
 profiler.o: profiler.c
 	$(CC) $(EXTRA_FLAGS) \
+	-DKEYSTONE \
 	-DLOG_FILE=\"$(LOG_FILE)\" \
 	-I$(SDK_INCLUDE_APP_DIR) \
 	-I$(SDK_INCLUDE_EDGE_DIR) \
