@@ -24,7 +24,7 @@ profiler.o: profiler.c
 	$(CC) $(EXTRA_FLAGS) \
 	-DLOG_FILE=\"$(LOG_FILE)\" \
 	-I${ta-dev-kit-dir}/include \
-	-DOPTEE \
+	 ${ENCLAVE_TYPE} \
 	-static -g \
 	-c $< \
 	-o $@ \

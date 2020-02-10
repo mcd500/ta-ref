@@ -116,7 +116,7 @@ comp-cppflags-$2 = $$(filter-out $$(CPPFLAGS_REMOVE) $$(cppflags-remove) \
 		      $$(cppflags$$(comp-sm-$2)) \
 		      $$(cppflags-lib$$(comp-lib-$2)) $$(cppflags-$2)) \
 		      -D__FILE_ID__=$$(subst -,_,$$(subst /,_,$$(subst .,_,$1))) \
-			  -DOPTEE \
+			  ${ENCLAVE_TYPE} \
 			  ${ENCLAVE_PERF_WRAPPER}
 
 comp-flags-$2 += -MD -MF $$(comp-dep-$2) -MT $$@

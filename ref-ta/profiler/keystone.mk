@@ -7,6 +7,7 @@ SDK_INCLUDE_APP_DIR = $(SDK_LIB_DIR)/app/include
 SDK_INCLUDE_EDGE_DIR = $(SDK_LIB_DIR)/edge/include
 EDGE_DIR = $(shell pwd)/../keystone/Edge
 ENCLAVE_DIR = $(shell pwd)/../keystone/Enclave
+ENCLAVE_TYPE=-DKEYSTONE
 OBJS = profiler.o # wrapper.o
 # This should be ok, but gitlab CI test fails with ENOENT
 #LOG_FILE = "/root/edger-sample/shared_mem"
@@ -20,7 +21,7 @@ libprofiler.a: $(OBJS)
 
 profiler.o: profiler.c
 	$(CC) $(EXTRA_FLAGS) \
-	-DKEYSTONE \
+	${ENCLAVE_TYPE} \
 	-DLOG_FILE=\"$(LOG_FILE)\" \
 	-I$(SDK_INCLUDE_APP_DIR) \
 	-I$(SDK_INCLUDE_EDGE_DIR) \
