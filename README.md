@@ -92,3 +92,7 @@ make run
 ```sh
 $ make doc
 ```
+
+# Related documents
+
+* [tee-ta-reference code structure memo](http://192.168.100.100/vc707/junkyard/blob/master/tee-ta-reference-memo.md)

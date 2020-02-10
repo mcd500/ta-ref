@@ -26,3 +26,7 @@ ree_time_t ocall_ree_time(void);
 typedef struct ob16_t { int ret; unsigned char b[16]; } ob16_t;
 
 ob16_t ocall_getrandom16(unsigned int flags);
+
+typedef struct ob196_t { int ret; unsigned char b[196]; } ob196_t;
+
+ob196_t ocall_getrandom196(unsigned int flags);

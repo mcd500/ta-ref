@@ -420,6 +420,15 @@ void TEE_CloseObject(TEE_ObjectHandle object)
 static int ocall_getrandom(char *buf, size_t len, unsigned int flags)
 {
   int retval = 0;
+  /* Short cut for random seed */
+  if (len == 196) {
+    ob196_t rret196 = ocall_getrandom196(flags);
+    if (rret196.ret == len) {
+      memcpy(buf, rret196.b, len);
+    }
+    return rret196.ret;
+  }
+
   ob16_t rret;
   while (len > 0) {
     rret = ocall_getrandom16(flags);
@@ -445,9 +454,19 @@ static int ocall_getrandom(char *buf, size_t len, unsigned int flags)
 static int wc_rng_init = 0;
 static WC_RNG rngstr;
 
+static WC_RNG *get_wc_rng(void)
+{
+    if (wc_rng_init == 0) {
+      wc_InitRng(&rngstr);
+      wc_rng_init = 1;
+    }
+    return &rngstr;
+}
+
 int wc_ocall_genseed(void *nonce, uint32_t len)
 {
     int ret = ocall_getrandom(nonce, (size_t)len, 0);
+    printf("nonce %d\n", ret);
     if (ret != len) {
       TEE_Panic(0);
     }
@@ -458,12 +477,9 @@ void TEE_GenerateRandom(void *randomBuffer, uint32_t randomBufferLen)
 {
     pr_deb("TEE_GenerateRandom(): start");
 
-    if (wc_rng_init == 0) {
-      wc_InitRng(&rngstr);
-      wc_rng_init = 1;
-    }
+    WC_RNG *rng = get_wc_rng();
 
-    int ret = wc_RNG_GenerateBlock(&rngstr, randomBuffer, randomBufferLen);
+    int ret = wc_RNG_GenerateBlock(rng, randomBuffer, randomBufferLen);
     if (ret != 0) {
       TEE_Panic(0);
     }

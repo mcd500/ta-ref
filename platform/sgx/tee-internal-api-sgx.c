@@ -211,11 +211,19 @@ static int set_object_key(const void *id, unsigned int idlen,
   unsigned char iv[TEE_OBJECT_NONCE_SIZE];
   // We can't use random nonce for AES here because of persistency.
   // Use the digest of attestation report and objectID as the last resort.
+#if CRYPTLIB==WOLFCRYPT
+  wc_Sha3 ctx;
+  wc_InitSha3_256(&ctx, NULL, 0);
+  wc_Sha3_256_Update(&ctx, key, TEE_OBJECT_KEY_SIZE);
+  wc_Sha3_256_Update(&ctx, id, idlen);
+  wc_Sha3_256_Final(&ctx, iv);
+#else
   sha3_ctx_t ctx;
   sha3_init(&ctx, TEE_OBJECT_NONCE_SIZE);
   sha3_update(&ctx, key, TEE_OBJECT_KEY_SIZE);
   sha3_update(&ctx, id, idlen);
   sha3_final(iv, &ctx);
+#endif
 #if 0
   printf("key:");
   for (int i = 0; i < TEE_OBJECT_KEY_SIZE; i++) {
@@ -486,5 +494,18 @@ void TEE_GenerateRandom(void *randomBuffer, uint32_t randomBufferLen)
     return;
 }
 
+#if CRYPTLIB==WOLFCRYPT
+static int wc_rng_init = 0;
+static WC_RNG rngstr;
+
+static WC_RNG *get_wc_rng(void)
+{
+    if (wc_rng_init == 0) {
+      wc_InitRng(&rngstr);
+      wc_rng_init = 1;
+    }
+    return &rngstr;
+}
+#endif
 
 #include "../../common/tee-internal-api-cryptlib.impl"

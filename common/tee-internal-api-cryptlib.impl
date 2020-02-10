@@ -61,7 +61,11 @@ TEE_Result TEE_AllocateOperation(TEE_OperationHandle *operation,
       *operation = handle;
       handle->mode = (int)mode;
       handle->alg = (int)algorithm;
+#if CRYPTLIB==WOLFCRYPT
+      wc_InitSha3_256(&(handle->ctx), NULL, 0);
+#else
       sha3_init(&(handle->ctx), SHA_LENGTH);
+#endif
     } else if (mode == TEE_MODE_ENCRYPT
 	       || mode == TEE_MODE_DECRYPT) {
       if (algorithm != TEE_ALG_AES_CBC_NOPAD
@@ -143,7 +147,11 @@ void TEE_DigestUpdate(TEE_OperationHandle operation,
       TEE_Panic(0);
     }
 
+#if CRYPTLIB==WOLFCRYPT
+    wc_Sha3_256_Update(&(operation->ctx), chunk, chunkSize);
+#else
     sha3_update(&(operation->ctx), chunk, chunkSize);
+#endif
 
     return;
 }
@@ -169,9 +177,17 @@ TEE_Result TEE_DigestDoFinal(TEE_OperationHandle operation, const void *chunk,
     }
 
     if (chunkLen > 0) {
+#if CRYPTLIB==WOLFCRYPT
+      wc_Sha3_256_Update(&(operation->ctx), chunk, chunkLen);
+#else
       sha3_update(&(operation->ctx), chunk, chunkLen);
+#endif
     }
+#if CRYPTLIB==WOLFCRYPT
+    wc_Sha3_256_Final(&(operation->ctx), hash);
+#else
     sha3_final(hash, &(operation->ctx));
+#endif
     if (hashLen) {
       *hashLen = SHA_LENGTH;
     }
@@ -200,8 +216,12 @@ TEE_Result TEE_SetOperationKey(TEE_OperationHandle operation,
       memcpy(operation->aekey, key->public_key, 32);
     } else if (key->type == TEE_TYPE_ECDH_KEYPAIR
 	       || key->type == TEE_TYPE_ECDSA_KEYPAIR) {
+#if CRYPTLIB==WOLFCRYPT
+      memcpy(&operation->key, &key->key, sizeof(ed25519_key));
+#else
       memcpy(operation->pubkey, key->public_key, TEE_OBJECT_KEY_SIZE);
       memcpy(operation->prikey, key->private_key, TEE_OBJECT_SKEY_SIZE);
+#endif
     }
 
     operation->flags |= TEE_HANDLE_FLAG_KEY_SET;
@@ -585,11 +605,17 @@ TEE_Result TEE_GenerateKey(TEE_ObjectHandle object, uint32_t keySize,
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
+#if CRYPTLIB==WOLFCRYPT
+    WC_RNG *rng = get_wc_rng();
+    wc_ed25519_init(&(object->key));
+    wc_ed25519_make_key(rng, ED25519_KEY_SIZE, &(object->key));
+    wc_ed25519_make_public(&(object->key),
+			  object->public_key, ED25519_PUB_KEY_SIZE);
+#else
     unsigned char seed[32];
     TEE_GenerateRandom(seed, sizeof(seed));
-
     ed25519_create_keypair(object->public_key, object->private_key, seed);
-
+#endif
     object->flags |= TEE_HANDLE_FLAG_KEY_SET;
 
     if (object->type == TEE_TYPE_AES) {
@@ -701,6 +727,12 @@ TEE_Result TEE_AsymmetricSignDigest(TEE_OperationHandle operation,
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
+#if CRYPTLIB==WOLFCRYPT
+    // Sign hashed data with keys
+    *signatureLen = SIG_LENGTH;
+    int ret = wc_ed25519_sign_msg(digest, digestLen, signature, signatureLen,
+			&(operation->key));
+#else
     unsigned char *key = operation->pubkey;
     unsigned char *skey = operation->prikey;
 #if 0
@@ -719,6 +751,7 @@ TEE_Result TEE_AsymmetricSignDigest(TEE_OperationHandle operation,
     // Sign hashed data with keys
     ed25519_sign(signature, digest, digestLen, key, skey);
     *signatureLen = SIG_LENGTH;
+#endif
 
     return 0;
 }
@@ -743,6 +776,16 @@ TEE_Result TEE_AsymmetricVerifyDigest(TEE_OperationHandle operation,
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
+#if CRYPTLIB==WOLFCRYPT
+    // Sign hashed data with test keys
+    int ret, res;
+    res = 0;
+    ret = wc_ed25519_verify_msg(signature, SIG_LENGTH, digest, digestLen,
+				&res, &(operation->key));
+    if (ret || res != 1) {
+      return TEE_ERROR_SIGNATURE_INVALID;
+    }
+#else
     unsigned char *key = operation->pubkey;
 
     // Sign hashed data with test keys
@@ -751,6 +794,7 @@ TEE_Result TEE_AsymmetricVerifyDigest(TEE_OperationHandle operation,
     if (!verify_ok) {
       return TEE_ERROR_SIGNATURE_INVALID;
     }
+#endif
 
     return TEE_SUCCESS;
 }
