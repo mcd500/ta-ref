@@ -46,6 +46,7 @@ static int __printf(1, 2) tee_printf(const char* fmt, ...)
     va_list ap;
     unsigned int retval;
 
+#if TRACE_LEVEL > 0
     va_start(ap, fmt);
     retval = vsnprintf(buf, BUFSIZ, fmt, ap);
     va_end(ap);
@@ -53,7 +54,7 @@ static int __printf(1, 2) tee_printf(const char* fmt, ...)
       buf[retval] = '\0';
       trace_ext_puts(buf);
     }
-
+#endif
     return retval;
 }
 
