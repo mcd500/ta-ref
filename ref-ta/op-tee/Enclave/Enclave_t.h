@@ -42,11 +42,11 @@
 
 static int __printf(1, 2) tee_printf(const char* fmt, ...)
 {
-    char buf[BUFSIZ] = { '\0' };
-    va_list ap;
-    unsigned int retval;
+    unsigned int retval = 0;
 
 #if TRACE_LEVEL > 0
+    char buf[BUFSIZ] = { '\0' };
+    va_list ap;
     va_start(ap, fmt);
     retval = vsnprintf(buf, BUFSIZ, fmt, ap);
     va_end(ap);
