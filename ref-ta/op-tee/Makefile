@@ -25,4 +25,5 @@ copyto:
 	make -C $(OPTEE_DIR)/build buildroot
 
 run: copyto
+	@echo "warning: raspberry pi3 doesn't support qemu demo"
 	./run-apps.sh

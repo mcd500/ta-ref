@@ -4,6 +4,9 @@
 #xterm -e ./run-test.sh&
 #sleep 5
 
+if [ -e $OPTEE_DIR/out-br/images/rootfs.cpio.gz ]; then
+    ln -sf $OPTEE_DIR/out-br/images/rootfs.cpio.gz $OPTEE_DIR/out/bin/
+fi
 cd $OPTEE_DIR/out/bin && $OPTEE_DIR/qemu/aarch64-softmmu/qemu-system-aarch64 \
 	-nographic \
 	-serial mon:stdio -serial tcp:localhost:54323 \
