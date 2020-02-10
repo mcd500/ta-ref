@@ -8,10 +8,11 @@
 int main(void);
 
 #ifdef TEST_INITFINI
+extern void __profiler_unmap_info();
+
 static void (*const init_array []) ()
   __attribute__ ((section (".init_array"), aligned (sizeof (void *))))
   = { __profiler_map_info };
-
 static void (*const fini_array []) ()
   __attribute__ ((section (".fini_array"), aligned (sizeof (void *))))
   = { __profiler_unmap_info };

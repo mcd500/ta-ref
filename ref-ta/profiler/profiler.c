@@ -1,7 +1,12 @@
-#include <fcntl.h>
 #include "profiler.h"
 #include "profiler_data.h"
+#ifdef KEYSTONE
 #include "Enclave_t.h"
+#include <fcntl.h>
+#elif defined(OPTEE)
+#include <tee_internal_api.h>
+#include <tee_internal_api_extensions.h>
+#endif
 
 #define PERF_SIZE 65536
 static char PERF_SECTION perf_buffer[PERF_SIZE];
@@ -9,8 +14,8 @@ static char PERF_SECTION perf_buffer[PERF_SIZE];
 void PERF_METHOD_ATTRIBUTE __attribute__((used)) __cyg_profile_func_enter(void * this_fn, void * call_site);
 void PERF_METHOD_ATTRIBUTE __attribute__((used)) __cyg_profile_func_exit(void * this_fn, void * call_site);
 
-static inline unsigned int __profiler_map_size = 0;
-static inline struct __profiler_header * __profiler_head = NULL;
+static unsigned int __profiler_map_size = 0;
+static struct __profiler_header * __profiler_head = NULL;
 static inline void PERF_METHOD_ATTRIBUTE __profiler_set_multithreaded(void);
 static inline void PERF_METHOD_ATTRIBUTE __profiler_unset_multithreaded(void);
 static inline void PERF_METHOD_ATTRIBUTE __profiler_set_direction(uint64_t * const dir, enum direction_t const val);
@@ -22,8 +27,14 @@ static inline uint64_t PERF_METHOD_ATTRIBUTE __profiler_get_thread_id();
 static inline void PERF_METHOD_ATTRIBUTE __profiler_get_time(__profiler_nsec_t * const nsec);
 static inline struct __profiler_data * const PERF_METHOD_ATTRIBUTE __profiler_get_data_ptr(void);
 static inline void PERF_METHOD_ATTRIBUTE __profiler_set_thread(struct __profiler_data * const data, uint64_t const threadID);
-static inline uint64_t __rdtsc(void);
+static inline uint64_t PERF_METHOD_ATTRIBUTE __rdtsc(void);
 static inline void PERF_METHOD_ATTRIBUTE __profiler_set_version(uint16_t version);
+static inline void PERF_METHOD_ATTRIBUTE __cyg_profile_func(void * const this_fn, enum direction_t const dir);
+
+#ifdef OPTEE
+// this defined in Enclave/ta.lds
+extern char __section_start[];
+#endif
 
 void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
 
@@ -60,14 +71,26 @@ void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
 	__profiler_head->__profiler_mem_location = (uintptr_t)&__profiler_map_info;
     __profiler_head->nsec = 0;
     __profiler_head->start = __rdtsc();
+
+#if KEYSTONE
+    __cyg_profile_func(0, CALL);
+#elif OPTEE
+    __cyg_profile_func(__section_start, CALL);
+#endif
 }
 
-void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(void) {
+#ifdef KEYSTONE
+void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(void)
+#elif defined(OPTEE)
+void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(char *buf, size_t *size)
+#endif
+{
 	if (__profiler_head != NULL) {
 		void * ptr = (void *)__profiler_head;
 		unsigned int sz = __profiler_map_size;
 		__profiler_head = NULL;
 		__profiler_map_size = 0;
+#ifdef KEYSTONE
         int fd = ocall_open_file(LOG_FILE, O_RDWR | O_CREAT, (mode_t)0600);
         if(fd == -1) return;
         if(ocall_write_file(fd, ptr, sz) <= 0) {
@@ -76,7 +99,11 @@ void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(void) {
         if(ocall_close_file(fd) == -1) {
             return;
         }
-	}
+#elif defined(OPTEE)
+    TEE_MemMove(buf, ptr, sz);
+    *size = sz;
+#endif
+    }
 }
 
 static inline void
@@ -86,8 +113,7 @@ __cyg_profile_func(void * const this_fn, enum direction_t const dir) {
 		return;
 
     // cannnot functionize because the function itself would be trapped
-    unsigned long cycles;
-    asm volatile ("rdcycle %0" : "=r" (cycles));
+    unsigned long cycles = __rdtsc();
     __profiler_head->nsec = cycles - __profiler_head->start;
     // __profiler_head
     // if not multithread, thread_id = 0;
@@ -106,10 +132,14 @@ __cyg_profile_func_exit(void * this_fn, void * call_site) {
 	__cyg_profile_func(this_fn, RET);
 }
 
-static inline uint64_t __rdtsc(void)
+static inline uint64_t PERF_METHOD_ATTRIBUTE __rdtsc(void)
 {
     unsigned long cycles;
+#ifdef KEYSTONE
     asm volatile ("rdcycle %0" : "=r" (cycles));
+#elif defined(OPTEE)
+    asm volatile("mrs %0, cntvct_el0" : "=r"(cycles));
+#endif
     return cycles;
 }
 

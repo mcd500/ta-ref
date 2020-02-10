@@ -35,6 +35,7 @@
 
 #include "Enclave.h"
 #include "Enclave_t.h"
+#include "../../profiler/profiler.h"
 
 /*
  * Called when the instance of the TA is created. This is the first call in
@@ -44,6 +45,13 @@ TEE_Result TA_CreateEntryPoint(void)
 {
     DMSG("has been called");
 
+    return TEE_SUCCESS;
+}
+
+TEE_Result TA_OpenSessionEntryPoint(uint32_t __unused param_types,
+                                    TEE_Param __unused params[4],
+                                    void __unused **sess_ctx) {
+    DMSG("Session has been opened");
     return TEE_SUCCESS;
 }
 
@@ -62,14 +70,15 @@ void TA_DestroyEntryPoint(void)
  * TA. In this function you will normally do the global initialization for the
  * TA.
  */
-TEE_Result TA_OpenSessionEntryPoint(uint32_t param_types,
+TEE_Result run_all_test(uint32_t param_types,
 				    TEE_Param __maybe_unused params[4],
 				    void __maybe_unused **sess_ctx)
 {
-    uint32_t exp_param_types = TEE_PARAM_TYPES(TEE_PARAM_TYPE_NONE,
+    uint32_t exp_param_types = TEE_PARAM_TYPES(TEE_PARAM_TYPE_MEMREF_OUTPUT,
 					       TEE_PARAM_TYPE_NONE,
 					       TEE_PARAM_TYPE_NONE,
 					       TEE_PARAM_TYPE_NONE);
+    __profiler_map_info();
 
     DMSG("has been called");
 
@@ -77,7 +86,6 @@ TEE_Result TA_OpenSessionEntryPoint(uint32_t param_types,
       return TEE_ERROR_BAD_PARAMETERS;
 
     /* Unused parameters */
-    (void)&params;
     (void)&sess_ctx;
 
     tee_printf("ecall_ta_main() start\n");
@@ -100,6 +108,8 @@ TEE_Result TA_OpenSessionEntryPoint(uint32_t param_types,
 
     tee_printf("ecall_ta_main() end\n");
 
+    __profiler_unmap_info(params[0].memref.buffer, &params[0].memref.size);
+
     /* If return value != TEE_SUCCESS the session will not be created. */
     return TEE_SUCCESS;
 }
@@ -114,27 +124,19 @@ void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
     IMSG("Goodbye!\n");
 }
 
-static TEE_Result run_all_test(void)
-{
-    DMSG("has been called");
-
-    return TEE_SUCCESS;
-}
-
 /*
  * Called when a TA is invoked. sess_ctx hold that value that was
  * assigned by TA_OpenSessionEntryPoint(). The rest of the paramters
  * comes from normal world.
  */
-TEE_Result TA_InvokeCommandEntryPoint(void __maybe_unused *sess_ctx,
+TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t cmd_id,
 				      uint32_t param_types, TEE_Param params[4])
 {
-    (void)&sess_ctx; /* Unused parameter */
 
     switch (cmd_id) {
     case TA_REF_RUN_ALL:
-      return run_all_test();
+      return run_all_test(param_types, params, sess_ctx);
     default:
       return TEE_ERROR_BAD_PARAMETERS;
     }

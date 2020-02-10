@@ -40,16 +40,24 @@ int main(int argc, char *argv[]) {
     data = ((struct __profiler_data *)(header + 1));
     count = header->idx;
 
+    unsigned long baseaddr;
     for(i = 0; i < count; i++, data++) {
         uint64_t dir;
         struct result res;
         char *name;
         __profiler_nsec_t nsec;
         get_direction_nsec(data->nsec, &dir, &nsec);
+        if(i == 0) {
+            baseaddr = (unsigned long)data->callee;
+            res.start = nsec;
+            res.end = 0;
+            continue;
+        }
         switch(dir) {
             case CALL:
                 res.callee = data->callee;
                 res.start = nsec; res.end = 0;
+                res.idx = i;
                 push(res);
                 break;
             case RET:
@@ -57,11 +65,8 @@ int main(int argc, char *argv[]) {
                 res = pop();
                 res.end = nsec;
                 __profiler_nsec_t duration = res.end - res.start;
-                unsigned long addr = (unsigned long)res.callee;
-                printf("%03ld %*c[%10p(%s)] : %lu (%lu, %lu)\n",
-                        res.depth, (int)res.depth*2, ' ',
-                        res.callee, get_func_name(table, addr),
-                        duration, res.start, res.end);
+                unsigned long addr = (unsigned long)res.callee - (unsigned long)baseaddr;
+                printf("%ld,%ld,%s,%ld\n", res.idx, res.depth, get_func_name(table, addr), duration);
                 break;
             default:
                 fprintf(stderr, "dir is something wrong!\n");

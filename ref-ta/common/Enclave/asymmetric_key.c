@@ -28,9 +28,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config_ref_ta.h"
-
 // asymmetric sign/verify
+//
+#include "config_ref_ta.h"
+#include "tee_wrapper.h"
 
 #define SHA_LENGTH (256/8)
 #define SIG_LENGTH 64
@@ -49,7 +50,7 @@ void gp_asymmetric_key_sign_test(void)
 
     TEE_Result rv;
   
-    /* Get hash of test data */
+    // Take hash of test data
     rv = TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
     GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
@@ -60,7 +61,7 @@ void gp_asymmetric_key_sign_test(void)
 
     TEE_FreeOperation(handle);
 
-    /* Dump hash data */
+    // Dump hashed data
     tee_printf("@digest: ");
     for (int i = 0; i < SHA_LENGTH; i++) {
       tee_printf ("%02x", hash[i]);
@@ -70,11 +71,11 @@ void gp_asymmetric_key_sign_test(void)
     uint32_t siglen = SIG_LENGTH;
     TEE_ObjectHandle keypair;
 
-    /* Sign hash data with the generated keys */
+    // Sign hashed data with the generated keys
     rv = TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, 256);
     GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
-    /* Generate keypair */
+    // Generate keypair
     rv = TEE_AllocateTransientObject(TEE_TYPE_ECDSA_KEYPAIR, 256, &keypair);
     GP_ASSERT(rv, "TEE_AllocateTransientObject fails");
 
@@ -94,14 +95,14 @@ void gp_asymmetric_key_sign_test(void)
 
     TEE_FreeOperation(handle);
 
-    /* Dump signature */
+    // Dump signature
     tee_printf("@signature: ");
     for (uint32_t i = 0; i < siglen; i++) {
       tee_printf ("%02x", sig[i]);
     }
     tee_printf("\n");
 
-    /* Verify signature of hash data */
+    // Verify signature against hashed data
     rv = TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_VERIFY, 256);
     GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
@@ -112,6 +113,7 @@ void gp_asymmetric_key_sign_test(void)
     verify_ok = TEE_AsymmetricVerifyDigest(handle, NULL, 0, hash, hashlen, sig, siglen);
 
     TEE_FreeOperation(handle);
+    tee_printf("@@TEE_FreeOperation: \n");
 
     TEE_FreeTransientObject(keypair);
 

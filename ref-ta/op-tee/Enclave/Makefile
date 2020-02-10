@@ -3,8 +3,11 @@ $(error OPTEE_DIR is not set)
 endif
 
 TA_DEV_KIT_DIR=$(OPTEE_DIR)/optee_os/ta
-CROSS_COMPILE=$(OPTEE_DIR)/toolchains/aarch64/bin/aarch64-linux-gnu-
+CROSS_COMPILE=$(OPTEE_DIR)/out-br/host/bin/aarch64-linux-gnu-
 LDFLAGS=
+#Enclave_Quiet=
+Enclave_Quiet ?= -DENCLAVE_QUIET
+Enable_Profiler ?= -finstrument-functions
 
 CFG_TEE_TA_LOG_LEVEL ?= 4
 CPPFLAGS += -DCFG_TEE_TA_LOG_LEVEL=$(CFG_TEE_TA_LOG_LEVEL)
@@ -101,8 +104,9 @@ include $(ta-dev-kit-dir$(sm))/mk/cleandirs.mk
 .PHONY: clean
 clean:
 	@$(cmd-echo-silent) '  CLEAN   $(out-dir)'
+	$(RM) *.nm
 	${q}rm -f $(cleanfiles)
-	rm -f *.o *.o.* *.cmd *.dmp *.elf *.map $(user-ta-uuid).ta .ta.ld.d ta.lds
+	rm -f *.o .*.o.* .*.cmd *.dmp *.elf *.map $(user-ta-uuid).ta .ta.ld.d ta.lds
 	${q}dirs="$(call cleandirs-for-rmdir)"; if [ "$$dirs" ]; then $(RMDIR) $$dirs; fi
 	@$(cmd-echo-silent) '  CLEAN   $(O)'
 	${q}if [ -d "$(O)" ]; then $(RMDIR) $(O); fi
@@ -122,10 +126,10 @@ endif
 
 SCRIPTS_DIR := $(ta-dev-kit-dir)/scripts
 include  $(ta-dev-kit-dir$(sm))/mk/$(COMPILER_$(sm)).mk
-include  $(ta-dev-kit-dir$(sm))/mk/compile.mk
+include  ./mk/compile.mk
 
 ifneq ($(user-ta-uuid),)
-include  $(ta-dev-kit-dir$(sm))/mk/link.mk
+include  ./mk/link.mk
 endif
 
 ifneq ($(libname),)
@@ -144,4 +148,6 @@ endif
 
 .PHONY: copyto
 copyto:
+	readelf -s $(BINARY).elf | grep -E "^([0-9]| )*:" | grep "FUNC" | awk '{print $$2 " T " $$8}' > $(BINARY).nm
+	install -m 0444 $(BINARY).nm  $(OPTEE_DIR)/out-br/target/root/enclave_nm
 	install -m 0444 $(BINARY).ta $(OPTEE_DIR)/out-br/target/lib/optee_armtz/

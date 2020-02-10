@@ -28,19 +28,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config_ref_ta.h"
-
 // random
+
+#include "config_ref_ta.h"
+#include "tee_wrapper.h"
 
 void gp_random_test(void)
 {
     unsigned char rbuf[16];
 
-    /* Clear buffer before string random */
-    memset(rbuf, 0, sizeof(rbuf));
-
     TEE_GenerateRandom(rbuf, sizeof(rbuf));
-
     tee_printf("@random: ");
     for (int i = 0; i < sizeof(rbuf); i++) {
         tee_printf ("%02x", rbuf[i]);

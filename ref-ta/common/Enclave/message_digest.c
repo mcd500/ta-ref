@@ -28,9 +28,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "config_ref_ta.h"
-
 // message digest
+//
+#include "config_ref_ta.h"
+#include "tee_wrapper.h"
 
 #define SHA_LENGTH (256/8)
 #define SIG_LENGTH 64
@@ -48,7 +49,7 @@ void gp_message_digest_test(void)
 
     TEE_Result rv;
 
-    /* Get hash of test data */
+    // Take hash of test data
     rv = TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
     GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
@@ -59,7 +60,7 @@ void gp_message_digest_test(void)
 
     TEE_FreeOperation(handle);
 
-    /* Dump hashed data */
+    // Dump hashed data
     tee_printf("hash: ");
     for (int i = 0; i < SHA_LENGTH; i++) {
       tee_printf ("%02x", hash[i]);

@@ -1,5 +1,6 @@
 TOPDIR=$(CURDIR)/../..
 include $(TOPDIR)/common.mk
+ENCLAVE_TYPE=-DKEYSTONE
 
 ifndef KEYSTONE_DIR
 $(error KEYSTONE_DIR is not set)
@@ -74,8 +75,11 @@ Enclave_Name := Enclave/Enclave.eapp_riscv
 
 ifeq ($(PROFILER),ON)
 Enclave_Quiet = -DENCLAVE_QUIET
+# optee only
+#Enclave_Perf_Wrapper = -DENCLAVE_PERF_WRAPPER
 else
 Enclave_Quiet=
+Enclave_Perf_Wrapper=
 endif
 
 EDGECALLS=Enclave
@@ -111,7 +115,7 @@ all: clean gen profiler app enclave
 
 ####### profiler #######
 profiler:
-	make -C $(PROFILER_DIR) EDGER_DIR=$(EDGER_DIR) KEYSTONE_SDK_DIR=$(KEYSTONE_SDK_DIR)
+	make -C $(PROFILER_DIR) ENCLAVE_TYPE=$(ENCLAVE_TYPE) EDGER_DIR=$(EDGER_DIR) KEYSTONE_SDK_DIR=$(KEYSTONE_SDK_DIR)
 
 ######## Edger ########
 edger $(EDGER):
@@ -169,7 +173,7 @@ $(ENCLAVE_LIB_BUILD)/common/%.o: $(TOPDIR)/common/%.c
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
 enclave: gen $(Enclave_Lib_Objects)
-	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet) CRYPTLIB=$(CRYPTLIB)
+	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet) ENCLAVE_PERF_WRAPPER=$(Enclave_Perf_Wrapper) CRYPTLIB=$(CRYPTLIB)
 
 .PHONY: clean cleangen
 
@@ -177,7 +181,7 @@ cleangen:
 	rm -rf $(GENFILES)
 
 clean:
-	make -C $(PROFILER_DIR) clean
+	make -C $(PROFILER_DIR) ENCLAVE_TYPE=$(ENCLAVE_TYPE) clean
 	make -C $(APP_DIR) clean EDGECALLS=$(EDGECALLS)
 	make -C $(ENCLAVE_DIR) clean EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR)
 	rm -rf $(GENFILES)
@@ -187,7 +191,7 @@ clean:
 
 copyto:
 	mkdir -p $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample
-	make -C $(PROFILER_DIR) copyto
+	make -C $(PROFILER_DIR) ENCLAVE_TYPE=$(ENCLAVE_TYPE) copyto
 	make -C $(APP_DIR) copyto KEYSTONE_DIR=$(KEYSTONE_DIR)
 	make -C $(ENCLAVE_DIR) copyto KEYSTONE_DIR=$(KEYSTONE_DIR)
 	cp -p $(KEYSTONE_DIR)/sdk/rts/eyrie/eyrie-rt $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample/

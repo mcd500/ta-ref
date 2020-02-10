@@ -1,6 +1,7 @@
 global-incdirs-y += .
 spec-out-dir := .
 spec-srcs += \
+	../../common/Enclave/tee_wrapper.c \
 	Enclave.c \
 	../../common/Enclave/random.c \
 	../../common/Enclave/time.c \

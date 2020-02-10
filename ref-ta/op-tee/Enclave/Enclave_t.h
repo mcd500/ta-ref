@@ -40,12 +40,13 @@
 
 #define BUFSIZ 1024
 
-static int __printf(1, 2) tee_printf(const char* fmt, ...)
+static int __attribute__((format(printf, 1, 2),no_instrument_function,hot)) tee_printf(const char* fmt, ...)
 {
+    unsigned int retval = 0;
+
+#if TRACE_LEVEL > 0
     char buf[BUFSIZ] = { '\0' };
     va_list ap;
-    unsigned int retval;
-
     va_start(ap, fmt);
     retval = vsnprintf(buf, BUFSIZ, fmt, ap);
     va_end(ap);
@@ -53,7 +54,7 @@ static int __printf(1, 2) tee_printf(const char* fmt, ...)
       buf[retval] = '\0';
       trace_ext_puts(buf);
     }
-
+#endif
     return retval;
 }
 
