@@ -148,6 +148,6 @@ endif
 
 .PHONY: copyto
 copyto:
-	readelf -s $(BINARY).elf | grep -E "^([0-9]| )*:" > $(BINARY).nm
+	readelf -s $(BINARY).elf | grep -E "^([0-9]| )*:" | grep "FUNC" | awk '{print $$2 " T " $$8}' > $(BINARY).nm
 	install -m 0444 $(BINARY).nm  $(OPTEE_DIR)/out-br/target/root/enclave_nm
 	install -m 0444 $(BINARY).ta $(OPTEE_DIR)/out-br/target/lib/optee_armtz/
