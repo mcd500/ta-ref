@@ -1,6 +1,6 @@
 TOPDIR=$(shell pwd)/../..
 include $(TOPDIR)/common.mk
-TYPE=KEYSTONE
+ENCLAVE_TYPE=-DKEYSTONE
 
 ifndef KEYSTONE_DIR
 $(error KEYSTONE_DIR is not set)
@@ -24,7 +24,6 @@ EDGER_TYPE=KEYEDGE
 endif
 
 PROFILER=OFF
-PROFILER_TYPE="TYPE=KEYSTONE"
 
 EDGE_DIR=Edge
 ENCLAVE_DIR=Enclave
@@ -114,7 +113,7 @@ all: clean gen profiler app enclave
 
 ####### profiler #######
 profiler:
-	make -C $(PROFILER_DIR) $(PROFILER_TYPE) EDGER_DIR=$(EDGER_DIR) KEYSTONE_SDK_DIR=$(KEYSTONE_SDK_DIR)
+	make -C $(PROFILER_DIR) ENCLAVE_TYPE=$(ENCLAVE_TYPE) EDGER_DIR=$(EDGER_DIR) KEYSTONE_SDK_DIR=$(KEYSTONE_SDK_DIR)
 
 ######## Edger ########
 edger $(EDGER):
@@ -180,7 +179,7 @@ cleangen:
 	rm -rf $(GENFILES)
 
 clean:
-	make -C $(PROFILER_DIR) $(PROFILER_TYPE) clean
+	make -C $(PROFILER_DIR) ENCLAVE_TYPE=$(ENCLAVE_TYPE) clean
 	make -C $(APP_DIR) clean EDGECALLS=$(EDGECALLS)
 	make -C $(ENCLAVE_DIR) clean EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR)
 	rm -rf $(GENFILES)
@@ -190,7 +189,7 @@ clean:
 
 copyto:
 	mkdir -p $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample
-	make -C $(PROFILER_DIR) $(PROFILER_TYPE) copyto
+	make -C $(PROFILER_DIR) ENCLAVE_TYPE=$(ENCLAVE_TYPE) copyto
 	make -C $(APP_DIR) copyto KEYSTONE_DIR=$(KEYSTONE_DIR)
 	make -C $(ENCLAVE_DIR) copyto KEYSTONE_DIR=$(KEYSTONE_DIR)
 	cp -p $(KEYSTONE_DIR)/sdk/rts/eyrie/eyrie-rt $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample/
