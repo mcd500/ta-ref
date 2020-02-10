@@ -32,7 +32,6 @@ verify ok
 TIME
 TIME
 TIME
-TIME
 verify ok
 gp ecall_ta_main() end
 TIME
