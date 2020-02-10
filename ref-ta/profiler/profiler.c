@@ -92,11 +92,11 @@ void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(void) {
         if(ocall_close_file(fd) == -1) {
             return;
         }
-	}
 #elif OPTEE
     TEE_MemMove(buf, ptr, sz);
     *size = sz;
 #endif
+    }
 }
 
 static inline void

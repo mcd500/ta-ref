@@ -1,5 +1,5 @@
 ifeq ($(TYPE), KEYSTONE)
 include keystone.mk
-else ifeq ($(TYPE), OP-TEE)
+else ifeq ($(TYPE), OPTEE)
 include op-tee.mk
 endif
