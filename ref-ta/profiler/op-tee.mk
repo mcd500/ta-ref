@@ -15,7 +15,7 @@ LOG_FILE = "shared_mem"
 ta-dev-kit-dir := $(OPTEE_DIR)/optee_os/out/arm/export-ta_arm64
 
 .PHONY: all clean copyto analyzer
-all: libprofiler.a analyzer
+all: clean libprofiler.a analyzer
 
 libprofiler.a: $(OBJS)
 	$(AR) $(ARFLAGS) $@ $^

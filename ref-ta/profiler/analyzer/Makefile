@@ -7,7 +7,7 @@ endif
 CFLAGS=-I../
 .PHONY: analyzer
 
-all: analyzer
+all: clean analyzer
 
 analyzer: analyzer.o nm_parse.o
 	$(CC) $(EXTRA_FLAGS) -g $^ -o $@ -Wall -Wpedantic

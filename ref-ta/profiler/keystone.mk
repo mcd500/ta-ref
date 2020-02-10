@@ -14,7 +14,7 @@ OBJS = profiler.o # wrapper.o
 LOG_FILE = "shared_mem"
 
 .PHONY: all clean analyzer
-all: libprofiler.a analyzer
+all: clean libprofiler.a analyzer
 
 libprofiler.a: $(OBJS)
 	$(AR) $(ARFLAGS) $@ $^
