@@ -124,10 +124,10 @@ void _TEE_FreeTransientObject(TEE_ObjectHandle object) {
     return;
 }
 
-void _TEE_ResetTransientObject(TEE_ObjectHandle object) {
-    TEE_ResetTransientObject(object);
-    return;
-}
+// void _TEE_ResetTransientObject(TEE_ObjectHandle object) {
+//     TEE_ResetTransientObject(object);
+//     return;
+// }
 
 // TEE_Result _TEE_PopulateTransientObject(TEE_ObjectHandle object,
 // 				       const TEE_Attribute *attrs,
