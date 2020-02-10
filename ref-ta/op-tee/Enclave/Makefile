@@ -106,7 +106,7 @@ clean:
 	@$(cmd-echo-silent) '  CLEAN   $(out-dir)'
 	$(RM) *.nm
 	${q}rm -f $(cleanfiles)
-	rm -f *.o *.o.* *.cmd *.dmp *.elf *.map $(user-ta-uuid).ta .ta.ld.d ta.lds
+	rm -f *.o .*.o.* .*.cmd *.dmp *.elf *.map $(user-ta-uuid).ta .ta.ld.d ta.lds
 	${q}dirs="$(call cleandirs-for-rmdir)"; if [ "$$dirs" ]; then $(RMDIR) $$dirs; fi
 	@$(cmd-echo-silent) '  CLEAN   $(O)'
 	${q}if [ -d "$(O)" ]; then $(RMDIR) $(O); fi

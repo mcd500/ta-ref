@@ -3,7 +3,7 @@
 #ifdef KEYSTONE
 #include "Enclave_t.h"
 #include <fcntl.h>
-#elif OPTEE
+#elif defined(OPTEE)
 #include <tee_internal_api.h>
 #include <tee_internal_api_extensions.h>
 #endif
@@ -72,12 +72,19 @@ void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
     __profiler_head->nsec = 0;
     __profiler_head->start = __rdtsc();
 
-#ifdef OPTEE
+#if KEYSTONE
+    __cyg_profile_func(0, CALL);
+#elif OPTEE
     __cyg_profile_func(__section_start, CALL);
 #endif
 }
 
-void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(void) {
+#ifdef KEYSTONE
+void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(void)
+#elif defined(OPTEE)
+void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(char *buf, size_t *size)
+#endif
+{
 	if (__profiler_head != NULL) {
 		void * ptr = (void *)__profiler_head;
 		unsigned int sz = __profiler_map_size;
@@ -92,7 +99,7 @@ void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(void) {
         if(ocall_close_file(fd) == -1) {
             return;
         }
-#elif OPTEE
+#elif defined(OPTEE)
     TEE_MemMove(buf, ptr, sz);
     *size = sz;
 #endif
@@ -130,7 +137,7 @@ static inline uint64_t PERF_METHOD_ATTRIBUTE __rdtsc(void)
     unsigned long cycles;
 #ifdef KEYSTONE
     asm volatile ("rdcycle %0" : "=r" (cycles));
-#elif OPTEE
+#elif defined(OPTEE)
     asm volatile("mrs %0, cntvct_el0" : "=r"(cycles));
 #endif
     return cycles;

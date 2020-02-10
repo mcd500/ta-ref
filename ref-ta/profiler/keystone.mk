@@ -33,9 +33,6 @@ profiler.o: profiler.c
 	-o $@ \
 	-Wall -Wpedantic
 
-analyzer:
-	make -C analyzer
-
 copyto:
 	install -m 0744 analyzer/analyzer $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample/
 

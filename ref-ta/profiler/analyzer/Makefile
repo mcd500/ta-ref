@@ -1,4 +1,9 @@
+ifeq ($(TYPE), KEYSTONE)
 CC = riscv64-unknown-linux-gnu-gcc
+else ifeq ($(TYPE), OPTEE)
+OPTEE_TOOLCHAIN_DIR=${OPTEE_DIR}/toolchains/aarch64/bin
+CC = $(OPTEE_TOOLCHAIN_DIR)/aarch64-linux-gnu-gcc
+endif
 CFLAGS=-I../
 .PHONY: analyzer
 
