@@ -11,6 +11,8 @@ expect -c '
     expect "*?ogin" { send "root\r" }
 
     expect "# " { send "optee_ref_ta\r" }
+    expect "# " { send "ls -ls\r" }
+    expect "# " { send "./analyzer shared_mem enclave_nm\r" }
 
     expect "# " { send "poweroff\r" }
 
