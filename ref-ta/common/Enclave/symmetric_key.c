@@ -32,7 +32,6 @@
 #include "config_ref_ta.h"
 #include "tee_wrapper.h"
 
-
 #define CIPHER_LENGTH 256
 
 void gp_symmetric_key_enc_verify_test(void)
@@ -52,30 +51,30 @@ void gp_symmetric_key_enc_verify_test(void)
     TEE_Result rv;
 
     // Generate key
-    rv = _TEE_AllocateTransientObject(TEE_TYPE_AES, 32*8, &key);
+    rv = TEE_AllocateTransientObject(TEE_TYPE_AES, 32*8, &key);
 
     GP_ASSERT(rv, "TEE_AllocateTransientObject fails");
-    rv = _TEE_GenerateKey(key, 256, NULL, 0);
+    rv = TEE_GenerateKey(key, 256, NULL, 0);
 
     GP_ASSERT(rv, "TEE_GenerateKey fails");
 
     // Encrypt test data
-    rv = _TEE_AllocateOperation(&handle, TEE_ALG_AES_CBC_NOPAD, TEE_MODE_ENCRYPT, 256);
+    rv = TEE_AllocateOperation(&handle, TEE_ALG_AES_CBC_NOPAD, TEE_MODE_ENCRYPT, 256);
     GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
-    rv = _TEE_SetOperationKey(handle, key);
+    rv = TEE_SetOperationKey(handle, key);
     GP_ASSERT(rv, "TEE_SetOperationKey fails");
 
-    _TEE_GenerateRandom(iv, sizeof(iv));
+    TEE_GenerateRandom(iv, sizeof(iv));
 
-    _TEE_CipherInit(handle, iv, sizeof(iv));
+    TEE_CipherInit(handle, iv, sizeof(iv));
     //GP_ASSERT(rv, "TEE_AEInit fails");
 
     outlen = CIPHER_LENGTH;
-    rv = _TEE_CipherUpdate(handle, data, CIPHER_LENGTH, out, &outlen);
+    rv = TEE_CipherUpdate(handle, data, CIPHER_LENGTH, out, &outlen);
     GP_ASSERT(rv, "TEE_CipherUpdate fails");
 
-    _TEE_FreeOperation(handle);
+    TEE_FreeOperation(handle);
 
     // Dump encrypted data
     tee_printf("@cipher: ");
@@ -85,22 +84,22 @@ void gp_symmetric_key_enc_verify_test(void)
     tee_printf("\n");
 
     // Decrypt it
-    rv= _TEE_AllocateOperation(&handle, TEE_ALG_AES_CBC_NOPAD, TEE_MODE_DECRYPT, 256);
+    rv= TEE_AllocateOperation(&handle, TEE_ALG_AES_CBC_NOPAD, TEE_MODE_DECRYPT, 256);
     GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
-    rv = _TEE_SetOperationKey(handle, key);
+    rv = TEE_SetOperationKey(handle, key);
     GP_ASSERT(rv, "TEE_SetOperationKey fails");
 
-    _TEE_CipherInit(handle, iv, sizeof(iv));
+    TEE_CipherInit(handle, iv, sizeof(iv));
     //GP_ASSERT(rv, "TEE_AEInit fails");
 
     outlen = CIPHER_LENGTH;
-    rv = _TEE_CipherUpdate(handle, out, CIPHER_LENGTH, out, &outlen);
+    rv = TEE_CipherUpdate(handle, out, CIPHER_LENGTH, out, &outlen);
     GP_ASSERT(rv, "TEE_CipherUpdate fails");
 
-    _TEE_FreeOperation(handle);
+    TEE_FreeOperation(handle);
 
-    _TEE_FreeTransientObject(key);
+    TEE_FreeTransientObject(key);
 
     // Dump data
     tee_printf("decrypted to: ");

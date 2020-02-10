@@ -74,8 +74,11 @@ Enclave_Name := Enclave/Enclave.eapp_riscv
 
 ifeq ($(PROFILER),ON)
 Enclave_Quiet = -DENCLAVE_QUIET
+# optee only
+#Enclave_Perf_Wrapper = -DENCLAVE_PERF_WRAPPER
 else
 Enclave_Quiet=
+Enclave_Perf_Wrapper=
 endif
 
 EDGECALLS=Enclave
@@ -169,7 +172,7 @@ $(ENCLAVE_LIB_BUILD)/common/%.o: $(TOPDIR)/common/%.c
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
 enclave: gen $(Enclave_Lib_Objects)
-	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet) CRYPTLIB=$(CRYPTLIB)
+	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet) ENCLAVE_PERF_WRAPPER=$(Enclave_Perf_Wrapper) CRYPTLIB=$(CRYPTLIB)
 
 .PHONY: clean cleangen
 

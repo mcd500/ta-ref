@@ -32,13 +32,12 @@
 #include "config_ref_ta.h"
 #include "tee_wrapper.h"
 
-//
 void gp_ree_time_test(void)
 {
     TEE_Time time;
 
     /* REE time */
-    _TEE_GetREETime(&time);
+    TEE_GetREETime(&time);
     tee_printf ("@GP REE time %u sec %u millis\n", time.seconds, time.millis);
 }
 
@@ -47,6 +46,6 @@ void gp_trusted_time_test(void)
     TEE_Time time;
 
     /* System time */
-    _TEE_GetSystemTime(&time);
+    TEE_GetSystemTime(&time);
     tee_printf ("@GP System time %u sec %u millis\n", time.seconds, time.millis);
 }

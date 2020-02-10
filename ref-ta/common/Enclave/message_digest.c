@@ -33,7 +33,6 @@
 #include "config_ref_ta.h"
 #include "tee_wrapper.h"
 
-
 #define SHA_LENGTH (256/8)
 #define SIG_LENGTH 64
 
@@ -51,15 +50,15 @@ void gp_message_digest_test(void)
     TEE_Result rv;
 
     // Take hash of test data
-    rv = _TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
+    rv = TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
     GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
-    _TEE_DigestUpdate(handle, data, sizeof(data));
+    TEE_DigestUpdate(handle, data, sizeof(data));
 
-    rv = _TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
+    rv = TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
     GP_ASSERT(rv, "TEE_DigestDoFinal fails");
 
-    _TEE_FreeOperation(handle);
+    TEE_FreeOperation(handle);
 
     // Dump hashed data
     tee_printf("hash: ");

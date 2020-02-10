@@ -48,7 +48,7 @@ void gp_secure_storage_test(void)
 
     /* write */
     TEE_ObjectHandle object;
-    rv = _TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
+    rv = TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
 				    "FileOne", strlen("FileOne"),
 				    (TEE_DATA_FLAG_ACCESS_WRITE
 				     | TEE_DATA_FLAG_OVERWRITE),
@@ -58,26 +58,26 @@ void gp_secure_storage_test(void)
     GP_ASSERT(rv, "TEE_CreatePersistentObject fails");
 
     memcpy(buf, data, DATA_LENGTH);
-    rv = _TEE_WriteObjectData(object, (const char *)data, DATA_LENGTH);
+    rv = TEE_WriteObjectData(object, (const char *)data, DATA_LENGTH);
     GP_ASSERT(rv, "TEE_WriteObjectData fails");
 
-    _TEE_CloseObject(object);
+    TEE_CloseObject(object);
 
     /* clear buf */
     memset(buf, 0, DATA_LENGTH);
 
     /* read */
-    rv = _TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
+    rv = TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
 				  "FileOne", strlen("FileOne"),
 				  TEE_DATA_FLAG_ACCESS_READ,
 				  &object);
     GP_ASSERT(rv, "TEE_OpenPersistentObject fails");
 
     uint32_t count;
-    rv = _TEE_ReadObjectData(object, (char *)buf, DATA_LENGTH, &count);
+    rv = TEE_ReadObjectData(object, (char *)buf, DATA_LENGTH, &count);
     GP_ASSERT(rv, "TEE_ReadObjectData fails");
 
-    _TEE_CloseObject(object);
+    TEE_CloseObject(object);
 
     tee_printf("%d bytes read: ", count);
     for (uint32_t i = 0; i < count; i++) {

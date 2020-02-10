@@ -54,34 +54,34 @@ void gp_symmetric_key_gcm_verify_test(void)
     TEE_Result rv;
 
     // Generate key
-    rv = _TEE_AllocateTransientObject(TEE_TYPE_AES, 256, &key);
+    rv = TEE_AllocateTransientObject(TEE_TYPE_AES, 256, &key);
     GP_ASSERT(rv, "TEE_AllocateTransientObject fails");
 
-    rv = _TEE_GenerateKey(key, 256, NULL, 0);
+    rv = TEE_GenerateKey(key, 256, NULL, 0);
     GP_ASSERT(rv, "TEE_GenerateKey fails");
 
     // Encrypt test data
-    rv = _TEE_AllocateOperation(&handle, TEE_ALG_AES_GCM, TEE_MODE_ENCRYPT, 256);
+    rv = TEE_AllocateOperation(&handle, TEE_ALG_AES_GCM, TEE_MODE_ENCRYPT, 256);
     GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
-    rv = _TEE_SetOperationKey(handle, key);
+    rv = TEE_SetOperationKey(handle, key);
     GP_ASSERT(rv, "TEE_SetOperationKey fails");
 
-    _TEE_GenerateRandom(iv, sizeof(iv));
+    TEE_GenerateRandom(iv, sizeof(iv));
 
-    rv = _TEE_AEInit(handle, iv, sizeof(iv), 16*8, 16, 16);
+    rv = TEE_AEInit(handle, iv, sizeof(iv), 16*8, 16, 16);
     GP_ASSERT(rv, "TEE_AEInit fails");
 
-    //  rv = _TEE_AEUpdateAAD(handle, aad, 16);
+    //  rv = TEE_AEUpdateAAD(handle, aad, 16);
     //  GP_ASSERT(rv, "TEE_AEUpdateAAD fails");
 
     unsigned int taglen = 16*8;
     memset(tag, 0, 16);
 
     outlen = CIPHER_LENGTH;
-    rv = _TEE_AEEncryptFinal(handle, data, 256, out, &outlen, tag, &taglen);
+    rv = TEE_AEEncryptFinal(handle, data, 256, out, &outlen, tag, &taglen);
 
-    _TEE_FreeOperation(handle);
+    TEE_FreeOperation(handle);
 
     // Dump encrypted data and tag
     tee_printf("@cipher: ");
@@ -96,26 +96,26 @@ void gp_symmetric_key_gcm_verify_test(void)
     tee_printf("\n");
 
     // Decrypt it
-    rv = _TEE_AllocateOperation(&handle, TEE_ALG_AES_GCM, TEE_MODE_DECRYPT, 256);
+    rv = TEE_AllocateOperation(&handle, TEE_ALG_AES_GCM, TEE_MODE_DECRYPT, 256);
     GP_ASSERT(rv, "TEE_AllocateOperation fails");
 
-    rv = _TEE_SetOperationKey(handle, key);
+    rv = TEE_SetOperationKey(handle, key);
     GP_ASSERT(rv, "TEE_SetOperationKey fails");
 
-    rv = _TEE_AEInit(handle, iv, sizeof(iv), 16*8, 16, 16);
+    rv = TEE_AEInit(handle, iv, sizeof(iv), 16*8, 16, 16);
     GP_ASSERT(rv, "TEE_AEInit fails");
 
-    //  rv = _TEE_AEUpdateAAD(handle, aad, 16);
+    //  rv = TEE_AEUpdateAAD(handle, aad, 16);
     //  GP_ASSERT(rv, "TEE_AEUpdateAAD fails");
 
     unsigned char decode[CIPHER_LENGTH];
     outlen = 256;
-    rv = _TEE_AEDecryptFinal(handle, out, 256, decode, &outlen, tag, 16);
+    rv = TEE_AEDecryptFinal(handle, out, 256, decode, &outlen, tag, 16);
     GP_ASSERT(rv, "TEE_AEDecryptFinal fails");
 
-    _TEE_FreeOperation(handle);
+    TEE_FreeOperation(handle);
 
-    _TEE_FreeTransientObject(key);
+    TEE_FreeTransientObject(key);
 
     // Dump data and tag
     tee_printf("decrypted to: ");
