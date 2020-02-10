@@ -151,6 +151,10 @@ TEE_Result TEE_AEUpdate(TEE_OperationHandle operation, const void *srcData,
                         uint32_t srcLen, void *destData, uint32_t *destLen);
 /// Crypto, Authenticated Encryption with Symmetric key Verification Functions
 /** Supports TEE_ALG_AES_CCM, TEE_ALG_AES_GCM. */
+void TEE_AEUpdateAAD(TEE_OperationHandle operation, const void *AADdata,
+		     uint32_t AADdataLen);
+/// Crypto, Authenticated Encryption with Symmetric key Verification Functions
+/** Supports TEE_ALG_AES_CCM, TEE_ALG_AES_GCM. */
 TEE_Result TEE_AEEncryptFinal(TEE_OperationHandle operation,
                               const void *srcData, uint32_t srcLen,
                               void *destData, uint32_t *destLen, void *tag,
@@ -174,7 +178,7 @@ TEE_Result TEE_CipherUpdate(TEE_OperationHandle operation, const void *srcData,
 /// Crypto, Asymmetric key Verification Functions
 /** Generate asymmetric keypair.  */
 TEE_Result TEE_GenerateKey(TEE_ObjectHandle object, uint32_t keySize,
-			   TEE_Attribute *params, uint32_t paramCount);
+			   const TEE_Attribute *params, uint32_t paramCount);
 /// Crypto, Asymmetric key Verification Functions
 /** Create object storing asymmetric key. */
 TEE_Result TEE_AllocateTransientObject(TEE_ObjectType objectType,

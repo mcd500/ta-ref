@@ -596,7 +596,7 @@ TEE_Result TEE_CipherDoFinal(TEE_OperationHandle operation, const void *srcData,
 
 
 TEE_Result TEE_GenerateKey(TEE_ObjectHandle object, uint32_t keySize,
-			   TEE_Attribute *params, uint32_t paramCount)
+			   const TEE_Attribute *params, uint32_t paramCount)
 {
     pr_deb("TEE_GenerateKey(): start");
 
