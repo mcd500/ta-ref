@@ -68,4 +68,4 @@ optee_test:
     tags:
       - shell
     script:
-      - make optee-rpi-test
+      - make optee-rpi3-test
