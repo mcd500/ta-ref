@@ -37,6 +37,8 @@ gp ecall_ta_main() end
 TIME
 TIME
 TIME
+TIME
+TIME
 # poweroff
 # Connection to localhost closed by remote host.
 Connection to localhost closed.
