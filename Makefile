@@ -5,6 +5,7 @@ KEYSTONE_DIR     ?= $(TEE_REF_TA_DIR)/build-keystone
 KEYSTONE_SDK_DIR ?= $(KEYSTONE_DIR)/sdk
 KEEDGER_DIR      =  $(TEE_REF_TA_DIR)/keedger8r
 OPTEE_DIR        ?= $(TEE_REF_TA_DIR)/build-optee
+OPTEE_BINARY_FILE = a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
 export CFLAGS    += -Wno-unused-parameter
 #PATH      =  $(KEYSTONE_DIR)/riscv/bin:$${PATH}
 
@@ -55,9 +56,28 @@ sgx-test:
 	# run ref-ta on thinkpad
 
 .PHONY: optee-rpi3-test
-optee-test:
+optee-rpi3-test:
+	export TEE_REF_TA_DIR=$(TEE_REF_TA_DIR); \
+	export CONTAINER_TEE_REF_TA_DIR=/home/main/tee-ta-reference; \
+	mkdir -p output; \
+	# create rootfs.cpio.gz
+	docker run -i --rm -v $(pwd):/home/main/shared -v ${TEE_REF_TA_DIR}:${CONTAINER_TEE_REF_TA_DIR} -w ${CONTAINER_TEE_REF_TA_DIR}/ref-ta/op-tee knknkn1162/test:bcmrpi3 /bin/bash <<-EOF
+		make clean
+		make
+		make copyto
+		cp -ap /home/main/optee/out-br/images/rootfs.cpio.gz /home/main/shared/output
+	EOF && \
+	# expand
+	gunzip -cd rootfs.cpio.gz | cpio -idmv "lib/optee_armtz/${OPTEE_BINARY_FILE}" && \
+	gunzip -cd rootfs.cpio.gz | cpio -idmv "usr/bin/optee_*" && \
+	gunzip -cd rootfs.cpio.gz | cpio -idmv "root/*" && \
+	gunzip -cd rootfs.cpio.gz | cpio -idmv "usr/lib/libteec.so.1.0.0" && \
+	ln -s libteec.so.1.0.0 ./usr/lib/libteec.so.1 && \
 	# scp binaries to rpi3
 	# run ref-ta on rpi3
+	# cd /root & optee_ref_ta
+	# ./analyzer shared_mem enclave_nm
+
 
 .PHONY: keystone-test
 keystone-test:
