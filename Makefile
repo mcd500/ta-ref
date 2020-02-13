@@ -1,6 +1,6 @@
 SHELL=/bin/bash -x
 
-CWD              = $(shwll pwd)
+CWD              = $(shell pwd)
 TEE_REF_TA_DIR   =  $(shell pwd)
 KEYSTONE_DIR     ?= $(TEE_REF_TA_DIR)/build-keystone
 KEYSTONE_SDK_DIR ?= $(KEYSTONE_DIR)/sdk
