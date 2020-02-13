@@ -66,8 +66,6 @@ optee-rpi3-test:
 	# create rootfs.cpio.gz
 	docker run -i --rm -v ${CWD}:/home/main/shared -v ${TEE_REF_TA_DIR}:${CONTAINER_TEE_REF_TA_DIR} -w ${CONTAINER_TEE_REF_TA_DIR}/ref-ta/op-tee vc707/test:rpi3 /bin/bash <<-EOF
 		export OPTEE_DIR=/home/main/optee
-		cd ref-ta/op-tee
-		make clean
 		make
 		make copyto
 		cp -ap /home/main/optee/out-br/images/rootfs.cpio.gz /home/main/shared/output
