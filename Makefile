@@ -64,12 +64,7 @@ optee-rpi3-test:
 	export CONTAINER_TEE_REF_TA_DIR=$(CONTAINER_TEE_REF_TA_DIR); \
 	mkdir -p output; \
 	# create rootfs.cpio.gz
-	docker run -i --rm -v ${CWD}:/home/main/shared -v ${TEE_REF_TA_DIR}:${CONTAINER_TEE_REF_TA_DIR} -w ${CONTAINER_TEE_REF_TA_DIR}/ref-ta/op-tee vc707/test:rpi3 /bin/bash <<-EOF
-		export OPTEE_DIR=/home/main/optee
-		make
-		make copyto
-		cp -ap /home/main/optee/out-br/images/rootfs.cpio.gz /home/main/shared/output
-	EOF && \
+	docker run -it --rm -v ${CWD}:/home/main/shared -v ${TEE_REF_TA_DIR}:${CONTAINER_TEE_REF_TA_DIR} -w ${CONTAINER_TEE_REF_TA_DIR}/ref-ta/op-tee vc707/test:rpi3 --env OPTEE_DIR=/home/main/optee /bin/bash -c "make && make copyto && cp -ap /home/main/optee/out-br/images/rootfs.cpio.gz /home/main/shared/output" && \
 	cd output && \
 	# expand
 	gunzip -cd rootfs.cpio.gz | cpio -idmv "lib/optee_armtz/${OPTEE_BINARY_FILE}" && \
