@@ -2,6 +2,7 @@ SHELL=/bin/bash -x
 
 CWD              = $(shell pwd)
 TEE_REF_TA_DIR   =  $(shell pwd)
+CONTAINER_TEE_REF_TA_DIR = /home/main/tee-ta-reference
 KEYSTONE_DIR     ?= $(TEE_REF_TA_DIR)/build-keystone
 KEYSTONE_SDK_DIR ?= $(KEYSTONE_DIR)/sdk
 KEEDGER_DIR      =  $(TEE_REF_TA_DIR)/keedger8r
@@ -60,7 +61,7 @@ sgx-test:
 .PHONY: optee-rpi3-test
 optee-rpi3-test:
 	export TEE_REF_TA_DIR=$(TEE_REF_TA_DIR); \
-	export CONTAINER_TEE_REF_TA_DIR=/home/main/tee-ta-reference; \
+	export CONTAINER_TEE_REF_TA_DIR=$(CONTAINER_TEE_REF_TA_DIR); \
 	mkdir -p output; \
 	# create rootfs.cpio.gz
 	docker run -i --rm -v ${CWD}:/home/main/shared -v ${TEE_REF_TA_DIR}:${CONTAINER_TEE_REF_TA_DIR} -w ${CONTAINER_TEE_REF_TA_DIR}/ref-ta/op-tee vc707/test:rpi3 /bin/bash <<-EOF
