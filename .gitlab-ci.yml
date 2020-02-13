@@ -68,4 +68,5 @@ optee_test:
     tags:
       - shell
     script:
+      - docker login -u ${GITLAB_USER} -p ${DOCKERHUB_PASSWD}
       - make optee-rpi3-test

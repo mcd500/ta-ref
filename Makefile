@@ -61,7 +61,8 @@ optee-rpi3-test:
 	export CONTAINER_TEE_REF_TA_DIR=/home/main/tee-ta-reference; \
 	mkdir -p output; \
 	# create rootfs.cpio.gz
-	docker run -i --rm -v $(pwd):/home/main/shared -v ${TEE_REF_TA_DIR}:${CONTAINER_TEE_REF_TA_DIR} -w ${CONTAINER_TEE_REF_TA_DIR}/ref-ta/op-tee knknkn1162/test:bcmrpi3 /bin/bash <<-EOF
+	docker run -i --rm -v $(pwd):/home/main/shared -v ${TEE_REF_TA_DIR}:${CONTAINER_TEE_REF_TA_DIR} -w ${CONTAINER_TEE_REF_TA_DIR}/ref-ta/op-tee vc707/test:rpi3 /bin/bash <<-EOF
+		export OPTEE_DIR=/home/main/optee
 		make clean
 		make
 		make copyto
@@ -69,7 +70,7 @@ optee-rpi3-test:
 	EOF && \
 	# expand
 	gunzip -cd rootfs.cpio.gz | cpio -idmv "lib/optee_armtz/${OPTEE_BINARY_FILE}" && \
-	gunzip -cd rootfs.cpio.gz | cpio -idmv "usr/bin/optee_*" && \
+	gunzip -cd rootfs.cpio.gz | cpio -idmv "usr/bin/optee_ref_ta" && \
 	gunzip -cd rootfs.cpio.gz | cpio -idmv "root/*" && \
 	gunzip -cd rootfs.cpio.gz | cpio -idmv "usr/lib/libteec.so.1.0.0" && \
 	ln -s libteec.so.1.0.0 ./usr/lib/libteec.so.1 && \
