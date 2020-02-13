@@ -2,6 +2,7 @@ variables:
     GITLAB_URL: http://192.168.100.100
     GITLAB_USER: vc707
     RISCV_GCC_DIR: /home/user/projects/keystone/riscv/bin
+    RPI3_IP_ADDR: 192.168.100.61
 
 before_script:
       - git submodule update --init --recursive
@@ -67,8 +68,13 @@ optee_test:
       - optee-rpi3-test
     tags:
       - shell
+    # ignore global before_script
     before_script:
       - ''
     script:
+      - mkdir -p ~/.ssh
+      - eval "$(ssh-agent -s)"
+      - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+      - ssh-keyscan ${RPI3_IP_ADDR}  >> ~/.ssh/known_hosts
       - docker login -u ${GITLAB_USER} -p ${DOCKERHUB_PASSWD}
       - make optee-rpi3-test
