@@ -74,7 +74,7 @@ optee_test:
     script:
       - mkdir -p ~/.ssh
       - eval "$(ssh-agent -s)"
-      - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+      - echo "$RPI3_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
       - ssh-keyscan ${RPI3_IP_ADDR}  >> ~/.ssh/known_hosts
       - docker login -u ${GITLAB_USER} -p ${DOCKERHUB_PASSWD}
       - make optee-rpi3-test
