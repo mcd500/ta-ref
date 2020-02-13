@@ -70,7 +70,7 @@ optee-rpi3-test:
 	gunzip -cd rootfs.cpio.gz | cpio -idmv "root/*" && \
 	gunzip -cd rootfs.cpio.gz | cpio -idmv "usr/lib/libteec.so.1.0.0" && \
 	ln -s libteec.so.1.0.0 ./usr/lib/libteec.so.1 && \
-	scp -r ./output gitlab@${RPI3_IP_ADDR}:/home/gitlab
+	cd ../ && scp -r ./output gitlab@${RPI3_IP_ADDR}:/home/gitlab
 	# run ref-ta on rpi3
 	# cd /root & optee_ref_ta
 	# ./analyzer shared_mem enclave_nm
