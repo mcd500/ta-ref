@@ -70,7 +70,7 @@ optee_test:
       - shell
     # ignore global before_script
     before_script:
-      - ''
+      - sudo apt-get install -y expect
     script:
       - mkdir -p ~/.ssh
       - eval "$(ssh-agent -s)"
