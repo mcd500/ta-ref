@@ -64,11 +64,9 @@ test:
 optee_test:
     stage: test
     only:
-      # TODO: fix this right before merge
-      - optee-rpi3-test
+      - master
     tags:
       - shell
-    # ignore global before_script
     before_script:
       - sudo apt-get install -y expect
     script:
