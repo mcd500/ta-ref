@@ -9,5 +9,5 @@ expect -c "
     expect \"*$ \" { send \"sudo usr/bin/optee_ref_ta\r\" }
     expect \"* Invoking all ref tests in Enclave\"
     expect \"*$ \"  { send \"sudo ./root/analyzer ./shared_mem ./root/enclave_nm\r\" }
-    expect eof
+    expect \"*$ \" exit 0
 "
