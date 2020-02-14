@@ -59,7 +59,7 @@ sgx-test:
 	# run ref-ta on thinkpad
 
 .PHONY: optee-rpi3-test
-optee-rpi3-test:
+optee-rpi3-test: optee-rpi3-clean
 	export TEE_REF_TA_DIR=$(TEE_REF_TA_DIR)
 	export CONTAINER_TEE_REF_TA_DIR=$(CONTAINER_TEE_REF_TA_DIR)
 	mkdir -p output
@@ -67,6 +67,10 @@ optee-rpi3-test:
 	cd ./output; gunzip -cd rootfs.cpio.gz | cpio -idmv "lib/optee_armtz/${OPTEE_BINARY_FILE}" "root/*" "usr/bin/optee_ref_ta"; cd ../
 	scp -r ./output gitlab@${RPI3_IP_ADDR}:/home/gitlab
 	./scripts/optee-rpi3-ssh-test.sh
+
+optee-rpi3-clean:
+	./scripts/optee-rpi3-ssh-clean.sh
+
 
 .PHONY: keystone-test
 keystone-test:
