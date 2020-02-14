@@ -63,18 +63,25 @@ optee-rpi3-test:
 	export TEE_REF_TA_DIR=$(TEE_REF_TA_DIR); \
 	export CONTAINER_TEE_REF_TA_DIR=$(CONTAINER_TEE_REF_TA_DIR); \
 	mkdir -p output; \
-	docker run --rm -v ${CWD}:/home/main/shared -v ${TEE_REF_TA_DIR}:${CONTAINER_TEE_REF_TA_DIR} -w ${CONTAINER_TEE_REF_TA_DIR}/ref-ta/op-tee --env OPTEE_DIR=/home/main/optee vc707/test:optee_rpi3 /bin/bash -c "make clean && make && make copyto && cp -ap /home/main/optee/out-br/images/rootfs.cpio.gz /home/main/shared/output" && \
+	docker run --rm -v ${CWD}:/home/main/shared -v ${TEE_REF_TA_DIR}:${CONTAINER_TEE_REF_TA_DIR} -w ${CONTAINER_TEE_REF_TA_DIR}/ref-ta/op-tee --env OPTEE_DIR=/home/main/optee vc707/test:optee_rpi3 /bin/bash -c "
+		make clean &&
+		make &&
+		make copyto &&
+		cp -ap /home/main/optee/out-br/images/rootfs.cpio.gz /home/main/shared/output
+	" && \
 	cd ./output && \
-	gunzip -cd rootfs.cpio.gz | cpio -idmv "lib/optee_armtz/${OPTEE_BINARY_FILE}" && \
-	gunzip -cd rootfs.cpio.gz | cpio -idmv "usr/bin/optee_ref_ta" && \
-	gunzip -cd rootfs.cpio.gz | cpio -idmv "root/*" && \
-	gunzip -cd rootfs.cpio.gz | cpio -idmv "usr/lib/libteec.so.1.0.0" && \
-	ln -s libteec.so.1.0.0 ./usr/lib/libteec.so.1 && \
-	cd ../ && scp -r ./output gitlab@${RPI3_IP_ADDR}:/home/gitlab
-	# run ref-ta on rpi3
-	# cd /root & optee_ref_ta
-	# ./analyzer shared_mem enclave_nm
-
+	gunzip -cd rootfs.cpio.gz | cpio -idmv "lib/optee_armtz/${OPTEE_BINARY_FILE}" "root/*" "usr/bin/optee_ref_ta" && \
+	cd ../ && scp -r ./output gitlab@${RPI3_IP_ADDR}:/home/gitlab && \
+	expect -c '
+		set timeout 30
+		spawn ssh gitlab@${RPI3_IP_ADDR}:/home/gitlab/output
+		expect "*$ " { send "sudo cp -r lib/optee_armtz/* /lib/optee_armtz/\r" }
+		expect "*$ " { send "sudo usr/bin/optee_ref_ta\r" }
+		expect "*$ " { send "sudo chown gitlab shared_mem\r" }
+		expect "*$ "  { send "./root/analyzer ./shared_mem ./root/enclave_nm\r" }
+		expect "* Invoking all ref tests in Enclave"
+		expect eof
+	'
 
 .PHONY: keystone-test
 keystone-test:
