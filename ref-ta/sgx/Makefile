@@ -34,8 +34,8 @@ include ../../common.mk
 # Using SIM as defualt during development, comment out when it is ready
 SGX_MODE=SIM
 
-CRYPTLIB=WOLFCRYPT
-#CRYPTLIB=MBEDCRYPT
+#CRYPTLIB=WOLFCRYPT
+CRYPTLIB=MBEDCRYPT
 
 ifeq ($(CRYPTLIB),MBEDCRYPT)
 Crypt_C_Files = $(addprefix ../../lib/mbed-crypto/library/,aes.c gcm.c cipher.c cipher_wrap.c platform_util.c)
