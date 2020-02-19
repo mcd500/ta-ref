@@ -2,6 +2,7 @@ variables:
     GITLAB_URL: http://192.168.100.100
     GITLAB_USER: vc707
     RISCV_GCC_DIR: /home/user/projects/keystone/riscv/bin
+    RPI3_IP_ADDR: 192.168.100.61
 
 before_script:
       - git submodule update --init --recursive
@@ -59,3 +60,21 @@ test:
       - . env-keystone.sh
       - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} keystone
       - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} check
+
+optee_test:
+    stage: test
+    only:
+      - master
+    tags:
+      - shell
+    before_script:
+      - sudo apt-get install -y expect
+    script:
+      - mkdir -p ~/.ssh
+      - eval "$(ssh-agent -s)"
+      # make sure that private key is set on gitlab
+      # and public key is appended on ~/.ssh/authorized_keys in the raspberry pi3 board
+      - echo "$RPI3_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+      - ssh-keyscan ${RPI3_IP_ADDR}  >> ~/.ssh/known_hosts
+      - docker login -u ${GITLAB_USER} -p ${DOCKERHUB_PASSWD}
+      - make optee-rpi3-test
