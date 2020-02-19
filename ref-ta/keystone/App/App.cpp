@@ -73,7 +73,7 @@ int ocall_ree_time(struct ree_time_t *timep)
 
 ssize_t ocall_getrandom(char *buf, size_t len, unsigned int flags)
 {
-  ssize_t rtn = getrandom(buf, len, flags);
+  ssize_t rtn = getrandom(buf, len, flags|GRND_NONBLOCK);
 #ifdef APP_VERBOSE
   printf("@[SE] getrandom buf %x len %d flags %d -> %d\n",buf,len,flags,rtn);
 #endif
