@@ -311,7 +311,7 @@ Enclave/%.o: Enclave/%.cpp Enclave/Enclave_t.h
 $(Crypt_extra_Files):
 	@touch $@
 
-../../platform/sgx/%.o: ../../platform/sgx/%.c Enclave/Enclave_t.h ../../common/tee-internal-api-cryptlib.impl $(Crypt_extra_Files)
+../../platform/sgx/%.o: ../../platform/sgx/%.c Enclave/Enclave_t.h ../../common/tee-internal-api-cryptlib.impl $(Crypt_extra_Files) Makefile
 	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -c $< -o $@
 	@echo "CC   <=  $<"
 
