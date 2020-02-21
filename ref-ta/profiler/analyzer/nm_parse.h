@@ -1,5 +1,6 @@
 #pragma once
 #include <stddef.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 #define HASH_SIZE 8192
@@ -11,9 +12,9 @@ struct nm_info {
 
 struct list {
     struct list *next;
-    unsigned long addr;
+    uintptr_t addr;
     struct nm_info* nm;
 };
 
-const char* get_func_name(struct list *table, unsigned long addr);
+const char* get_func_name(struct list *table, uintptr_t addr);
 struct list* parse_nm(const char *fname);
