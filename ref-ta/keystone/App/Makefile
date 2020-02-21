@@ -26,7 +26,7 @@ EXTRA_LIBS = $(EDGER_DIR)/lib/flatccrt.a
 endif
 
 APP = App
-OBJS =App.o
+OBJS = App.o App_ocalls.o
 EOBJS = $(EDGECALLS)_u.o
 
 CCFLAGS += -I$(SDK_INCLUDE_HOST_DIR) -I$(SDK_INCLUDE_EDGE_DIR) -I$(SDK_INCLUDE_VERIFIER_DIR) $(addprefix -I,$(EDGER_INCLUDE_DIRS)) -I../Edge -I./ $(APP_VERBOSE)
@@ -36,8 +36,8 @@ APP_BIN = $(patsubst %,%.client,$(APP))
 
 all: $(APP_BIN)
 
-$(APP_BIN): %.client : %.o $(EOBJS) $(SDK_HOST_LIB) $(SDK_EDGE_LIB) $(SDK_VERIFIER_LIB)
-	$(CXX) $(CCFLAGS) $(LDFLAGS) -o $@ $< $(EOBJS) $(SDK_HOST_LIB) $(SDK_EDGE_LIB) $(SDK_VERIFIER_LIB) $(EXTRA_LIBS)
+$(APP_BIN): %.client : ${OBJS} $(EOBJS) $(SDK_HOST_LIB) $(SDK_EDGE_LIB) $(SDK_VERIFIER_LIB)
+	$(CXX) $(CCFLAGS) $(LDFLAGS) -o $@ ${OBJS} $(EOBJS) $(SDK_HOST_LIB) $(SDK_EDGE_LIB) $(SDK_VERIFIER_LIB) $(EXTRA_LIBS)
 
 $(OBJS): %.o: %.cpp $(EDGECALLS)_u.h
 	$(CXX) $(CCFLAGS) -c $<
