@@ -33,6 +33,7 @@ CCFLAGS += -I$(SDK_INCLUDE_HOST_DIR) -I$(SDK_INCLUDE_EDGE_DIR) -I$(SDK_INCLUDE_V
 LDFLAGS = -L$(SDK_LIB_DIR) $(EDGER_LDFLAGS)
 
 APP_BIN = $(patsubst %,%.client,$(APP))
+APP_NM = $(patsubst %,%.nm,$(APP))
 
 all: $(APP_BIN)
 
@@ -46,9 +47,10 @@ $(EOBJS): %.o: %.c $(EDGECALLS)_u.h
 	$(CC)  $(CCFLAGS) -c $<
 
 clean:
-	rm -rf $(OBJS) $(EOBJS) $(APP_BIN)
+	rm -rf $(OBJS) $(EOBJS) $(APP_BIN) $(APP_NM)
 
 .PHONY: copyto
 
 copyto:
-	cp -p $(APP_BIN) $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample/
+	nm $(APP_BIN) > $(APP_NM)
+	cp -p $(APP_BIN) $(APP_NM) $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample/
