@@ -70,7 +70,6 @@ int main(int argc, char *argv[]) {
             default:
                 fprintf(stderr, "dir is something wrong!\n");
                 return 0;
-
         }
     }
     return 0;

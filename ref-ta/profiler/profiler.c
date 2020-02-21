@@ -12,6 +12,7 @@
 extern char __section_start[];
 #endif
 
+
 #ifndef PERF_SIZE
 #define PERF_SIZE 8192
 #endif
@@ -38,11 +39,11 @@ __profiler_get_data_ptr(void) {
 }
 
 void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
-    unsigned long ptr = 0;
 	__profiler_head = (struct __profiler_header *)perf_buffer;
     __profiler_head->size = PERF_SIZE;
     __profiler_head->idx = 0;
     __profiler_head->start = __rdtsc();
+    uintptr_t ptr = 0;
 #if OPTEE
     ptr = __section_start;
 #endif
