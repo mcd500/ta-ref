@@ -58,17 +58,20 @@ endif
 
 Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(Enclave_cryptlib_Objects)
 
+######## General Settings #######
+ifeq ($(PROFILER),ON)
+Perf_Option=-finstrument-functions
+else
+Perf_Option=
+endif
 
 ######## App Settings ########
 
 App_Name := App/App.client
-Perf_Option=-finstrument-functions
 ifeq ($(PROFILER),ON)
 App_Verbose=
-App_Perf_Option=$(Perf_Option)
 else
 App_Verbose = -DAPP_VERBOSE
-App_Perf_Option=
 endif
 
 ######## Enclave Settings ########
@@ -77,13 +80,11 @@ Enclave_Name := Enclave/Enclave.eapp_riscv
 
 ifeq ($(PROFILER),ON)
 Enclave_Quiet = -DENCLAVE_QUIET
-Enclave_Perf_Option=$(Perf_Option)
 # optee only
 #Enclave_Perf_Wrapper = -DENCLAVE_PERF_WRAPPER
 else
 Enclave_Quiet=
 Enclave_Perf_Wrapper=
-Enclave_Perf_Option=
 endif
 
 EDGECALLS=Enclave
@@ -145,7 +146,7 @@ endif
 ######## App Objects ########
 
 app: gen
-	make -C $(APP_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) APP_VERBOSE=$(App_Verbose) PERF_OPTION=$(App_Perf_Option) ENCLAVE_TYPE=$(ENCLAVE_TYPE)
+	make -C $(APP_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) APP_VERBOSE=$(App_Verbose) PERF_OPTION=$(Perf_Option) ENCLAVE_TYPE=$(ENCLAVE_TYPE)
 
 ######## Enclave Objects ########
 
@@ -177,7 +178,7 @@ $(ENCLAVE_LIB_BUILD)/common/%.o: $(TOPDIR)/common/%.c
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
 enclave: gen $(Enclave_Lib_Objects)
-	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet) ENCLAVE_PERF_WRAPPER=$(Enclave_Perf_Wrapper) CRYPTLIB=$(CRYPTLIB) PERF_OPTION=$(Enclave_Perf_Option)
+	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet) ENCLAVE_PERF_WRAPPER=$(Enclave_Perf_Wrapper) CRYPTLIB=$(CRYPTLIB) PERF_OPTION=$(Perf_Option)
 
 .PHONY: clean cleangen
 
