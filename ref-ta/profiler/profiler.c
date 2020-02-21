@@ -44,14 +44,14 @@ void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
     __profiler_head->idx = 0;
     __profiler_head->start = __rdtsc();
     uintptr_t ptr = 0;
-#if OPTEE
+#ifdef OPTEE
     ptr = __section_start;
 #endif
     __cyg_profile_func((void*)ptr, START);
 }
 
 void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(
-#if defined(OPTEE)
+#ifdef OPTEE
     char *buf, size_t *size
 #else
     void
@@ -62,6 +62,7 @@ void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(
 		void * ptr = (void *)__profiler_head;
 		unsigned int sz = __profiler_head->size;
 		__profiler_head = NULL;
+#ifndef HOST
 #ifdef KEYSTONE
         int fd = ocall_open_file(LOG_FILE, O_RDWR | O_CREAT, (mode_t)0600);
         if(fd == -1) return;
@@ -74,6 +75,16 @@ void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(
 #elif defined(OPTEE)
         TEE_MemMove(buf, ptr, sz);
         *size = sz;
+#endif
+#else
+#include <unistd.h>
+#include <fcntl.h>
+        int fd = open(LOG_FILE, O_RDWR | O_CREAT, (mode_t)0600);
+        if(fd == 0) return;
+        if(write(fd, ptr, sz) <= 0) {
+            return;
+        }
+        if(close(fd) == -1) return;
 #endif
     }
 }
