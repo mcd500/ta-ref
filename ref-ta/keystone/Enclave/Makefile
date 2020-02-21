@@ -73,10 +73,10 @@ $(EDGECALLS)_t.o: %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -Os -c $< -o $@
 
 $(ENCLAVE_API_OBJS): %.o: %.c $(EDGECALLS)_t.h
-	$(CC) $(CFLAGS) -c -finstrument-functions $< -o $@
+	$(CC) $(CFLAGS) -c $(PERF_OPTION) $< -o $@
 
 $(ENCLAVE_TEST_OBJS): %.o: $(TEE_TA_REF_ENCLAVE_COMMON_DIR)/%.c $(EDGECALLS)_t.h
-	$(CC) $(CFLAGS) -c -finstrument-functions $< -o $@
+	$(CC) $(CFLAGS) -c $(PERF_OPTION) $< -o $@
 
 $(ENCLAVE_LIB_OBJS): %.o: %.c $(EDGECALLS)_t.h
 	$(CC) $(CFLAGS) -c $< -o $@

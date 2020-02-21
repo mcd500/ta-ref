@@ -30,9 +30,16 @@ EXTRA_LIBS = $(EDGER_DIR)/lib/flatccrt.a
 endif
 EXTRA_LIBS +=  $(PROFILER_LIB)
 
+ifdef PERF_OPTION
+PERF_ENABLE=-DPERF_ENABLE
+else
+PERF_ENABLE=
+endif
+
 APP = App
 OBJS = App.o
 PERF_OBJS= App_ocalls.o
+
 EOBJS = $(EDGECALLS)_u.o
 
 CCFLAGS += -I$(SDK_INCLUDE_HOST_DIR) -I$(SDK_INCLUDE_EDGE_DIR) -I$(SDK_INCLUDE_VERIFIER_DIR) $(addprefix -I,$(EDGER_INCLUDE_DIRS)) -I../Edge -I./ -I$(PROFILER_DIR) $(ENCLAVE_TYPE) $(APP_VERBOSE)
@@ -47,10 +54,10 @@ $(APP_BIN): %.client : ${OBJS} ${PERF_OBJS} $(EOBJS) $(SDK_HOST_LIB) $(SDK_EDGE_
 	$(CXX) $(CCFLAGS) $(LDFLAGS) -o $@ ${OBJS} ${PERF_OBJS} $(EOBJS) $(SDK_HOST_LIB) $(SDK_EDGE_LIB) $(SDK_VERIFIER_LIB) $(EXTRA_LIBS)
 
 $(OBJS): %.o: %.cpp $(EDGECALLS)_u.h
-	$(CXX) $(CCFLAGS) -c $<
+	$(CXX) $(CCFLAGS) -c $< $(PERF_ENABLE)
 
 $(PERF_OBJS): %.o: %.cpp $(EDGECALLS)_u.h
-	$(CXX) $(CCFLAGS) -c -finstrument-functions $<
+	$(CXX) $(CCFLAGS) -c $(PERF_OPTION) $< $(PERF_ENABLE)
 
 $(EOBJS): %.o: %.c $(EDGECALLS)_u.h
 	$(CC)  $(CCFLAGS) -c $<

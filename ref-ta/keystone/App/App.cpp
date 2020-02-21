@@ -23,7 +23,9 @@ extern "C" {
 
 int main(int argc, char** argv)
 {
+#ifdef PERF_ENABLE
   __profiler_map_info();
+#endif
   Keystone enclave;
   Params params;
 
@@ -43,7 +45,9 @@ int main(int argc, char** argv)
                            enclave.getSharedBufferSize());
 
   enclave.run();
+#ifdef PERF_ENABLE
   __profiler_unmap_info();
+#endif
 
   return 0;
 }
