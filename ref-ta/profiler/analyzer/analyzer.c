@@ -11,6 +11,7 @@
 #include "nm_parse.h"
 
 #define BUF_MAX 65536
+#define FORMAT "%ld,%ld,%s,%ld\n"
 
 int main(int argc, char *argv[]) {
     static char buf[BUF_MAX];
@@ -42,18 +43,16 @@ int main(int argc, char *argv[]) {
 
     unsigned long baseaddr;
     for(i = 0; i < count; i++, data++) {
-        uint64_t dir;
         struct result res;
         char *name;
-        __profiler_nsec_t nsec;
-        get_direction_nsec(data->nsec, &dir, &nsec);
+        __profiler_nsec_t nsec = data->nsec;
         if(i == 0) {
             baseaddr = (unsigned long)data->callee;
             res.start = nsec;
             res.end = 0;
             continue;
         }
-        switch(dir) {
+        switch(data->direction) {
             case CALL:
                 res.callee = data->callee;
                 res.start = nsec; res.end = 0;
@@ -66,7 +65,7 @@ int main(int argc, char *argv[]) {
                 res.end = nsec;
                 __profiler_nsec_t duration = res.end - res.start;
                 unsigned long addr = (unsigned long)res.callee - (unsigned long)baseaddr;
-                printf("%ld,%ld,%s,%ld\n", res.idx, res.depth, get_func_name(table, addr), duration);
+                printf(FORMAT, res.idx, res.depth, get_func_name(table, addr), duration);
                 break;
             default:
                 fprintf(stderr, "dir is something wrong!\n");
