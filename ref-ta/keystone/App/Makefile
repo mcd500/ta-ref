@@ -63,7 +63,7 @@ $(EOBJS): %.o: %.c $(EDGECALLS)_u.h
 	$(CC)  $(CCFLAGS) -c $<
 
 clean:
-	rm -rf $(OBJS) $(EOBJS) $(APP_BIN) $(APP_NM)
+	rm -rf $(OBJS) $(PERF_OBJS) $(EOBJS) $(APP_BIN) $(APP_NM)
 
 .PHONY: copyto
 

@@ -62,4 +62,4 @@ copyto:
 
 clean:
 	make clean -C analyzer
-	$(RM) *.o libprofiler.a
+	$(RM) *.o lib*.a
