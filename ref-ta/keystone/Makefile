@@ -192,7 +192,7 @@ clean:
 	rm -rf $(GENFILES)
 	rm -rf $(Enclave_Lib_Objects) $(ENCLAVE_LIB_BUILD)
 
-.PHONY: copyto run
+.PHONY: copyto run perf
 
 copyto:
 	mkdir -p $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample
@@ -207,3 +207,8 @@ run:
 
 perf:
 	./run-apps.sh perf
+
+perf_demo:
+	make PROFILER=ON
+	make copyto
+	make perf
