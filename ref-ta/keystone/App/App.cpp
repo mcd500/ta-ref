@@ -17,8 +17,13 @@
 const char* enc_path = "Enclave.eapp_riscv";
 const char* runtime_path = "eyrie-rt";
 
+extern "C" {
+#include "profiler.h"
+}
+
 int main(int argc, char** argv)
 {
+  __profiler_map_info();
   Keystone enclave;
   Params params;
 
@@ -38,6 +43,7 @@ int main(int argc, char** argv)
                            enclave.getSharedBufferSize());
 
   enclave.run();
+  __profiler_unmap_info();
 
   return 0;
 }

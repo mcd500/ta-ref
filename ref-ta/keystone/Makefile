@@ -141,7 +141,7 @@ endif
 ######## App Objects ########
 
 app: gen
-	make -C $(APP_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) APP_VERBOSE=$(App_Verbose)
+	make -C $(APP_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) APP_VERBOSE=$(App_Verbose) ENCLAVE_TYPE=$(ENCLAVE_TYPE)
 
 ######## Enclave Objects ########
 

@@ -8,21 +8,43 @@ SDK_INCLUDE_EDGE_DIR = $(SDK_LIB_DIR)/edge/include
 EDGE_DIR = $(shell pwd)/../keystone/Edge
 ENCLAVE_DIR = $(shell pwd)/../keystone/Enclave
 ENCLAVE_TYPE=-DKEYSTONE
-OBJS = profiler.o # wrapper.o
+EOBJS = profiler.o
+HOBJS = hostprofiler.o
 # This should be ok, but gitlab CI test fails with ENOENT
 #LOG_FILE = "/root/edger-sample/shared_mem"
-LOG_FILE = "shared_mem"
+ENCLAVE_LOG_FILE = "shared_mem"
+HOST_LOG_FILE = "host_shared_mem"
 
 .PHONY: all clean analyzer
-all: clean libprofiler.a analyzer
+all: clean libprofiler.a libhostprofiler.a analyzer
 
-libprofiler.a: $(OBJS)
+libprofiler.a: $(EOBJS)
 	$(AR) $(ARFLAGS) $@ $^
 
-profiler.o: profiler.c
+libhostprofiler.a: $(HOBJS)
+	$(AR) $(ARFLAGS) $@ $^
+
+$(HOBJS): profiler.c
 	$(CC) $(EXTRA_FLAGS) \
 	${ENCLAVE_TYPE} \
-	-DLOG_FILE=\"$(LOG_FILE)\" \
+	-DLOG_FILE=\"$(HOST_LOG_FILE)\" \
+	-DPERF_SIZE=65536*8 \
+	-I$(SDK_INCLUDE_APP_DIR) \
+	-I$(SDK_INCLUDE_EDGE_DIR) \
+	-DEDGE_IGNORE_EGDE_RESULT \
+	-DHOST \
+	-I$(EDGE_DIR) \
+	-I$(ENCLAVE_DIR) \
+	-I$(KEYEDGE_TARGET_DIR) \
+	-static -g \
+	-c $< \
+	-o $@ \
+	-Wall -Wpedantic
+
+$(EOBJS): profiler.c
+	$(CC) $(EXTRA_FLAGS) \
+	${ENCLAVE_TYPE} \
+	-DLOG_FILE=\"$(ENCLAVE_LOG_FILE)\" \
 	-DPERF_SIZE=65536 \
 	-I$(SDK_INCLUDE_APP_DIR) \
 	-I$(SDK_INCLUDE_EDGE_DIR) \
