@@ -23,6 +23,7 @@ libprofiler.a: $(OBJS)
 profiler.o: profiler.c
 	$(CC) $(EXTRA_FLAGS) \
 	-DLOG_FILE=\"$(LOG_FILE)\" \
+	-DPERF_SIZE=65536 \
 	-I${ta-dev-kit-dir}/include \
 	 ${ENCLAVE_TYPE} \
 	-static -g \

@@ -23,6 +23,7 @@ profiler.o: profiler.c
 	$(CC) $(EXTRA_FLAGS) \
 	${ENCLAVE_TYPE} \
 	-DLOG_FILE=\"$(LOG_FILE)\" \
+	-DPERF_SIZE=65536 \
 	-I$(SDK_INCLUDE_APP_DIR) \
 	-I$(SDK_INCLUDE_EDGE_DIR) \
 	-DEDGE_IGNORE_EGDE_RESULT \
