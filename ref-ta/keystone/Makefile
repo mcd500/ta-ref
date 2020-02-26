@@ -58,11 +58,16 @@ endif
 
 Enclave_Lib_Objects = $(Enclave_ed25519_Objects) $(Enclave_cryptlib_Objects)
 
+######## General Settings #######
+ifeq ($(PROFILER),ON)
+Perf_Option=-finstrument-functions
+else
+Perf_Option=
+endif
 
 ######## App Settings ########
 
 App_Name := App/App.client
-
 ifeq ($(PROFILER),ON)
 App_Verbose=
 else
@@ -97,9 +102,9 @@ else ifeq ($(EDGER_TYPE), KEYEDGE)
 EDGE_FILE=ocalls.h
 EDGE_BASE=$(basename $(EDGE_FILE))
 ENC_T_C="\#include \"common_header.h\"\n\#include \"ocalls_eapp.h\"\n"
-ENC_T_H="\#include \"ocalls_header.h\"\n\#include \"ocalls.h\"\n"
+ENC_T_H="\#pragma once\n\#include \"ocalls_header.h\"\n\#include \"ocalls.h\"\n"
 ENC_U_C="// generated empty file\n"
-ENC_U_H="\#include \"ocalls_host.h\"\n\#define EDGE_EXTERNC_BEGIN\n\#define EDGE_EXTERNC_END\n"
+ENC_U_H="\#pragma once\n\#include \"ocalls_host.h\"\n\#define EDGE_EXTERNC_BEGIN\n\#define EDGE_EXTERNC_END\n"
 
 GENFILES=$(ENCLAVE_DIR)/$(EDGECALLS)_t.c $(ENCLAVE_DIR)/$(EDGECALLS)_t.h \
 	$(APP_DIR)/$(EDGECALLS)_u.c $(APP_DIR)/$(EDGECALLS)_u.h \
@@ -141,7 +146,7 @@ endif
 ######## App Objects ########
 
 app: gen
-	make -C $(APP_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) APP_VERBOSE=$(App_Verbose)
+	make -C $(APP_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) APP_VERBOSE=$(App_Verbose) PERF_OPTION=$(Perf_Option) ENCLAVE_TYPE=$(ENCLAVE_TYPE)
 
 ######## Enclave Objects ########
 
@@ -173,7 +178,7 @@ $(ENCLAVE_LIB_BUILD)/common/%.o: $(TOPDIR)/common/%.c
 	$(CC) $(Enclave_C_Flags) -c $< -o $@
 
 enclave: gen $(Enclave_Lib_Objects)
-	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet) ENCLAVE_PERF_WRAPPER=$(Enclave_Perf_Wrapper) CRYPTLIB=$(CRYPTLIB)
+	make -C $(ENCLAVE_DIR) KEYSTONE_DIR=$(KEYSTONE_DIR) EDGER_DIR=$(EDGER_DIR) EDGECALLS=$(EDGECALLS) TEE_TA_DIR=$(TOPDIR) ENCLAVE_QUIET=$(Enclave_Quiet) ENCLAVE_PERF_WRAPPER=$(Enclave_Perf_Wrapper) CRYPTLIB=$(CRYPTLIB) PERF_OPTION=$(Perf_Option)
 
 .PHONY: clean cleangen
 
@@ -187,7 +192,7 @@ clean:
 	rm -rf $(GENFILES)
 	rm -rf $(Enclave_Lib_Objects) $(ENCLAVE_LIB_BUILD)
 
-.PHONY: copyto run
+.PHONY: copyto run perf
 
 copyto:
 	mkdir -p $(KEYSTONE_DIR)/buildroot_overlay/root/edger-sample
@@ -202,3 +207,8 @@ run:
 
 perf:
 	./run-apps.sh perf
+
+perf_demo:
+	make PROFILER=ON
+	make copyto
+	make perf

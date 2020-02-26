@@ -1,5 +1,6 @@
 #pragma once
 #include "analyzer.h"
+#include <stdint.h>
 
 #define STACK_SIZE 100
 static uint64_t pos = 0;
