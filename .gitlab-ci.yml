@@ -5,7 +5,6 @@ variables:
     RPI3_IP_ADDR: 192.168.100.61
     DOCKERHUB_REPO: vc707/test
     CONTAINER_ROOT_DIR: /home/main/tee-ta-reference
-    CI_BRANCH: fix_ci
 
 before_script:
     - apt-get install -y doxygen
@@ -22,7 +21,7 @@ stages:
 intel_sgx_build:
     stage: build
     only:
-      - ${CI_BRANCH}
+      - fix_ci
     tags:
       - shell
     script:
@@ -31,7 +30,7 @@ intel_sgx_build:
 optee_qemu_build:
     stage: build
     only:
-      - ${CI_BRANCH}
+      - fix_ci
     tags:
       - shell
     script:
@@ -40,7 +39,7 @@ optee_qemu_build:
 keystone_build:
     stage: build
     only:
-      - ${CI_BRANCH}
+      - fix_ci
     tags:
       - shell
     script:
@@ -49,7 +48,7 @@ keystone_build:
 doc_build:
     stage: build
     only:
-      - ${CI_BRANCH}
+      - fix_ci
     tags:
       - shell
     script:
@@ -61,7 +60,7 @@ doc_build:
 test:
     stage: test
     only:
-      - ${CI_BRANCH}
+      - fix_ci
     tags:
       - shell
     script:
@@ -74,7 +73,7 @@ test:
 optee_test:
     stage: test
     only:
-      - ${CI_BRANCH}
+      - fix_ci
     tags:
       - shell
     before_script:
