@@ -100,8 +100,16 @@ clean-build-keystone:
 	make -C $(KEYSTONE_DIR) clean
 
 .PHONY: clean
-clean:
-	make -C keyedge clean
+clean: keyedge-clean ref-sgx-clean ref-keystone-clean ref-optee-clean
+
+ref-sgx-clean:
 	make -C ref-ta/sgx clean
+
+keyedge-clean:
+	make -C keyedge clean
+
+ref-keystone-clean:
 	make -C ref-ta/keystone KEYSTONE_DIR=$(KEYSTONE_DIR) KEEDGER_DIR=$(KEEDGER_DIR) clean
+
+ref-optee-clean:
 	make -C ref-ta/op-tee OPTEE_DIR=$(OPTEE_DIR) clean
