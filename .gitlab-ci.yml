@@ -3,24 +3,13 @@ variables:
     GITLAB_USER: vc707
     RISCV_GCC_DIR: /home/user/projects/keystone/riscv/bin
     RPI3_IP_ADDR: 192.168.100.61
+    DOCKERHUB_REPO: vc707/test
+    CONTAINER_ROOT_DIR: /home/main/tee-ta-reference
+    CI_BRANCH: fix_ci
 
 before_script:
-      - git submodule update --init --recursive
-      - . env-keystone.sh
-      - yes "" | sudo apt-get install android-tools-adb android-tools-fastboot autoconf \
-        automake bc bison build-essential ccache cscope curl device-tree-compiler \
-        expect flex ftp-upload gdisk iasl libattr1-dev libc6:i386 libcap-dev \
-        libfdt-dev libftdi-dev libglib2.0-dev libhidapi-dev libncurses5-dev \
-        libpixman-1-dev libssl-dev libstdc++6:i386 libtool libz1:i386 make \
-        mtools netcat python-crypto python3-crypto python-pyelftools \
-        python3-pyelftools python-serial python3-serial rsync unzip uuid-dev \
-        xdg-utils xterm xz-utils zlib1g-dev || true
-      - yes "" | pip3 install pyelftools pycryptodomex || true
-      - rmdir ${KEYSTONE_DIR} || true
-      - ./unpack-prebuilt-keystone.sh 2> /dev/null
-      - cd ${KEYSTONE_DIR}; ./aist-setup.sh; cd ..
-      - rm -fr ${OPTEE_DIR} || true
-      - ./unpack-and-build-optee.sh 2> /dev/null
+    - apt-get install -y doxygen
+    - docker login -u ${GITLAB_USER} -p ${DOCKERHUB_PASSWD}
 
 cache:
     untracked: true
@@ -30,17 +19,40 @@ stages:
     - build
     - test
 
-build:
+intel_sgx_build:
     stage: build
     only:
-      - master
+      - ${CI_BRANCH}
     tags:
       - shell
-
     script:
-      - export PATH=${PATH}:${RISCV_GCC_DIR}
-      - . env-keystone.sh
-      - make
+      - docker run -it -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_sgx_devel make ref-sgx
+
+optee_qemu_build:
+    stage: build
+    only:
+      - ${CI_BRANCH}
+    tags:
+      - shell
+    script:
+      - docker run -it -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_optee_qemu_devel make ref-optee
+
+keystone_build:
+    stage: build
+    only:
+      - ${CI_BRANCH}
+    tags:
+      - shell
+    script:
+      - docker run -it -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_keystone_devel make ref-keystone
+
+doc_build:
+    stage: build
+    only:
+      - ${CI_BRANCH}
+    tags:
+      - shell
+    script:
       - make doc
     artifacts:
       paths:
@@ -49,10 +61,9 @@ build:
 test:
     stage: test
     only:
-      - master
+      - ${CI_BRANCH}
     tags:
       - shell
-
     script:
       - echo "test"
       - export PATH=${PATH}:${RISCV_GCC_DIR}
@@ -63,7 +74,7 @@ test:
 optee_test:
     stage: test
     only:
-      - master
+      - ${CI_BRANCH}
     tags:
       - shell
     before_script:
