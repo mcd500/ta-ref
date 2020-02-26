@@ -24,7 +24,7 @@ intel_sgx_build:
     tags:
       - shell
     script:
-      - docker run -it -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_sgx_devel make ref-sgx
+      - docker run -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_sgx_devel make ref-sgx
 
 optee_qemu_build:
     stage: build
@@ -33,7 +33,7 @@ optee_qemu_build:
     tags:
       - shell
     script:
-      - docker run -it -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_optee_qemu_devel make ref-optee
+      - docker run -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_optee_qemu_devel make ref-optee
 
 keystone_build:
     stage: build
@@ -42,7 +42,7 @@ keystone_build:
     tags:
       - shell
     script:
-      - docker run -it -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_keystone_devel make ref-keystone
+      - docker run -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_keystone_devel make ref-keystone
 
 doc_build:
     stage: build
