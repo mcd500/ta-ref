@@ -34,7 +34,9 @@ enclave {
     
     include "user_types.h" /* buffer_t */
 
+#if 0
     from "sgx_tae_service.edl" import *;
+#endif
 
     /* Import ECALL/OCALL from sub-directory EDLs.
      *  [from]: specifies the location of EDL file. 
