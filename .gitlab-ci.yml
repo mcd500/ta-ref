@@ -8,6 +8,8 @@ variables:
 
 before_script:
     - docker login -u ${GITLAB_USER} -p ${DOCKERHUB_PASSWD}
+    - git submodule update --init --recursive
+
 
 # cache:
 #     untracked: true
