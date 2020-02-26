@@ -67,7 +67,7 @@ keystone-test:
     tags:
       - shell
     script:
-      - docker run -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_keystone_devel /bin/bash -c "make ref-keystone && make check"
+      - docker run -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_keystone_devel /bin/bash -c "make ref-keystone && make keystone-test && make ref-keystone-clean"
 
 optee_test:
     stage: test
