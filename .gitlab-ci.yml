@@ -9,6 +9,10 @@ variables:
 before_script:
     - docker login -u ${GITLAB_USER} -p ${DOCKERHUB_PASSWD}
 
+cache:
+    untracked: true
+    paths:
+
 stages:
     - build
     - test
