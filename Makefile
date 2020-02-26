@@ -17,7 +17,7 @@ all: ref-sgx ref-keystone ref-optee
 
 .PHONY: ref-sgx
 ref-sgx:
-	PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make -C keyedge
+	PATH=$(KEYSTONE_DIR)/riscv/bin:${PATH}
 	make -C ref-ta/sgx
 
 .PHONY: ref-keystone
