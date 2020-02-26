@@ -60,18 +60,14 @@ doc_build:
       paths:
         - tee-internal-doc-draft.pdf
 
-test:
+keystone-test:
     stage: test
     only:
       - fix_ci
     tags:
       - shell
     script:
-      - echo "test"
-      - export PATH=${PATH}:${RISCV_GCC_DIR}
-      - . env-keystone.sh
-      - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} keystone
-      - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} check
+      - docker run -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_keystone_devel /bin/bash -c "make ref-keystone && make check"
 
 optee_test:
     stage: test

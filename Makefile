@@ -82,9 +82,6 @@ keystone-test:
 	make -C $(KEYSTONE_DIR) image; \
 	$(TEE_REF_TA_DIR)/scripts/keystone-check.sh
 
-.PHONY: check
-check: keystone-test
-
 .PHONY: doc
 doc: clean-doc
 	doxygen
