@@ -3,67 +3,76 @@ variables:
     GITLAB_USER: vc707
     RISCV_GCC_DIR: /home/user/projects/keystone/riscv/bin
     RPI3_IP_ADDR: 192.168.100.61
+    DOCKERHUB_REPO: vc707/test
+    CONTAINER_ROOT_DIR: /home/main/tee-ta-reference
 
 before_script:
-      - git submodule update --init --recursive
-      - . env-keystone.sh
-      - yes "" | sudo apt-get install android-tools-adb android-tools-fastboot autoconf \
-        automake bc bison build-essential ccache cscope curl device-tree-compiler \
-        expect flex ftp-upload gdisk iasl libattr1-dev libc6:i386 libcap-dev \
-        libfdt-dev libftdi-dev libglib2.0-dev libhidapi-dev libncurses5-dev \
-        libpixman-1-dev libssl-dev libstdc++6:i386 libtool libz1:i386 make \
-        mtools netcat python-crypto python3-crypto python-pyelftools \
-        python3-pyelftools python-serial python3-serial rsync unzip uuid-dev \
-        xdg-utils xterm xz-utils zlib1g-dev || true
-      - yes "" | pip3 install pyelftools pycryptodomex || true
-      - rmdir ${KEYSTONE_DIR} || true
-      - ./unpack-prebuilt-keystone.sh 2> /dev/null
-      - cd ${KEYSTONE_DIR}; ./aist-setup.sh; cd ..
-      - rm -fr ${OPTEE_DIR} || true
-      - ./unpack-and-build-optee.sh 1> /dev/null 2>&1
+    - docker login -u ${GITLAB_USER} -p ${DOCKERHUB_PASSWD}
+    - git submodule update --init --recursive
 
-cache:
-    untracked: true
-    paths:
+
+# cache:
+#     untracked: true
+#     paths:
 
 stages:
     - build
     - test
 
-build:
+intel_sgx_build:
     stage: build
     only:
-      - master
+      - fix_ci
     tags:
       - shell
-
     script:
-      - export PATH=${PATH}:${RISCV_GCC_DIR}
-      - . env-keystone.sh
-      - make
+      - docker run -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_sgx_devel /bin/bash -c "make ref-sgx && make ref-sgx-clean"
+
+optee_qemu_build:
+    stage: build
+    only:
+      - fix_ci
+    tags:
+      - shell
+    script:
+      - docker run -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_optee_qemu_devel /bin/bash -c "make ref-optee && make ref-optee-clean"
+
+keystone_build:
+    stage: build
+    only:
+      - fix_ci
+    tags:
+      - shell
+    script:
+      - docker run -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_keystone_devel /bin/bash -c "make ref-keystone && make ref-keystone-clean"
+
+doc_build:
+    stage: build
+    before_script:
+      - sudo apt-get install -y doxygen
+    only:
+      - fix_ci
+    tags:
+      - shell
+    script:
       - make doc
     artifacts:
       paths:
         - tee-internal-doc-draft.pdf
 
-test:
+keystone-test:
     stage: test
     only:
-      - master
+      - fix_ci
     tags:
       - shell
-
     script:
-      - echo "test"
-      - export PATH=${PATH}:${RISCV_GCC_DIR}
-      - . env-keystone.sh
-      - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} keystone
-      - make KEYSTONE_DIR=${KEYSTONE_DIR} KEYSTONE_SDK_DIR=${KEYSTONE_SDK_DIR} check
+      - docker run -v $(pwd):${CONTAINER_ROOT_DIR} -w ${CONTAINER_ROOT_DIR} --rm ${DOCKERHUB_REPO}:ta_keystone_devel /bin/bash -c "make ref-keystone && make keystone-test && make ref-keystone-clean"
 
 optee_test:
     stage: test
     only:
-      - master
+      - fix_ci
     tags:
       - shell
     before_script:

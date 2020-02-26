@@ -17,7 +17,7 @@ all: ref-sgx ref-keystone ref-optee
 
 .PHONY: ref-sgx
 ref-sgx:
-	PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make -C keyedge
+	PATH=$(KEYSTONE_DIR)/riscv/bin:${PATH}
 	make -C ref-ta/sgx
 
 .PHONY: ref-keystone
@@ -82,9 +82,6 @@ keystone-test:
 	make -C $(KEYSTONE_DIR) image; \
 	$(TEE_REF_TA_DIR)/scripts/keystone-check.sh
 
-.PHONY: check
-check: keystone-test
-
 .PHONY: doc
 doc: clean-doc
 	doxygen
@@ -100,8 +97,16 @@ clean-build-keystone:
 	make -C $(KEYSTONE_DIR) clean
 
 .PHONY: clean
-clean:
-	make -C keyedge clean
+clean: keyedge-clean ref-sgx-clean ref-keystone-clean ref-optee-clean
+
+ref-sgx-clean:
 	make -C ref-ta/sgx clean
+
+keyedge-clean:
+	make -C keyedge clean
+
+ref-keystone-clean:
 	make -C ref-ta/keystone KEYSTONE_DIR=$(KEYSTONE_DIR) KEEDGER_DIR=$(KEEDGER_DIR) clean
+
+ref-optee-clean:
 	make -C ref-ta/op-tee OPTEE_DIR=$(OPTEE_DIR) clean
