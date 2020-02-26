@@ -73,7 +73,8 @@ make
 
 ```sh
 cd ref-ta/sgx/
-./app
+make copyto
+make run
 ```
 
 ## op-tee

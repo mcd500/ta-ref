@@ -34,6 +34,8 @@ include ../../common.mk
 # Using SIM as defualt during development, comment out when it is ready
 SGX_MODE=SIM
 
+OUT_DIR=outdir
+
 #CRYPTLIB=WOLFCRYPT
 CRYPTLIB=MBEDCRYPT
 
@@ -343,7 +345,14 @@ $(Signed_Enclave_Name): $(Enclave_Name)
 	@$(SGX_ENCLAVE_SIGNER) sign -key Enclave/Enclave_private.pem -enclave $(Enclave_Name) -out $@ -config $(Enclave_Config_File)
 	@echo "SIGN =>  $@"
 
-.PHONY: clean
+.PHONY: copyto clean
+
+copyto:
+	mkdir -p $(OUT_DIR)
+	cp enclave.signed.so enclave.so sgx_app $(OUT_DIR)
+
+run:
+	${OUT_DIR}/sgx_app
 
 clean:
-	@rm -f .config_* $(App_Name) $(Enclave_Name) $(Signed_Enclave_Name) $(App_Cpp_Objects) App/Enclave_u.* $(Enclave_Cpp_Objects) $(Enclave_C_Objects) Enclave/Enclave_t.*
+	@rm -rf .config_* FileOne $(OUT_DIR) $(App_Name) $(Enclave_Name) $(Signed_Enclave_Name) $(App_Cpp_Objects) App/Enclave_u.* $(Enclave_Cpp_Objects) $(Enclave_C_Objects) Enclave/Enclave_t.*
