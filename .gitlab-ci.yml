@@ -17,10 +17,10 @@ before_script:
         xdg-utils xterm xz-utils zlib1g-dev || true
       - yes "" | pip3 install pyelftools pycryptodomex || true
       - rmdir ${KEYSTONE_DIR} || true
-      - ./unpack-prebuilt-keystone.sh 1> /dev/null 2>&1
+      - ./unpack-prebuilt-keystone.sh 2> /dev/null
       - cd ${KEYSTONE_DIR}; ./aist-setup.sh; cd ..
       - rm -fr ${OPTEE_DIR} || true
-      - ./unpack-and-build-optee.sh 2> /dev/null
+      - ./unpack-and-build-optee.sh 1> /dev/null 2>&1
 
 cache:
     untracked: true
