@@ -7,7 +7,6 @@ variables:
     CONTAINER_ROOT_DIR: /home/main/tee-ta-reference
 
 before_script:
-    - apt-get install -y doxygen
     - docker login -u ${GITLAB_USER} -p ${DOCKERHUB_PASSWD}
 
 cache:
@@ -47,6 +46,8 @@ keystone_build:
 
 doc_build:
     stage: build
+    before_script:
+      - sudo apt-get install -y doxygen
     only:
       - fix_ci
     tags:
