@@ -34,7 +34,9 @@
 #include "tee-ta-internal.h"
 
 #include "sgx_trts.h"
+#if 0
 #include "sgx_tae_service.h"
+#endif
 #include "sgx_utils.h"
 #include "Enclave_t.h"
 
@@ -67,7 +69,9 @@ void TEE_GetREETime(TEE_Time *time)
 void TEE_GetSystemTime(TEE_Time *time)
 {
     pr_deb("TEE_GetSystemTime(): start");
-
+    TEE_GetREETime(time);
+// Unfortunatelly, trusted time doesn't work on linux.
+#if 0
     sgx_status_t rtn;
     sgx_time_source_nonce_t nonce;
     sgx_time_t base;
@@ -127,6 +131,7 @@ void TEE_GetSystemTime(TEE_Time *time)
       pr_deb ("%02x", ((uint8_t *)&nonce)[i]);
     }
     pr_deb("\n");
+#endif
 #endif
 }
 
