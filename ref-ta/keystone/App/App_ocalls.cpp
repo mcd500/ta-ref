@@ -11,9 +11,9 @@
 #include <cstring>
 
 // from keystone/Edge
-#include "ocalls.h"
+#include "Enclave_u.h"
 
-//EDGE_EXTERNC_BEGIN
+EDGE_EXTERNC_BEGIN
 
 unsigned int ocall_print_string(const char* str){
   printf("%s",str);
@@ -131,4 +131,4 @@ ob196_t ocall_getrandom196(unsigned int flags)
 
 #endif
 
-//EDGE_EXTERNC_END
+EDGE_EXTERNC_END

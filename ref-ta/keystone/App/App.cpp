@@ -11,6 +11,7 @@
 #include <cstring>
 
 #include "keystone.h"
+#define EGDE_CALL_IMPL
 #include "Enclave_u.h"
 
 /* We hardcode these for demo purposes. */

@@ -104,7 +104,7 @@ EDGE_BASE=$(basename $(EDGE_FILE))
 ENC_T_C="\#include \"common_header.h\"\n\#include \"ocalls_eapp.h\"\n"
 ENC_T_H="\#pragma once\n\#include \"ocalls_header.h\"\n\#include \"ocalls.h\"\n"
 ENC_U_C="// generated empty file\n"
-ENC_U_H="\#pragma once\n\#include \"ocalls_host.h\"\n\#define EDGE_EXTERNC_BEGIN\n\#define EDGE_EXTERNC_END\n"
+ENC_U_H="\#pragma once\n\#ifdef EGDE_CALL_IMPL\n\#include \"ocalls_host.h\"\n\#else\n\#include \"ocalls.h\"\n\#endif\n\#define EDGE_EXTERNC_BEGIN\n\#define EDGE_EXTERNC_END\n"
 
 GENFILES=$(ENCLAVE_DIR)/$(EDGECALLS)_t.c $(ENCLAVE_DIR)/$(EDGECALLS)_t.h \
 	$(APP_DIR)/$(EDGECALLS)_u.c $(APP_DIR)/$(EDGECALLS)_u.h \
