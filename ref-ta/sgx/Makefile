@@ -107,13 +107,14 @@ Enclave_C_Files       += $(wildcard ../../lib/ed25519/src/*.c) \
                          $(wildcard ../../lib/tiny-AES-c/aes.c)
 endif
 
-ifeq ($(PROFILER), ON)
 PROFILER_DIR=../profiler
+ifeq ($(PROFILER), ON)
 Enclave_C_Files       += $(wildcard $(PROFILER_DIR)/*.c)
 Enclave_Include_Paths += -I$(PROFILER_DIR)
 PROFILER_ENABLE=-DPROFILER_ENABLE
 PROFILER_OPTION=-finstrument-functions
 ENCLAVE_TYPE=-DSGX
+ENCLAVE_LOG_FILE = "shared_mem"
 else
 PROFILER_ENABLE=
 PROFILER_OPTION=
@@ -327,7 +328,7 @@ $(Crypt_extra_Files):
 	@touch $@
 
 $(PROFILER_DIR)/%.o: $(PROFILER_DIR)/%.c Enclave/Enclave_t.h
-	@$(CC) $(Enclave_Include_Paths) $(ENCLAVE_TYPE) -c $< -o $@
+	@$(CC) $(Enclave_Include_Paths) $(ENCLAVE_TYPE) -DLOG_FILE=\"$(ENCLAVE_LOG_FILE)\" -DPERF_SIZE=65536 -c $< -o $@
 	@echo "CC   <=  $<"
 
 ../../platform/sgx/%.o: ../../platform/sgx/%.c Enclave/Enclave_t.h ../../common/tee-internal-api-cryptlib.impl $(Crypt_extra_Files) Makefile
@@ -372,4 +373,4 @@ run:
 	${OUT_DIR}/sgx_app
 
 clean:
-	@rm -rf .config_* FileOne $(OUT_DIR) $(App_Name) $(Enclave_Name) $(Signed_Enclave_Name) $(App_Cpp_Objects) App/Enclave_u.* $(Enclave_Cpp_Objects) $(Enclave_C_Objects) Enclave/Enclave_t.*
+	@rm -rf .config_* FileOne $(OUT_DIR) $(App_Name) $(Enclave_Name) $(Signed_Enclave_Name) $(App_Cpp_Objects) App/Enclave_u.* $(Enclave_Cpp_Objects) $(Enclave_C_Objects) Enclave/Enclave_t.* $(PROFILER_DIR)/*.o

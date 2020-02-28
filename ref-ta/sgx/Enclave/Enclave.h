@@ -37,8 +37,6 @@
 extern "C" {
 #endif
 
-int printf(const char* fmt, ...);
-
 void gp_random_test(void);
 void gp_ree_time_test(void);
 void gp_trusted_time_test(void);

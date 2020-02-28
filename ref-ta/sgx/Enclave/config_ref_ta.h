@@ -33,6 +33,7 @@
 
 #include <string.h>
 
+#include "tools.h"
 #include "Enclave.h"
 #include "tee_api_types_sgx.h"
 #include "tee-ta-internal.h"

@@ -12,8 +12,6 @@
 extern "C" {
 #include "profiler.h"
 }
-extern void __profiler_unmap_info(void);
-
 static void (*const init_array []) ()
   __attribute__ ((section (".init_array"), aligned (sizeof (void *))))
   = { __profiler_map_info };

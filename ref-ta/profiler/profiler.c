@@ -8,9 +8,10 @@
 #elif defined(SGX)
 #include "Enclave_t.h"
 #include "Enclave.h"
+#include "tools.h"
 /* open-only flags */
-#define	O_RDWR		0x0002		/* open for reading and writing */
-#define	O_CREAT		0x0200		/* create if nonexistant */
+#define O_RDWR     00002
+#define O_CREAT	   00100
 #elif defined(OPTEE)
 #include <tee_internal_api.h>
 #include <tee_internal_api_extensions.h>
@@ -85,10 +86,12 @@ void NO_PERF __profiler_unmap_info(
         }
 #elif defined(SGX)
         int fd, retval;
-        ocall_open_file(&fd, LOG_FILE, O_RDWR | O_CREAT, 0600);
+        sgx_status_t st = ocall_open_file(&fd, LOG_FILE, O_RDWR | O_CREAT, 0600);
+        if(st != SGX_SUCCESS) return;
         if(fd == -1) return;
         ocall_write_file(&retval, fd, ptr, sz);
         ocall_close_file(&retval, fd);
+        if(retval == -1) return;
 #elif defined(OPTEE)
         TEE_MemMove(buf, ptr, sz);
         *size = sz;
