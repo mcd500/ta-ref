@@ -5,6 +5,11 @@
 #ifdef KEYSTONE
 #include "Enclave_t.h"
 #include <fcntl.h>
+#elif defined(SGX)
+#include "Enclave_t.h"
+/* open-only flags */
+#define	O_RDWR		0x0002		/* open for reading and writing */
+#define	O_CREAT		0x0200		/* create if nonexistant */
 #elif defined(OPTEE)
 #include <tee_internal_api.h>
 #include <tee_internal_api_extensions.h>
@@ -26,6 +31,11 @@ static inline uint64_t NO_PERF __rdtsc(void)
     unsigned long cycles;
 #ifdef KEYSTONE
     asm volatile ("rdcycle %0" : "=r" (cycles));
+#elif defined(SGX)
+	uint32_t eax, edx;
+	unsigned long long clk;
+    asm volatile("rdtsc" : "=a"(eax), "=d"(edx));
+    cycles = ((unsigned long long)edx << 32) | eax;
 #elif defined(OPTEE)
     asm volatile("mrs %0, cntvct_el0" : "=r"(cycles));
 #endif
@@ -72,6 +82,12 @@ void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(
         if(ocall_close_file(fd) == -1) {
             return;
         }
+#elif defined(SGX)
+        int fd, retval;
+        ocall_open_file(&fd, LOG_FILE, O_RDWR | O_CREAT, 0600);
+        if(fd == -1) return;
+        ocall_write_file(&retval, fd, ptr, sz);
+        ocall_close_file(&retval, fd);
 #elif defined(OPTEE)
         TEE_MemMove(buf, ptr, sz);
         *size = sz;

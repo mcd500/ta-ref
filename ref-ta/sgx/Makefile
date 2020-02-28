@@ -80,6 +80,16 @@ SGX_COMMON_FLAGS += -Wall -Wextra -Winit-self -Wpointer-arith -Wreturn-type \
 SGX_COMMON_CFLAGS := $(SGX_COMMON_FLAGS) -Wjump-misses-init -Wstrict-prototypes -Wunsuffixed-float-constants
 SGX_COMMON_CXXFLAGS := $(SGX_COMMON_FLAGS) -Wnon-virtual-dtor -std=c++11
 
+######## Profiler Settings ######
+#ifeq $($(PROFILER), ON)
+PROFILER=ON
+PROFILER_OPTION=-finstrument-functions
+PROFILER_DIR=../profiler
+ENCLAVE_TYPE=-DSGX
+#else
+#PROFILER_OPTION=
+#endif
+
 ######## Crypt Settings #######
 
 #CRYPTLIB=WOLFCRYPT
@@ -105,6 +115,9 @@ ifneq ($(CRYPTLIB),WOLFCRYPT)
 Enclave_C_Files       += $(wildcard ../../lib/ed25519/src/*.c) \
                          $(wildcard ../../lib/tiny_sha3/sha*.c) \
                          $(wildcard ../../lib/tiny-AES-c/aes.c)
+endif
+ifeq ($(PROFILER), ON)
+Enclave_C_Files       += $(wildcard ../profiler/*.c)
 endif
 
 ######## App Settings ########
@@ -314,8 +327,12 @@ Enclave/%.o: Enclave/%.cpp Enclave/Enclave_t.h
 $(Crypt_extra_Files):
 	@touch $@
 
+../profiler/%.o: ../profiler/%.c Enclave/Enclave_t.h ../../common/tee-internal-api-cryptlib.impl
+	@$(CC) $(Enclave_Include_Paths) $(ENCLAVE_TYPE) -c $< -o $@
+	@echo "CC   <=  $<"
+
 ../../platform/sgx/%.o: ../../platform/sgx/%.c Enclave/Enclave_t.h ../../common/tee-internal-api-cryptlib.impl $(Crypt_extra_Files) Makefile
-	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) -c $< -o $@
+	@$(CC) $(SGX_COMMON_CFLAGS) $(Enclave_C_Flags) $(PROFILER_OPTION) -c $< -o $@
 	@echo "CC   <=  $<"
 
 ../../lib/ed25519/src/%.o: ../../lib/ed25519/src/%.c Enclave/Enclave_t.h
