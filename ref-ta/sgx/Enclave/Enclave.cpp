@@ -55,10 +55,10 @@ int printf(const char* fmt, ...)
     return retval;
 }
 
-/* ecall_print_aes:
+/* main: defined in startup.cpp
  *   testing symmetric key verification
  */
-void ecall_ta_main(void)
+int main(void)
 {
 
     printf("ecall_ta_main() start\n");

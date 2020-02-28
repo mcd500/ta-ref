@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #elif defined(SGX)
 #include "Enclave_t.h"
+#include "Enclave.h"
 /* open-only flags */
 #define	O_RDWR		0x0002		/* open for reading and writing */
 #define	O_CREAT		0x0200		/* create if nonexistant */
@@ -48,7 +49,7 @@ __profiler_get_data_ptr(void) {
 	return res;
 }
 
-void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
+void NO_PERF __profiler_map_info(void) {
 	__profiler_head = (struct __profiler_header *)perf_buffer;
     __profiler_head->size = PERF_SIZE;
     __profiler_head->idx = 0;
@@ -60,7 +61,7 @@ void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
     __cyg_profile_func((void*)ptr, START);
 }
 
-void __attribute__((no_instrument_function,hot)) __profiler_unmap_info(
+void NO_PERF __profiler_unmap_info(
 #ifdef OPTEE
     char *buf, size_t *size
 #else

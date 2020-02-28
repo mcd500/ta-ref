@@ -80,16 +80,6 @@ SGX_COMMON_FLAGS += -Wall -Wextra -Winit-self -Wpointer-arith -Wreturn-type \
 SGX_COMMON_CFLAGS := $(SGX_COMMON_FLAGS) -Wjump-misses-init -Wstrict-prototypes -Wunsuffixed-float-constants
 SGX_COMMON_CXXFLAGS := $(SGX_COMMON_FLAGS) -Wnon-virtual-dtor -std=c++11
 
-######## Profiler Settings ######
-#ifeq $($(PROFILER), ON)
-PROFILER=ON
-PROFILER_OPTION=-finstrument-functions
-PROFILER_DIR=../profiler
-ENCLAVE_TYPE=-DSGX
-#else
-#PROFILER_OPTION=
-#endif
-
 ######## Crypt Settings #######
 
 #CRYPTLIB=WOLFCRYPT
@@ -116,8 +106,17 @@ Enclave_C_Files       += $(wildcard ../../lib/ed25519/src/*.c) \
                          $(wildcard ../../lib/tiny_sha3/sha*.c) \
                          $(wildcard ../../lib/tiny-AES-c/aes.c)
 endif
+
 ifeq ($(PROFILER), ON)
-Enclave_C_Files       += $(wildcard ../profiler/*.c)
+PROFILER_DIR=../profiler
+Enclave_C_Files       += $(wildcard $(PROFILER_DIR)/*.c)
+Enclave_Include_Paths += -I$(PROFILER_DIR)
+PROFILER_ENABLE=-DPROFILER_ENABLE
+PROFILER_OPTION=-finstrument-functions
+ENCLAVE_TYPE=-DSGX
+else
+PROFILER_ENABLE=
+PROFILER_OPTION=
 endif
 
 ######## App Settings ########
@@ -180,7 +179,7 @@ Enclave_C_Files :=  $(Enclave_C_Files) #$(wildcard ../common/Enclave/*.c)
 Enclave_Cpp_Files := Enclave/Enclave.cpp $(wildcard Enclave/*.cpp) $(wildcard Enclave/Edger8rSyntax/*.cpp) $(wildcard Enclave/TrustedLibrary/*.cpp) $(Enclave_Cpp_Files)
 Enclave_Include_Paths := -IInclude -IEnclave -I$(SGX_SDK)/include -I$(SGX_SDK)/include/tlibc -I$(SGX_SDK)/include/libcxx $(Enclave_Include_Paths) -I../../platform/sgx -I../../ref-ta/common/Enclave -I../../include -I$(Crypt_Include_Paths)
 
-Enclave_C_Flags := $(Enclave_Include_Paths) -nostdinc -fvisibility=hidden -fpie -ffunction-sections -fdata-sections $(Enclave_Quiet) -DCRYPTLIB=$(CRYPTLIB)
+Enclave_C_Flags := $(Enclave_Include_Paths) -nostdinc -fvisibility=hidden -fpie -ffunction-sections -fdata-sections $(Enclave_Quiet) -DCRYPTLIB=$(CRYPTLIB) $(PROFILER_ENABLE)
 CC_BELOW_4_9 := $(shell expr "`$(CC) -dumpversion`" \< "4.9")
 ifeq ($(CC_BELOW_4_9), 1)
 	Enclave_C_Flags += -fstack-protector
@@ -327,7 +326,7 @@ Enclave/%.o: Enclave/%.cpp Enclave/Enclave_t.h
 $(Crypt_extra_Files):
 	@touch $@
 
-../profiler/%.o: ../profiler/%.c Enclave/Enclave_t.h ../../common/tee-internal-api-cryptlib.impl
+$(PROFILER_DIR)/%.o: $(PROFILER_DIR)/%.c Enclave/Enclave_t.h
 	@$(CC) $(Enclave_Include_Paths) $(ENCLAVE_TYPE) -c $< -o $@
 	@echo "CC   <=  $<"
 
