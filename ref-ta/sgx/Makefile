@@ -36,32 +36,6 @@ SGX_MODE=SIM
 
 OUT_DIR=outdir
 
-#CRYPTLIB=WOLFCRYPT
-CRYPTLIB=MBEDCRYPT
-
-ifeq ($(CRYPTLIB),MBEDCRYPT)
-Crypt_C_Files = $(addprefix ../../lib/mbed-crypto/library/,aes.c gcm.c cipher.c cipher_wrap.c platform_util.c)
-Crypt_Include_Paths = ../../lib/mbed-crypto/include
-Crypt_extra_Files =
-else ifeq ($(CRYPTLIB),WOLFCRYPT)
-Crypt_C_Files = $(addprefix ../../lib/wolfssl/wolfcrypt/src/,aes.c ed25519.c sha512.c sha256.c random.c hash.c fe_operations.c ge_operations.c sha3.c)
-Crypt_Include_Paths = ../../lib/wolfssl
-Crypt_extra_Files = ../../lib/wolfssl/wolfssl/wolfcrypt/fips.h
-endif
-
-SGX_COMMON_CFLAGS     += $(CFLAGS) -DED25519_NO_SEED=1
-SGX_COMMON_CXXFLAGS   += $(CXXFLAGS)
-Enclave_Include_Paths += $(CFLAGS)
-Enclave_C_Files       += $(wildcard ../../platform/sgx/*.c) \
-			 $(Crypt_C_Files)
-
-ifneq ($(CRYPTLIB),WOLFCRYPT)
-Enclave_C_Files       += $(wildcard ../../lib/ed25519/src/*.c) \
-                         $(wildcard ../../lib/tiny_sha3/sha*.c) \
-                         $(wildcard ../../lib/tiny-AES-c/aes.c)
-endif
-
-
 ######## SGX SDK Settings ########
 
 SGX_SDK ?= /opt/intel/sgxsdk
@@ -105,6 +79,33 @@ SGX_COMMON_FLAGS += -Wall -Wextra -Winit-self -Wpointer-arith -Wreturn-type \
                     -Wcast-align -Wcast-qual -Wconversion -Wredundant-decls
 SGX_COMMON_CFLAGS := $(SGX_COMMON_FLAGS) -Wjump-misses-init -Wstrict-prototypes -Wunsuffixed-float-constants
 SGX_COMMON_CXXFLAGS := $(SGX_COMMON_FLAGS) -Wnon-virtual-dtor -std=c++11
+
+######## Crypt Settings #######
+
+#CRYPTLIB=WOLFCRYPT
+CRYPTLIB=MBEDCRYPT
+
+ifeq ($(CRYPTLIB),MBEDCRYPT)
+Crypt_C_Files = $(addprefix ../../lib/mbed-crypto/library/,aes.c gcm.c cipher.c cipher_wrap.c platform_util.c)
+Crypt_Include_Paths = ../../lib/mbed-crypto/include
+Crypt_extra_Files =
+else ifeq ($(CRYPTLIB),WOLFCRYPT)
+Crypt_C_Files = $(addprefix ../../lib/wolfssl/wolfcrypt/src/,aes.c ed25519.c sha512.c sha256.c random.c hash.c fe_operations.c ge_operations.c sha3.c)
+Crypt_Include_Paths = ../../lib/wolfssl
+Crypt_extra_Files = ../../lib/wolfssl/wolfssl/wolfcrypt/fips.h
+endif
+
+SGX_COMMON_CFLAGS     += $(CFLAGS) -DED25519_NO_SEED=1
+SGX_COMMON_CXXFLAGS   += $(CXXFLAGS)
+Enclave_Include_Paths += $(CFLAGS)
+Enclave_C_Files       += $(wildcard ../../platform/sgx/*.c) \
+			 $(Crypt_C_Files)
+
+ifneq ($(CRYPTLIB),WOLFCRYPT)
+Enclave_C_Files       += $(wildcard ../../lib/ed25519/src/*.c) \
+                         $(wildcard ../../lib/tiny_sha3/sha*.c) \
+                         $(wildcard ../../lib/tiny-AES-c/aes.c)
+endif
 
 ######## App Settings ########
 
