@@ -4,7 +4,7 @@
 #include <stdio.h> /* vsnprintf */
 #include <string.h>
 
-#ifdef PERF_ENABLE
+#ifdef PROFILER_ENABLE
 #define TEST_INITFINI
 #endif
 
