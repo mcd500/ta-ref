@@ -1,112 +1,31 @@
-SHELL=/bin/bash -x
+SHELL := /bin/bash
+BUILD_DIR=build
+CONFIG_PATH=$(BUILD_DIR)/config.mk
+PHONY: sgx_conf keystone_conf optee_conf
 
-CWD              = $(shell pwd)
-TEE_REF_TA_DIR   =  $(shell pwd)
-CONTAINER_TEE_REF_TA_DIR = /home/main/tee-ta-reference
-KEYSTONE_DIR     ?= $(TEE_REF_TA_DIR)/build-keystone
-KEYSTONE_SDK_DIR ?= $(KEYSTONE_DIR)/sdk
-KEEDGER_DIR      =  $(TEE_REF_TA_DIR)/keedger8r
-OPTEE_DIR        ?= $(TEE_REF_TA_DIR)/build-optee
-OPTEE_BINARY_FILE = a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
-RPI3_IP_ADDR      = 192.168.100.61
-export CFLAGS    += -Wno-unused-parameter
-#PATH      =  $(KEYSTONE_DIR)/riscv/bin:$${PATH}
+# command
+SLN = ln -sf
 
-.PHONY: all
-all: ref-sgx ref-keystone ref-optee
+.PHONY: sgx optee keystone
+sgx: sgx_select pre
+optee: optee_select pre
+keystone: keystone_select pre
 
-.PHONY: ref-sgx
-ref-sgx:
-	PATH=$(KEYSTONE_DIR)/riscv/bin:${PATH}
-	make -C ref-ta/sgx
+sgx_select:
+	make select TEE=sgx
 
-.PHONY: ref-keystone
-ref-keystone:
-	PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make -C ref-ta/keystone KEYSTONE_DIR=$(KEYSTONE_DIR) KEEDGER_DIR=$(KEEDGER_DIR)
+optee_select:
+	make select TEE=optee
 
-.PHONY: ref-optee
-ref-optee:
-	make -C ref-ta/op-tee OPTEE_DIR=$(OPTEE_DIR)
+keystone_select:
+	make select TEE=keystone
 
-.PHONY: optee
-optee:
-	rmfir $(OPTEE_DIR) || true
-	./unpack-prebuilt-optee.sh
-	cd $(OPTEE_DIR)/build; ../../unpack-optee-toolchain.sh
-	cd $(OPTEE_DIR)/build; make -j `nproc`; make -j `nproc` run
+pre:
+	make -C $(BUILD_DIR)
 
-.PHONY: keystone
-keystone:
-	rmdir $(KEYSTONE_DIR) || true
-	./unpack-prebuilt-keystone.sh 2> /dev/null
-	cd $(KEYSTONE_DIR); ./aist-setup.sh
-	cd $(KEYSTONE_DIR); PATH=$(KEYSTONE_DIR)/riscv/bin:$${PATH} make run-tests KEYSTONE_SDK_DIR=$(KEYSTONE_DIR)/sdk KEYSTONE_DIR=$(KEYSTONE_DIR)
+select:
+	$(SLN) $(TEE).mk $(BUILD_DIR)/Makefile
 
-.PHONY: keystone-qemu
-keystone-qemu:
-	set -e; cd $(KEYSTONE_DIR); \
-	export TEE_REF_TA_DIR=$(TEE_REF_TA_DIR); \
-	export KEYSTONE_DIR=$(KEYSTONE_DIR); \
-	export KEYSTONE_SDK_DIR=$(KEYSTONE_SDK_DIR); \
-	export PATH=$(KEYSTONE_DIR)/riscv/bin:$(PATH); \
-	$(TEE_REF_TA_DIR)/scripts/keystone-cp.sh; \
-	make -C hifive-work/buildroot_initramfs; \
-	make -f hifive.mk
-
-.PHONY: sgx-thinkpad-test
-sgx-test:
-	# scp binaries to thinkpad
-	# run ref-ta on thinkpad
-
-.PHONY: optee-rpi3-test
-optee-rpi3-test: optee-rpi3-clean
-	export TEE_REF_TA_DIR=$(TEE_REF_TA_DIR)
-	export CONTAINER_TEE_REF_TA_DIR=$(CONTAINER_TEE_REF_TA_DIR)
-	mkdir -p output
-	docker run --rm -v ${CWD}:/home/main/shared -v ${TEE_REF_TA_DIR}:${CONTAINER_TEE_REF_TA_DIR} -w ${CONTAINER_TEE_REF_TA_DIR}/ref-ta/op-tee --env OPTEE_DIR=/home/main/optee vc707/test:optee_rpi3 /bin/bash -c "make PROFILER=ON && make copyto && cp -ap /home/main/optee/out-br/images/rootfs.cpio.gz /home/main/shared/output"
-	cd ./output; gunzip -cd rootfs.cpio.gz | cpio -idmv "lib/optee_armtz/${OPTEE_BINARY_FILE}" "root/*" "usr/bin/optee_ref_ta"; cd ../
-	RPI3_IP_ADDR=${RPI3_IP_ADDR} ./scripts/optee-rpi3-ssh-test.sh
-
-optee-rpi3-clean:
-	RPI3_IP_ADDR=${RPI3_IP_ADDR} ./scripts/optee-rpi3-ssh-clean.sh
-
-
-.PHONY: keystone-test
-keystone-test:
-	set -e; cd $(KEYSTONE_DIR); \
-	export TEE_REF_TA_DIR=$(TEE_REF_TA_DIR); \
-	export KEYSTONE_DIR=$(KEYSTONE_DIR); \
-	export KEYSTONE_SDK_DIR=$(KEYSTONE_SDK_DIR); \
-	export PATH=$(KEYSTONE_DIR)/riscv/bin:$(PATH); \
-	$(TEE_REF_TA_DIR)/scripts/keystone-cp.sh; \
-	make -C $(KEYSTONE_DIR) image; \
-	$(TEE_REF_TA_DIR)/scripts/keystone-check.sh
-
-.PHONY: doc
-doc: clean-doc
-	doxygen
-	cd latex; make
-	cp latex/refman.pdf tee-internal-doc-draft.pdf
-
-.PHONY: clean-doc
-clean-doc:
-	rm -fr html latex
-
-.PHONY: clean-build-keystone
-clean-build-keystone:
-	make -C $(KEYSTONE_DIR) clean
-
-.PHONY: clean
-clean: keyedge-clean ref-sgx-clean ref-keystone-clean ref-optee-clean
-
-ref-sgx-clean:
-	make -C ref-ta/sgx clean
-
-keyedge-clean:
-	make -C keyedge clean
-
-ref-keystone-clean:
-	make -C ref-ta/keystone KEYSTONE_DIR=$(KEYSTONE_DIR) KEEDGER_DIR=$(KEEDGER_DIR) clean
-
-ref-optee-clean:
-	make -C ref-ta/op-tee OPTEE_DIR=$(OPTEE_DIR) clean
+clean:
+	make -C $(BUILD_DIR)
+	$(RM) $(BUILD_DIR)/Makefile
