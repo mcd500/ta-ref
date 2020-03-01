@@ -1,0 +1,8 @@
+Makefile
+*.h
+*.o
+*.c
+*.fbs
+*.client
+lib/*
+include/*
