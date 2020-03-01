@@ -29,6 +29,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "keystone/tee_api_types_keystone.h"
+#include "tee-common.h"
+#include "tee-ta-internal.h"
+#include "Enclave_t.h"
+#include "eapp_utils.h"
+
+#include "syscall.h"
+#include "report.h"
+
+#include <string.h>
+#include <stdlib.h>
+
 #if CRYPTLIB==WOLFCRYPT
 void wolfSSL_Free(void *p)
 {

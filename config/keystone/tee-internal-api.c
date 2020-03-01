@@ -47,8 +47,6 @@ static inline void __attribute__((noreturn)) TEE_Panic(unsigned long code)
       EAPP_RETURN(0xfffe0000 + (code & 0x1ffff));
 }
 
-#define SHA_LENGTH (256/8)
-
 void TEE_GetREETime(TEE_Time *time)
 {
     ree_time_t ree_time;
@@ -501,5 +499,3 @@ void TEE_GenerateRandom(void *randomBuffer, uint32_t randomBufferLen)
     return;
 }
 #endif
-
-#include "../../common/tee-internal-api-cryptlib.impl"

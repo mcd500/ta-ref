@@ -66,6 +66,7 @@
 # include "aes/aes.h"
 #endif
 
+#define SHA_LENGTH (256/8)
 #define TEE_OBJECT_NONCE_SIZE 16
 #define TEE_OBJECT_KEY_SIZE 32
 #define TEE_OBJECT_SKEY_SIZE 64
