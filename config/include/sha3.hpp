@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#include "../cryptos/tiny_sha3/sha3.h"
+#include "../crypto/tiny_sha3/sha3.h"
 
 #ifdef __cplusplus
 }

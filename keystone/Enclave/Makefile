@@ -1,11 +1,17 @@
 .PHONY: all clean
 
 ENCLAVE_BIN = Enclave.eapp_riscv
+ENCLAVE_LIB_SRCS = printf.c tools.c strcmp.c startup.c
+ENCLAVE_LIB_OBJS = $($ENCLAVE_LIB_OBJS:.c=.o)
+CFLAGS=-I$(INCLUDE_DIR)
 
-all:
+all: $(ENCLAVE_LIB_OBJS)
 
 clean:
 	$(RM) $(ENCLAVE_BIN)
+
+$(ENCLAVE_LIB_OBJS): %.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 
 

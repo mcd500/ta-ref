@@ -1,8 +1,7 @@
 # edger and flatcc binary requires default toolchains.
-include ./general.mk
 unexport CC CXX LD
 
-ifndef $(TEE)
+ifeq ($(TEE),)
 $(error TEE should be specified)
 endif
 
@@ -10,8 +9,6 @@ endif
 ifeq ($(EDGER_TYPE), KEYEDGE)
 EDGER_DIR=$(KEYEDGE_DIR)
 EDGER_BIN=$(EDGER_DIR)/bin/keyedge
-EDGE_FILE=ocalls.h
-INCLUDE_PATHS=$(CURDIR) $(EDGER_DIR)/target/include $(EDGER_DIR)/flatcc/include
 else ifeq ($(EDGER_TYPE), KEEDGER8R)
 EDGER_DIR=$(KEEDGER8R_DIR)
 EDGER_BIN=$(EDGER_DIR)/keedger8r
@@ -20,39 +17,37 @@ $(error EDGER_TYPE is invalid value. set KEYEDGE or KEEDGER8R.)
 endif
 
 FLATCC_LIB=lib/libflatccrt.a
-CFLAGS=$(addprefix -I,$(INCLUDE_PATHS) $(KEYSTONE_SDK_LIB_DIR)/app/include)
+FLATCC_INCLUDE_DIR=include/flatcc
+
+OBJS=Enclave_t.o Enclave_u.o
+ARS=$(patsubst %.o,lib%.a,$(OBJS))
 
 
 .PHONY: all
-all: edger
+all: edger build
 
-edger: $(EDGER_BIN) $(FLATCC_LIB) build
+edger: bind build
 
-flatcc: $(FLATCC_LIB)
+OBJS=Enclave_t.o Enclave_u.o
+ARS=$(patsubst %.o,lib%.a,$(OBJS))
 
 $(EDGER_BIN) $(FLATCC_BIN):
-	make -C $(EDGER_DIR)
+	make -C $(TOPDIR)/edger EDGER_TYPE=$(EDGER_TYPE)
 
-$(FLATCC_LIB): $(EDGER_BIN) $(FLATCC_BIN)
+bind: $(FLATCC_LIB) $(FLATCC_INCLUDE) $(EDGER_BIN)
+	$(SLN) $(EDGER_DIR)/target/include/*.h ./include/
+
+$(FLATCC_LIB): $(FLATCC_BIN)
 	$(SLN) $(EDGER_DIR)/lib/flatccrt.a $@
 
-# restore toolchains used in $(TEE)
-OBJS=Enclave_t.o Enclave_u.o
-build: gen $(OBJS)
-	cp -a $(CURDIR)/*.h ./include/
-	cp -a $(CURDIR)/*.o ./lib/
+$(FLATCC_INCLUDE): $(FLATCC_BIN)
+	mkdir -p $(FLATCC_INCLUDE_DIR)
+	$(SLN) $(FLATCC_DIR)/$(FLATCC_INCLUDE_DIR) $(FLATCC_INCLUDE_DIR)
 
-gen: $(EDGER_BIN) $(FLATCC_LIB)
-	cp -a $(CONFIG_DIR)/$(TEE)/keyedge/* ./
-	$(EDGER_BIN) $(EDGE_FILE)
-	$(FLATCC_BIN) -a $(EDGE_FILE:.h=.fbs)
-
-$(OBJS): %.o: %.c
-	$(CC) $(CFLAGS) -c $^ -o $@
+build:
+	make -C $(TOPDIR)/edger EDGER_TYPE=$(EDGER_TYPE) INCLUDE_DIR=$(BUILD_DIR)/include LIB_DIR=$(BUILD_DIR)/lib
 
 clean:
-	$(RM) *.o ocalls* flatbuffers* Enclave_* lib/*.o
 
 mrproper: clean
-	$(RM) $(FLATCC_LIB)
-	make -C $(EDGER_DIR) clean
+	$(RM) include/*.h $(FLATCC_LIB)

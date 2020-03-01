@@ -6,7 +6,7 @@ export TOOLPREFIX=riscv64-unknown-linux-gnu-
 export TEE=keystone
 include ./general.mk
 
-DEPENDS=edger cryptos config
+DEPENDS=edger crypto config
 EDGER_TYPE=KEYEDGE
 # MBEDCRYPT or WOLFCRYPT
 CRYPT_TYPE=MBEDCRYPT
@@ -19,9 +19,6 @@ DEPENDS += profiler
 endif
 
 TEE_CONFIG_DIR=$(CONFIG_DIR)/$(TEE)
-INCLUDE_PATHS = $(CURDIR) $(TOPDIR)/keyedge/target/include $(TOPDIR)/keyedge/flatcc/include
-NEW_CPATH=$(call join-with,:,$(INCLUDE_PATHS)):$(CPATH)
-
 
 EDGECALLS=$(CURDIR)/Enclave
 
@@ -37,25 +34,33 @@ profiler:
 	make -f profiler.mk
 
 edger:
-	make -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
+	make -C $(TOPDIR)/edger EDGER_TYPE=$(EDGER_TYPE)
+	#make -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
+	$(SLN) $(EDGER_DIR)/lib/flatccrt.a $@
+	mkdir -p include/flatcc
+	$(SLN) $(FLATCC_DIR)/include/flatcc include/flatcc
+	$(SLN) $(EDGER_DIR)/target/include/*.h ./include/
 
-cryptos:
-	make -f cryptos.mk
+crypto:
+	make -f crypto.mk
 
-config: cryptos
-	CPATH=$(NEW_CPATH) make -C $(TOPDIR)/config CRYPT_TYPE=$(CRYPT_TYPE) INCLUDE_PATHS="$(CURDIR)/include"
+config: crypto
+	make -C $(TOPDIR)/config CRYPT_TYPE=$(CRYPT_TYPE) INCLUDE_PATHS="$(CURDIR)/include"
+	$(SLN) $(TOPDIR)/config/*.a ./lib
 
 $(TEE): depends
-	CPATH=$(NEW_CPATH) make -C $(TOPDIR)/$(TEE) UNTRUSTED_OBJ=${CURDIR}/Enclave_u.o TRUSTED_OBJ=${CURDIR}/Enclave_t.o BUILD_DIR=$(CURDIR)
+	make -C $(TOPDIR)/$(TEE) BUILD_DIR=$(CURDIR)
+	$(SLN) $(TOPDIR)/$(TEE)/app/*.client $(TOPDIR)/$(TEE)/enclave/*.eapp_riscv ./
 
 
 clean:
 	make -C $(TOPDIR)/config clean
 	make -C $(TOPDIR)/$(TEE) clean BUILD_DIR=$(CURDIR)
-	make clean -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
+	# make clean -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
+	make -C $(TOPDIR)/edger clean EDGER_TYPE=$(EDGER_TYPE)
 
 # clean build files including dependencies
 mrproper: clean
 	$(RM) lib/*.a
-	make mrproper -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
-	make clean -f cryptos.mk
+	# make clean -f cryptos.mk
+	make -C $(TOPDIR)/edger mrproper EDGER_TYPE=$(EDGER_TYPE)

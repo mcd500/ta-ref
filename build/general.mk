@@ -6,7 +6,7 @@ TOPDIR=$(CURDIR)/..
 CONFIG_DIR=$(TOPDIR)/config
 # command
 export CC = $(TOOLPREFIX)gcc
-export AR = $(TOOLPREFIX)ar
+export AR = $(TOOLPREFIX)ar rcs
 export CXX = $(TOOLPREFIX)g++
 export LINK = $(TOOLPREFIX)ld
 export AS = $(TOOLPREFIX)as
