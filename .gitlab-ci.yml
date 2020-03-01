@@ -1,0 +1,16 @@
+variables:
+    GITLAB_URL: http://192.168.100.100
+    GITLAB_USER: vc707
+    RISCV_GCC_DIR: /home/user/projects/keystone/riscv/bin
+    RPI3_IP_ADDR: 192.168.100.61
+    DOCKERHUB_REPO: vc707/test
+    CONTAINER_ROOT_DIR: /home/main/tee-ta-reference
+
+before_script:
+    - docker login -u ${GITLAB_USER} -p ${DOCKERHUB_PASSWD}
+    - git submodule update --init --recursive
+
+stages:
+    - build
+    - test
+
