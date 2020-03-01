@@ -1,0 +1,21 @@
+[submodule "edger/keedger8r"]
+	path = edger/keedger8r
+	url = http://192.168.100.100/vc707/keedger8r
+[submodule "edger/keyedge"]
+	path = edger/keyedge
+	url = http://192.168.100.100/vc707/keyedge
+[submodule "crypto/ed25519"]
+	path = crypto/ed25519
+	url = https://github.com/orlp/ed25519/
+[submodule "crypto/mbedtls"]
+	path = crypto/mbedtls
+	url = https://github.com/ARMmbed/mbed-crypto
+[submodule "crypto/tiny_AES_c"]
+	path = crypto/tiny_AES_c
+	url = https://github.com/kokke/tiny-AES-c
+[submodule "crypto/tiny_sha3"]
+	path = crypto/tiny_sha3
+	url = https://github.com/mjosaarinen/tiny_sha3
+[submodule "crypto/wolfssl"]
+	path = crypto/wolfssl
+	url = http://192.168.100.100/vc707/wolfssl
