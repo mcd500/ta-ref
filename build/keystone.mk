@@ -1,59 +1,55 @@
-include ./general.mk
-
-TOOLPREFIX=riscv64-unknown-linux-gnu-
-CC = $(TOOLPREFIX)gcc
-
-# KEYEDGE or KEEDGER8R
-EDGER_TYPE=KEYEDGE
-ifeq ($(EDGER_TYPE), KEYEDGE)
-EDGER_DIR=$(KEYEDGE_DIR)
-EDGER_BIN=$(EDGER_DIR)/bin/keyedge
-EDGE_FILE=ocalls.h
-else ifeq ($(EDGER_TYPE), KEEDGER8R)
-EDGER_DIR=$(KEEDGER8R_DIR)
-EDGER_BIN=$(EDGER_DIR)/keedger8r
-else
-$(error EDGER_DIR is invalid value. set KEYEDGE or KEEDGER8R.)
+ifeq ($(KEYSTONE_DIR),)
+$(error "Make sure that keystone framework is prebuilt!")
 endif
 
-TEE_CONFIG_DIR=$(CONFIG_DIR)/keystone
+export TOOLPREFIX=riscv64-unknown-linux-gnu-
+export TEE=keystone
+include ./general.mk
+
+DEPENDS=edger cryptos
+EDGER_TYPE=KEYEDGE
+EDGE_FILE=ocalls.h
+
+PROFILER=OFF
+
+ifeq ($(PROFILER),ON)
+DEPENDS += profiler
+endif
+
+TEE_CONFIG_DIR=$(CONFIG_DIR)/$(TEE)
 INCLUDE_PATHS = $(CURDIR) $(TOPDIR)/keyedge/target/include $(TOPDIR)/keyedge/flatcc/include
 # TODO: why added ${KEYSTONE_SDK_DIR}/lib/app/include separately?
 CFLAGS=$(addprefix -I, $(INCLUDE_PATHS) ${KEYSTONE_SDK_DIR}/lib/app/include)
-EXTRA_LIBS=$(EDGER_DIR)/lib/flatccrt.a
-
-OBJS=Enclave_t.o Enclave_u.o
 
 EDGECALLS=$(CURDIR)/Enclave
 
 .PHONY: all clean mrproper
 
-all: depends build
+all: build
 
-depends: edger profiler
+build: depends $(TEE)
+
+depends: $(DEPENDS)
 
 profiler:
+	make -f profiler.mk
 
 edger:
-	make -C $(EDGER_DIR)
+	make -f edger.mk EDGER_TYPE=$(EDGER_TYPE) CFLAGS="$(CFLAGS)"
 
-build: keystone
+cryptos:
+	make -f cryptos.mk
 
-gen_edge:
-	cp -rp $(TEE_CONFIG_DIR)/keyedge/* ./
-	$(EDGER_BIN) $(EDGE_FILE)
-	$(FLATCC_BIN) -a $(EDGE_FILE:.h=.fbs)
+$(TEE): depends
+	CPATH=$(call join-with,:,$(INCLUDE_PATHS)):$(CPATH) make -C $(TOPDIR)/$(TEE) UNTRUSTED_OBJ=${CURDIR}/Enclave_u.o BUILD_DIR=$(CURDIR)
 
-$(OBJS): %.o: %.c
-	$(CC) $(CFLAGS) -c $^ -o $@
-
-keystone: gen_edge $(OBJS)
-	CPATH=$(call join-with,:,$(INCLUDE_PATHS)):$(CPATH) make -C $(TOPDIR)/keystone UNTRUSTED_OBJ=${CURDIR}/Enclave_u.o EXTRA_LIBS=$(EXTRA_LIBS)
 
 clean:
-	$(RM) *.o ocalls* flatbuffers* Enclave_*
-	make -C $(TOPDIR)/keystone clean
+	make -C $(TOPDIR)/$(TEE) clean
+	make -f edger.mk clean
 
 # clean build files including dependencies
 mrproper: clean
-	make -C $(EDGER_DIR)
+	$(RM) lib/*.a
+	make -C $(EDGER_DIR) clean
+	make clean -f cryptos.mk
