@@ -1,4 +1,5 @@
 # edger and flatcc binary requires default toolchains.
+include ./general.mk
 unexport CC CXX LD
 
 ifeq ($(TEE),)
@@ -19,23 +20,16 @@ endif
 FLATCC_LIB=lib/libflatccrt.a
 FLATCC_INCLUDE_DIR=include/flatcc
 
-OBJS=Enclave_t.o Enclave_u.o
-ARS=$(patsubst %.o,lib%.a,$(OBJS))
+.PHONY: all clean mrproper
+all: edger build fetch2
 
-
-.PHONY: all
-all: edger build
-
-edger: bind build
+edger: $(FLATCC_LIB) $(FLATCC_INCLUDE) edger_include
 
 OBJS=Enclave_t.o Enclave_u.o
 ARS=$(patsubst %.o,lib%.a,$(OBJS))
 
 $(EDGER_BIN) $(FLATCC_BIN):
-	make -C $(TOPDIR)/edger EDGER_TYPE=$(EDGER_TYPE)
-
-bind: $(FLATCC_LIB) $(FLATCC_INCLUDE) $(EDGER_BIN)
-	$(SLN) $(EDGER_DIR)/target/include/*.h ./include/
+	make -C $(TOPDIR)/edger bin EDGER_TYPE=$(EDGER_TYPE)
 
 $(FLATCC_LIB): $(FLATCC_BIN)
 	$(SLN) $(EDGER_DIR)/lib/flatccrt.a $@
@@ -44,10 +38,18 @@ $(FLATCC_INCLUDE): $(FLATCC_BIN)
 	mkdir -p $(FLATCC_INCLUDE_DIR)
 	$(SLN) $(FLATCC_DIR)/$(FLATCC_INCLUDE_DIR) $(FLATCC_INCLUDE_DIR)
 
+edger_include: $(EDGER_BIN)
+	$(SLN) $(EDGER_DIR)/target/include/*.h ./include/
+
 build:
-	make -C $(TOPDIR)/edger EDGER_TYPE=$(EDGER_TYPE) INCLUDE_DIR=$(BUILD_DIR)/include LIB_DIR=$(BUILD_DIR)/lib
+	make -C $(TOPDIR)/edger build EDGER_TYPE=$(EDGER_TYPE) EDGE_FILE=$(CONFIG_DIR)/$(TEE)/keyedge/ocalls.h
+
+fetch2: build
+	#
 
 clean:
+	$(RM) ./include/*.h Enclave_* flatbuffers* ocalls*
 
 mrproper: clean
-	$(RM) include/*.h $(FLATCC_LIB)
+	$(RM) $(FLATCC_LIB) $(FLATCC_INCLUDE)
+	make -C $(TOPDIR)/edger clean EDGER_TYPE=$(EDGER_TYPE)

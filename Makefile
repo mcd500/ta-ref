@@ -36,3 +36,4 @@ clean: build_clean
 # delete including dependencies
 mrproper: build_clean
 	make -C $(BUILD_DIR) mrproper
+	$(RM) $(BUILD_DIR)/Makefile
