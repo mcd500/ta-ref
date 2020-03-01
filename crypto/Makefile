@@ -3,7 +3,7 @@
 AR=$(TOOLPREFIX)ar rcs
 
 # variables
-TARGETS = tiny_sha3 ed25519 tiny_AES_c mbed_crypto wolfssl
+TARGETS = tiny_sha3 ed25519 tiny_AES_c mbedtls wolfssl
 ARCHIVES = $(patsubst %,lib%.a,$(TARGETS))
 
 EXCLUDE_OBJS=main.c test.c
