@@ -53,7 +53,7 @@ install:
 	install $(APP_BIN) $(BUILD_DIR)
 
 clean:
-	rm -rf *.o $(APP_BIN)
+	rm -rf *.o $(APP_BIN) $(BUILD_DIR)/$(APP_BIN)
 
 # .PHONY: copyto
 
