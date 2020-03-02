@@ -22,7 +22,7 @@ edger_build:
     stage: build
     only:
         - master
-    target:
+    tags:
         - shell
     script:
         - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} \
