@@ -19,8 +19,7 @@ endif
 EDGE_FILE=ocalls.h
 SRCS = Enclave_t.c Enclave_u.c
 OBJS = $(SRCS:.c=.o)
-ARCHIVES = $(patsubst %.c,lib%.a,$(SRCS))
-LIB = libedge.a
+LIBS = $(patsubst %.c,lib%.a,$(SRCS))
 INCLUDE_PATHS=$(EDGER_DIR)/target/include $(KEYSTONE_SDK_LIB_DIR)/app/include $(FLATCC_DIR)/include
 CFLAGS += $(addprefix -I,$(INCLUDE_PATHS))
 
@@ -39,16 +38,16 @@ gen: pre
 	$(EDGER_BIN) $(EDGE_FILE)
 	$(FLATCC_BIN) -a $(notdir $(EDGE_FILE:.h=.fbs))
 
-build: gen $(OBJS) $(LIB)
+build: gen $(OBJS) $(LIBS)
 
 $(OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(ARCHIVES): lib%.a: %.o
+$(LIBS): lib%.a: %.o
 	$(AR) $@ $^
 
 clean:
-	$(RM) ocalls* flatbuffers* Enclave_* $(LIB)
+	$(RM) ocalls* flatbuffers* Enclave_* $(LIBS)
 
 mrproper: clean
 	make -C $(EDGER_DIR) clean

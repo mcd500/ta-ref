@@ -26,6 +26,9 @@ all: build
 
 build: depends $(TEE)
 
+test:
+	make -C ../keystone/Enclave LIB_DIR=/home/keystone/tee-ta-reference/build/lib INCLUDE_DIR=/home/keystone/tee-ta-reference/build/include
+
 depends: $(DEPENDS)
 
 profiler:
