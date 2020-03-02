@@ -10,8 +10,7 @@
 #include <string>
 #include <cstring>
 
-// from keystone/Edge
-#include "Enclave_u.h"
+#include "edger/Enclave_u.h"
 
 EDGE_EXTERNC_BEGIN
 

@@ -19,7 +19,8 @@ OBJS =$(SRCS:.cpp=.o)
 
 EDGECALL_OBJS=$(patsubst %.h,%.o,$(EDGECALL_HEADERS))
 
-LDFLAGS = -L$(KEYSTONE_SDK_DIR)/lib -L$(LIB_DIR) -lkeystone-host -lkeystone-edge -lkeystone-verifier -lflatccrt -lEnclave_u
+#LDFLAGS = -L$(KEYSTONE_SDK_DIR)/lib -L$(LIB_DIR) -lkeystone-host -lkeystone-edge -lkeystone-verifier -lflatccrt -lEnclave_u
+LDFLAGS = -L$(LIB_DIR) -lflatccrt
 
 APP_BIN = $(patsubst %,%.client,$(APP))
 APP_NM = $(patsubst %,%.nm,$(APP))

@@ -1,8 +1,6 @@
 #include "eapp_utils.h"
+//#include "profiler.h"
 
-#include <stdarg.h>
-#include <stdio.h> /* vsnprintf */
-#include "profiler.h"
 #define TEST_INITFINI
 
 int main(void);
@@ -12,10 +10,12 @@ extern void __profiler_unmap_info();
 
 static void (*const init_array []) ()
   __attribute__ ((section (".init_array"), aligned (sizeof (void *))))
-  = { __profiler_map_info };
+//  = { __profiler_map_info };
+    = {};
 static void (*const fini_array []) ()
   __attribute__ ((section (".fini_array"), aligned (sizeof (void *))))
-  = { __profiler_unmap_info };
+//  = { __profiler_unmap_info };
+    = {};
 
 extern void (*__init_array_start []) (void) __attribute__((weak));
 extern void (*__init_array_end []) (void) __attribute__((weak));

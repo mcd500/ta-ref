@@ -12,7 +12,7 @@
 
 #include "keystone.h"
 #define EGDE_CALL_IMPL
-#include "Enclave_u.h"
+#include "edger/Enclave_u.h"
 
 /* We hardcode these for demo purposes. */
 const char* enc_path = "Enclave.eapp_riscv";

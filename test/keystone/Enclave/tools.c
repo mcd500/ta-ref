@@ -1,5 +1,5 @@
 #include "syscall.h"
-#include "Enclave_t.h"
+#include "edger/Enclave_t.h"
 
 #include <stdarg.h>
 #include <stdio.h> /* vsnprintf */

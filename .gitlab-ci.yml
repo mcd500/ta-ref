@@ -20,21 +20,6 @@ stages:
     - build
     - test
 
-build_edger:
-    variables:
-        IMAGE: ${KEYSTONE_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        SCRIPT: "source env.sh &&
-              make keystone_select &&
-              make -C build edger"
-    stage: build
-    only:
-        - master
-    tags:
-        - shell
-    script:
-        - 'echo "TODO: check files"'
-
 build_depends:
     variables:
         IMAGE: ${KEYSTONE_IMAGE}

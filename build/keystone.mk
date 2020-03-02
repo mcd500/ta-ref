@@ -20,6 +20,8 @@ endif
 
 .PHONY: all clean mrproper
 
+TEST_DIR=$(TOPDIR)/test/$(TEE)
+OUT_DIR=out
 all: build
 
 build: depends $(TEE)
@@ -39,8 +41,8 @@ config: crypto
 	make -f config.mk CRYPT_TYPE=$(CRYPT_TYPE)
 
 $(TEE): depends
-	make -C $(TOPDIR)/$(TEE) INCLUDE_DIR=$(CURDIR)/include
-	$(SLN) $(TOPDIR)/$(TEE)/app/*.client $(TOPDIR)/$(TEE)/enclave/*.eapp_riscv ./
+	make -C $(TEST_DIR) INCLUDE_DIR=$(CURDIR)/include LIB_DIR=$(CURDIR)/lib
+	#$(SLN) $(TEST_DIR)/app/*.client $(TEST_DIR)/enclave/*.eapp_riscv $(OUT_DIR)
 
 clean:
 	$(RM) *.client *.eapp_riscv

@@ -1,19 +1,26 @@
 .PHONY: all clean
 
 ENCLAVE_BIN = Enclave.eapp_riscv
-ENCLAVE_LIB_SRCS = printf.c tools.c strcmp.c startup.c
-ENCLAVE_LIB_OBJS = $($ENCLAVE_LIB_OBJS:.c=.o)
-CFLAGS=-I$(INCLUDE_DIR)
+#ENCLAVE_LIB_SRCS = printf.c tools.c strcmp.c startup.c
+ENCLAVE_SRCS = $(wildcard *.c)
+#ENCLAVE_LIB_OBJS = $(ENCLAVE_LIB_OBJS:.c=.o)
+ENCLAVE_OBJS= $(ENCLAVE_SRCS:.c=.o)
+INCLUDE_PATHS=$(INCLUDE_DIR) $(KEYSTONE_SDK_LIB_DIR)/app/include
+CFLAGS = $(addprefix -I,$(INCLUDE_PATHS))
+CFLAGS += -fno-builtin-printf
+LDFLAGS= -L$(LIB_DIR)
 
-all: $(ENCLAVE_LIB_OBJS)
 
-clean:
-	$(RM) $(ENCLAVE_BIN)
+all: $(ENCLAVE_BIN)
 
-$(ENCLAVE_LIB_OBJS): %.o: %.c
+$(ENCLAVE_OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(ENCLAVE_BIN): $(ENCLAVE_OBJS)
+	$(LINK) $(LDFLAGS) -o $@ $^
 
+clean:
+	$(RM) $(ENCLAVE_OBJS) $(ENCLAVE_BIN)
 
 ## ENCLAVE = Enclave
 ## ENCLAVE_SRCS  = Enclave.c
