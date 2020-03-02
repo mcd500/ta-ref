@@ -25,8 +25,8 @@ edger_build:
     tags:
         - shell
     script:
-        - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} \
+        - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE}
             make keystone_select
-        - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} \
+        - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE}
             /bin/bash -c "make -C build edger mrproper"
 
