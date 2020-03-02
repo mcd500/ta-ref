@@ -16,6 +16,13 @@ else
 $(error EDGER_TYPE is invalid value. set KEYEDGE or KEEDGER8R.)
 endif
 
+EDGE_FILE=ocalls.h
+SRCS = Enclave_t.c Enclave_u.c
+OBJS = $(SRCS:.c=.o)
+LIB = libedge.a
+INCLUDE_PATHS=$(EDGER_DIR)/target/include $(KEYSTONE_SDK_LIB_DIR)/app/include $(FLATCC_DIR)/include
+CFLAGS += $(addprefix -I,$(INCLUDE_PATHS))
+
 .PHONY: all clean mrproper
 all: bin build
 
@@ -24,12 +31,23 @@ bin: $(EDGER_BIN) $(FLATCC_BIN)
 $(EDGER_BIN) $(FLATCC_BIN):
 	make -C $(EDGER_DIR)
 
-build:
+pre:
+	$(SLN) default/* ./
+
+gen: pre
 	$(EDGER_BIN) $(EDGE_FILE)
 	$(FLATCC_BIN) -a $(notdir $(EDGE_FILE:.h=.fbs))
 
+build: gen $(OBJS) $(LIB)
+
+$(OBJS): %.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(LIB): $(OBJS)
+	$(AR) $@ $^
+
 clean:
-	$(RM) ocalls* flatbuffers*
+	$(RM) ocalls* flatbuffers* Enclave_* $(LIB)
 
 mrproper: clean
 	make -C $(EDGER_DIR) clean

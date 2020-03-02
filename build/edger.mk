@@ -25,11 +25,12 @@ all: edger build
 
 edger: $(FLATCC_LIB) $(FLATCC_INCLUDE_DIR) edger_includes
 
+EDGER_DIR=$(TOPDIR)/edger
 OBJS=Enclave_t.o Enclave_u.o
 ARS=$(patsubst %.o,lib%.a,$(OBJS))
 
 $(EDGER_BIN) $(FLATCC_BIN):
-	make -C $(TOPDIR)/edger bin EDGER_TYPE=$(EDGER_TYPE)
+	make -C $(EDGER_DIR) bin EDGER_TYPE=$(EDGER_TYPE)
 
 $(FLATCC_LIB): $(FLATCC_BIN)
 	$(SLN) $(EDGER_DIR)/lib/flatccrt.a $@
@@ -41,11 +42,13 @@ edger_includes: $(EDGER_BIN)
 	$(SLN) $(EDGER_DIR)/target/include/*.h ./include/
 
 build:
-	make -C $(TOPDIR)/edger build EDGER_TYPE=$(EDGER_TYPE) EDGE_FILE=$(CONFIG_DIR)/$(TEE)/keyedge/ocalls.h
-	$(SLN) $(TOPDIR)/edger/*.h ./include/
+	make -C $(EDGER_DIR) build EDGER_TYPE=$(EDGER_TYPE)
+	$(SLN) $(EDGER_DIR)/*.h ./include/
+	$(SLN) $(EDGER_DIR)/*.a ./lib/
 
 clean:
-	$(RM) ./include/*.h ./include/flatcc $(FLATCC_LIB) $(FLATCC_INCLUDE)
+	# $(RM) ./include/*.h ./include/flatcc $(FLATCC_LIB) $(FLATCC_INCLUDE)
+	$(RM) ./include/*.h $(FLATCC_LIB)
 	make -C $(TOPDIR)/edger clean EDGER_TYPE=$(EDGER_TYPE)
 
 mrproper: clean

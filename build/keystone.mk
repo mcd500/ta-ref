@@ -40,7 +40,7 @@ crypto:
 	make -f crypto.mk
 
 config: crypto
-	make -f config.mk
+	make -f config.mk CRYPT_TYPE=$(CRYPT_TYPE)
 
 $(TEE): depends
 	make -C $(TOPDIR)/$(TEE) INCLUDE_DIR=$(CURDIR)/include

@@ -1,2 +1,5 @@
-*.h
+ocalls_*
 *.fbs
+*.o
+*.a
+*.c

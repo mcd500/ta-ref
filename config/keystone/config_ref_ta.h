@@ -34,7 +34,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "Enclave_t.h"
+#include "edger/Enclave_t.h"
 
 #include "tee_api_types_keystone.h"
 
