@@ -4,7 +4,7 @@ variables:
     RISCV_GCC_DIR: /home/user/projects/keystone/riscv/bin
     RPI3_IP_ADDR: 192.168.100.61
     DOCKERHUB_REPO: vc707/test
-    KEYSTONE_IMAGE: "${DOCKERHUB_REPO}:ta_ref_keystone_devel"
+    KEYSTONE_IMAGE: vc707/test:ta_ref_keystone_devel
     CONTAINER_ROOT_DIR: /home/main/ref-ta
     WORKDIR: ${CONTAINER_ROOT_DIR}
 
