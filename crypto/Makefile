@@ -47,7 +47,7 @@ libed25519.a: $(ED25519_OBJS)
 libtiny_AES_c.a: $(TINY_AES_C_OBJS)
 	$(AR) $@ $^
 
-libmbed_crypto.a: $(MBED_CRYPTO_OBJS)
+libmbedtls.a: $(MBED_CRYPTO_OBJS)
 	$(AR) $@ $^
 
 libwolfssl.a: $(WOLFSSL_OBJS)
