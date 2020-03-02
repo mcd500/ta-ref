@@ -1,9 +1,6 @@
 [submodule "edger/keedger8r"]
 	path = edger/keedger8r
 	url = http://192.168.100.100/vc707/keedger8r
-[submodule "edger/keyedge"]
-	path = edger/keyedge
-	url = http://192.168.100.100/vc707/keyedge
 [submodule "crypto/ed25519"]
 	path = crypto/ed25519
 	url = https://github.com/orlp/ed25519/
@@ -19,3 +16,7 @@
 [submodule "crypto/wolfssl"]
 	path = crypto/wolfssl
 	url = http://192.168.100.100/vc707/wolfssl
+[submodule "edger/keyedge"]
+	path = edger/keyedge
+	url = http://192.168.100.100/vc707/keyedge.git
+	branch = ref-ta
