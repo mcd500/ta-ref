@@ -22,6 +22,8 @@ edger_build:
     stage: build
     only:
         - master
+    target:
+        - shell
     script:
         - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} \
             make keystone_select

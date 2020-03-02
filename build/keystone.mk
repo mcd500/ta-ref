@@ -34,7 +34,7 @@ profiler:
 	make -f profiler.mk
 
 edger:
-	make lib/libflatccrt.a -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
+	make -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
 
 crypto:
 	make -f crypto.mk

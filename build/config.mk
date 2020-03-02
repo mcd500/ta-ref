@@ -2,8 +2,10 @@
 
 all:
 	make -C $(TOPDIR)/config CRYPT_TYPE=$(CRYPT_TYPE) INCLUDE_DIR=$(CURDIR)/include
+	$(SLN) $(TOPDIR)/config/*.a ./lib
+
 
 clean:
-	$(SLN) $(TOPDIR)/config/*.a ./lib
+	$(RM) ./lib/*.a
 
 mrproper: clean
