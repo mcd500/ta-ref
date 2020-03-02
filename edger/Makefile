@@ -24,9 +24,6 @@ bin: $(EDGER_BIN) $(FLATCC_BIN)
 $(EDGER_BIN) $(FLATCC_BIN):
 	make -C $(EDGER_DIR)
 
-fetch:
-	#cp -a $(CONFIG_DIR)/$(TEE)/keyedge/ocalls.h ./include
-
 build:
 	$(EDGER_BIN) $(EDGE_FILE)
 	$(FLATCC_BIN) -a $(notdir $(EDGE_FILE:.h=.fbs))
@@ -35,4 +32,5 @@ clean:
 	$(RM) ocalls* flatbuffers*
 
 mrproper: clean
+	make -C $(EDGER_DIR) clean
 	$(RM) include/*.h $(FLATCC_LIB)

@@ -11,10 +11,10 @@ ARCHIVES=$(patsubst %,lib%.a,$(TARGETS))
 
 build: $(TARGETS)
 
-fetch:
+bind:
 	cd include; mkdir -p $(TARGETS); cd ../
 	$(SLN) $(CRYPTO_DIR)/ed25519/src/*.h include/ed25519/
-	$(SLN) $(CRYPTO_DIR)/mbed-crypto/include/mbedtls/*.h include/mbedtls/
+	$(SLN) $(CRYPTO_DIR)/mbedtls/include/mbedtls/*.h include/mbedtls/
 	$(SLN) $(CRYPTO_DIR)/tiny_AES_c/*.h include/tiny_AES_c/
 	$(SLN) $(CRYPTO_DIR)/tiny_sha3/*.h include/tiny_sha3/
 	$(SLN) $(CRYPTO_DIR)/*.a lib/
@@ -39,8 +39,7 @@ wolfssl:
 # shallow delete
 clean:
 	cd lib; $(RM) $(ARCHIVES)
-	cd ../include; $(RM) -rf $(INCLUDES)
-	cd ../
+	cd include; $(RM) -rf $(TARGETS)
 
 mrproper: clean
 	make -C $(TOPDIR)/crypto clean

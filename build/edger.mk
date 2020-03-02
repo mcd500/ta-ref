@@ -23,7 +23,7 @@ FLATCC_INCLUDE_DIR=include/flatcc
 .PHONY: all clean mrproper
 all: edger build
 
-edger: $(FLATCC_LIB) $(FLATCC_INCLUDE) edger_include
+edger: $(FLATCC_LIB) $(FLATCC_INCLUDE_DIR) edger_includes
 
 OBJS=Enclave_t.o Enclave_u.o
 ARS=$(patsubst %.o,lib%.a,$(OBJS))
@@ -34,11 +34,10 @@ $(EDGER_BIN) $(FLATCC_BIN):
 $(FLATCC_LIB): $(FLATCC_BIN)
 	$(SLN) $(EDGER_DIR)/lib/flatccrt.a $@
 
-$(FLATCC_INCLUDE): $(FLATCC_BIN)
-	mkdir -p $(FLATCC_INCLUDE_DIR)
-	$(SLN) $(FLATCC_DIR)/$(FLATCC_INCLUDE_DIR) $(FLATCC_INCLUDE_DIR)
+$(FLATCC_INCLUDE_DIR): $(FLATCC_BIN)
+	$(SLN) $(FLATCC_DIR)/$(FLATCC_INCLUDE_DIR) ./include/
 
-edger_include: $(EDGER_BIN)
+edger_includes: $(EDGER_BIN)
 	$(SLN) $(EDGER_DIR)/target/include/*.h ./include/
 
 build:
@@ -46,9 +45,8 @@ build:
 	$(SLN) $(TOPDIR)/edger/*.h ./include/
 
 clean:
-	$(RM) ./include/*.h
+	$(RM) ./include/*.h ./include/flatcc $(FLATCC_LIB) $(FLATCC_INCLUDE)
 	make -C $(TOPDIR)/edger clean EDGER_TYPE=$(EDGER_TYPE)
 
 mrproper: clean
-	$(RM) $(FLATCC_LIB) $(FLATCC_INCLUDE)
 	make -C $(TOPDIR)/edger mrproper EDGER_TYPE=$(EDGER_TYPE)
