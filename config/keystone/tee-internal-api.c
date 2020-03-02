@@ -32,7 +32,7 @@
 
 #include "tee-common.h"
 #include "tee-ta-internal.h"
-#include "Enclave_t.h"
+#include "edger/Enclave_t.h"
 #include "eapp_utils.h"
 
 #include "syscall.h"

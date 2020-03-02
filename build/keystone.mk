@@ -50,7 +50,7 @@ clean:
 	$(RM) *.client *.eapp_riscv
 	make -f edger.mk clean EDGER_TYPE=$(EDGER_TYPE)
 	make -f crypto.mk clean
-	make -C $(TOPDIR)/config clean
+	make -f config.mk clean
 	make -C $(TOPDIR)/$(TEE) clean BUILD_DIR=$(CURDIR)
 	make -C $(TOPDIR)/edger clean EDGER_TYPE=$(EDGER_TYPE)
 
