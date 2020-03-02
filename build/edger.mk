@@ -21,7 +21,7 @@ FLATCC_LIB=lib/libflatccrt.a
 FLATCC_INCLUDE_DIR=include/flatcc
 
 .PHONY: all clean mrproper
-all: edger build fetch2
+all: edger build
 
 edger: $(FLATCC_LIB) $(FLATCC_INCLUDE) edger_include
 
@@ -43,13 +43,12 @@ edger_include: $(EDGER_BIN)
 
 build:
 	make -C $(TOPDIR)/edger build EDGER_TYPE=$(EDGER_TYPE) EDGE_FILE=$(CONFIG_DIR)/$(TEE)/keyedge/ocalls.h
-
-fetch2: build
-	#
+	$(SLN) $(TOPDIR)/edger/*.h ./include/
 
 clean:
-	$(RM) ./include/*.h Enclave_* flatbuffers* ocalls*
+	$(RM) ./include/*.h
+	make -C $(TOPDIR)/edger clean EDGER_TYPE=$(EDGER_TYPE)
 
 mrproper: clean
 	$(RM) $(FLATCC_LIB) $(FLATCC_INCLUDE)
-	make -C $(TOPDIR)/edger clean EDGER_TYPE=$(EDGER_TYPE)
+	make -C $(TOPDIR)/edger mrproper EDGER_TYPE=$(EDGER_TYPE)

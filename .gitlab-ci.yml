@@ -4,7 +4,7 @@ variables:
     RISCV_GCC_DIR: /home/user/projects/keystone/riscv/bin
     RPI3_IP_ADDR: 192.168.100.61
     DOCKERHUB_REPO: vc707/test
-    CONTAINER_ROOT_DIR: /home/main/tee-ta-reference
+    CONTAINER_ROOT_DIR: /home/main/ref-ta
 
 before_script:
     - docker login -u ${GITLAB_USER} -p ${DOCKERHUB_PASSWD}
@@ -13,4 +13,18 @@ before_script:
 stages:
     - build
     - test
+
+edger_build:
+    variables:
+        IMAGE: ${DOCKERHUB_REPO}:ta_keystone_devel
+        VOLUME: $(pwd):${CONTAINER_ROOT_DIR}
+        WORKDIR: ${CONTAINER_ROOT_DIR}
+    stage: build
+    only:
+        - master
+    script:
+        - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} \
+            make keystone_select
+        - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} \
+            /bin/bash -c "make -C build edger mrproper"
 

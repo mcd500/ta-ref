@@ -9,7 +9,6 @@ endif
 ifeq ($(EDGER_TYPE), KEYEDGE)
 EDGER_DIR=$(KEYEDGE_DIR)
 EDGER_BIN=$(EDGER_DIR)/bin/keyedge
-EDGE_FILE=ocalls.h
 else ifeq ($(EDGER_TYPE), KEEDGER8R)
 EDGER_DIR=$(KEEDGER8R_DIR)
 EDGER_BIN=$(EDGER_DIR)/keedger8r
@@ -30,9 +29,10 @@ fetch:
 
 build:
 	$(EDGER_BIN) $(EDGE_FILE)
-	$(FLATCC_BIN) -a $(EDGE_FILE:.h=.fbs)
+	$(FLATCC_BIN) -a $(notdir $(EDGE_FILE:.h=.fbs))
 
 clean:
+	$(RM) ocalls* flatbuffers*
 
 mrproper: clean
 	$(RM) include/*.h $(FLATCC_LIB)
