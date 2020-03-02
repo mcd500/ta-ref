@@ -39,7 +39,8 @@ $(FLATCC_INCLUDE_DIR): $(FLATCC_BIN)
 	$(SLN) $(FLATCC_DIR)/$(FLATCC_INCLUDE_DIR) ./include/
 
 edger_imports: $(EDGER_BIN)
-	$(SLN) $(EDGER_DIR)/target/include/*.h ./include/
+	mkdir -p $(EDGER_INCLUDE_DIR)
+	$(SLN) $(EDGER_DIR)/target/include/*.h $(EDGER_INCLUDE_DIR)
 
 build:
 	make -C $(TOPDIR)/edger build EDGER_TYPE=$(EDGER_TYPE)
