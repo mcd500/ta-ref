@@ -29,4 +29,3 @@ edger_build:
             /bin/bash -c "source env.sh &&
               make keystone_select &&
               make -C build edger mrproper"
-
