@@ -4,6 +4,7 @@ variables:
     RISCV_GCC_DIR: /home/user/projects/keystone/riscv/bin
     RPI3_IP_ADDR: 192.168.100.61
     DOCKERHUB_REPO: vc707/test
+    KEYSTONE_IMAGE: ${DOCKERHUB_REPO}:ta_ref_keystone_devel
     CONTAINER_ROOT_DIR: /home/main/ref-ta
     WORKDIR: ${CONTAINER_ROOT_DIR}
 
@@ -21,7 +22,7 @@ stages:
 
 build_edger:
     variables:
-        IMAGE: ${DOCKERHUB_REPO}:ta_keystone_devel
+        IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         SCRIPT: "source env.sh &&
               make keystone_select &&
@@ -36,7 +37,7 @@ build_edger:
 
 build_depends:
     variables:
-        IMAGE: ${DOCKERHUB_REPO}:ta_keystone_devel
+        IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         SCRIPT: "source env.sh &&
           make keystone_select &&
