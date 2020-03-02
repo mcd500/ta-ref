@@ -13,7 +13,7 @@ before_script:
     - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c ${SCRIPT}
 
 after_script:
-    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "make mrproper"
+    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} make mrproper
 
 stages:
     - build
@@ -32,7 +32,7 @@ build_edger:
     tags:
         - shell
     script:
-        - echo "TODO: check files"
+        - 'echo "TODO: check files"'
 
 build_depends:
     variables:
@@ -47,4 +47,4 @@ build_depends:
     tags:
         - shell
     script:
-        - echo "TODO: check files"
+        - 'echo "TODO: check files"'
