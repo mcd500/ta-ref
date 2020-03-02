@@ -26,7 +26,7 @@ edger_build:
         - shell
     script:
         - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE}
-            make keystone_select
-        - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE}
-            /bin/bash -c "make -C build edger mrproper"
+            /bin/bash -c "source env.sh &&
+              make keystone_select &&
+              make -C build edger mrproper"
 
