@@ -52,7 +52,7 @@ clean:
 	make -f edger.mk clean EDGER_TYPE=$(EDGER_TYPE)
 	make -f crypto.mk clean
 	make -f config.mk clean
-	make -C $(TOPDIR)/$(TEE) clean BUILD_DIR=$(CURDIR)
+	make -C $(TEST_DIR) clean BUILD_DIR=$(CURDIR)
 	make -C $(TOPDIR)/edger clean EDGER_TYPE=$(EDGER_TYPE)
 
 # clean build files including dependencies
