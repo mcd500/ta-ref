@@ -18,10 +18,6 @@ ifeq ($(PROFILER),ON)
 DEPENDS += profiler
 endif
 
-TEE_CONFIG_DIR=$(CONFIG_DIR)/$(TEE)
-
-EDGECALLS=$(CURDIR)/Enclave
-
 .PHONY: all clean mrproper
 
 all: build
