@@ -17,7 +17,7 @@ stages:
 edger_build:
     variables:
         IMAGE: ${DOCKERHUB_REPO}:ta_keystone_devel
-        VOLUME: ${CI_PROJECT_DIR}/ref-ta:${CONTAINER_ROOT_DIR}
+        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         WORKDIR: ${CONTAINER_ROOT_DIR}
     stage: build
     only:
