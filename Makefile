@@ -1,5 +1,6 @@
 SHELL := /bin/bash
 BUILD_DIR=build
+TEST_DIR=test
 CONFIG_PATH=$(BUILD_DIR)/config.mk
 PHONY: sgx optee keystone
 
@@ -13,22 +14,28 @@ optee: optee_select build
 keystone: keystone_select build
 
 sgx_select:
-	make select TEE=sgx
-
+	make _select TEE=sgx
 optee_select:
-	make select TEE=optee
-
+	make _select TEE=optee
 keystone_select:
-	make select TEE=keystone
+	make _select TEE=keystone
 
 build:
 	make -C $(BUILD_DIR)
 
-select:
+_select:
 	$(SLN) $(TEE).mk $(BUILD_DIR)/Makefile
+
+keystone_test:
+	make -C $(TEST_DIR) TEE=keystone
+optee_test:
+	make -C $(TEST_DIR) TEE=optee
+sgx_test:
+	make -C $(TEST_DIR) TEE=sgx
 
 build_clean:
 	make -C $(BUILD_DIR) clean
+	make -C $(TEST_DIR) clean
 
 clean: build_clean
 	$(RM) $(BUILD_DIR)/Makefile

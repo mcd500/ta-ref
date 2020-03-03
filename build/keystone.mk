@@ -16,11 +16,10 @@ ifeq ($(PROFILER),ON)
 DEPENDS += profiler
 endif
 
-.PHONY: all test clean mrproper
+.PHONY: all clean mrproper
 
-TEST_DIR=$(TOPDIR)/test/
 OUT_DIR=out
-all: build test
+all: build
 
 build: depends config
 
@@ -43,20 +42,12 @@ crypto:
 config: depends
 	make -f config.mk CRYPT_TYPE=$(CRYPT_TYPE)
 
-test: $(TEE)
-
-$(TEE): config
-	make -C $(TEST_DIR) INCLUDE_DIR=$(CURDIR)/include LIB_DIR=$(CURDIR)/lib
-	#$(SLN) $(TEST_DIR)/app/*.client $(TEST_DIR)/enclave/*.eapp_riscv $(OUT_DIR)
-
 clean:
 	$(RM) *.client *.eapp_riscv
 	make -f edger.mk clean EDGER_TYPE=$(EDGER_TYPE)
 	make -f edger_glue.mk clean EDGER_TYPE=$(EDGER_TYPE)
 	make -f crypto.mk clean
 	make -f config.mk clean
-	make -C $(TEST_DIR) clean BUILD_DIR=$(CURDIR)
-	make -C $(TOPDIR)/edger clean EDGER_TYPE=$(EDGER_TYPE)
 
 # clean build files including dependencies
 mrproper: clean
@@ -64,4 +55,3 @@ mrproper: clean
 	make -f edger.mk mrproper EDGER_TYPE=$(EDGER_TYPE)
 	make -f crypto.mk mrproper
 	make -f config.mk mrproper
-	make -C $(TOPDIR)/edger mrproper EDGER_TYPE=$(EDGER_TYPE)
