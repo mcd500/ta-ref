@@ -19,8 +19,7 @@ all: build
 build:
 	make -C $(TOPDIR)/edger build EDGER_TYPE=$(EDGER_TYPE)
 	mkdir -p $(EDGER_INCLUDE_DIR)
-	$(SLN) $(TOPDIR)/edger/ocalls.h $(EDGER_INCLUDE_DIR)
-	$(SLN) $(TOPDIR)/edger/Enclave_*.h $(EDGER_INCLUDE_DIR)
+	$(SLN) $(TOPDIR)/edger/*.h $(EDGER_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/edger/libEnclave*.a lib
 
 clean:

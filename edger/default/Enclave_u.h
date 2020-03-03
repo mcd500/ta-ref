@@ -1,5 +1,4 @@
 #pragma once
-#include "ocalls.h"
 
 //#ifdef EGDE_CALL_IMPL
 //#include "ocalls_host.h"
