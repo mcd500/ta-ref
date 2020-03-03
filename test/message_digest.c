@@ -31,7 +31,7 @@
 // message digest
 //
 #include "config_ref_ta.h"
-#include "tee_wrapper.h"
+//#include "tee_wrapper.h"
 
 #define SHA_LENGTH (256/8)
 #define SIG_LENGTH 64

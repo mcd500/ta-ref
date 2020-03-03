@@ -29,7 +29,7 @@
  */
 
 #include "config_ref_ta.h"
-#include "tee_wrapper.h"
+//#include "tee_wrapper.h"
 
 // secure storage
 

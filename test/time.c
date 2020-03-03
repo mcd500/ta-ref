@@ -30,7 +30,7 @@
 
 // time
 #include "config_ref_ta.h"
-#include "tee_wrapper.h"
+//#include "tee_wrapper.h"
 
 void gp_ree_time_test(void)
 {

@@ -30,7 +30,7 @@
 
 // asymmetric key verification
 #include "config_ref_ta.h"
-#include "tee_wrapper.h"
+//#include "tee_wrapper.h"
 
 #define CIPHER_LENGTH 256
 

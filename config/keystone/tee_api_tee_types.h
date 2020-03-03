@@ -63,7 +63,7 @@
 #include "sha3.h"
 #include "ed25519/ed25519.h"
 #define AES256 1
-# include "aes/aes.h"
+# include "tiny_AES_c/aes.h"
 #endif
 
 #define SHA_LENGTH (256/8)
