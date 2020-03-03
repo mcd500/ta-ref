@@ -22,17 +22,15 @@ stages:
     - build
     - test
 
-build_depends:
+keystone:
     variables:
         IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         SCRIPT: "source env.sh &&
           make keystone_select &&
-          make -C build depends"
+          make build"
     stage: build
     only:
         - master
     tags:
         - shell
-    script:
-        - 'echo "TODO: check files"'

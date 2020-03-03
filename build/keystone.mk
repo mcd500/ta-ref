@@ -24,7 +24,6 @@ all: build
 build: depends config
 
 debug:
-	#make -C ../keystone/Enclave LIB_DIR=/home/keystone/tee-ta-reference/build/lib INCLUDE_DIR=/home/keystone/tee-ta-reference/build/include
 	make build -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
 
 depends: $(DEPENDS)
