@@ -18,7 +18,7 @@ FLATCC_GEN_FILES=$(patsubst %,ocalls_%.h,$(FLATCC_SUFFIXES))
 SRCS = Enclave_t.c Enclave_u.c
 OBJS = $(SRCS:.c=.o)
 LIBS = $(patsubst %.c,lib%.a,$(SRCS))
-INCLUDE_PATHS=$(EDGER_DIR)/target/include $(FLATCC_DIR)/include
+INCLUDE_PATHS=$(EDGER_DIR)/target/include $(FLATCC_DIR)/include ${KEYSTONE_SDK_LIB_DIR}/app/include
 CFLAGS += $(addprefix -I,$(INCLUDE_PATHS))
 
 .PHONY: all clean mrproper

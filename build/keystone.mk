@@ -35,6 +35,7 @@ profiler:
 
 edger:
 	make -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
+	make -f edger_glue.mk EDGER_TYPE=$(EDGER_TYPE)
 
 crypto:
 	make -f crypto.mk
@@ -51,6 +52,7 @@ $(TEE): depends
 clean:
 	$(RM) *.client *.eapp_riscv
 	make -f edger.mk clean EDGER_TYPE=$(EDGER_TYPE)
+	make -f edger_glue.mk clean EDGER_TYPE=$(EDGER_TYPE)
 	make -f crypto.mk clean
 	make -f config.mk clean
 	make -C $(TEST_DIR) clean BUILD_DIR=$(CURDIR)
