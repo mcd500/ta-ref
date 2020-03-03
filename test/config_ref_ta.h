@@ -36,7 +36,7 @@
 
 #include "edger/Enclave_t.h"
 
-#include "tee_api_types_keystone.h"
+#include "tee_api_types.h"
 
 #include "tee-ta-internal.h"
 

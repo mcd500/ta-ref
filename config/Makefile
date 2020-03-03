@@ -7,7 +7,7 @@ SRCS = $(wildcard *.c)
 # tee-dependent code
 SRCS += $(wildcard $(TEE)/*.c)
 OBJS = $(SRCS:.c=.o)
-LIB=libplatform.a
+LIB=libtee_api.a
 
 CFLAGS += $(addprefix -I,$(INCLUDE_DIR) $(TEE) include $(CRYPTO_DIR) $(KEYSTONE_SDK_LIB_DIR)/app/include)
 CFLAGS += -DCRYPTLIB=$(CRYPT_TYPE)

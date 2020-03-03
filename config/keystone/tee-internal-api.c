@@ -28,7 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "tee_api_types_keystone.h"
+#include "tee_api_tee_types.h"
 
 #include "tee-common.h"
 #include "tee-ta-internal.h"

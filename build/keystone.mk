@@ -16,11 +16,11 @@ ifeq ($(PROFILER),ON)
 DEPENDS += profiler
 endif
 
-.PHONY: all clean mrproper
+.PHONY: all test clean mrproper
 
 TEST_DIR=$(TOPDIR)/test/
 OUT_DIR=out
-all: build
+all: build test
 
 build: depends config
 

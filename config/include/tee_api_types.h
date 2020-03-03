@@ -34,6 +34,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <tee_api_defines.h>
+#include "tee_api_tee_types.h"
 
 /*
  * Common Definitions
