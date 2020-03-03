@@ -1,10 +1,3 @@
-# edger and flatcc binary requires default toolchains.
-unexport CC CXX LD
-
-ifeq ($(TEE),)
-$(error TEE should be specified)
-endif
-
 # KEYEDGE or KEEDGER8R
 ifeq ($(EDGER_TYPE), KEYEDGE)
 EDGER_DIR=$(KEYEDGE_DIR)
@@ -16,11 +9,16 @@ else
 $(error EDGER_TYPE is invalid value. set KEYEDGE or KEEDGER8R.)
 endif
 
-EDGE_FILE=ocalls.h
+EDGER_HEADER=ocalls.h
+EDGER_SUFFIXES=common eapp host
+EDGER_GEN_FILES=$(patsubst %,ocalls_%.h,$(EDGER_SUFFIXES)) ocalls.fbs
+FLATCC_SUFFIXES=reader verifier builder
+FLATCC_GEN_FILES=$(patsubst %,ocalls_%.h,$(FLATCC_SUFFIXES))
+
 SRCS = Enclave_t.c Enclave_u.c
 OBJS = $(SRCS:.c=.o)
 LIBS = $(patsubst %.c,lib%.a,$(SRCS))
-INCLUDE_PATHS=$(EDGER_DIR)/target/include $(KEYSTONE_SDK_LIB_DIR)/app/include $(FLATCC_DIR)/include
+INCLUDE_PATHS=$(EDGER_DIR)/target/include $(FLATCC_DIR)/include
 CFLAGS += $(addprefix -I,$(INCLUDE_PATHS))
 
 .PHONY: all clean mrproper
@@ -31,14 +29,20 @@ bin: $(EDGER_BIN) $(FLATCC_BIN)
 $(EDGER_BIN) $(FLATCC_BIN):
 	make -C $(EDGER_DIR)
 
-pre:
+build: gen $(OBJS) $(LIBS)
+
+gen: import $(EDGER_GEN_FILES) $(FLATCC_GEN_FILES)
+
+import:
 	$(SLN) default/* ./
 
-gen: pre
-	$(EDGER_BIN) $(EDGE_FILE)
-	$(FLATCC_BIN) -a $(notdir $(EDGE_FILE:.h=.fbs))
+$(EDGER_GEN_FILES): $(EDGER_HEADER)
+	@echo "=> $(EDGER_GEN_FILES)"
+	$(EDGER_BIN) $^
 
-build: gen $(OBJS) $(LIBS)
+$(FLATCC_GEN_FILES): $(EDGER_HEADER:.h=.fbs)
+	@echo "=> $(FLATCC_GEN_FILES)"
+	$(FLATCC_BIN) -a $^
 
 $(OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

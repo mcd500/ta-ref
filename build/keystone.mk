@@ -6,12 +6,10 @@ export TOOLPREFIX=riscv64-unknown-linux-gnu-
 export TEE=keystone
 include ./general.mk
 
-DEPENDS=edger crypto config
+DEPENDS=edger crypto
 EDGER_TYPE=KEYEDGE
 # MBEDCRYPT or WOLFCRYPT
 CRYPT_TYPE=MBEDCRYPT
-EDGE_FILE=ocalls.h
-
 PROFILER=OFF
 
 ifeq ($(PROFILER),ON)
@@ -24,10 +22,11 @@ TEST_DIR=$(TOPDIR)/test/$(TEE)
 OUT_DIR=out
 all: build
 
-build: depends $(TEE)
+build: depends config
 
-test:
-	make -C ../keystone/Enclave LIB_DIR=/home/keystone/tee-ta-reference/build/lib INCLUDE_DIR=/home/keystone/tee-ta-reference/build/include
+debug:
+	#make -C ../keystone/Enclave LIB_DIR=/home/keystone/tee-ta-reference/build/lib INCLUDE_DIR=/home/keystone/tee-ta-reference/build/include
+	make build -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
 
 depends: $(DEPENDS)
 
@@ -42,6 +41,8 @@ crypto:
 
 config: crypto
 	make -f config.mk CRYPT_TYPE=$(CRYPT_TYPE)
+
+test: $(TEE)
 
 $(TEE): depends
 	make -C $(TEST_DIR) INCLUDE_DIR=$(CURDIR)/include LIB_DIR=$(CURDIR)/lib

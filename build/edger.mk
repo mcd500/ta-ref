@@ -26,7 +26,6 @@ all: edger build
 edger: $(FLATCC_LIB) $(FLATCC_INCLUDE_DIR) edger_imports
 
 OBJS=Enclave_t.o Enclave_u.o
-EDGE_LIB=lib/libedge.a
 EDGER_INCLUDE_DIR=include/edger
 
 $(EDGER_BIN) $(FLATCC_BIN):
@@ -45,11 +44,12 @@ edger_imports: $(EDGER_BIN)
 build:
 	make -C $(TOPDIR)/edger build EDGER_TYPE=$(EDGER_TYPE)
 	mkdir -p $(EDGER_INCLUDE_DIR)
-	$(SLN) $(TOPDIR)/edger/*.h $(EDGER_INCLUDE_DIR)
-	$(SLN) $(TOPDIR)/edger/$(notdir $(EDGE_LIB)) $(EDGE_LIB)
+	$(SLN) $(TOPDIR)/edger/ocalls.h $(EDGER_INCLUDE_DIR)
+	$(SLN) $(TOPDIR)/edger/Enclave_*.h $(EDGER_INCLUDE_DIR)
+	$(SLN) $(TOPDIR)/edger/libEnclave*.a lib
 
 clean:
-	$(RM) -r $(EDGER_INCLUDE_DIR) $(FLATCC_LIB) $(EDGE_LIB) $(FLATCC_INCLUDE_DIR)
+	$(RM) -r $(EDGER_INCLUDE_DIR) $(FLATCC_LIB) lib/libEnclave* $(FLATCC_INCLUDE_DIR)
 	make -C $(TOPDIR)/edger clean EDGER_TYPE=$(EDGER_TYPE)
 
 mrproper: clean
