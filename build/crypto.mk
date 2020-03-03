@@ -18,6 +18,7 @@ bind:
 	$(SLN) $(CRYPTO_DIR)/tiny_AES_c/*.h include/tiny_AES_c/
 	$(SLN) $(CRYPTO_DIR)/tiny_sha3/*.h include/tiny_sha3/
 	$(SLN) $(CRYPTO_DIR)/*.a lib/
+	$(SLN) $(CRYPTO_DIR)/*.h include/
 
 tiny_sha3:
 	make -C $(CRYPTO_DIR) tiny_sha3 BUILD_OPTIONS=""

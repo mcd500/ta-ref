@@ -38,7 +38,7 @@
 # define MBEDTLS_CONFIG_FILE "mbed-crypto-config.h"
 # include "mbedtls/gcm.h"
 # include "mbedtls/aes.h"
-# include "sha3.hpp"
+# include "sha3.h"
 # include "ed25519/ed25519.h"
 #define AES256 1
 #elif CRYPTLIB==WOLFCRYPT
@@ -60,7 +60,7 @@
 # include "wolfssl/wolfcrypt/sha512.h"
 # include "wolfssl/wolfcrypt/ed25519.h"
 #else
-#include "sha3.hpp"
+#include "sha3.h"
 #include "ed25519/ed25519.h"
 #define AES256 1
 # include "aes/aes.h"
