@@ -43,6 +43,8 @@
 extern "C" {
 #endif
 
+void __attribute__((noreturn)) TEE_Panic(unsigned long code);
+
 /// Core Functions, Time Functions
 /**
  * Wall clock time of host OS, expressed in the number of seconds since 1970-01-01 UTC.\n

@@ -33,19 +33,12 @@
 #include "tee-common.h"
 #include "tee-ta-internal.h"
 #include "edger/Enclave_t.h"
-#include "eapp_utils.h"
 
 #include "syscall.h"
 #include "report.h"
 
 #include <string.h>
 #include <stdlib.h>
-
-static inline void __attribute__((noreturn)) TEE_Panic(unsigned long code)
-{
-    for(;;)
-      EAPP_RETURN(0xfffe0000 + (code & 0x1ffff));
-}
 
 void TEE_GetREETime(TEE_Time *time)
 {
