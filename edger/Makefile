@@ -17,12 +17,12 @@ FLATCC_GEN_FILES=$(patsubst %,ocalls_%.h,$(FLATCC_SUFFIXES))
 
 C_SRCS = Enclave_t.c
 C_OBJS = $(C_SRCS:.c=.o)
-C_LIBS = $(patsubst %.c,lib%.a,$(C_SRCS))
+TRUSTED_LIBS = $(patsubst %.c,lib%.a,$(C_SRCS))
 
 # Enclave_u.c uses cpp files, so we assumev that this is cpp source.
 CPP_SRCS = Enclave_u.c
 CPP_OBJS = $(CPP_SRCS:.c=.o)
-CPP_LIBS = $(patsubst %.c,lib%.a,$(CPP_SRCS))
+UNTRUSTED_LIBS = $(patsubst %.c,lib%.a,$(CPP_SRCS))
 
 INCLUDE_PATHS=$(EDGER_DIR)/target/include $(FLATCC_DIR)/include
 
@@ -65,13 +65,13 @@ $(C_OBJS): %.o: %.c
 $(CPP_OBJS): %.o: %.c
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-libs: $(C_LIBS) $(CPP_LIBS)
+libs: $(TRUSTED_LIBS) $(UNTRUSTED_LIBS)
 
-$(C_LIBS) $(CPP_LIBS): lib%.a: %.o
+$(TRUSTED_LIBS) $(UNTRUSTED_LIBS): lib%.a: %.o
 	$(AR) $@ $^
 
 clean:
-	$(RM) ocalls* flatbuffers* Enclave* $(LIBS)
+	$(RM) ocalls* flatbuffers* Enclave* $(TRUSTED_LIBS) $(UNTRUSTED_LIBS)
 
 mrproper: clean
 	make -C $(EDGER_DIR) clean
