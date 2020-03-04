@@ -1,7 +1,6 @@
 variables:
     GITLAB_URL: http://192.168.100.100
     GITLAB_USER: vc707
-    RISCV_GCC_DIR: /home/user/projects/keystone/riscv/bin
     RPI3_IP_ADDR: 192.168.100.61
     DOCKERHUB_REPO: vc707/test
     KEYSTONE_IMAGE: vc707/test:ta_ref_keystone_devel
@@ -34,3 +33,5 @@ keystone:
         - master
     tags:
         - shell
+    shell:
+        - 'echo dummy'
