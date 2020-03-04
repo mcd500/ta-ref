@@ -13,18 +13,18 @@ TINY_SHA3_OBJS=$(TINY_SHA3_SRCS:.c=.o)
 ED25519_SRCS=$(filter-out $(addprefix ed25519/src/,$(EXCLUDE_OBJS)), $(wildcard ed25519/src/*.c))
 ED25519_OBJS=$(ED25519_SRCS:.c=.o)
 
-TINY_AES_C_SRCS=$(filter-out $(addprefix tiny-AES-c/,$(EXCLUDE_OBJS)), $(wildcard tiny-AES-c/*.c))
+TINY_AES_C_SRCS=$(filter-out $(addprefix tiny_AES_c/,$(EXCLUDE_OBJS)), $(wildcard tiny_AES_c/*.c))
 TINY_AES_C_OBJS=$(TINY_AES_C_SRCS:.c=.o)
 
-MBED_CRYPTO_SRCS=$(filter-out $(addprefix mbed-crypto/library/,$(EXCLUDE_OBJS)), $(wildcard mbed-crypto/library/*.c))
-MBED_CRYPTO_OBJS=$(MBED_CRYPTO_SRCS:.c=.o)
-CFLAGS += -Imbed-crypto/include
+MBEDTLS_SRCS=$(filter-out $(addprefix mbedtls/library/,$(EXCLUDE_OBJS)), $(wildcard mbedtls/library/*.c))
+MBEDTLS_OBJS=$(MBEDTLS_SRCS:.c=.o)
+CFLAGS += -Imbedtls/include
 
 WOLFSSL_SRCS=$(filter-out $(addprefix wolfssl/wolfcrypt/src,$(EXCLUDE_OBJS)), $(wildcard wolfssl/wolfcrypt/src/*.c))
 WOLFSSL_OBJS=$(WOLFSSL_SRCS:.c=.o)
 CFLAGS += -Iwolfssl
 
-OBJS=$(TINY_SHA3_OBJS) $(ED25519_OBJS) $(TINY_AES_C_OBJS) $(MBED_CRYPTO_OBJS) $(WOLFSSL_OBJS)
+OBJS=$(TINY_SHA3_OBJS) $(ED25519_OBJS) $(TINY_AES_C_OBJS) $(MBEDTLS_OBJS) $(WOLFSSL_OBJS)
 
 all: $(TARGETS)
 
@@ -47,7 +47,7 @@ libed25519.a: $(ED25519_OBJS)
 libtiny_AES_c.a: $(TINY_AES_C_OBJS)
 	$(AR) $@ $^
 
-libmbedtls.a: $(MBED_CRYPTO_OBJS)
+libmbedtls.a: $(MBEDTLS_OBJS)
 	$(AR) $@ $^
 
 libwolfssl.a: $(WOLFSSL_OBJS)
