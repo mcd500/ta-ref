@@ -13,10 +13,11 @@ before_script:
     - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "${SCRIPT}"
 
 after_script:
-    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "export ENABLE_TEE_ENVS=1 && make mrproper"
+    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "export ENABLE_TEE_ENVS=1 && make clean"
     # TODO: we want to fail CI if false.
     - test $(find build/lib -mindepth 1 | wc -l) -eq 1
     - test $(find build/include -mindepth 1 | wc -l) -eq 1
+    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "export ENABLE_TEE_ENVS=1 && make mrproper"
 
 stages:
     - build

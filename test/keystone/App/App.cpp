@@ -10,8 +10,6 @@
 #include <string>
 #include <cstring>
 
-#include "keystone.h"
-#define EGDE_CALL_IMPL
 #include "edger/Enclave_u.h"
 
 /* We hardcode these for demo purposes. */

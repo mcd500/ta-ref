@@ -4,13 +4,6 @@ void register_functions();
 void __wrapper_ocall_close_file(void* buffer);
 #include "edge_syscall.h"
 #include "ocalls.h"
-//#include "ocalls_host.h"
-
-//#ifdef EGDE_CALL_IMPL
-//#include "ocalls_host.h"
-//#else
-//#include "ocalls.h"
-//#endif
-
+#include "keystone.h"
 #define EDGE_EXTERNC_BEGIN
 #define EDGE_EXTERNC_END

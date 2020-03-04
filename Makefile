@@ -12,6 +12,13 @@ test:
 run:
 	make -C $(TEST_DIR) run TEE=$(TEE)
 
+
+build_test:
+	make -C $(TEST_DIR) build TEE=$(TEE)
+
+image:
+	make -C $(TEST_DIR) image TEE=$(TEE)
+
 sgx_select:
 	make select TEE=sgx
 optee_select:
