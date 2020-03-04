@@ -1,5 +1,7 @@
 #!/bin/sh
 
+export TEE=keystone
+export TOOLPREFIX=riscv64-unknown-linux-gnu-
 export ENABLE_TEE_ENVS=1
 export KEYEDGE_DIR=$(pwd)/edger/keyedge
 export FLATCC_DIR=${KEYEDGE_DIR}/flatcc
