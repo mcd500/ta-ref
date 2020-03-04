@@ -14,7 +14,7 @@ before_script:
     - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "${SCRIPT}"
 
 after_script:
-    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "source env.sh && make mrproper"
+    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "export ENABLE_TEE_ENVS=1 && make mrproper"
     - test $(find lib -mindepth 1 | wc -l) -eq 1
     - test $(find include -mindepth 1 | wc -l) -eq 1
 
@@ -26,7 +26,7 @@ keystone:
     variables:
         IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        SCRIPT: "source env.sh &&
+        SCRIPT: "source keystone.sh &&
           make keystone_select &&
           make build"
     stage: build
