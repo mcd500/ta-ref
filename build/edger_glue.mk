@@ -7,8 +7,10 @@ EDGER_BIN=$(EDGER_DIR)/bin/keyedge
 else ifeq ($(EDGER_TYPE), KEEDGER8R)
 EDGER_DIR=$(KEEDGER8R_DIR)
 EDGER_BIN=$(EDGER_DIR)/keedger8r
+else ifeq ($(EDGER_TYPE), EDGER8R)
+EDGER_BIN=$(EDGER_BIN)
 else
-$(error EDGER_TYPE is invalid value. set KEYEDGE or KEEDGER8R.)
+$(error EDGER_TYPE is invalid value. set KEYEDGE, KEEDGER8R or EDGER8R.)
 endif
 
 EDGER_INCLUDE_DIR=include/edger

@@ -32,6 +32,25 @@ make test
 make run
 ```
 
+## intel-sgx
+
+```sh
+git clone --recursive http://192.168.100.100/vc707/ta-ref.git
+cd ta-ref
+docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_sgx_devel
+```
+
+Next, build && test:
+
+```sh
+source sgx.sh
+# make build
+# make test
+# show demo
+# make run
+```
+
+
 # Implementation
 
 + We rely on TEE environment variable to switch TEE-dependent build which defines in $(TEE).sh. This shell script also defines keystone-related variable for convenience.
