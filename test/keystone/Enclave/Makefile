@@ -5,10 +5,12 @@ ENCLAVE_BIN = Enclave.eapp_riscv
 ENCLAVE_SRCS = $(wildcard *.c)
 #ENCLAVE_LIB_OBJS = $(ENCLAVE_LIB_OBJS:.c=.o)
 ENCLAVE_OBJS= $(ENCLAVE_SRCS:.c=.o)
-INCLUDE_PATHS=$(INCLUDE_DIR) $(KEYSTONE_SDK_LIB_DIR)/app/include
+INCLUDE_PATHS=$(INCLUDE_DIRS) $(KEYSTONE_SDK_LIB_DIR)/app/include
 CFLAGS = $(addprefix -I,$(INCLUDE_PATHS))
-CFLAGS += -fno-builtin-printf
-LDFLAGS= -L$(LIB_DIR)
+CFLAGS += $(addprefix -fno-builtin-,puts putchar printf)
+LDFLAGS += $(addprefix -L,$(LIB_DIRS))
+# TODO: Enlave_t is dependent on flatccrt
+LDFLAGS += -lgp -lEnclave_t -lflatccrt -lkeystone-eapp -ltee_api
 
 
 all: $(ENCLAVE_BIN)
@@ -17,7 +19,7 @@ $(ENCLAVE_OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(ENCLAVE_BIN): $(ENCLAVE_OBJS)
-	$(LINK) $(LDFLAGS) -o $@ $^
+	$(LINK) -o $@ $^ $(LDFLAGS) -T Enclave.lds
 
 clean:
 	$(RM) $(ENCLAVE_OBJS) $(ENCLAVE_BIN)

@@ -1,5 +1,5 @@
 #include "edger/Enclave_t.h"
-#include "ocalls_eapp.h"
+//#include "ocalls_eapp.h"
 
 #include <stdarg.h>
 #include <stdio.h> /* vsnprintf */

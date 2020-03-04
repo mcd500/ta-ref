@@ -1,4 +1,4 @@
-#include "eapp_utils.h"
+#include "edger/Enclave_t.h"
 //#include "profiler.h"
 
 #define TEST_INITFINI
