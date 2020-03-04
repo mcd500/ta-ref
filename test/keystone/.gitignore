@@ -1,3 +1,4 @@
 App/*.client
+Enclave/*.eapp_riscv
 App/*.o
 Enclave/*.o
