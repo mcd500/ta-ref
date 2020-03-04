@@ -16,8 +16,11 @@ LIB=libgp.a
 
 CFLAGS=$(addprefix -I,$(INCLUDE_DIRS) $(KEYSTONE_SDK_LIB_DIR)/app/include)
 
-.PHONY: all app enclave image clean
-all: gp app enclave
+.PHONY: all app enclave build image clean
+
+all: build image
+
+build: gp app enclave
 
 # build global platform(tee-intedependent) code
 gp: $(LIB)
@@ -29,6 +32,7 @@ $(OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 # build TEE-dependent code
+# We should make this part as small as possible..
 app:
 	make -C $(TEE)/App LIB_DIRS="$(LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)"
 
