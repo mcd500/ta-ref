@@ -1,9 +1,7 @@
-SHELL := /bin/bash
 BUILD_DIR=build
 TEST_DIR=test
-CONFIG_PATH=$(BUILD_DIR)/config.mk
 
-.PHONY: build test
+.PHONY: build test run clean mrproper
 
 build: select
 	make -C $(BUILD_DIR)
@@ -11,7 +9,8 @@ build: select
 test:
 	make -C $(TEST_DIR) TEE=$(TEE)
 
-# command
+run:
+	make -C $(TEST_DIR) run TEE=$(TEE)
 
 sgx_select:
 	make select TEE=sgx

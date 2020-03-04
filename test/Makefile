@@ -16,7 +16,7 @@ LIB=libgp.a
 
 CFLAGS=$(addprefix -I,$(INCLUDE_DIRS) $(KEYSTONE_SDK_LIB_DIR)/app/include)
 
-.PHONY: all app enclave build image clean
+.PHONY: all app enclave build image run clean
 
 all: build image
 
@@ -41,6 +41,9 @@ enclave:
 
 image:
 	make -C $(TEE) image
+
+run:
+	make -C $(TEE) run
 
 clean:
 	$(RM) $(OBJS) $(LIB)
