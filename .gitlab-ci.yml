@@ -33,5 +33,5 @@ keystone:
         - master
     tags:
         - shell
-    shell:
+    script:
         - 'echo dummy'
