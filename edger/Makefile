@@ -67,7 +67,11 @@ $(CPP_OBJS): %.o: %.c
 
 libs: $(TRUSTED_LIBS) $(UNTRUSTED_LIBS)
 
-$(TRUSTED_LIBS) $(UNTRUSTED_LIBS): lib%.a: %.o
+$(TRUSTED_LIBS): lib%.a: %.o
+	$(AR) $@ $^
+
+# TODO: we want to merge $(UNTRUSTED_LIBS) and flatccrt library
+$(UNTRUSTED_LIBS): lib%.a: %.o
 	$(AR) $@ $^
 
 clean:

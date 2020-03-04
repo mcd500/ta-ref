@@ -5,13 +5,7 @@ CPPFLAGS = -Wall
 LINK = $(TOOLPREFIX)ld
 AS = $(TOOLPREFIX)as
 
-CPPFLAGS=-I$(INCLUDE_DIR)
-ifdef PERF_OPTION
-PERF_ENABLE=-DPERF_ENABLE
-else
-PERF_ENABLE=
-endif
-CPPFLAGS +=$(PREF_ENABLE)
+CPPFLAGS=$(addprefix -I, $(INCLUDE_DIRS))
 
 APP = App
 SRCS=$(wildcard *.cpp)
@@ -19,8 +13,8 @@ OBJS =$(SRCS:.cpp=.o)
 
 EDGECALL_OBJS=$(patsubst %.h,%.o,$(EDGECALL_HEADERS))
 
-#LDFLAGS = -L$(KEYSTONE_SDK_DIR)/lib -L$(LIB_DIR) -lkeystone-host -lkeystone-edge -lkeystone-verifier -lflatccrt -lEnclave_u
-LDFLAGS = -L$(LIB_DIR) -lflatccrt
+# TODO: flatccrt library is used only for Enclave_u library, so we want merge flatccrt with Enclave_u
+LDFLAGS = $(addprefix -L,$(LIB_DIRS)) -lkeystone-host -lkeystone-edge -lEnclave_u -lflatccrt
 
 APP_BIN = $(patsubst %,%.client,$(APP))
 APP_NM = $(patsubst %,%.nm,$(APP))
