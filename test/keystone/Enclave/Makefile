@@ -6,11 +6,13 @@ ENCLAVE_SRCS = $(wildcard *.c)
 #ENCLAVE_LIB_OBJS = $(ENCLAVE_LIB_OBJS:.c=.o)
 ENCLAVE_OBJS= $(ENCLAVE_SRCS:.c=.o)
 INCLUDE_PATHS=$(INCLUDE_DIRS) $(KEYSTONE_SDK_LIB_DIR)/app/include
+
 CFLAGS = $(addprefix -I,$(INCLUDE_PATHS))
 CFLAGS += $(addprefix -fno-builtin-,puts putchar printf)
 LDFLAGS += $(addprefix -L,$(LIB_DIRS))
 # TODO: Enlave_t is dependent on flatccrt
-LDFLAGS += -lgp -lEnclave_t -lflatccrt -lkeystone-eapp -ltee_api
+# TODO: tee_api library is dependent on crypto library.
+LDFLAGS += -lgp -lEnclave_t -lflatccrt -lkeystone-eapp -ltee_api -lmbedtls -ltiny_AES_c -ltiny_sha3 -led25519
 
 
 all: $(ENCLAVE_BIN)

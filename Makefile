@@ -5,7 +5,6 @@ CONFIG_PATH=$(BUILD_DIR)/config.mk
 .PHONY: sgx optee keystone build test
 
 # command
-SLN = ln -sf
 
 .PHONY: sgx optee keystone build
 
@@ -24,7 +23,7 @@ build:
 	make -C $(BUILD_DIR)
 
 select:
-	$(SLN) $(TEE).mk $(BUILD_DIR)/Makefile
+	ln -sf $(TEE).mk $(BUILD_DIR)/Makefile
 
 keystone_test:
 	make test TEE=keystone
