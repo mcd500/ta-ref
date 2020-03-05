@@ -1,6 +1,6 @@
 TOPDIR=$(CURDIR)/..
-INCLUDE_DIRS=$(TOPDIR)/build/include $(TOPDIR)/config/include $(TOPDIR)/config/$(TEE) $(CURDIR)
-LIB_DIRS = $(TOPDIR)/build/lib $(KEYSTONE_SDK_LIB_DIR) $(CURDIR)
+INCLUDE_DIRS=$(TOPDIR)/build/include $(TOPDIR)/config/include $(TOPDIR)/config/$(TEE) $(CURDIR)/include
+LIB_DIRS = $(TOPDIR)/build/lib $(CURDIR)
 
 # command
 export CC = $(TOOLPREFIX)gcc
@@ -10,17 +10,21 @@ export LINK = $(TOOLPREFIX)ld
 export AS = $(TOOLPREFIX)as
 export SLN = ln -sf
 
+# build as $(LIB)
 SRCS=$(wildcard *.c)
 OBJS=$(SRCS:.c=.o)
 LIB=libgp.a
 
-CFLAGS=$(addprefix -I,$(INCLUDE_DIRS) $(KEYSTONE_SDK_LIB_DIR)/app/include)
+COMMON_INCLUDE_DIRS = $(INCLUDE_DIRS)
+ifneq ($(KEYSTONE_SDK_LIB_DIR),)
+# Global Platform uses enclave library in keystone-sdk.
+COMMON_INCLUDE_DIRS += $(KEYSTONE_SDK_LIB_DIR)/app/include
+endif
+CFLAGS=$(addprefix -I,$(COMMON_INCLUDE_DIRS))
 
-.PHONY: all app enclave build image run clean
+.PHONY: all build image run clean
 
-all: build image
-
-build: gp app enclave
+all: gp build image
 
 # build global platform(tee-intedependent) code
 gp: $(LIB)
@@ -33,11 +37,8 @@ $(OBJS): %.o: %.c
 
 # build TEE-dependent code
 # We should make this part as small as possible..
-app:
-	make -C $(TEE)/App LIB_DIRS="$(LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)"
-
-enclave:
-	make -C $(TEE)/Enclave LIB_DIRS="$(LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)"
+build:
+	make -C $(TEE) LIB_DIRS="$(LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE)
 
 image:
 	make -C $(TEE) image
@@ -47,5 +48,4 @@ run:
 
 clean:
 	$(RM) $(OBJS) $(LIB)
-	make -C keystone/App clean
-	make -C keystone/Enclave clean
+	make -C $(TEE) clean

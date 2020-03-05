@@ -1,21 +1,24 @@
 BUILD_DIR=build
 TEST_DIR=test
+# sgx option(DEBUG, RELEASE, PRERELEASE)
+DEBUG_TYPE=DEBUG
+
 
 .PHONY: build test run clean mrproper
 
 build: select
-	make -C $(BUILD_DIR)
+	make -C $(BUILD_DIR) DEBUG_TYPE=$(DEBUG_TYPE)
 
 # build test -> ship execs -> make image
 test:
-	make -C $(TEST_DIR) TEE=$(TEE)
+	make -C $(TEST_DIR) TEE=$(TEE) DEBUG_TYPE=$(DEBUG_TYPE)
 
 run:
 	make -C $(TEST_DIR) run TEE=$(TEE)
 
 # build test only
 build_test:
-	make -C $(TEST_DIR) build TEE=$(TEE)
+	make -C $(TEST_DIR) build TEE=$(TEE) DEBUG_TYPE=$(DEBUG_TYPE)
 
 image:
 	make -C $(TEST_DIR) image TEE=$(TEE)

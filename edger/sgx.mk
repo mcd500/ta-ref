@@ -8,7 +8,7 @@ else
 DEBUG_FLAGS =
 endif
 
-EDL_PATH=default/Enclave.edl
+EDL_PATH=edger8r/Enclave.edl
 UNTRUSTED_SRCS=Enclave_u.c
 UNTRUSTED_HEADERS=$(UNTRUSTED_SRCS:.c=.h)
 UNTRUSTED_OBJS=$(UNTRUSTED_SRCS:.c=.o)
@@ -21,8 +21,8 @@ LIBS=$(patsubst %.c,lib%.a,$(TRUSTED_SRCS) $(UNTRUSTED_SRCS))
 
 SEARCH_PATHS=$(SGX_INCLUDE_DIR)
 # CFLAGS = $(SGX_CFLAGS) $(DEBUG_FLAGS) -nostdinc -fvisibility=hidden -fpie -ffunction-sections -fdata-sections -fstack-protector-strong
-CFLAGS = $(SGX_CFLAGS) $(DEBUG_FLAGS)
-CXXFLAGS = $(SGX_CXXFLAGS) $(DEBUG_FLAGS)
+CFLAGS = $(SGX_CFLAGS) -Iedger8r $(DEBUG_FLAGS)
+CXXFLAGS = $(SGX_CXXFLAGS) -Iedger8r $(DEBUG_FLAGS)
 
 .PHONY: build
 

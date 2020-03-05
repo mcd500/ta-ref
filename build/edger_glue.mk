@@ -40,4 +40,4 @@ sgx_clean:
 	$(RM) -r $(EDGER_INCLUDE_DIR) lib/libEnclave*
 
 sgx_mrproper: sgx_clean
-	make test -C $(TOPDIR)/edger -f sgx.mk
+	make clean -C $(TOPDIR)/edger -f sgx.mk

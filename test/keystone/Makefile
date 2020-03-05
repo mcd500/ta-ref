@@ -6,7 +6,18 @@ EYRIE_BIN=$(KEYSTONE_DIR)/sdk/rts/eyrie/eyrie-rt
 
 APP_BIN=App/App.client
 ENCLAVE_BIN=Enclave/Enclave.eapp_riscv
-.PHONY: image run
+
+KEYSTONE_LIB_DIRS = $(LIB_DIRS) $(KEYSTONE_SDK_LIB_DIR)
+
+.PHONY: build image run
+
+build: app enclave
+
+app:
+	make -C App LIB_DIRS="$(KEYSTONE_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE)
+
+enclave:
+	make -C Enclave LIB_DIRS="$(KEYSTONE_LIB_DIRS) " INCLUDE_DIRS="$(INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE)
 
 # In Keystone, Four items are required to run Enclave program; App.client, Enclave.eapp_riscv, eyrie OS runtime(eyrie-rt) and keystone-driver module.
 ship:
