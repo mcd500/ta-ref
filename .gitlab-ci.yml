@@ -29,10 +29,26 @@ keystone:
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
         SCRIPT: "source keystone.sh &&
-          make keystone_select &&
+          make select &&
           make build &&
           make test &&
           make run"
+    stage: test
+    only:
+        - master
+    tags:
+        - shell
+    script:
+        - 'echo dummy'
+
+sgx_x64:
+    variables:
+        IMAGE: ${KEYSTONE_IMAGE}
+        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
+        # TODO: this is too nasy, so we use `image:` tag
+        SCRIPT: "source sgx_x64.sh &&
+          make select &&
+          make build"
     stage: test
     only:
         - master

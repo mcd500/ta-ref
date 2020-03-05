@@ -2,8 +2,6 @@ ifeq ($(KEYSTONE_DIR),)
 $(error "Make sure that keystone framework is prebuilt!")
 endif
 
-export TOOLPREFIX=riscv64-unknown-linux-gnu-
-export TEE=keystone
 include ./general.mk
 
 DEPENDS=edger crypto

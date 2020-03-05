@@ -6,22 +6,27 @@ AR=$(TOOLPREFIX)ar rcs
 TARGETS = tiny_sha3 ed25519 tiny_AES_c mbedtls wolfssl
 ARCHIVES = $(patsubst %,lib%.a,$(TARGETS))
 
-EXCLUDE_OBJS=main.c test.c
-TINY_SHA3_SRCS=$(filter-out $(addprefix tiny_sha3/,$(EXCLUDE_OBJS)), $(wildcard tiny_sha3/*.c))
-TINY_SHA3_OBJS=$(TINY_SHA3_SRCS:.c=.o)
+EXCLUDE_SRCS=main.c test.c wc_port.c
+# $1=dir
+define exclude_from_list
+	$(patsubst \
+		%.c,\
+		%.o,\
+		$(filter-out \
+			$(addprefix $(1)/,$(EXCLUDE_SRCS)), \
+			$(wildcard $(1)/*.c) \
+		)\
+	)
+endef
 
-ED25519_SRCS=$(filter-out $(addprefix ed25519/src/,$(EXCLUDE_OBJS)), $(wildcard ed25519/src/*.c))
-ED25519_OBJS=$(ED25519_SRCS:.c=.o)
 
-TINY_AES_C_SRCS=$(filter-out $(addprefix tiny_AES_c/,$(EXCLUDE_OBJS)), $(wildcard tiny_AES_c/*.c))
-TINY_AES_C_OBJS=$(TINY_AES_C_SRCS:.c=.o)
-
-MBEDTLS_SRCS=$(filter-out $(addprefix mbedtls/library/,$(EXCLUDE_OBJS)), $(wildcard mbedtls/library/*.c))
-MBEDTLS_OBJS=$(MBEDTLS_SRCS:.c=.o)
+TINY_SHA3_OBJS=$(call exclude_from_list,tiny_sha3)
+ED25519_OBJS=$(call exclude_from_list,ed25519/src)
+TINY_AES_C_OBJS=$(call exclude_from_list,tiny_AES_c)
+MBEDTLS_OBJS=$(call exclude_from_list,mbedtls/library)
 CFLAGS += -Imbedtls/include
 
-WOLFSSL_SRCS=$(filter-out $(addprefix wolfssl/wolfcrypt/src,$(EXCLUDE_OBJS)), $(wildcard wolfssl/wolfcrypt/src/*.c))
-WOLFSSL_OBJS=$(WOLFSSL_SRCS:.c=.o)
+WOLFSSL_OBJS=$(call exclude_from_list,wolfssl/wolfcrypt/src)
 CFLAGS += -Iwolfssl
 
 OBJS=$(TINY_SHA3_OBJS) $(ED25519_OBJS) $(TINY_AES_C_OBJS) $(MBEDTLS_OBJS) $(WOLFSSL_OBJS)

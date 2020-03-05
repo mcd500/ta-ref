@@ -2,10 +2,8 @@ include ./general.mk
 
 # KEYEDGE or KEEDGER8R
 ifeq ($(EDGER_TYPE), KEYEDGE)
-EDGER_DIR=$(KEYEDGE_DIR)
 EDGER_BIN=$(EDGER_DIR)/bin/keyedge
 else ifeq ($(EDGER_TYPE), KEEDGER8R)
-EDGER_DIR=$(KEEDGER8R_DIR)
 EDGER_BIN=$(EDGER_DIR)/keedger8r
 else ifeq ($(EDGER_TYPE), EDGER8R)
 EDGER_BIN=$(EDGER_BIN)
@@ -37,3 +35,9 @@ sgx_build:
 	mkdir -p $(EDGER_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/edger/*.h $(EDGER_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/edger/libEnclave*.a lib
+
+sgx_clean:
+	$(RM) -r $(EDGER_INCLUDE_DIR) lib/libEnclave*
+
+sgx_mrproper: sgx_clean
+	make test -C $(TOPDIR)/edger -f sgx.mk

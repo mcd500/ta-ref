@@ -2,7 +2,6 @@ ifeq ($(SGX_SDK),)
 $(error "Make sure that linux-sgx framework is prebuilt!")
 endif
 
-export TEE=sgx
 include ./general.mk
 
 DEPENDS=edger crypto
@@ -23,7 +22,7 @@ endif
 OUT_DIR=out
 all: build
 
-build: depends config
+build: depends
 
 debug:
 	make build -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
@@ -44,14 +43,13 @@ config: depends
 
 clean:
 	$(RM) *.client *.eapp_riscv
-	make -f edger.mk clean EDGER_TYPE=$(EDGER_TYPE)
-	make -f edger_glue.mk clean EDGER_TYPE=$(EDGER_TYPE)
+	make -f edger_glue.mk sgx_clean EDGER_TYPE=$(EDGER_TYPE)
 	make -f crypto.mk clean
 	make -f config.mk clean
 
 # clean build files including dependencies
 mrproper: clean
 	#make -f profiler.mk mrproper
-	make -f edger.mk mrproper EDGER_TYPE=$(EDGER_TYPE)
+	make -f edger_glue.mk sgx_mrproper EDGER_TYPE=$(EDGER_TYPE)
 	make -f crypto.mk mrproper
 	make -f config.mk mrproper
