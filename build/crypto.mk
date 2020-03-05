@@ -8,6 +8,7 @@ all: build bind
 TARGETS=tiny_sha3 ed25519 tiny_AES_c mbedtls wolfssl
 ARCHIVES=$(patsubst %,lib%.a,$(TARGETS))
 
+# see http://192.168.100.100/vc707/junkyard/blob/master/tee-ta-reference-memo.md#wolfcrypt
 ifeq ($(TEE),keystone)
 WOLFSSL_BUILD_OPTIONS=-DHAVE_AESGCM -DHAVE_AES_CBC -DHAVE_AES_DECRYPT -DHAVE_FIPS -DHAVE_FIPS_VERSION=2 -DCUSTOM_RAND_GENERATE_SEED=wc_ocall_genseed -DHAVE_ED25519 -DHAVE_ED25519_SIGN -DHAVE_ED25519_VERIFY -DWOLFSSL_SHA512 -DWOLFSSL_SHA3 -DWOLFSSL_SHA3_SMALL -DWC_SHA_DIGEST_SIZE=20 -DNO_MD5 -DNO_SHA -DWOLFCRYPT_ONLY
 else ifeq ($(TEE),sgx)

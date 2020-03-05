@@ -28,7 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "tee_api_types_sgx.h"
+#include "tee_api_tee_types.h"
 
 #include "tee-common.h"
 #include "tee-ta-internal.h"
@@ -38,17 +38,15 @@
 #include "sgx_tae_service.h"
 #endif
 #include "sgx_utils.h"
-#include "Enclave_t.h"
+#include "edger/Enclave_t.h"
 
 #include <string.h>
 
-static inline void __attribute__((noreturn)) TEE_Panic(unsigned long ec)
+void __attribute__((noreturn)) TEE_Panic(unsigned long ec)
 {
   (void) ec;
     abort();
 }
-
-#define SHA_LENGTH (256/8)
 
 void TEE_GetREETime(TEE_Time *time)
 {
@@ -512,5 +510,3 @@ static WC_RNG *get_wc_rng(void)
     return &rngstr;
 }
 #endif
-
-#include "../../common/tee-internal-api-cryptlib.impl"

@@ -33,8 +33,9 @@
 
 #define MBEDCRYPT 1
 #define WOLFCRYPT 2
+#define SHA_LENGTH (256/8)
 
-#include "sha3.hpp"
+#include "sha3.h"
 #include "ed25519/ed25519.h"
 #define AES256 1
 #if CRYPTLIB==MBEDCRYPT
@@ -116,14 +117,15 @@ struct __TEE_ObjectHandle
 
 #define TEE_HANDLE_NULL 0
 
-enum Data_Flag_Constants {
-  TEE_DATA_FLAG_ACCESS_READ = 0x00000001,
-  TEE_DATA_FLAG_ACCESS_WRITE = 0x00000002,
-  //TEE_DATA_FLAG_ACCESS_WRITE_META = 0x00000004,
-  //TEE_DATA_FLAG_SHARE_READ = 0x00000010,
-  //TEE_DATA_FLAG_SHARE_WRITE = 0x00000020,
-  TEE_DATA_FLAG_OVERWRITE = 0x00000400
-};
+// defined in tee_api_defines.h
+// enum Data_Flag_Constants {
+//   TEE_DATA_FLAG_ACCESS_READ = 0x00000001,
+//   TEE_DATA_FLAG_ACCESS_WRITE = 0x00000002,
+//   //TEE_DATA_FLAG_ACCESS_WRITE_META = 0x00000004,
+//   //TEE_DATA_FLAG_SHARE_READ = 0x00000010,
+//   //TEE_DATA_FLAG_SHARE_WRITE = 0x00000020,
+//   TEE_DATA_FLAG_OVERWRITE = 0x00000400
+// };
 
 // Move this to the better place
 #define GP_ASSERT(rv,msg) \

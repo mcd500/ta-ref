@@ -22,7 +22,7 @@ endif
 OUT_DIR=out
 all: build
 
-build: depends
+build: depends config
 
 debug:
 	make build -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
@@ -39,7 +39,7 @@ crypto:
 	make -f crypto.mk
 
 config: depends
-	make -f config.mk CRYPT_TYPE=$(CRYPT_TYPE)
+	make sgx_all -f config.mk CRYPT_TYPE=$(CRYPT_TYPE)
 
 clean:
 	$(RM) *.client *.eapp_riscv
