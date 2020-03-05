@@ -1,7 +1,7 @@
 BUILD_DIR=build
 TEST_DIR=test
 # MBEDCRYPT or WOLFCRYPT or nothing
-CRYPT_TYPE=
+CRYPT_TYPE=MBEDCRYPT
 
 .PHONY: build test run clean mrproper
 
