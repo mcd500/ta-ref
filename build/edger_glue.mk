@@ -34,3 +34,6 @@ mrproper: clean
 sgx_build:
 	# TODO: we use Makefile instead of sgx.mk
 	make test -C $(TOPDIR)/edger -f sgx.mk EDGER_TYPE=$(EDGER_TYPE) DEBUG_TYPE=$(DEBUG_TYPE)
+	mkdir -p $(EDGER_INCLUDE_DIR)
+	$(SLN) $(TOPDIR)/edger/*.h $(EDGER_INCLUDE_DIR)
+	$(SLN) $(TOPDIR)/edger/libEnclave*.a lib
