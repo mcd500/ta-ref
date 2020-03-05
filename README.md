@@ -4,10 +4,10 @@ Improvement of http://192.168.100.100/vc707/tee-ta-reference. Please feel free t
 
 Note) We recommend that we use docker images because we export multiple environment variables at the very beginning of build phase..
 
-|TEE|docker images|
+|TEE|docker image|
 |---|---|
 |keystone|vc707/test:ta_ref_keystone_devel|
-|intel_sgx|(not yet)|
+|intel_sgx|vc707/test:ta_ref_sgx_devel|
 |optee|(not yet)|
 
 For more information, see [GitLab CI job configuration file](./gitlab-ci.yml).
