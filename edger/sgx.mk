@@ -1,3 +1,13 @@
+ifeq ($(DEBUG_TYPE), DEBUG)
+DEBUG_FLAGS += -O0 -g
+else ifeq ($(DEBUG_TYPE), PRERELEASE)
+DEBUG_FLAGS += -O2
+else ifeq ($(DEBUG_TYPE), RELEASE)
+DEBUG_FLAGS += -O2
+else
+DEBUG_FLAGS =
+endif
+
 EDL_PATH=default/Enclave.edl
 UNTRUSTED_SRCS=Enclave_u.c
 UNTRUSTED_HEADERS=$(UNTRUSTED_SRCS:.c=.h)
@@ -7,30 +17,38 @@ TRUSTED_SRCS=Enclave_t.c
 TRUSTED_HEADERS=$(TRUSTED_SRCS:.c=.h)
 TRUSTED_OBJS=$(TRUSTED_SRCS:.c=.o)
 
-SEARCH_PATH=
+LIBS=$(patsubst %.c,lib%.a,$(TRUSTED_SRCS) $(UNTRUSTED_SRCS))
+
+SEARCH_PATHS=$(SGX_INCLUDE_DIR)
+# CFLAGS = $(SGX_CFLAGS) $(DEBUG_FLAGS) -nostdinc -fvisibility=hidden -fpie -ffunction-sections -fdata-sections -fstack-protector-strong
+CFLAGS = $(SGX_CFLAGS) $(DEBUG_FLAGS)
+CXXFLAGS = $(SGX_CXXFLAGS) $(DEBUG_FLAGS)
 
 .PHONY: build
 
-build:
+build: $(TRUSTED_LIBS) $(UNTRUSTED_LIBS)
 
+.PHONY: test
+
+test: $(LIBS)
 
 $(UNTRUSTED_HEADERS) $(UNTRUSTED_SRCS):
-	$(EGDER8R_BIN) --untrusted $(EDL_PATH) --search-path $(TOOLS_DIR)/Enclave/ --search-path $(SGX_INCLUDE_DIR)
-	@echo "GEN  =>  $@"
+	$(EGDER8R_BIN) --untrusted $(EDL_PATH) \
+		$(addprefix --search-path ,$(SEARCH_PATHS))
 
 $(TRUSTED_HEADERS) $(TRUSTED_SRCS):
-	$(EGDER8R_BIN) --trusted $(EDL_PATH) --search-path $(TOOLS_DIR)/Enclave/ --search-path $(SGX_INCLUDE_DIR)
-	@echo "GEN  =>  $@"
+	$(EGDER8R_BIN) --trusted $(EDL_PATH) \
+		$(addprefix --search-path ,$(SEARCH_PATHS))
 
+# Enclave_u.c uses cpp files, so we assume that this is cpp source.
 $(UNTRUSTED_OBJS): %.o: %.c
-	@$(CC) $(SGX_COMMON_CFLAGS) $(App_C_Flags) -c $< -o $@
-	@echo "CC   <=  $<"
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-Enclave_u.o: Enclave_u.c
-	@$(CC) $(SGX_COMMON_CFLAGS) $(App_C_Flags) -c $< -o $@
-	@echo "CC   <=  $<"
+$(TRUSTED_OBJS): %.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-$(TRUSTED_LIBS): lib%.a: %.o
+$(LIBS): lib%.a: %.o
 	$(AR) $@ $^
-$(UNTRUSTED_LIBS): lib%.a: %.o
-	$(AR) $@ $^
+
+clean:
+	$(RM) $(UNTRUSTED_SRCS) $(UNTRUSTED_HEADERS) $(TRUSTED_SRCS) $(TRUSTED_HEADERS) $(TRUSTED_OBJS) $(UNTRUSTED_OBJS) $(LIBS)

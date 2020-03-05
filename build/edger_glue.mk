@@ -30,3 +30,7 @@ clean:
 
 mrproper: clean
 	make -C $(TOPDIR)/edger mrproper EDGER_TYPE=$(EDGER_TYPE)
+
+sgx_build:
+	# TODO: we use Makefile instead of sgx.mk
+	make test -C $(TOPDIR)/edger -f sgx.mk EDGER_TYPE=$(EDGER_TYPE) DEBUG_TYPE=$(DEBUG_TYPE)

@@ -19,7 +19,7 @@ C_SRCS = Enclave_t.c
 C_OBJS = $(C_SRCS:.c=.o)
 TRUSTED_LIBS = $(patsubst %.c,lib%.a,$(C_SRCS))
 
-# Enclave_u.c uses cpp files, so we assumev that this is cpp source.
+# Enclave_u.c uses cpp files, so we assume that this is cpp source.
 CPP_SRCS = Enclave_u.c
 CPP_OBJS = $(CPP_SRCS:.c=.o)
 UNTRUSTED_LIBS = $(patsubst %.c,lib%.a,$(CPP_SRCS))

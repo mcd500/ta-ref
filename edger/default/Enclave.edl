@@ -29,8 +29,8 @@
  */
 
 /* Enclave.edl - Top EDL file. */
-
 enclave {
+    include "sys/types.h"
     
     /* structure definition */
     struct ree_time_t {
