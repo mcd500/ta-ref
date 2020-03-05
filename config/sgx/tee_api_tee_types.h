@@ -58,7 +58,7 @@
 # include "wolfssl/wolfcrypt/sha512.h"
 # include "wolfssl/wolfcrypt/ed25519.h"
 #else
-# include "aes/aes.h"
+# include "tiny_AES_c/aes.h"
 #endif
 
 #define TEE_OBJECT_NONCE_SIZE 16
