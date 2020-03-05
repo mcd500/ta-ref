@@ -1,22 +1,21 @@
 BUILD_DIR=build
 TEST_DIR=test
-# MBEDCRYPT or WOLFCRYPT or nothing
-CRYPT_TYPE=MBEDCRYPT
 
 .PHONY: build test run clean mrproper
 
 build: select
-	make -C $(BUILD_DIR) CRYPT_TYPE=$(CRYPT_TYPE)
+	make -C $(BUILD_DIR)
 
+# build test -> ship execs -> make image
 test:
-	make -C $(TEST_DIR) TEE=$(TEE) CRYPT_TYPE=$(CRYPT_TYPE)
+	make -C $(TEST_DIR) TEE=$(TEE)
 
 run:
 	make -C $(TEST_DIR) run TEE=$(TEE)
 
-
+# build test only
 build_test:
-	make -C $(TEST_DIR) build TEE=$(TEE) CRYPT_TYPE=$(CRYPT_TYPE)
+	make -C $(TEST_DIR) build TEE=$(TEE)
 
 image:
 	make -C $(TEST_DIR) image TEE=$(TEE)

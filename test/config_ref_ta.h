@@ -35,9 +35,6 @@
 #include <stdio.h>
 
 #include "edger/Enclave_t.h"
-
-#include "tee_api_types.h"
-
 #include "tee-ta-internal.h"
 
 #define tee_printf printf

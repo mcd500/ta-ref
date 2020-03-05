@@ -24,14 +24,14 @@ stages:
     - build
     - test
 
-keystone:
+keystone_mbedcrypt:
     variables:
         IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
         SCRIPT: "source keystone.sh &&
           make select &&
-          make build &&
+          make build CRYPT_TYPE=MBEDCRYPT &&
           make test &&
           make run"
     stage: test
@@ -41,6 +41,25 @@ keystone:
         - shell
     script:
         - 'echo dummy'
+
+keystone_wolfcrypt:
+    variables:
+        IMAGE: ${KEYSTONE_IMAGE}
+        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
+        # TODO: this is too nasy, so we use `image:` tag
+        SCRIPT: "source keystone.sh &&
+          make select &&
+          make build CRYPT_TYPE=WOLFCRYPT &&
+          make test &&
+          make run"
+    stage: test
+    only:
+        - master
+    tags:
+        - shell
+    script:
+        - 'echo dummy'
+
 
 sgx_x64:
     variables:
