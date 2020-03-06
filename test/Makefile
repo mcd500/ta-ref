@@ -38,7 +38,7 @@ $(OBJS): %.o: %.c
 # build TEE-dependent code
 # We should make this part as small as possible..
 build:
-	make -C $(TEE) build LIB_DIRS="$(LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE)
+	make -C $(TEE) build LIB_DIRS="$(LIB_DIRS)" INCLUDE_DIRS="$(SGX_LIBRARY_DIR) $(INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE)
 
 image:
 	make -C $(TEE) image

@@ -32,7 +32,7 @@ LIBRARIES=sgx_urts sgx_uae_service
 LOAD_LIBRARIES=$(patsubst %,-l%$(LIBRARY_SUFFIX), $(LIBRARIES))
 LOAD_LIBRARIES += $(addprefix -l, Enclave_u pthread)
 
-LDFLAGS = $(addprefix -L,$(SGX_LIBRARY_DIR) $(LIB_DIRS)) $(LOAD_LIBRARIES)
+LDFLAGS = $(addprefix -L,$(LIB_DIRS)) $(LOAD_LIBRARIES)
 
 SRCS = $(wildcard *.cpp)
 OBJS = $(SRCS:.cpp=.o)
