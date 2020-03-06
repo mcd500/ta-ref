@@ -11,8 +11,8 @@ CFLAGS = $(addprefix -I,$(INCLUDE_PATHS))
 CFLAGS += $(addprefix -fno-builtin-,puts putchar printf)
 LDFLAGS += $(addprefix -L,$(LIB_DIRS))
 # TODO: Enlave_t is dependent on flatccrt
-# TODO: tee_api library is dependent on crypto library.
-LDFLAGS += -lgp -lEnclave_t -lflatccrt -lkeystone-eapp -ltee_api -lmbedtls -ltiny_AES_c -ltiny_sha3 -led25519
+# TODO: tee_api library is dependent on crypto libraries.
+LDFLAGS += -lgp -lEnclave_t -lflatccrt -lkeystone-eapp -ltee_api -lmbedtls -ltiny_AES_c -ltiny_sha3 -led25519 -lwolfssl
 
 
 all: $(ENCLAVE_BIN)
