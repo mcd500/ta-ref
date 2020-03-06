@@ -23,8 +23,14 @@ enclave:
 ship:
 	install $(EYRIE_BIN) $(APP_BIN) $(ENCLAVE_BIN) $(BUILDROOT_OVERLAY_DIR)
 
+run:
+	./run-apps.sh
+
+# `make image` uses ${KEYSTONE_DIR} specific toolchains and settings, so we disable expanded settings.
+unexport CC AR CXX LINK AS SLN
 image: ship
 	make -C $(KEYSTONE_DIR) image
 
-run:
-	./run-apps.sh
+clean:
+	make -C App clean
+	make -C Enclave clean

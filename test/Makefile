@@ -48,4 +48,5 @@ run:
 
 clean:
 	$(RM) $(OBJS) $(LIB)
-	make -C $(TEE) clean
+	make -C keystone clean
+	make -C sgx clean
