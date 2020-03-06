@@ -445,7 +445,7 @@ static int ocall_getrandom(char *buf, size_t len, unsigned int flags)
 static int wc_rng_init = 0;
 static WC_RNG rngstr;
 
-static WC_RNG *get_wc_rng(void)
+WC_RNG *get_wc_rng(void)
 {
     if (wc_rng_init == 0) {
       wc_InitRng(&rngstr);
