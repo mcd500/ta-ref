@@ -81,9 +81,9 @@ sgx_x64:
     script:
         - 'echo dummy'
 
-sgx_x32:
+sgx_x86:
     variables:
-        TEE: sgx_x32
+        TEE: sgx_x86
         IMAGE: ${SGX_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
