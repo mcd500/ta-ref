@@ -5,7 +5,7 @@ CRYPTO_DIR=$(TOPDIR)/crypto
 .PHONY: build bind
 all: build bind
 
-TARGETS=tiny_sha3 ed25519 tiny_AES_c mbedtls wolfssl wolfssl
+TARGETS=tiny_sha3 ed25519 tiny_AES_c mbedtls wolfssl
 ARCHIVES=$(patsubst %,lib%.a,$(TARGETS))
 
 # see http://192.168.100.100/vc707/junkyard/blob/master/tee-ta-reference-memo.md#wolfcrypt
