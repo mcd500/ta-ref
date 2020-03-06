@@ -35,6 +35,7 @@ sgx_build:
 	mkdir -p $(EDGER_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/edger/*.h $(EDGER_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/edger/libEnclave*.a lib
+	$(SLN) $(TOPDIR)/edger/edger8r/user_types.h $(EDGER_INCLUDE_DIR)
 
 sgx_clean:
 	$(RM) -r $(EDGER_INCLUDE_DIR) lib/libEnclave*
