@@ -28,8 +28,8 @@ bind:
 	$(SLN) $(CRYPTO_DIR)/mbedtls/include/mbedtls/*.h include/mbedtls/
 	$(SLN) $(CRYPTO_DIR)/tiny_AES_c/*.h include/tiny_AES_c/
 	$(SLN) $(CRYPTO_DIR)/tiny_sha3/*.h include/tiny_sha3/
-	mkdir -p $(WOLFSSL_INCLUDE_DIR)
-	$(SLN) $(CRYPTO_DIR)/$(WOLFSSL_INCLUDE_DIR)/*.h $(WOLFSSL_INCLUDE_DIR)/
+	mkdir -p include/$(WOLFSSL_INCLUDE_DIR)
+	$(SLN) $(CRYPTO_DIR)/$(WOLFSSL_INCLUDE_DIR)/*.h include/$(WOLFSSL_INCLUDE_DIR)/
 	$(SLN) $(CRYPTO_DIR)/*.a lib/
 	$(SLN) $(addprefix $(CRYPTO_DIR)/, $(COMMON_INCLUDES)) include/
 
