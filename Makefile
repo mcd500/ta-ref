@@ -42,9 +42,12 @@ sgx_test:
 
 build_clean:
 	make -C $(BUILD_DIR) clean
+
+test_clean:
 	make -C $(TEST_DIR) clean
 
-clean: build_clean
+
+clean: build_clean test_clean
 	$(RM) $(BUILD_DIR)/Makefile
 
 # delete including dependencies
