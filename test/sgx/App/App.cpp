@@ -44,7 +44,7 @@
 #include "sgx_urts.h"
 #include "App.h"
 #include "edger/Enclave_u.h"
-#include "type.h"
+#include "types.h"
 
 /* Check error conditions for loading enclave */
 void print_error_message(sgx_status_t ret)

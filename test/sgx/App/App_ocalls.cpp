@@ -1,8 +1,11 @@
 #include <stdio.h>
-#include <string.h>
-#include <assert.h>
-# include <unistd.h>
-# include <pwd.h>
+#include <unistd.h> // read,write
+// open,close
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <time.h>
+#include "edger/Enclave_u.h"
 # define MAX_PATH FILENAME_MAX
 
 /* OCall functions */

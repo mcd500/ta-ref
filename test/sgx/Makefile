@@ -1,10 +1,11 @@
+# LIB_DIRS INCLUDE_DIRS
 MODE ?= SIM
 APP_BIN = App/sgx_app
 
 SGX_LIB_DIRS = $(LIB_DIRS) $(SGX_LIBRARY_DIR)
 SIGNED_ENCLAVE_LIBRARY := Enclave/enclave.signed.so
 
-.PHONY: build image run
+.PHONY: build app enclave image run
 
 build: app enclave
 
@@ -13,6 +14,9 @@ app:
 
 enclave:
 	make -C Enclave LIB_DIRS="$(SGX_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE) MODE=$(MODE)
+
+image:
+	make -f image.mk
 
 # Assume that we are build on x86_64 machine, so qemu is not necessary to run.
 run:

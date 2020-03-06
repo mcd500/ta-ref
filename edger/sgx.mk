@@ -21,7 +21,11 @@ LIBS=$(patsubst %.c,lib%.a,$(TRUSTED_SRCS) $(UNTRUSTED_SRCS))
 
 SEARCH_PATHS=$(SGX_INCLUDE_DIR)
 # CFLAGS = $(SGX_CFLAGS) $(DEBUG_FLAGS) -nostdinc -fvisibility=hidden -fpie -ffunction-sections -fdata-sections -fstack-protector-strong
-CFLAGS = $(SGX_CFLAGS) -Iedger8r $(DEBUG_FLAGS)
+
+CFLAGS = $(SGX_CFLAGS) $(DEBUG_FLAGS)
+
+# Enclave_t.c uses mbusafecrt.h and user_types.h
+CFLAGS += $(addprefix -I,edger8r ${SGX_TRUSTED_INCLUDE_DIR})
 CXXFLAGS = $(SGX_CXXFLAGS) -Iedger8r $(DEBUG_FLAGS)
 
 .PHONY: build
