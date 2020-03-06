@@ -29,7 +29,7 @@ bind:
 	$(SLN) $(CRYPTO_DIR)/tiny_AES_c/*.h include/tiny_AES_c/
 	$(SLN) $(CRYPTO_DIR)/tiny_sha3/*.h include/tiny_sha3/
 	mkdir -p include/$(WOLFSSL_INCLUDE_DIR)
-	$(SLN) $(CRYPTO_DIR)/$(WOLFSSL_INCLUDE_DIR)/*.h include/$(WOLFSSL_INCLUDE_DIR)/
+	$(SLN) $(CRYPTO_DIR)/wolfssl/wolfssl/wolfcrypt/*.h include/$(WOLFSSL_INCLUDE_DIR)/
 	$(SLN) $(CRYPTO_DIR)/*.a lib/
 	$(SLN) $(addprefix $(CRYPTO_DIR)/, $(COMMON_INCLUDES)) include/
 
