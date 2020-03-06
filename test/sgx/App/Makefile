@@ -45,8 +45,8 @@ $(OBJS): %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # link
-$(APP_BIN):
-	@$(CXX) $^ -o $@ $(LDFLAGS)
+$(APP_BIN): $(OBJS)
+	$(CXX) $^ -o $@ $(LDFLAGS)
 
 clean:
 	$(RM) $(APP_BIN) $(OBJS)

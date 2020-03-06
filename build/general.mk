@@ -1,5 +1,5 @@
 ifneq ($(ENABLE_TEE_ENVS),1)
-$(error 'First, type `source env.sh` in the top directory to enable environments')
+$(error 'First, type `source <TEE>.sh` in the top directory to enable environments')
 endif
 
 TOPDIR=$(CURDIR)/..

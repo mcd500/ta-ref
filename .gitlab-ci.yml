@@ -63,7 +63,6 @@ keystone_wolfcrypt:
     script:
         - 'echo dummy'
 
-
 sgx_x64:
     variables:
         TEE: sgx_x64
