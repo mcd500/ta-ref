@@ -11,7 +11,7 @@ build: select
 
 # build test -> ship execs -> make image
 test:
-	make -C $(TEST_DIR) TEE=$(TEE) DEBUG_TYPE=$(DEBUG_TYPE)
+	make -C $(TEST_DIR) build image TEE=$(TEE) DEBUG_TYPE=$(DEBUG_TYPE)
 
 run:
 	make -C $(TEST_DIR) run TEE=$(TEE)
@@ -23,22 +23,8 @@ build_test:
 image:
 	make -C $(TEST_DIR) image TEE=$(TEE)
 
-sgx_select:
-	make select TEE=sgx
-optee_select:
-	make select TEE=optee
-keystone_select:
-	make select TEE=keystone
-
 select:
 	ln -sf $(TEE).mk $(BUILD_DIR)/Makefile
-
-keystone_test:
-	make test TEE=keystone
-optee_test:
-	make test TEE=optee
-sgx_test:
-	make test TEE=sgx
 
 build_clean:
 	make -C $(BUILD_DIR) clean
