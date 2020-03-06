@@ -10,8 +10,8 @@ else
 LIBRARY_SUFFIX =
 endif
 
-C_SRCS = $(wildcard *.c)
-C_OBJS = $(C_SRCS:.c=.o)
+SRCS = $(wildcard *.c)
+OBJS = $(SRCS:.c=.o)
 
 CFLAGS = $(SGX_CFLAGS) $(DEBUG_FLAGS)
 CFLAGS += $(addprefix -I, $(INCLUDE_DIRS))
@@ -39,7 +39,7 @@ SIGNED_ENCLAVE_LIBRARY = $(ENCLAVE_LIBRARY:.so=.signed.so)
 
 all: $(SIGNED_ENCLAVE_LIBRARY)
 
-$(C_OBJS): %.o: %.c
+$(OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(ENCLAVE_LIBRARY): $(OBJS)
