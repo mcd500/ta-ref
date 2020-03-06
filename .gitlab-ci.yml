@@ -72,7 +72,8 @@ sgx_x64:
         SCRIPT: "source ${TEE}.sh &&
           make select &&
           make build &&
-          make test"
+          make test &&
+          make run"
     stage: test
     only:
         - master
