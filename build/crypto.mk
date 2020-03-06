@@ -5,7 +5,7 @@ CRYPTO_DIR=$(TOPDIR)/crypto
 .PHONY: build bind
 all: build bind
 
-TARGETS=tiny_sha3 ed25519 tiny_AES_c mbedtls wolfssl
+TARGETS=tiny_sha3 ed25519 tiny_AES_c mbedtls wolfssl wolfssl
 ARCHIVES=$(patsubst %,lib%.a,$(TARGETS))
 
 # see http://192.168.100.100/vc707/junkyard/blob/master/tee-ta-reference-memo.md#wolfcrypt
@@ -16,7 +16,9 @@ WOLFSSL_BUILD_OPTIONS=-DHAVE_AES_CBC -DHAVE_AES_DECRYPT -DHAVE_FIPS -DHAVE_FIPS_
 else
 WOLFSSL_BUILD_OPTIONS=
 endif
+WOLFSSL_INCLUDE_DIR=wolfssl/wolfssl/wolfcrypt
 
+COMMON_INCLUDES=sha3.h mbed-crypto-config.h
 
 build: $(TARGETS)
 
@@ -26,8 +28,10 @@ bind:
 	$(SLN) $(CRYPTO_DIR)/mbedtls/include/mbedtls/*.h include/mbedtls/
 	$(SLN) $(CRYPTO_DIR)/tiny_AES_c/*.h include/tiny_AES_c/
 	$(SLN) $(CRYPTO_DIR)/tiny_sha3/*.h include/tiny_sha3/
+	mkdir -p $(WOLFSSL_INCLUDE_DIR)
+	$(SLN) $(CRYPTO_DIR)/$(WOLFSSL_INCLUDE_DIR)/*.h $(WOLFSSL_INCLUDE_DIR)/
 	$(SLN) $(CRYPTO_DIR)/*.a lib/
-	$(SLN) $(CRYPTO_DIR)/*.h include/
+	$(SLN) $(addprefix $(CRYPTO_DIR)/, $(COMMON_INCLUDES)) include/
 
 tiny_sha3:
 	make -C $(CRYPTO_DIR) tiny_sha3 BUILD_OPTIONS=""
@@ -49,7 +53,7 @@ wolfssl:
 # shallow delete
 clean:
 	cd lib; $(RM) $(ARCHIVES)
-	cd include; $(RM) -rf $(TARGETS)
+	cd include; $(RM) -rf $(TARGETS) $(COMMON_INCLUDES)
 
 mrproper: clean
 	make -C $(TOPDIR)/crypto clean
