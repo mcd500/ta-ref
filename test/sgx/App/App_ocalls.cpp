@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <unistd.h> // read,write
+#include <stdint.h>
 // open,close
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <time.h>
-#include "edger/Enclave_u.h"
+#include "App_ocalls.h"
 # define MAX_PATH FILENAME_MAX
 
 /* OCall functions */

@@ -16,7 +16,7 @@ enclave:
 	make -C Enclave LIB_DIRS="$(SGX_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE) MODE=$(MODE)
 
 image:
-	make -f image.mk
+	# do nothing
 
 # Assume that we are build on x86_64 machine, so qemu is not necessary to run.
 run:
