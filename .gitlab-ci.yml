@@ -7,6 +7,7 @@ variables:
     SGX_IMAGE: vc707/test:ta_ref_sgx_devel
     CONTAINER_ROOT_DIR: /home/main/ref-ta
     WORKDIR: ${CONTAINER_ROOT_DIR}
+    TEE: dummy
 
 before_script:
     - docker login -u ${GITLAB_USER} -p ${DOCKERHUB_PASSWD}
@@ -14,11 +15,11 @@ before_script:
     - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "${SCRIPT}"
 
 after_script:
-    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "export ENABLE_TEE_ENVS=1 && make clean"
+    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "source ${TEE}.sh && make clean"
     # TODO: we want to fail CI if false.
     - test $(find build/lib -mindepth 1 | wc -l) -eq 1
     - test $(find build/include -mindepth 1 | wc -l) -eq 1
-    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "export ENABLE_TEE_ENVS=1 && make mrproper"
+    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "source ${TEE}.sh && make mrproper"
 
 stages:
     - build
@@ -26,10 +27,11 @@ stages:
 
 keystone_mbedcrypt:
     variables:
+        TEE: keystone
         IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source keystone.sh &&
+        SCRIPT: "source $(TEE).sh &&
           make select &&
           make build CRYPT_TYPE=MBEDCRYPT &&
           make test &&
@@ -44,10 +46,11 @@ keystone_mbedcrypt:
 
 keystone_wolfcrypt:
     variables:
+        TEE: keystone
         IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source keystone.sh &&
+        SCRIPT: "source ${TEE}.sh &&
           make select &&
           make build CRYPT_TYPE=WOLFCRYPT &&
           make test &&
@@ -63,10 +66,11 @@ keystone_wolfcrypt:
 
 sgx_x64:
     variables:
+        TEE: sgx_x64
         IMAGE: ${SGX_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source sgx_x64.sh &&
+        SCRIPT: "source ${TEE}.sh &&
           make select &&
           make build"
     stage: test
