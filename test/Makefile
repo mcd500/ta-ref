@@ -11,15 +11,16 @@ TOPDIR=$(CURDIR)/..
 # build as $(LIB)
 SRCS=$(wildcard *.c)
 OBJS=$(SRCS:.c=.o)
-LIB=libgp.a
+LIB=lib/libgp.a
 
 COMMON_INCLUDE_DIRS=$(TOPDIR)/build/include $(TOPDIR)/config/include $(TOPDIR)/config/$(TEE) $(CURDIR)/include
+INCLUDE_DIRS = $(COMMON_INCLUDE_DIRS)
 
 ifneq ($(KEYSTONE_SDK_LIB_DIR),)
 # Global Platform uses enclave library in keystone-sdk.
-COMMON_INCLUDE_DIRS += $(KEYSTONE_SDK_LIB_DIR)/app/include
+INCLUDE_DIRS += $(KEYSTONE_SDK_LIB_DIR)/app/include
 endif
-CFLAGS=$(addprefix -I,$(COMMON_INCLUDE_DIRS))
+CFLAGS=$(addprefix -I,$(INCLUDE_DIRS))
 
 LIB_DIRS = $(TOPDIR)/build/lib $(CURDIR)/lib
 
@@ -32,7 +33,6 @@ gp: $(LIB)
 
 $(LIB): $(OBJS)
 	$(AR) $@ $^
-	$(SLN) $(LIB) lib/$(LIB)
 
 $(OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $^
@@ -40,7 +40,7 @@ $(OBJS): %.o: %.c
 # build TEE-dependent code
 # We should make this part as small as possible..
 build: gp
-	make -C $(TEE) build LIB_DIRS="$(LIB_DIRS)" INCLUDE_DIRS="$(SGX_LIBRARY_DIR) $(INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE)
+	make -C $(TEE) build LIB_DIRS="$(LIB_DIRS)" INCLUDE_DIRS="$(COMMON_INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE)
 
 image:
 	make -C $(TEE) image
@@ -49,6 +49,6 @@ run:
 	make -C $(TEE) run
 
 clean:
-	$(RM) $(OBJS) $(LIB) lib/$(LIB)
+	$(RM) $(OBJS) $(LIB)
 	make -C keystone clean
 	make -C sgx clean

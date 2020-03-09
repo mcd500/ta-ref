@@ -15,4 +15,4 @@ ship:
 
 # you should erase the shipped contents in $(BUILDROOT_OVERLAY_DIR) by yourself, because keystone is separated from this project.(In this case, we use docker image to prepare keystone environment.)
 clean:
-	$(RM) $(EYRIE_BIN) $(APP_BIN) $(ENCLAVE_BIN)
+	$(RM) $(APP_BIN) $(ENCLAVE_BIN)

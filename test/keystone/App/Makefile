@@ -1,11 +1,11 @@
 TOOLPREFIX=riscv64-unknown-linux-gnu-
 CC = $(TOOLPREFIX)gcc
 CXX = $(TOOLPREFIX)g++
-CPPFLAGS = -Wall
+CXXFLAGS = -Wall
 LINK = $(TOOLPREFIX)ld
 AS = $(TOOLPREFIX)as
 
-CPPFLAGS=$(addprefix -I, $(INCLUDE_DIRS))
+CXXFLAGS += $(addprefix -I, $(INCLUDE_DIRS))
 
 APP = App
 SRCS=$(wildcard *.cpp)
@@ -25,6 +25,7 @@ $(APP_BIN): %.client : $(OBJS) $(EDGECALL_OBJS)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
 $(OBJS): %.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $^ -o $@
 
 clean:
 	rm -rf *.o $(APP_BIN)
