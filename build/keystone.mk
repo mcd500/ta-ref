@@ -19,7 +19,7 @@ endif
 OUT_DIR=out
 all: build
 
-build: depends config
+build: depends api
 
 debug:
 	make build -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
@@ -36,19 +36,19 @@ edger:
 crypto:
 	make -f crypto.mk
 
-config: depends
-	make -f config.mk CRYPT_TYPE=$(CRYPT_TYPE)
+api: depends
+	make -f api.mk CRYPT_TYPE=$(CRYPT_TYPE)
 
 clean:
 	$(RM) *.client *.eapp_riscv
 	make -f edger.mk clean EDGER_TYPE=$(EDGER_TYPE)
 	make -f edger_glue.mk clean EDGER_TYPE=$(EDGER_TYPE)
 	make -f crypto.mk clean
-	make -f config.mk clean
+	make -f api.mk clean
 
 # clean build files including dependencies
 mrproper: clean
 	#make -f profiler.mk mrproper
 	make -f edger.mk mrproper EDGER_TYPE=$(EDGER_TYPE)
 	make -f crypto.mk mrproper
-	make -f config.mk mrproper
+	make -f api.mk mrproper

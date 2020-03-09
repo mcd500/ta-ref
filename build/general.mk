@@ -3,7 +3,6 @@ $(error 'First, type `source <TEE>.sh` in the top directory to enable environmen
 endif
 
 TOPDIR=$(CURDIR)/..
-CONFIG_DIR=$(TOPDIR)/config
 # command
 export CC = $(TOOLPREFIX)gcc
 export AR = $(TOOLPREFIX)ar rcs

@@ -13,7 +13,7 @@ SRCS=$(wildcard *.c)
 OBJS=$(SRCS:.c=.o)
 LIB=lib/libgp.a
 
-COMMON_INCLUDE_DIRS=$(TOPDIR)/build/include $(TOPDIR)/config/include $(TOPDIR)/config/$(TEE) $(CURDIR)/include
+COMMON_INCLUDE_DIRS=$(TOPDIR)/build/include $(TOPDIR)/api/include $(TOPDIR)/api/$(TEE) $(CURDIR)/include
 INCLUDE_DIRS = $(COMMON_INCLUDE_DIRS)
 
 ifneq ($(KEYSTONE_SDK_LIB_DIR),)
