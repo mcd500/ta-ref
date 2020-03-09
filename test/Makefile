@@ -17,7 +17,7 @@ COMMON_INCLUDE_DIRS=$(TOPDIR)/build/include $(TOPDIR)/config/include $(TOPDIR)/c
 INCLUDE_DIRS = $(COMMON_INCLUDE_DIRS)
 
 ifneq ($(KEYSTONE_SDK_LIB_DIR),)
-# Global Platform uses enclave library in keystone-sdk.
+# Global Platform uses eapp library in keystone-sdk.
 INCLUDE_DIRS += $(KEYSTONE_SDK_LIB_DIR)/app/include
 endif
 CFLAGS=$(addprefix -I,$(INCLUDE_DIRS))

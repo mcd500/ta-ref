@@ -20,8 +20,6 @@ TRUSTED_OBJS=$(TRUSTED_SRCS:.c=.o)
 LIBS=$(patsubst %.c,lib%.a,$(TRUSTED_SRCS) $(UNTRUSTED_SRCS))
 
 SEARCH_PATHS=$(SGX_INCLUDE_DIR)
-# CFLAGS = $(SGX_CFLAGS) $(DEBUG_FLAGS) -nostdinc -fvisibility=hidden -fpie -ffunction-sections -fdata-sections -fstack-protector-strong
-
 CFLAGS = $(SGX_CFLAGS) $(DEBUG_FLAGS)
 
 # Enclave_t.c uses mbusafecrt.h and user_types.h

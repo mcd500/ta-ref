@@ -37,7 +37,7 @@ crypto:
 	make -f crypto.mk
 
 config: depends
-	make sgx_all -f config.mk CRYPT_TYPE=$(CRYPT_TYPE)
+	make -f config.mk CRYPT_TYPE=$(CRYPT_TYPE)
 
 clean:
 	$(RM) *.client *.eapp_riscv
