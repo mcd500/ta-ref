@@ -15,11 +15,11 @@ before_script:
     - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "${SCRIPT}"
 
 after_script:
-    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "source ${TEE}.sh && make select clean"
+    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "source env/${TEE}.sh && make select clean"
     # TODO: we want to fail CI if false.
     - test $(find build/lib -mindepth 1 | wc -l) -eq 1
     - test $(find build/include -mindepth 1 | wc -l) -eq 1
-    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "source ${TEE}.sh && make select mrproper"
+    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "source env/${TEE}.sh && make select mrproper"
 
 stages:
     - build
@@ -31,7 +31,7 @@ keystone_mbedcrypt:
         IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${TEE}.sh &&
+        SCRIPT: "source env/${TEE}.sh &&
           make select &&
           make build CRYPT_TYPE=MBEDCRYPT &&
           make test &&
@@ -50,7 +50,7 @@ keystone_wolfcrypt:
         IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${TEE}.sh &&
+        SCRIPT: "source env/${TEE}.sh &&
           make select &&
           make build CRYPT_TYPE=WOLFCRYPT &&
           make test &&
@@ -69,7 +69,7 @@ sgx_x64:
         IMAGE: ${SGX_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${TEE}.sh &&
+        SCRIPT: "source env/${TEE}.sh &&
           make select &&
           make build &&
           make test &&
