@@ -37,6 +37,6 @@ clean: build_clean test_clean
 	$(RM) $(BUILD_DIR)/Makefile
 
 # delete including dependencies
-mrproper: build_clean
+mrproper: build_clean test_clean
 	make -C $(BUILD_DIR) mrproper
 	$(RM) $(BUILD_DIR)/Makefile
