@@ -1,5 +1,5 @@
 # LIB_DIRS INCLUDE_DIRS
-MODE ?= SIM
+MODE = $(SGX_MODE)
 APP_BIN = App/sgx_app
 ENCLAVE_BIN=enclave.signed.so
 

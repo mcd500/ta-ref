@@ -16,12 +16,18 @@ OBJS = $(SRCS:.c=.o)
 CFLAGS = $(SGX_CFLAGS) $(DEBUG_FLAGS)
 CFLAGS += $(addprefix -I, $(INCLUDE_DIRS))
 
+LIBS = tee_api mbedtls tiny_AES_c tiny_sha3 ed25519 wolfssl
+LIBS += gp
+LIBS += Enclave_t
+# default
+LIBS += sgx_tstdc sgx_tcxx sgx_tcrypto sgx_tservice$(LIBRARY_SUFFIX)
+
 # These flags are stereotyped. For more information, see https://github.com/intel/linux-sgx/blob/9ddec08fb98c1636ed3b1a77bbc4fa3520344ede/SampleCode/SampleEnclave/Makefile#L132-L149.
 Enclave_Security_Link_Flags := -Wl,-z,relro,-z,now,-z,noexecstack
 Enclave_Link_Flags := $(Enclave_Security_Link_Flags) \
     -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles $(addprefix -L, $(LIB_DIRS)) \
 	-Wl,--whole-archive -lsgx_trts$(LIBRARY_SUFFIX) -Wl,--no-whole-archive \
-	-Wl,--start-group -ltee_api -lmbedtls -ltiny_AES_c -ltiny_sha3 -led25519 -lwolfssl -lgp -lEnclave_t -lsgx_tstdc -lsgx_tcxx -lsgx_tcrypto -lsgx_tservice$(LIBRARY_SUFFIX) -Wl,--end-group \
+	-Wl,--start-group $(addprefix -l,$(LIBS)) -Wl,--end-group \
 	-Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined \
 	-Wl,-pie,-eenclave_entry -Wl,--export-dynamic  \
 	-Wl,--defsym,__ImageBase=0 -Wl,--gc-sections   \

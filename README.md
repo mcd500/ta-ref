@@ -25,8 +25,9 @@ docker run -it --rm -v $(pwd):/home/keystone/ta-ref vc707/test:ta_ref_keystone_d
 Next, build && test:
 
 ```sh
-source keystone.sh
+source env/keystone.sh
 make build
+# or make build CRYPT_TYPE=(MBEDCRYPT|WOLFCRYPT)
 make test
 # show demo
 make run
@@ -43,11 +44,10 @@ docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_sgx_devel
 Next, build && test:
 
 ```sh
-source sgx.sh
-# make build
-# make test
-# show demo
-# make run
+source env/sgx.sh
+make build
+make test
+make run
 ```
 
 
