@@ -91,7 +91,7 @@ sgx_x64_sim:
         SCRIPT: "source env/${TEE}.sh &&
           make select &&
           make build &&
-          make test SGX_MODE=SIM &&
+          make test MODE=SIM &&
           make run"
     stage: test
     only:
