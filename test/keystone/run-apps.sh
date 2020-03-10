@@ -8,6 +8,8 @@ expect -c '
 
     expect "# " { send "insmod keystone-driver.ko\r" }
     expect "# " { send "./App.client  Enclave.eapp_riscv eyrie-rt\r" }
+    expect "# " { send "ls -ls .\r" }
+    expect "# " { send "./analyzer shared_mem Enclave.nm\r" }
     expect "# " { send "poweroff\r" }
     expect eof
     '

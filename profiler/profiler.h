@@ -3,6 +3,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 #include "profiler_attrs.h"
 #include "tee_profiler.h"
 

@@ -12,16 +12,16 @@ SRCS=$(wildcard *.cpp)
 OBJS =$(SRCS:.cpp=.o)
 
 # perf settings if enable
-ifeq ($(PROFILER), ON)
-CXXFLAGS += -DPERF_ENABLE
-LDFLAGS += -lappprofiler
-PERF_SRCS := App_ocalls.cpp
-PERF_OBJS := $(PERF_SRCS:.cpp=.o)
-PERF_OPTION = -finstrument-functions
-else
-PERF_OBJS =
-PERF_OPTION =
-endif
+# ifeq ($(PROFILER), ON)
+# CXXFLAGS += -DPERF_ENABLE
+# LDFLAGS += -lappprofiler
+# PERF_SRCS := App_ocalls.cpp
+# PERF_OBJS := $(PERF_SRCS:.cpp=.o)
+# PERF_OPTION = -finstrument-functions
+# else
+# PERF_OBJS =
+# PERF_OPTION =
+# endif
 
 ifeq ($(DEBUG_TYPE), DEBUG)
 DEBUG_OPTION = -g -O0
