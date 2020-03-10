@@ -4,6 +4,7 @@
 #endif
 #include <stddef.h>
 #include <stdint.h>
+#include "profiler_attrs.h"
 
 #ifndef PERF_SIZE
 #define PERF_SIZE 8192
@@ -11,12 +12,6 @@
 
 typedef uint64_t  __profiler_nsec_t;
 typedef uint8_t __profiler_direction_t;
-#define NO_PERF \
-    __attribute__((no_instrument_function,hot))
-#define PERF_SECTION \
-    __attribute__((section(".perf_region")))
-#define USED \
-    __attribute__((used))
 
 enum direction_t {
     START = 0,
