@@ -1,7 +1,7 @@
 # KEYEDGE or KEEDGER8R
 ifeq ($(EDGER_TYPE), KEYEDGE)
 EDGER_DIR=$(KEYEDGE_DIR)
-EDGER_BIN=$(EDGER_DIR)/bin/keyedge
+EDGER_BIN=${KEYEDGE_DIR}/bin/keyedge
 else ifeq ($(EDGER_TYPE), KEEDGER8R)
 EDGER_DIR=$(KEEDGER8R_DIR)
 EDGER_BIN=$(EDGER_DIR)/keedger8r
@@ -14,6 +14,7 @@ EDGER_SUFFIXES=common eapp host
 EDGER_GEN_FILES=$(patsubst %,ocalls_%.h,$(EDGER_SUFFIXES)) ocalls.fbs
 FLATCC_SUFFIXES=reader verifier builder
 FLATCC_GEN_FILES=$(patsubst %,ocalls_%.h,$(FLATCC_SUFFIXES))
+FLATCC_BIN ?= ${FLATCC_DIR}/bin/flatcc
 
 C_SRCS = Enclave_t.c
 C_OBJS = $(C_SRCS:.c=.o)
@@ -33,12 +34,7 @@ CFLAGS += $(addprefix -I,$(INCLUDE_PATHS) ${KEYSTONE_SDK_LIB_DIR}/app/include)
 CXXFLAGS += $(addprefix -I,$(INCLUDE_PATHS))
 
 .PHONY: all clean mrproper
-all: bin build
-
-bin: $(EDGER_BIN) $(FLATCC_BIN)
-
-$(EDGER_BIN) $(FLATCC_BIN):
-	make -C $(EDGER_DIR)
+all: build
 
 build: gen objs libs
 

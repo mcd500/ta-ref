@@ -11,6 +11,7 @@ CRYPT_TYPE=MBEDCRYPT
 PROFILER=OFF
 
 ifeq ($(PROFILER),ON)
+# after edger because of use of Enclave_t header
 DEPENDS += profiler
 endif
 
@@ -20,9 +21,6 @@ OUT_DIR=out
 all: build
 
 build: depends api
-
-debug:
-	make build -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
 
 depends: $(DEPENDS)
 
@@ -40,7 +38,6 @@ api: depends
 	make -f api.mk CRYPT_TYPE=$(CRYPT_TYPE)
 
 clean:
-	$(RM) *.client *.eapp_riscv
 	make -f profiler.mk clean
 	make -f edger.mk clean EDGER_TYPE=$(EDGER_TYPE)
 	make -f edger_glue.mk clean EDGER_TYPE=$(EDGER_TYPE)

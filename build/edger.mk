@@ -23,18 +23,15 @@ edger: $(FLATCC_LIB) $(FLATCC_INCLUDE_DIR) edger_imports
 
 EDGER_INCLUDE_DIR=include/edger
 
-$(EDGER_BIN) $(FLATCC_BIN):
-	make -C $(TOPDIR)/edger bin EDGER_TYPE=$(EDGER_TYPE)
-
-$(FLATCC_LIB): $(FLATCC_BIN)
+$(FLATCC_LIB):
 	$(SLN) $(EDGER_DIR)/lib/flatccrt.a $@
 
-$(FLATCC_INCLUDE_DIR): $(FLATCC_BIN)
+$(FLATCC_INCLUDE_DIR):
 	$(SLN) $(FLATCC_DIR)/$(FLATCC_INCLUDE_DIR) include
 
 edger_imports: $(EDGER_BIN)
 	mkdir -p $(EDGER_INCLUDE_DIR)
-	$(SLN) $(EDGER_DIR)/target/include/*.h $(EDGER_INCLUDE_DIR)
+	$(SLN) ${EDGER_DIR}/target/include/*.h $(EDGER_INCLUDE_DIR)
 
 clean:
-	$(RM) -r $(EDGER_INCLUDE_DIR) $(FLATCC_LIB) $(FLATCC_INCLUDE_DIR)
+	$(RM) -r ${EDGER_DIR}/target/include $(FLATCC_LIB) $(FLATCC_INCLUDE_DIR)
