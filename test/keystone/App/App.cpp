@@ -12,15 +12,15 @@
 
 #include "edger/Enclave_u.h"
 
+#ifdef PERF_ENABLE
+extern "C" {
+#include "profiler/profiler.h"
+}
+#endif
+
 /* We hardcode these for demo purposes. */
 const char* enc_path = "Enclave.eapp_riscv";
 const char* runtime_path = "eyrie-rt";
-
-#ifdef PERF_ENABLE
-extern "C" {
-#include "profiler.h"
-}
-#endif
 
 int main(int argc, char** argv)
 {

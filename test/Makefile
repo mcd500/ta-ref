@@ -41,7 +41,7 @@ $(OBJS): %.o: %.c
 # We should make this part as small as possible..
 SGX_MODE=SIM
 build: gp
-	make -C $(TEE) build LIB_DIRS="$(LIB_DIRS)" INCLUDE_DIRS="$(COMMON_INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE) SGX_MODE=$(SGX_MODE)
+	make -C $(TEE) build LIB_DIRS="$(LIB_DIRS)" INCLUDE_DIRS="$(COMMON_INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE) SGX_MODE=$(SGX_MODE) PROFILER=$(PROFILER)
 
 image:
 	make -C $(TEE) image

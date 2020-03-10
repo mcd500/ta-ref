@@ -11,19 +11,32 @@ APP = App
 SRCS=$(wildcard *.cpp)
 OBJS =$(SRCS:.cpp=.o)
 
-EDGECALL_OBJS=$(patsubst %.h,%.o,$(EDGECALL_HEADERS))
+# perf settings if enable
+ifeq ($(PROFILER), ON)
+CXXFLAGS += -DPERF_ENABLE
+LDFLAGS += -lappprofiler
+PERF_OBJS = App_ocalls.cpp
+PERF_OPTION = -finstrument-functions
+else
+PERF_OBJS =
+PERF_OPTION =
+endif
 
 # TODO: flatccrt library is used only for Enclave_u library, so we want merge flatccrt with Enclave_u
-LDFLAGS = $(addprefix -L,$(LIB_DIRS)) -lkeystone-host -lkeystone-edge -lEnclave_u -lflatccrt
+LDFLAGS += $(addprefix -L,$(LIB_DIRS)) -lkeystone-host -lkeystone-edge -lEnclave_u -lflatccrt
 
 APP_BIN = $(patsubst %,%.client,$(APP))
 APP_NM = $(patsubst %,%.nm,$(APP))
 
 all: $(APP_BIN)
 
-$(APP_BIN): %.client : $(OBJS) $(EDGECALL_OBJS)
+$(APP_BIN): %.client : $(OBJS)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
+$(PERF_OBJS): %.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(PERF_OPTION) -c $^ -o $@
+
+# ignore perf_objs.
 $(OBJS): %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $^ -o $@
 
