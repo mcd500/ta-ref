@@ -4,4 +4,4 @@
 // __profiler_unmap_info
 #include "tee_profiler.h"
 
-void PERF_METHOD_ATTRIBUTE __profiler_map_info(void);
+void NO_PERF __profiler_map_info(void);

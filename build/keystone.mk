@@ -41,6 +41,7 @@ api: depends
 
 clean:
 	$(RM) *.client *.eapp_riscv
+	make -f profiler.mk clean
 	make -f edger.mk clean EDGER_TYPE=$(EDGER_TYPE)
 	make -f edger_glue.mk clean EDGER_TYPE=$(EDGER_TYPE)
 	make -f crypto.mk clean
@@ -48,7 +49,7 @@ clean:
 
 # clean build files including dependencies
 mrproper: clean
-	#make -f profiler.mk mrproper
+	make -f profiler.mk mrproper
 	make -f edger.mk mrproper EDGER_TYPE=$(EDGER_TYPE)
 	make -f crypto.mk mrproper
 	make -f api.mk mrproper
