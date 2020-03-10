@@ -1,7 +1,7 @@
 CFLAGS += -I../
 
 CFLAGS += -Wall -Wpedantic
-all: clean analyzer
+all: analyzer
 
 SRCS = $(wildcard *.c)
 OBJS = $(SRCS:.c=.o)
