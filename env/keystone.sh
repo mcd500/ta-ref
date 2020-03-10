@@ -4,9 +4,10 @@ export TEE=keystone
 export ARCH=riscv64
 export TOOLPREFIX=${ARCH}-unknown-linux-gnu-
 export ENABLE_TEE_ENVS=1
-export KEYEDGE_DIR=$(pwd)/edger/keyedge
-export FLATCC_DIR=${KEYEDGE_DIR}/flatcc
-export FLATCC_BIN=${FLATCC_DIR}/bin/flatcc
+# this is embedded in docker images
+# export KEYEDGE_DIR=$(pwd)/edger/keyedge
+# export FLATCC_DIR=${KEYEDGE_DIR}/flatcc
+# export FLATCC_BIN=${FLATCC_DIR}/bin/flatcc
 export KEEGDER8R_DIR=$(pwd)/edger/keedger8r
 export KEYSTONE_SDK_DIR=${KEYSTONE_DIR}/sdk
 export KEYSTONE_SDK_LIB_DIR=${KEYSTONE_SDK_DIR}/lib

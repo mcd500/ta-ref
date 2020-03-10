@@ -45,6 +45,5 @@ analyzer:
 	make -C analyzer
 
 clean:
-	$(RM) $(ENCLAVE_OBJS) $(APP_OBJS) $(LIB) $(HOST_LIB)
+	$(RM) $(ENCLAVE_OBJS) $(APP_OBJS) $(LIBS)
 	make -C analyzer clean
-

@@ -16,7 +16,3 @@
 [submodule "crypto/wolfssl"]
 	path = crypto/wolfssl
 	url = http://192.168.100.100/vc707/wolfssl
-[submodule "edger/keyedge"]
-	path = edger/keyedge
-	url = http://192.168.100.100/vc707/keyedge.git
-	branch = ref-ta
