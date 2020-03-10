@@ -2,6 +2,7 @@ include general.mk
 .PHONY: all clean
 
 PROFILER_DIR = $(TOPDIR)/profiler
+ANALYZER_DIR = $(TOPDIR)/profiler/analyzer
 LIB_NAMES = appprofiler profiler
 LIBS = $(patsubst %,lib/lib%.a,$(LIB_NAMES))
 

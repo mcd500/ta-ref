@@ -5,6 +5,7 @@ export CXX = $(TOOLPREFIX)g++
 export LINK = $(TOOLPREFIX)ld
 export AS = $(TOOLPREFIX)as
 export SLN = ln -sf
+export TOPDIR=$(CURDIR)/..
 
 TOPDIR=$(CURDIR)/..
 
