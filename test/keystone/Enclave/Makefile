@@ -18,7 +18,8 @@ LDFLAGS += -lgp -lEnclave_t -lflatccrt -lkeystone-eapp -ltee_api -lmbedtls -ltin
 ifeq ($(PROFILER), ON)
 CFLAGS += -DPERF_ENABLE
 LDFLAGS += -lprofiler
-PERF_OBJS = App_ocalls.cpp
+PERF_SRCS = Enclave.c
+PERF_OBJS = $(PERF_SRCS:.c=.o)
 PERF_OPTION = -finstrument-functions
 else
 PERF_OBJS =
@@ -31,7 +32,6 @@ else
 DEBUG_OPTION =
 endif
 CXXFLAGS += $(DEBUG_OPTION)
-
 
 all: $(ENCLAVE_BIN)
 

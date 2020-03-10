@@ -15,7 +15,8 @@ OBJS =$(SRCS:.cpp=.o)
 ifeq ($(PROFILER), ON)
 CXXFLAGS += -DPERF_ENABLE
 LDFLAGS += -lappprofiler
-PERF_OBJS = App_ocalls.cpp
+PERF_SRCS := App_ocalls.cpp
+PERF_OBJS := $(PERF_SRCS:.cpp=.o)
 PERF_OPTION = -finstrument-functions
 else
 PERF_OBJS =
@@ -43,6 +44,10 @@ $(APP_BIN): %.client : $(OBJS)
 
 $(OBJS): %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $^ -o $@
+
+# ignore old rules
+$(PERF_OBJS): %.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(PERF_OPTION) -c $^ -o $@
 
 # override old rules
 $(PERF_OBJS): %.o: %.cpp

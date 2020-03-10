@@ -27,6 +27,9 @@ test:
 run:
 	make -C $(TEST_DIR) run TEE=$(TEE)
 
+qemu:
+	make -C $(TEST_DIR) qemu TEE=$(TEE)
+
 # build test only
 build_test:
 	make -C $(TEST_DIR) build TEE=$(TEE)

@@ -5,10 +5,10 @@ KEYSTONE_LIB_DIRS = $(LIB_DIRS) $(KEYSTONE_SDK_LIB_DIR)
 build: app enclave
 
 app:
-	make -C App LIB_DIRS="$(KEYSTONE_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE) PROFILER=$(PROFILER)
+	make -C App LIB_DIRS="$(KEYSTONE_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)"
 
 enclave:
-	make -C Enclave LIB_DIRS="$(KEYSTONE_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE)
+	make -C Enclave LIB_DIRS="$(KEYSTONE_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)"
 
 image:
 	make -f image.mk
@@ -16,6 +16,9 @@ image:
 # TODO: implement dependent on MODE
 run:
 	./run-apps.sh
+
+qemu:
+	./run-qemu.sh
 
 clean:
 	make -f image.mk clean

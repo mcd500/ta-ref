@@ -65,6 +65,9 @@ image:
 run:
 	make -C $(TEE) run
 
+qemu:
+	make -C $(TEE) qemu
+
 clean:
 	$(RM) $(OBJS) $(LIB)
 	make -C keystone clean
