@@ -11,7 +11,9 @@
 #include <cstring>
 
 #include "edger/Enclave_u.h"
+#ifdef PERF_ENABLE
 #include "profiler/profiler.h"
+#endif
 
 /* We hardcode these for demo purposes. */
 const char* enc_path = "Enclave.eapp_riscv";
