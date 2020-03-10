@@ -41,7 +41,7 @@ build: gen objs libs
 gen: import $(EDGER_GEN_FILES) $(FLATCC_GEN_FILES)
 
 import:
-	$(SLN) default/* ./
+	$(SLN) keyedge/* ./
 
 $(EDGER_GEN_FILES): $(EDGER_HEADER)
 	@echo "=> $(EDGER_GEN_FILES)"
