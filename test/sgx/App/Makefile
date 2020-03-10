@@ -1,9 +1,3 @@
-ifeq ($(DEBUG_TYPE), DEBUG)
-DEBUG_FLAGS = -O0 -g
-else
-DEBUG_FLAGS = -O2
-endif
-
 # # Three configuration modes - Debug, prerelease, release
 #   Debug - Macro DEBUG enabled.
 #   Prerelease - Macro NDEBUG and EDEBUG enabled.
@@ -26,7 +20,6 @@ endif
 
 CXXFLAGS = $(SGX_CXXFLAGS) $(DEBUG_FLAGS)
 CXXFLAGS += $(addprefix -I, $(INCLUDE_DIRS))
-#CFLAGS = $(SGX_CFLAGS) $(DEBUG_FLAGS)
 
 LIBRARIES=sgx_urts sgx_uae_service
 LOAD_LIBRARIES=$(patsubst %,-l%$(LIBRARY_SUFFIX), $(LIBRARIES))

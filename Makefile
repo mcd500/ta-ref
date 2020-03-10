@@ -1,25 +1,35 @@
 BUILD_DIR=build
 TEST_DIR=test
-# sgx option(DEBUG, RELEASE, PRERELEASE)
-DEBUG_TYPE=DEBUG
-PROFILER=OFF
 
+# used only on sgx/App
+## sgx option(DEBUG, RELEASE, PRERELEASE)
+export DEBUG_TYPE ?= DEBUG
+export PROFILER ?= OFF
+# almost not implemented
+## keystone => SIM, SIFIVE, sgx: SIM, HW, optee: SIM, ..
+export MODE ?= SIM
+
+ifeq ($(DEBUG_TYPE), DEBUG)
+export DEBUG_FLAGS = -g -O0 -DAPP_VERBOSE -DENCLAVE_VERBOSE
+else
+export DEBUG_FLAGS = -O2
+endif
 
 .PHONY: build test run clean mrproper
 
 build: select
-	make -C $(BUILD_DIR) DEBUG_TYPE=$(DEBUG_TYPE) PROFILER=$(PROFILER)
+	make -C $(BUILD_DIR)
 
 # build test -> ship execs -> make image
 test:
-	make -C $(TEST_DIR) build image TEE=$(TEE) DEBUG_TYPE=$(DEBUG_TYPE) PROFILER=$(PROFILER)
+	make -C $(TEST_DIR) build image TEE=$(TEE)
 
 run:
 	make -C $(TEST_DIR) run TEE=$(TEE)
 
 # build test only
 build_test:
-	make -C $(TEST_DIR) build TEE=$(TEE) DEBUG_TYPE=$(DEBUG_TYPE) PROFILER=$(PROFILER)
+	make -C $(TEST_DIR) build TEE=$(TEE)
 
 image:
 	make -C $(TEST_DIR) image TEE=$(TEE)

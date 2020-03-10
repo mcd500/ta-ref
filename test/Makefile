@@ -24,6 +24,18 @@ CFLAGS=$(addprefix -I,$(INCLUDE_DIRS))
 
 LIB_DIRS = $(TOPDIR)/build/lib $(CURDIR)/lib
 
+# perf settings if enable
+ifeq ($(PROFILER), ON)
+CXXFLAGS += -DPERF_ENABLE
+LDFLAGS += -lprofiler
+PERF_OBJS := $(OBJS)
+PERF_OPTION := -finstrument-functions
+else
+PERF_OBJS =
+PERF_OPTION =
+endif
+CFLAGS += $(DEBUG_FLAGS)
+
 .PHONY: all build image run clean
 
 all: build image
@@ -37,11 +49,15 @@ $(LIB): $(OBJS)
 $(OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 
+# override old rules
+$(PERF_OBJS): %.o: %.c
+	$(CC) $(CFLAGS) $(PERF_OPTION) -o $@ -c $^
+
+
 # build TEE-dependent code
 # We should make this part as small as possible..
-SGX_MODE=SIM
 build: gp
-	make -C $(TEE) build LIB_DIRS="$(LIB_DIRS)" INCLUDE_DIRS="$(COMMON_INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE) SGX_MODE=$(SGX_MODE) PROFILER=$(PROFILER)
+	make -C $(TEE) build LIB_DIRS="$(LIB_DIRS)" INCLUDE_DIRS="$(COMMON_INCLUDE_DIRS)"
 
 image:
 	make -C $(TEE) image

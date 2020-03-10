@@ -1,7 +1,7 @@
 # LIB_DIRS INCLUDE_DIRS
-MODE = $(SGX_MODE)
-APP_BIN = App/sgx_app
-ENCLAVE_BIN=enclave.signed.so
+MODE ?= SIM
+APP_BIN := App/sgx_app
+ENCLAVE_BIN := enclave.signed.so
 
 SGX_LIB_DIRS = $(LIB_DIRS) $(SGX_LIBRARY_DIR)
 
@@ -10,10 +10,10 @@ SGX_LIB_DIRS = $(LIB_DIRS) $(SGX_LIBRARY_DIR)
 build: app enclave
 
 app:
-	make -C App LIB_DIRS="$(SGX_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE) MODE=$(MODE)
+	make -C App LIB_DIRS="$(SGX_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)"
 
 enclave:
-	make -C Enclave LIB_DIRS="$(SGX_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)" DEBUG_TYPE=$(DEBUG_TYPE) MODE=$(MODE)
+	make -C Enclave LIB_DIRS="$(SGX_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)"
 	$(SLN) Enclave/$(ENCLAVE_BIN) $(ENCLAVE_BIN)
 
 image:

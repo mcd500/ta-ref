@@ -44,6 +44,25 @@ keystone_mbedcrypt:
     script:
         - 'echo dummy'
 
+keystone_profiler:
+    variables:
+        TEE: keystone
+        IMAGE: ${KEYSTONE_IMAGE}
+        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
+        # TODO: this is too nasy, so we use `image:` tag
+        SCRIPT: "source env/${TEE}.sh &&
+          make select &&
+          make build PROFILER=ON &&
+          make test PROFILER=ON &&
+          make run"
+    stage: test
+    only:
+        - master
+    tags:
+        - shell
+    script:
+        - 'echo dummy'
+
 keystone_wolfcrypt:
     variables:
         TEE: keystone
@@ -91,7 +110,7 @@ sgx_x64_hw:
         SCRIPT: "source env/${TEE}.sh &&
           make select &&
           make build &&
-          make test SGX_MODE=HW"
+          make test MODE=HW"
     stage: test
     only:
         - master

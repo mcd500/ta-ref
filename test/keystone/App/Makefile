@@ -22,6 +22,14 @@ PERF_OBJS =
 PERF_OPTION =
 endif
 
+ifeq ($(DEBUG_TYPE), DEBUG)
+DEBUG_OPTION = -g -O0
+else
+DEBUG_OPTION =
+endif
+CXXFLAGS += $(DEBUG_OPTION)
+
+
 # TODO: flatccrt library is used only for Enclave_u library, so we want merge flatccrt with Enclave_u
 LDFLAGS += $(addprefix -L,$(LIB_DIRS)) -lkeystone-host -lkeystone-edge -lEnclave_u -lflatccrt
 
@@ -33,12 +41,12 @@ all: $(APP_BIN)
 $(APP_BIN): %.client : $(OBJS)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
-$(PERF_OBJS): %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(PERF_OPTION) -c $^ -o $@
-
-# ignore perf_objs.
 $(OBJS): %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $^ -o $@
+
+# override old rules
+$(PERF_OBJS): %.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(PERF_OPTION) -c $^ -o $@
 
 clean:
 	rm -rf *.o $(APP_BIN)

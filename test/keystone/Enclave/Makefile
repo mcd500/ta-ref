@@ -14,6 +14,25 @@ LDFLAGS += $(addprefix -L,$(LIB_DIRS))
 # TODO: tee_api library is dependent on crypto libraries.
 LDFLAGS += -lgp -lEnclave_t -lflatccrt -lkeystone-eapp -ltee_api -lmbedtls -ltiny_AES_c -ltiny_sha3 -led25519 -lwolfssl
 
+# perf settings if enable
+ifeq ($(PROFILER), ON)
+CFLAGS += -DPERF_ENABLE
+LDFLAGS += -lprofiler
+PERF_OBJS = App_ocalls.cpp
+PERF_OPTION = -finstrument-functions
+else
+PERF_OBJS =
+PERF_OPTION =
+endif
+
+ifeq ($(DEBUG_TYPE), DEBUG)
+DEBUG_OPTION = -g -O0
+else
+DEBUG_OPTION =
+endif
+CXXFLAGS += $(DEBUG_OPTION)
+
+
 all: $(ENCLAVE_BIN)
 
 $(ENCLAVE_OBJS): %.o: %.c

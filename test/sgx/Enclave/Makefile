@@ -1,9 +1,3 @@
-ifeq ($(DEBUG_TYPE), DEBUG)
-DEBUG_FLAGS = -O0 -g
-else
-DEBUG_FLAGS = -O2
-endif
-
 ifneq ($(MODE), HW)
 LIBRARY_SUFFIX = _sim
 else
