@@ -61,7 +61,8 @@ int ocall_ree_time(struct ree_time_t *timep)
 {
   struct timeval tv;
   struct timezone tz;
-  int rtn = gettimeofday(&tv, &tz);
+  //int rtn = gettimeofday(&tv, &tz);
+  gettimeofday(&tv, &tz);
 #ifdef APP_VERBOSE
   printf("@[SE] gettimeofday %d sec %d usec -> %d\n",tv.tv_sec,tv.tv_usec,rtn);
 #endif

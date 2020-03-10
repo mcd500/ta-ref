@@ -4,8 +4,12 @@
 #include <stdarg.h>
 #include <stdio.h> /* vsnprintf */
 
-static inline unsigned int _strlen(const char* str);
-
+static inline unsigned int _strlen(const char* str)
+{
+  const char* s;
+  for (s = str; *s; ++s);
+  return (unsigned int)(s - str);
+}
 
 // Compiler may replace simple printf to puts and putchar
 int puts(const char *s)
@@ -46,11 +50,4 @@ int printf(const char* fmt, ...)
 #else
   return 0;
 #endif
-}
-
-static inline unsigned int _strlen(const char* str)
-{
-  const char* s;
-  for (s = str; *s; ++s);
-  return (unsigned int)(s - str);
 }

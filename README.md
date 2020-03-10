@@ -44,7 +44,7 @@ docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_sgx_devel
 Next, build && test:
 
 ```sh
-source env/sgx.sh
+source env/sgx_x64.sh
 make build
 make test
 make run
