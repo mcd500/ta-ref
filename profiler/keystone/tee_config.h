@@ -1,5 +1,6 @@
 #include <fcntl.h>
-#include "profiler_data.h"
+#include "profiler_attrs.h"
+#include <stdint.h>
 
 static uintptr_t __section_start = 0;
 

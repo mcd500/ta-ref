@@ -15,7 +15,13 @@ BUILD_DIR = $(TOPDIR)/build
 
 INCLUDE_DIRS = $(TEE)
 # for Enclave_t.h
-INCLUDE_DIRS += $(BUILD_DIR)/include ${KEYSTONE_SDK_LIB_DIR}/app/include
+INCLUDE_DIRS += $(BUILD_DIR)/include $(CURDIR)
+
+ifneq ($(KEYSTONE_SDK_LIB_DIR),)
+INCLUDE_DIRS += ${KEYSTONE_SDK_LIB_DIR}/app/include
+endif
+
+
 CFLAGS = $(addprefix -I, $(INCLUDE_DIRS))
 PERF_SIZE=65536
 
