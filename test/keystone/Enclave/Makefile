@@ -1,26 +1,23 @@
 .PHONY: all clean
 
 ENCLAVE_BIN = Enclave.eapp_riscv
-#ENCLAVE_LIB_SRCS = printf.c tools.c strcmp.c startup.c
 SRCS = $(wildcard *.c)
-#ENCLAVE_LIB_OBJS = $(ENCLAVE_LIB_OBJS:.c=.o)
 OBJS= $(SRCS:.c=.o)
 INCLUDE_PATHS=$(INCLUDE_DIRS) $(KEYSTONE_SDK_LIB_DIR)/app/include
 
-
-
 CFLAGS += $(addprefix -I,$(INCLUDE_PATHS))
-CFLAGS += $(addprefix -fno-builtin-,puts putchar printf)
-LDFLAGS += $(addprefix -L,$(LIB_DIRS))
 
 # TODO: Enlave_t is dependent on flatccrt
 # TODO: tee_api library is dependent on crypto libraries.
-LDFLAGS += -lgp -lEnclave_t -lflatccrt -lkeystone-eapp -ltee_api -lmbedtls -ltiny_AES_c -ltiny_sha3 -led25519 -lwolfssl
+LIBS = etools gp
+LIBS += Enclave_t flatccrt
+LIBS += keystone-eapp
+LIBS += tee_api mbedtls tiny_AES_c tiny_sha3 ed25519 wolfssl
 
 # perf settings if enable
 ifeq ($(PROFILER), ON)
 CFLAGS += -DPERF_ENABLE
-LDFLAGS += -lprofiler
+LIBS += profiler
 PERF_SRCS := Enclave.c
 PERF_OBJS := $(PERF_SRCS:.c=.o)
 PERF_OPTION := -finstrument-functions
@@ -29,12 +26,10 @@ PERF_OBJS =
 PERF_OPTION =
 endif
 
-ifeq ($(DEBUG_TYPE), DEBUG)
-DEBUG_OPTION = -g -O0
-else
-DEBUG_OPTION =
-endif
-CXXFLAGS += $(DEBUG_OPTION)
+CFLAGS += $(DEBUG_FLAGS)
+
+LDFLAGS += $(addprefix -L,$(LIB_DIRS))
+LDFLAGS += --start-group $(addprefix -l,$(LIBS)) --end-group
 
 all: $(ENCLAVE_BIN)
 
@@ -48,4 +43,4 @@ $(ENCLAVE_BIN): $(OBJS)
 	$(LINK) -o $@ $^ $(LDFLAGS) -T Enclave.lds
 
 clean:
-	$(RM) $(ENCLAVE_OBJS) $(ENCLAVE_BIN)
+	$(RM) $(OBJS) $(ENCLAVE_BIN)

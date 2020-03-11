@@ -10,9 +10,15 @@ export TOPDIR=$(CURDIR)/..
 TOPDIR=$(CURDIR)/..
 
 # build as $(LIB)
-SRCS=$(wildcard *.c)
-OBJS=$(SRCS:.c=.o)
-LIB=lib/libgp.a
+GP_SRCS=$(wildcard gp/*.c)
+GP_OBJS=$(GP_SRCS:.c=.o)
+TOOL_SRCS=$(wildcard *.c)
+TOOL_OBJS=$(TOOL_SRCS:.c=.o)
+
+OBJS=$(GP_OBJS) $(TOOL_OBJS)
+GP_LIB=lib/libgp.a
+TOOL_LIB=lib/libetools.a
+LIBS = $(GP_LIB) $(TOOL_LIB)
 
 COMMON_INCLUDE_DIRS=$(TOPDIR)/build/include $(TOPDIR)/api/include $(TOPDIR)/api/$(TEE) $(CURDIR)/include
 INCLUDE_DIRS = $(COMMON_INCLUDE_DIRS)
@@ -27,29 +33,32 @@ LIB_DIRS = $(TOPDIR)/build/lib $(CURDIR)/lib
 
 # perf settings if enable
 ifeq ($(PROFILER), ON)
-CXXFLAGS += -DPERF_ENABLE
+CFLAGS += -DPERF_ENABLE
 LDFLAGS += -lprofiler
-PERF_OBJS := $(OBJS)
+PERF_OBJS := $(GP_OBJS)
 PERF_OPTION := -finstrument-functions
 else
 PERF_OBJS =
 PERF_OPTION =
 endif
+
 CFLAGS += $(DEBUG_FLAGS)
+CFLAGS += $(addprefix -fno-builtin-,puts putchar printf)
 
 .PHONY: all build image run clean
 
-all: build image
+all: common build image
 
-# build global platform(tee-intedependent) code
-gp: $(LIB)
+# build global platform(tee-intedependent) and tools code
+common: $(GP_LIB) $(TOOL_LIB)
 
-$(LIB): $(OBJS)
+$(GP_LIB): $(GP_OBJS)
+	$(AR) $@ $^
+$(TOOL_LIB): $(TOOL_OBJS)
 	$(AR) $@ $^
 
 $(OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $^
-
 # override old rules
 $(PERF_OBJS): %.o: %.c
 	$(CC) $(CFLAGS) $(PERF_OPTION) -o $@ -c $^
@@ -57,7 +66,7 @@ $(PERF_OBJS): %.o: %.c
 
 # build TEE-dependent code
 # We should make this part as small as possible..
-build: gp
+build: common
 	make -C $(TEE) build LIB_DIRS="$(LIB_DIRS)" INCLUDE_DIRS="$(COMMON_INCLUDE_DIRS)"
 
 image:
@@ -70,6 +79,6 @@ qemu:
 	make -C $(TEE) qemu
 
 clean:
-	$(RM) $(OBJS) $(LIB)
+	$(RM) $(OBJS) $(LIBS)
 	make -C keystone clean
 	make -C sgx clean

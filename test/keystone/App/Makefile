@@ -49,10 +49,6 @@ $(OBJS): %.o: %.cpp
 $(PERF_OBJS): %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(PERF_OPTION) -c $^ -o $@
 
-# override old rules
-$(PERF_OBJS): %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(PERF_OPTION) -c $^ -o $@
-
 clean:
 	rm -rf *.o $(APP_BIN)
 
