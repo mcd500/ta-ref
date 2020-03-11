@@ -29,7 +29,7 @@
  */
 
 #include "gp_test.h"
-//#include "printf.h"
+//#include "tools.h"
 
 /* ecall_print_aes:
  *   testing symmetric key verification
