@@ -7,9 +7,10 @@ INCLUDE_PATHS=$(INCLUDE_DIRS) $(KEYSTONE_SDK_LIB_DIR)/app/include
 
 CFLAGS += $(addprefix -I,$(INCLUDE_PATHS))
 
-# TODO: Enlave_t is dependent on flatccrt
-# TODO: tee_api library is dependent on crypto libraries.
-LIBS = etools gp
+# NOTE: gp is dependent on etools which is dependent on Enclave_t(ocall_** functions)
+# NOTE: Enlave_t is dependent on flatccrt
+# NOTE: tee_api library is dependent on crypto libraries.
+LIBS = gp etools
 LIBS += Enclave_t flatccrt
 LIBS += keystone-eapp
 LIBS += tee_api mbedtls tiny_AES_c tiny_sha3 ed25519 wolfssl
