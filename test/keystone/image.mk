@@ -6,7 +6,12 @@ EYRIE_BIN=$(KEYSTONE_DIR)/sdk/rts/eyrie/eyrie-rt
 APP_BIN=App/App.client
 ENCLAVE_BIN=Enclave/Enclave.eapp_riscv
 ENCLAVE_NM = $(ENCLAVE_BIN:.eapp_riscv=.nm)
+
+ifeq ($(PROFILER), ON)
 ANALYZER_BIN=$(TOPDIR)/profiler/analyzer/analyzer
+else
+ANALYZER_BIN=
+endif
 
 .PHONY: all clean
 
