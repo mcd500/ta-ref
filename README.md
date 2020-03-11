@@ -10,7 +10,7 @@ Note) We recommend that we use docker images because we export multiple environm
 |intel_sgx|vc707/test:ta_ref_sgx_devel|
 |optee|(not yet)|
 
-For more information, see [GitLab CI job configuration file](./gitlab-ci.yml).
+For more information, see [GitLab CI job configuration file](http://192.168.100.100/vc707/ta-ref/-/blob/master/.gitlab-ci.yml).
 
 ## keystone
 
