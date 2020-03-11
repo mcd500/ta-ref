@@ -1,12 +1,7 @@
-#include "tools.h"
+//#include "tools.h" // for printf-debug
 #include "gp_test.h"
 
 int main(void) {
-  //edge_init();
-  //magic_random_init();
-
-  printf("gp ecall_ta_main() start\n");
-
   gp_random_test();
 
   gp_ree_time_test();
@@ -25,10 +20,5 @@ int main(void) {
   gp_asymmetric_key_sign_test();
 
   // asymmetric_key_verify_test();
-#ifdef NOT_DONE
-#endif
-
-  printf("gp ecall_ta_main() end\n");
-
   return 0;
 }

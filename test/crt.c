@@ -1,10 +1,9 @@
+#include "crt.h"
 #include "edger/Enclave_t.h"
 
 #ifdef PERF_ENABLE
 #include "profiler/profiler.h"
 #endif
-
-int main(void);
 
 static void (*const init_array []) ()
   __attribute__ ((section (".init_array"), aligned (sizeof (void *))))
@@ -26,18 +25,18 @@ extern void (*__init_array_end []) (void) __attribute__((weak));
 extern void (*__fini_array_start []) (void) __attribute__((weak));
 extern void (*__fini_array_end []) (void) __attribute__((weak));
 
-void EAPP_ENTRY eapp_entry(){
-  if (__init_array_start && __init_array_end) {
+void crt_begin(void) {
+    if (__init_array_start && __init_array_end) {
     for (void (**fp)() = __init_array_start; fp < __init_array_end; ++fp)
-      (**fp)();
-  }
+        (**fp)();
+    }
+    return;
+}
 
-  main();
-
-  if (__fini_array_start && __fini_array_end) {
+void crt_end(void) {
+    if (__fini_array_start && __fini_array_end) {
     for (void (**fp)() = __fini_array_end - 1; __fini_array_start <= fp; --fp)
-      (**fp)();
-  }
-
-  EAPP_RETURN(0);
+        (**fp)();
+    }
+    return;
 }
