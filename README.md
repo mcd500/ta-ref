@@ -2,7 +2,7 @@
 
 Improvement of http://192.168.100.100/vc707/tee-ta-reference. Please feel free to share your idea!
 
-Note) We recommend that we use docker images because we export multiple environment variables at the very beginning of build phase..
+Note) We recommend that we use docker images because we export multiple environment variables at the very beginning of build phase.
 
 |TEE|docker image|
 |---|---|
@@ -53,12 +53,12 @@ make run
 
 # Implementation
 
-+ We rely on TEE environment variable to switch TEE-dependent build which defines in $(TEE).sh. This shell script also defines keystone-related variable for convenience.
++ We rely on `TEE`(environment variable) to switch TEE-dependent build which defines in $(TEE).sh. This shell script also exports each tee-related variable for convenience.
 
 + This repo consists of three phases; build phase, test phase and demo phase:
 
-1. [Build phase]: This phase builds dependencies such as crypto, profiler, edger and tee api functions(`TEE_**` functions) to create library named `libtee_api.a`.
+1. [Build phase]: In This phase several dependencies are built such as crypto, profiler, edger and tee api functions(`TEE_**` functions) to create library named `libtee_api.a`.
 
-2. [Test phase]: This phase build global platform function and TEE-dependent (glue) code.
+2. [Test phase]: In this phase global platform API functions are and TEE-dependent (glue) codes are built.
 
 3. [Demo phase]: After finishing previous phase, we can exec `make run` to check demo. (Currently, we support qemu environment).
