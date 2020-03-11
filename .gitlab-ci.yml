@@ -101,6 +101,25 @@ sgx_x64_sim:
     script:
         - 'echo dummy'
 
+sgx_x64_sim_profiler:
+    variables:
+        TEE: sgx_x64
+        IMAGE: ${SGX_IMAGE}
+        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
+        # TODO: this is too nasy, so we use `image:` tag
+        SCRIPT: "source env/${TEE}.sh &&
+          make select &&
+          make build PROFILER=ON &&
+          make test MODE=SIM PROFILER=ON &&
+          make run"
+    stage: test
+    only:
+        - master
+    tags:
+        - shell
+    script:
+        - 'echo dummy'
+
 sgx_x64_hw:
     variables:
         TEE: sgx_x64
