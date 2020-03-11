@@ -8,7 +8,6 @@ DEPENDS=edger crypto
 EDGER_TYPE=KEYEDGE
 # MBEDCRYPT or WOLFCRYPT
 CRYPT_TYPE=MBEDCRYPT
-PROFILER=OFF
 
 ifeq ($(PROFILER),ON)
 # after edger because of use of Enclave_t header
