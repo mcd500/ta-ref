@@ -36,6 +36,10 @@ all: $(APP_BIN)
 
 $(OBJS): %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+# ignore old rules
+$(PERF_OBJS): %.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(PERF_OPTION) -c $^ -o $@
+
 
 # link
 $(APP_BIN): $(OBJS)

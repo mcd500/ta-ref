@@ -28,17 +28,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "Enclave.h"
-#include "printf.h"
+#include "gp_test.h"
+//#include "printf.h"
 
 /* ecall_print_aes:
  *   testing symmetric key verification
  */
-void ecall_ta_main(void)
+int main(void)
 {
-
-    printf("ecall_ta_main() start\n");
-
     gp_random_test();
 
     gp_ree_time_test();
@@ -56,10 +53,5 @@ void ecall_ta_main(void)
 //    gp_symmetric_key_dec_verify_test();
 
     gp_asymmetric_key_sign_test();
-
 //    gp_asymmetric_key_verify_test();
-#ifdef NOT_DONE
-#endif
-
-    printf("ecall_ta_main() end\n");
 }

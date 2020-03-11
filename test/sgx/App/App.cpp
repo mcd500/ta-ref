@@ -45,6 +45,9 @@
 #include "App.h"
 #include "edger/Enclave_u.h"
 #include "types.h"
+#ifdef PERF_ENABLE
+#include "profiler/profiler.h"
+#endif
 
 /* Check error conditions for loading enclave */
 void print_error_message(sgx_status_t ret)
@@ -86,6 +89,9 @@ int initialize_enclave(void)
 /* Application entry */
 int SGX_CDECL main(int argc, char *argv[])
 {
+#ifdef PERF_ENABLE
+    __profiler_map_info();
+#endif
     (void)(argc);
     (void)(argv);
     int ret = SGX_ERROR_UNEXPECTED;
@@ -108,6 +114,9 @@ main_destory_out:
     printf("Info: Enclave successfully returned.\n");
 
 main_out:
+#ifdef PERF_ENABLE
+    __profiler_map_info();
+#endif
     printf("Enter a character before exit ...\n");
     getchar();
     return ret;

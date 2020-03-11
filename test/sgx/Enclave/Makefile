@@ -16,6 +16,20 @@ LIBS += Enclave_t
 # default
 LIBS += sgx_tstdc sgx_tcxx sgx_tcrypto sgx_tservice$(LIBRARY_SUFFIX)
 
+# perf settings if enable
+ifeq ($(PROFILER), ON)
+CFLAGS += -DPERF_ENABLE
+#LDFLAGS += -lprofiler
+LIBS += profiler
+PERF_SRCS := Enclave.c
+PERF_OBJS := $(PERF_SRCS:.c=.o)
+PERF_OPTION := -finstrument-functions
+else
+PERF_OBJS =
+PERF_OPTION =
+endif
+
+
 # These flags are stereotyped. For more information, see https://github.com/intel/linux-sgx/blob/9ddec08fb98c1636ed3b1a77bbc4fa3520344ede/SampleCode/SampleEnclave/Makefile#L132-L149.
 Enclave_Security_Link_Flags := -Wl,-z,relro,-z,now,-z,noexecstack
 Enclave_Link_Flags := $(Enclave_Security_Link_Flags) \
@@ -41,6 +55,9 @@ all: $(SIGNED_ENCLAVE_LIBRARY)
 
 $(OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
+# ignore old rules
+$(PERF_OBJS): %.o: %.c
+	$(CC) $(CFLAGS) $(PERF_OPTION) -c $< -o $@
 
 $(ENCLAVE_LIBRARY): $(OBJS)
 	$(CXX) $^ -o $@ $(LDFLAGS)
