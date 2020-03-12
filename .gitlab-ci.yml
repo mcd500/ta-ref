@@ -111,7 +111,7 @@ sgx_x64_sim_profiler:
           make select &&
           make build PROFILER=ON &&
           make test MODE=SIM PROFILER=ON &&
-          make run"
+          make run PROFILER=ON"
     stage: test
     only:
         - master

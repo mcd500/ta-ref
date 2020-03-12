@@ -20,9 +20,17 @@ image:
 	make -f image.mk
 
 # Assume that we are build on x86_64 machine, so qemu is not necessary to run.
-run:
+JOBS = demo
+ifeq ($(PROFILER), ON)
+JOBS += analyze
+endif
+run: $(JOBS)
+
+demo:
 	./$(APP_BIN)
-	./analyzer shared_mem enclave.nm
+
+analyze:
+	./analyzer shared_mem $(ENCLAVE_NM)
 
 clean:
 	$(RM) $(ENCLAVE_LIB) $(ENCLAVE_NM) $(APP_BIN) shared_mem analyzer
