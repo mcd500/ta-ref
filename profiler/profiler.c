@@ -23,9 +23,7 @@ void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
     __profiler_head->size = PERF_SIZE;
     __profiler_head->idx = 0;
     __profiler_head->start = __rdtsc();
-    uintptr_t ptr = 0;
-    ptr = __section_start;
-    __cyg_profile_func((void*)ptr, START);
+    __cyg_profile_func((void*)__ImageBase, START);
 }
 
 static inline void NO_PERF __cyg_profile_func(void * const this_fn, enum direction_t const dir) {

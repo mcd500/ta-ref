@@ -47,6 +47,7 @@ int main(int argc, char *argv[]) {
         __profiler_nsec_t nsec = data->nsec;
         if(i == 0) {
             baseaddr = (unsigned long)data->callee;
+            printf("baseaddr: 0x%08lx\n", baseaddr);
             res.start = nsec;
             res.end = 0;
             continue;

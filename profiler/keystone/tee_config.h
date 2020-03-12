@@ -2,7 +2,7 @@
 #include "profiler_attrs.h"
 #include <stdint.h>
 
-static uintptr_t __section_start = 0;
+static uintptr_t __ImageBase = 0;
 
 static inline uint64_t NO_PERF tee_rdtsc(void)
 {

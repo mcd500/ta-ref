@@ -2,10 +2,7 @@
 #include "profiler_attrs.h"
 #include <stdint.h>
 
-/* open-only flags */
-//#define O_RDWR     00002
-//#define O_CREAT	   00100
-uintptr_t __section_start = 0;
+extern uintptr_t __ImageBase[];
 
 static inline uint64_t NO_PERF tee_rdtsc(void)
 {
