@@ -1,5 +1,5 @@
 APP_BIN=App/sgx_app
-ENCLAVE_LIB=Enclave/Enclave.signed.so
+ENCLAVE_LIB=Enclave/enclave.signed.so
 ENCLAVE_NM = $(ENCLAVE_LIB:.signed.so=.nm)
 
 ifeq ($(PROFILER), ON)
@@ -11,6 +11,8 @@ endif
 OUT_DIR=$(CURDIR)
 
 .PHONY: all clean
+
+all: image
 
 image: ship
 

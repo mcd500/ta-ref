@@ -147,7 +147,7 @@ sgx_x64_hw_profiler:
         SCRIPT: "source env/${TEE}.sh &&
           make select &&
           make build PROFILER=ON &&
-          make test MODE=SIM PROFILER=ON"
+          make test MODE=HW PROFILER=ON"
     stage: test
     only:
         - master
