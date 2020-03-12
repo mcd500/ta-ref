@@ -5,7 +5,7 @@ endif
 include ./general.mk
 
 #DEPENDS=crypto
-DEPENDS=
+DEPENDS=edger
 # MBEDCRYPT or WOLFCRYPT
 # CRYPT_TYPE=MBEDCRYPT
 
@@ -26,6 +26,9 @@ depends: $(DEPENDS)
 
 profiler:
 	make -f profiler.mk
+
+edger:
+	make optee_build -f edger_glue.mk EDGER_TYPE=NONE
 
 # crypto:
 # 	make -f crypto.mk

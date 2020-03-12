@@ -20,8 +20,13 @@ PERF_OBJS =
 PERF_OPTION =
 endif
 
+INCLUDE_DIRS=$(INCLUDE_DIR) $(TEE) include
+ifneq ($(KEYSTONE_SDK_LIB_DIR),)
+INCLUDE_DIRS += $(KEYSTONE_SDK_LIB_DIR)/app/include
+endif
 
-CFLAGS += $(addprefix -I,$(INCLUDE_DIR) $(TEE) include $(CRYPTO_DIR) $(KEYSTONE_SDK_LIB_DIR)/app/include)
+
+CFLAGS += $(addprefix -I,$(INCLUDE_DIRS))
 CFLAGS += -DCRYPTLIB=$(CRYPT_TYPE)
 
 all: $(LIB)

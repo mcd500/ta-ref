@@ -82,3 +82,4 @@ clean:
 	$(RM) $(OBJS) $(LIBS)
 	make -C keystone clean
 	make -C sgx clean
+	make -C optee clean

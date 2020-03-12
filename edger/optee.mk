@@ -1,0 +1,2 @@
+build:
+	$(SLN) $(TEE)/*.h ./

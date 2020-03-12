@@ -22,9 +22,6 @@ all: build
 
 build: depends api
 
-debug:
-	make build -f edger.mk EDGER_TYPE=$(EDGER_TYPE)
-
 depends: $(DEPENDS)
 
 profiler:

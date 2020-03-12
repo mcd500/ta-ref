@@ -7,6 +7,8 @@ else ifeq ($(EDGER_TYPE), KEEDGER8R)
 EDGER_BIN=$(EDGER_DIR)/keedger8r
 else ifeq ($(EDGER_TYPE), EDGER8R)
 EDGER_BIN=$(EDGER_BIN)
+else ifeq ($(EDGER_TYPE), NONE)
+# do noting
 else
 $(error EDGER_TYPE is invalid value. set KEYEDGE, KEEDGER8R or EDGER8R.)
 endif
@@ -42,3 +44,7 @@ sgx_clean:
 
 sgx_mrproper: sgx_clean
 	make clean -C $(TOPDIR)/edger -f sgx.mk
+
+optee_build:
+	make build -C $(TOPDIR)/edger -f optee.mk
+	$(SLN) $(TOPDIR)/edger/*.h $(EDGER_INCLUDE_DIR)
