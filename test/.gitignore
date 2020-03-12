@@ -1,5 +1,8 @@
 *.o
 *.a
-*_app
+*app
 *.so
+*.nm
 FileOne
+analyzer
+shared_mem
