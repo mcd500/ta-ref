@@ -117,7 +117,5 @@ main_out:
 #ifdef PERF_ENABLE
     __profiler_map_info();
 #endif
-    printf("Enter a character before exit ...\n");
-    getchar();
     return ret;
 }

@@ -1,6 +1,6 @@
 # LIB_DIRS INCLUDE_DIRS
 MODE ?= SIM
-APP_BIN := App/sgx_app
+APP_BIN := sgx_app
 ENCLAVE_LIB := enclave.signed.so
 ENCLAVE_NM := $(ENCLAVE_LIB:.signed.so=.nm)
 
@@ -25,6 +25,7 @@ run:
 	./analyzer shared_mem enclave.nm
 
 clean:
-	$(RM) $(ENCLAVE_LIB) $(ENCLAVE_NM) shared_mem FileOne
+	$(RM) $(ENCLAVE_LIB) $(ENCLAVE_NM) $(APP_BIN) shared_mem analyzer
+	make -f image.mk clean
 	make -C App clean
 	make -C Enclave clean
