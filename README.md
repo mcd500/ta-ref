@@ -50,6 +50,10 @@ make test
 make run
 ```
 
+# delete
+
+If you want to clean build directory only, try `make clean`. Otherwise, `make mrproper` will clean objects for all directories completely.
+
 
 # Implementation
 
