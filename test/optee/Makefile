@@ -40,7 +40,7 @@ run: $(JOBS)
 
 run:
 	socat TCP4-LISTEN:$(RANDOM_PORT),reuseaddr - &
-	 PORT=$(RANDOM_PORT) ./run-apps.sh
+	PORT=$(RANDOM_PORT) ./run-apps.sh
 
 qemu:
 	socat TCP4-LISTEN:$(RANDOM_PORT),reuseaddr - &

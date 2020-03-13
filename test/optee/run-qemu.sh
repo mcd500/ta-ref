@@ -12,6 +12,6 @@ cd ${OPTEE_DIR}/out/bin && ${OPTEE_DIR}/qemu/aarch64-softmmu/qemu-system-aarch64
 	-d unimp -semihosting-config enable,target=native \
 	-m 1057 \
 	-bios bl1.bin \
-	-initrd rootfs.cpio.gz \
+	-initrd ${OPTEE_OUT_DIR}/images/rootfs.cpio.gz \
 	-kernel Image -no-acpi \
 	-append 'console=ttyAMA0,38400 keep_bootcon root=/dev/vda2'

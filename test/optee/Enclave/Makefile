@@ -121,4 +121,4 @@ image:
 	make -f image.mk
 
 clean:
-	$(RM) $(OBJS) $(UUID_TA) $(UUID_STRIPPED_ELF) $(UUID_DMP) $(UUID_ELF)
+	$(RM) $(OBJS) $(UUID_TA) $(UUID_STRIPPED_ELF) $(UUID_DMP) $(UUID_ELF) $(UUID_NM)

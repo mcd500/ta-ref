@@ -21,7 +21,8 @@ image: ship
 	make -C $(OPTEE_DIR)/build buildroot
 
 ship:
-	install -m 0755 $(APP_BIN) $(UUID_NM) $(ANALYZER_BIN) $(TARGET_DIR)/root/
+	$(RM) $(TARGET_DIR)/root/*
+	install -m 0755 $(APP_BIN) $(APP_BIN)_old $(UUID_NM) $(ANALYZER_BIN) $(TARGET_DIR)/root/
 	install -m 0444 $(UUID_TA) $(TARGET_DIR)/lib/optee_armtz/
 
 clean:
