@@ -39,11 +39,11 @@ RANDOM_PORT = $(shell expr $(SEED) % 30000 + 10000)
 run: $(JOBS)
 
 demo:
-	socat TCP4-LISTEN:$(RANDOM_PORT),reuseaddr - &
+	socat TCP4-LISTEN:$(RANDOM_PORT),reuseaddr - | tee /dev/stdout &
 	PORT=$(RANDOM_PORT) ./run-apps.sh
 
 qemu:
-	socat TCP4-LISTEN:$(RANDOM_PORT),reuseaddr - &
+	socat TCP4-LISTEN:$(RANDOM_PORT),reuseaddr - | tee /dev/stdout &
 	PORT=$(RANDOM_PORT) ./run-qemu.sh
 
 clean:

@@ -72,8 +72,7 @@ cppflags$(sm) += $(strip \
 
 OPTEE_INCLUDE_DIRS = $(INCLUDE_DIRS) $(CURDIR) $(TA_DEV_DIR)/include
 
-# warning + -nostdinc + other flags @ ./mk/compile.mk
-CFLAGS = $(comp-cflags-warns-$(WARNS)) $(comp-cflags-warns-$(COMPILER_$(sm))) $(nostdinc$(sm)) $(cppflags$(sm))
+CFLAGS = $(comp-cflags$(sm)) $(comp-cflags-warns-$(WARNS)) $(comp-cflags-warns-$(COMPILER_$(sm))) $(cflags$(sm)) $(nostdinc$(sm)) $(cppflags$(sm))
 CFLAGS += $(addprefix -I,$(OPTEE_INCLUDE_DIRS))
 #CFLAGS += -D__FILE_ID__=$(subst -,_,$(subst /,_,$(subst .,_,$1)))
 
@@ -101,7 +100,7 @@ $(OBJS): %.o: %.c
 		--rename-section .rodata.str1.1=.rodata.str1.1.$^ \
 		$@
 
-$(UUID_ELF): $(OBJS)
+$(UUID_ELF): Enclave.o user_ta_header.o
 	$(LD$(sm)) $(LDFLAGS) --as-needed $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 # used in profiler
