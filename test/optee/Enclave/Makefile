@@ -53,7 +53,7 @@ comp-cflags-warns-2:= $(comp-cflags-warns-1) $(comp-cflags-warns-medium)
 comp-cflags-warns-3:= $(comp-cflags-warns-2) $(comp-cflags-warns-low)
 
 cppflags$(sm)  := $($(sm)-platform-cppflags) $(CPPFLAGS_$(sm))
-aflags$(sm)    := $($(sm)-platform-aflags)
+#aflags$(sm)    := $($(sm)-platform-aflags)
 cflags$(sm)    := $($(sm)-platform-cflags) $(CFLAGS_$(sm))
 
 CFG_TEE_TA_LOG_LEVEL ?= 2
@@ -72,8 +72,16 @@ cppflags$(sm) += $(strip \
 
 OPTEE_INCLUDE_DIRS = $(INCLUDE_DIRS) $(CURDIR) $(TA_DEV_DIR)/include
 
-CFLAGS = $(comp-cflags$(sm)) $(comp-cflags-warns-$(WARNS)) $(comp-cflags-warns-$(COMPILER_$(sm))) $(cflags$(sm)) $(nostdinc$(sm)) $(cppflags$(sm))
+DEFAULT_CFLAGS = $(comp-cflags$(sm)) $(comp-cflags-warns-$(WARNS)) $(comp-cflags-warns-$(COMPILER_$(sm))) $(cflags$(sm)) $(nostdinc$(sm)) $(cppflags$(sm))
+
+
+# remove default debug & optimization option
+CFLAGS = $(filter-out -g0 -g1 -g -g3 -O -O1 -O2 -O3 -O0 -Os -Ofast -Og, $(DEFAULT_CFLAGS))
+# DEBUG_FLAGS variable derives from Makefile in topdir
+CFLAGS += $(DEBUG_FLAGS)
+
 CFLAGS += $(addprefix -I,$(OPTEE_INCLUDE_DIRS))
+# TODO: Does this need??
 #CFLAGS += -D__FILE_ID__=$(subst -,_,$(subst /,_,$(subst .,_,$1)))
 
 # see link-ldflags in link.mk

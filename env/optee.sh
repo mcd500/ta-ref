@@ -5,7 +5,7 @@ export TEE=optee
 #export ARCH=aarch64
 export ENABLE_TEE_ENVS=1
 # ${OPTEE_DIR}/toolchains/${ARCH}/bin would error when link.
-export OPTEE_OUT_DIR=${OPTEE_DIR}/out-br
+export OPTEE_OUTBR_DIR=${OPTEE_DIR}/out-br
 export OPTEE_TOOLCHAIN_DIR=${OPTEE_DIR}/out-br/host/bin
 export TOOLPREFIX=${OPTEE_TOOLCHAIN_DIR}/aarch64-linux-gnu-
 

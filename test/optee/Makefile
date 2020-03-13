@@ -7,6 +7,7 @@
 
 export user-ta-version ?= 1
 MK_DIR = Enclave/mk
+LOG_FILE = /tmp/tee.log
 
 # LIB_DIRS INCLUDE_DIRS
 MODE ?= SIM
@@ -38,17 +39,17 @@ RANDOM_PORT = $(shell expr $(SEED) % 30000 + 10000)
 
 run: $(JOBS)
 
-demo:
+socat:
 	socat TCP4-LISTEN:$(RANDOM_PORT),reuseaddr - | tee /dev/stdout &
+
+demo: socat
 	PORT=$(RANDOM_PORT) ./run-apps.sh
 
-qemu:
-	socat TCP4-LISTEN:$(RANDOM_PORT),reuseaddr - | tee /dev/stdout &
-	PORT=$(RANDOM_PORT) ./run-qemu.sh
+qemu: socat
+	./run-qemu.sh
 
 clean:
-	# $(RM) $(ENCLAVE_LIB) $(ENCLAVE_NM) $(APP_BIN)
-	$(RM) shared_mem analyzer
+	$(RM) shared_mem analyzer $(LOG_FILE)
 	make -f image.mk clean
 	make -C App clean
 	make -C Enclave clean

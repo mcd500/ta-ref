@@ -65,7 +65,7 @@ Next, build && test:
 source env/optee.sh
 make build
 make test
-make run
+PORT=$(($RANDOM % 30000 + 10000)) LOG_FILE=/tmp/tee.log source   test/optee/run-qemu.sh
 ```
 
 # delete

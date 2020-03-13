@@ -77,10 +77,14 @@ TEE_Result run_all_test(uint32_t param_types,
 				    TEE_Param __maybe_unused params[4],
 				    void __maybe_unused **sess_ctx)
 {
-    uint32_t exp_param_types = TEE_PARAM_TYPES(TEE_PARAM_TYPE_MEMREF_OUTPUT,
+    uint32_t exp_param_types = TEE_PARAM_TYPES(TEE_PARAM_TYPE_NONE,
 					       TEE_PARAM_TYPE_NONE,
 					       TEE_PARAM_TYPE_NONE,
 					       TEE_PARAM_TYPE_NONE);
+
+    /* Unused parameters */
+    (void)&sess_ctx;
+
 #ifdef PERF_ENABLE
     __profiler_map_info();
 #endif
@@ -89,9 +93,6 @@ TEE_Result run_all_test(uint32_t param_types,
 
     if (param_types != exp_param_types)
       return TEE_ERROR_BAD_PARAMETERS;
-
-    /* Unused parameters */
-    (void)&sess_ctx;
 
 #ifdef ENCLAVE_VERBOSE
     printf("ecall_ta_main() start\n");
