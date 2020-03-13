@@ -20,9 +20,9 @@ all: image
 image: ship
 	make -C $(OPTEE_DIR)/build buildroot
 
-ship:
-	$(RM) $(TARGET_DIR)/root/*
-	install -m 0755 $(APP_BIN) $(APP_BIN)_old $(UUID_NM) $(ANALYZER_BIN) $(TARGET_DIR)/root/
+ship: clean
+	install -m 0755 $(APP_BIN) $(UUID_NM) $(ANALYZER_BIN) $(TARGET_DIR)/root/
 	install -m 0444 $(UUID_TA) $(TARGET_DIR)/lib/optee_armtz/
 
 clean:
+	$(RM) $(TARGET_DIR)/root/* $(TARGET_DIR)/lib/optee_armtz/$(UUID_TA)
