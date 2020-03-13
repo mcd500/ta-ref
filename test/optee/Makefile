@@ -38,7 +38,7 @@ RANDOM_PORT = $(shell expr $(SEED) % 30000 + 10000)
 
 run: $(JOBS)
 
-run:
+demo:
 	socat TCP4-LISTEN:$(RANDOM_PORT),reuseaddr - &
 	PORT=$(RANDOM_PORT) ./run-apps.sh
 

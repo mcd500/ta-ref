@@ -33,7 +33,7 @@ spawn ./run-qemu.sh
 
 expect "*?ogin" { send "root\r" }
 
-expect "# " { send "optee_ref_ta\r" }
+expect "# " { send "./optee_ref_ta\r" }
 expect "# " { send "poweroff\r" }
 
 expect "*?RROR:   QEMU System Off: operation not handled." { send "\001c" }
