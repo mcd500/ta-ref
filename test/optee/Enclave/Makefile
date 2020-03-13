@@ -1,3 +1,9 @@
+## sm := ta_arm64
+include ./mk/conf.mk
+CROSS_COMPILE=$(TOOLPREFIX)
+# nostdinc$(sm)
+include  ./mk/gcc.mk
+
 SRCS := $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
 # The UUID for the Trusted Application
@@ -10,12 +16,6 @@ PEM_PATH := ${TA_DEV_DIR}/keys/default_ta.pem
 SIGN_ENCRYPT := ${TA_DEV_DIR}/scripts/sign_encrypt.py
 
 WARNS ?= 3
-
-# sm := ta_arm64
-include $(TA_DEV_DIR)/mk/conf.mk
-CROSS_COMPILE=$(TOOLPREFIX)
-# nostdinc$(sm)
-include  $(TA_DEV_DIR)/mk/$(COMPILER_$(sm)).mk
 
 comp-cflags$(sm) = -std=gnu99
 #comp-aflags$(sm) =
@@ -51,9 +51,6 @@ comp-cflags-warns-1:= $(comp-cflags-warns-high)
 comp-cflags-warns-2:= $(comp-cflags-warns-1) $(comp-cflags-warns-medium)
 comp-cflags-warns-3:= $(comp-cflags-warns-2) $(comp-cflags-warns-low)
 
-# update CFLAGS
-comp-cflags$(sm) += $(comp-cflags-warns-$(WARNS)) $(comp-cflags-warns-$(COMPILER_$(sm)))
-
 cppflags$(sm)  := $($(sm)-platform-cppflags) $(CPPFLAGS_$(sm))
 aflags$(sm)    := $($(sm)-platform-aflags)
 cflags$(sm)    := $($(sm)-platform-cflags) $(CFLAGS_$(sm))
@@ -75,7 +72,7 @@ cppflags$(sm) += $(strip \
 OPTEE_INCLUDE_DIRS = $(INCLUDE_DIRS) $(CURDIR) $(TA_DEV_DIR)/include
 
 # warning + -nostdinc + other flags @ ./mk/compile.mk
-CFLAGS = $(comp-cflags$(sm)) $(nostdinc$(sm)) $(cppflags$(sm))
+CFLAGS = $(comp-cflags-warns-$(WARNS)) $(comp-cflags-warns-$(COMPILER_$(sm))) $(nostdinc$(sm)) $(cppflags$(sm))
 CFLAGS += $(addprefix -I,$(OPTEE_INCLUDE_DIRS))
 #CFLAGS += -D__FILE_ID__=$(subst -,_,$(subst /,_,$(subst .,_,$1)))
 
