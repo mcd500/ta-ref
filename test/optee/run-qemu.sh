@@ -2,14 +2,11 @@
 
 #xterm -e ./run-record.sh&
 #xterm -e ./run-test.sh&
-#sleep 5
+sleep 2
 
-if [ -e $OPTEE_DIR/out-br/images/rootfs.cpio.gz ]; then
-    ln -sf $OPTEE_DIR/out-br/images/rootfs.cpio.gz $OPTEE_DIR/out/bin/
-fi
-cd $OPTEE_DIR/out/bin && $OPTEE_DIR/qemu/aarch64-softmmu/qemu-system-aarch64 \
+cd ${OPTEE_DIR}/out/bin && ${OPTEE_DIR}/qemu/aarch64-softmmu/qemu-system-aarch64 \
 	-nographic \
-	-serial mon:stdio -serial tcp:localhost:54323 \
+	-serial mon:stdio -serial tcp:localhost:${PORT} \
 	-smp 2 \
 	-machine virt,secure=on -cpu cortex-a57 \
 	-d unimp -semihosting-config enable,target=native \

@@ -33,13 +33,18 @@ JOBS = demo
 ifeq ($(PROFILER), ON)
 JOBS += analyze
 endif
+SEED := $(shell bash -c 'echo $$RANDOM')
+RANDOM_PORT = $(shell expr $(SEED) % 30000 + 10000)
+
 run: $(JOBS)
 
-demo:
-	./$(APP_BIN)
+run:
+	socat TCP4-LISTEN:$(RANDOM_PORT),reuseaddr - &
+	 PORT=$(RANDOM_PORT) ./run-apps.sh
 
-analyze:
-	#./analyzer shared_mem $(ENCLAVE_NM)
+qemu:
+	socat TCP4-LISTEN:$(RANDOM_PORT),reuseaddr - &
+	PORT=$(RANDOM_PORT) ./run-qemu.sh
 
 clean:
 	# $(RM) $(ENCLAVE_LIB) $(ENCLAVE_NM) $(APP_BIN)

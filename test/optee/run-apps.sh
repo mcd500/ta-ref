@@ -23,8 +23,8 @@ expect "*?RROR:   QEMU System Off: operation not handled." { send "\001c" }
 
 else
 
-xterm -e ./run-record.sh&
-sleep 2
+#xterm -e ./run-record.sh&
+sleep 1
 
 expect -c '
 set timeout 50
@@ -41,6 +41,6 @@ expect "*?RROR:   QEMU System Off: operation not handled." { send "\001c" }
 
 fi
 
-./cut.py
+#./cut.py
 
 exit
