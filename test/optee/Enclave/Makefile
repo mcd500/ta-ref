@@ -12,6 +12,7 @@ UUID_ELF := $(UUID).elf
 UUID_STRIPPED_ELF := $(UUID_ELF:.elf=.stripped.elf)
 UUID_DMP := $(UUID).dmp
 UUID_TA := $(UUID).ta
+UUID_NM := $(UUID).nm
 PEM_PATH := ${TA_DEV_DIR}/keys/default_ta.pem
 SIGN_ENCRYPT := ${TA_DEV_DIR}/scripts/sign_encrypt.py
 
@@ -90,7 +91,7 @@ LDLIBS = --start-group $(addprefix -l,$(LIBS)) --end-group
 
 all: build
 
-build: $(UUID_TA)
+build: $(UUID_TA) $(UUID_NM)
 
 $(OBJS): %.o: %.c
 	$(CC$(sm)) -c $(CFLAGS) $^ -o $@
@@ -102,6 +103,10 @@ $(OBJS): %.o: %.c
 
 $(UUID_ELF): $(OBJS)
 	$(LD$(sm)) $(LDFLAGS) --as-needed $^ $(LOADLIBES) $(LDLIBS) -o $@
+
+# used in profiler
+$(UUID_NM): $(UUID_ELF)
+	readelf -s $< | grep -E "^([0-9]| )*:" | grep "FUNC" | awk '{print $$2 " T " $$8}' > $(UUID_NM)
 
 $(UUID_DMP): $(UUID_ELF)
 	$(OBJDUMP$(sm)) -l -x -d $(UUID_ELF) > $(UUID_DMP)

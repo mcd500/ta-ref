@@ -1,8 +1,9 @@
 #!/bin/bash
 
 export TEE=optee
-export ARCH=aarch64
-export TOOLPREFIX=${ARCH}-linux-gnu-
+# this must not be used because optee_os assume that ARCH=arm
+#export ARCH=aarch64
+export TOOLPREFIX=aarch64-linux-gnu-
 export ENABLE_TEE_ENVS=1
 # ${OPTEE_DIR}/toolchains/${ARCH}/bin would error when link.
 export OPTEE_TOOLCHAIN_DIR=${OPTEE_DIR}/out-br/host/bin
