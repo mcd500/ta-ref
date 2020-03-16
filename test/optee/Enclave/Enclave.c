@@ -77,10 +77,12 @@ TEE_Result run_all_test(uint32_t param_types,
 				    TEE_Param __maybe_unused params[4],
 				    void __maybe_unused **sess_ctx)
 {
-    uint32_t exp_param_types = TEE_PARAM_TYPES(TEE_PARAM_TYPE_NONE,
-					       TEE_PARAM_TYPE_NONE,
-					       TEE_PARAM_TYPE_NONE,
-					       TEE_PARAM_TYPE_NONE);
+    uint32_t exp_param_types = TEE_PARAM_TYPES(
+            TEE_PARAM_TYPE_NONE,
+            TEE_PARAM_TYPE_NONE,
+            TEE_PARAM_TYPE_NONE,
+            TEE_PARAM_TYPE_NONE
+    );
 
     /* Unused parameters */
     (void)&sess_ctx;
@@ -122,7 +124,6 @@ TEE_Result run_all_test(uint32_t param_types,
     __profiler_unmap_info(params[0].memref.buffer, &params[0].memref.size);
 #endif
 
-    /* If return value != TEE_SUCCESS the session will not be created. */
     return TEE_SUCCESS;
 }
 

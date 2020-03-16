@@ -176,10 +176,10 @@ sgx_x64_hw_profiler:
 #         - 'echo dummy'
 
 
-optee:
+optee_qemu_v8:
     variables:
         TEE: optee
-        IMAGE: ${KEYSTONE_IMAGE}
+        IMAGE: ${OPTEE_QEMU_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
         SCRIPT: "source env/${TEE}.sh &&
