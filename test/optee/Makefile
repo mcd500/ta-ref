@@ -22,8 +22,6 @@ app:
 	make -C App LIB_DIRS="$(OPTEE_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)"
 
 enclave:
-	$(SLN) $(TA_DEV_DIR)/mk/gcc.mk $(MK_DIR)/gcc.mk
-	$(SLN) $(TA_DEV_DIR)/mk/conf.mk $(MK_DIR)/conf.mk
 	make -C Enclave LIB_DIRS="$(OPTEE_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)"
 
 image:
