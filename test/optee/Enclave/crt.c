@@ -74,6 +74,8 @@ void TA_DestroyEntryPoint(void)
  * TA. In this function you will normally do the global initialization for the
  * TA.
  */
+
+extern uintptr_t __ImageBase[];
 TEE_Result run_all_test(uint32_t param_types,
 				    TEE_Param __maybe_unused params[4],
 				    void __maybe_unused **sess_ctx)
@@ -97,6 +99,7 @@ TEE_Result run_all_test(uint32_t param_types,
     (void)&sess_ctx;
 
 #ifdef PERF_ENABLE
+    printf("enclave ELF address: 0x%lx\n", __ImageBase);
     __profiler_map_info();
 #endif
 

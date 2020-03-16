@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 extern uintptr_t __ImageBase[];
+static char perf_buffer[PERF_SIZE];
 
 static inline uint64_t NO_PERF tee_rdtsc(void)
 {

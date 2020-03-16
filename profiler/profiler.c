@@ -3,7 +3,6 @@
 #include "profiler_data.h"
 #include "tee_config.h"
 
-static char PERF_SECTION perf_buffer[PERF_SIZE];
 struct __profiler_header * __profiler_head = NULL;
 static inline void NO_PERF __cyg_profile_func(void * const this_fn, enum direction_t const dir);
 
