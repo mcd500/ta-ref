@@ -43,10 +43,10 @@ socat:
 	socat TCP4-LISTEN:$(RANDOM_PORT),reuseaddr - | tee /dev/stdout &
 
 demo: socat
-	PORT=$(RANDOM_PORT) ./run-apps.sh
+	PORT=$(RANDOM_PORT) LOG_FILE=$(LOG_FILE) ./run-apps.sh
 
-qemu: socat
-	./run-qemu.sh
+qemu:
+	PORT=$(RANDOM_PORT) LOG_FILE=$(LOG_FILE) ./run-qemu.sh
 
 clean:
 	$(RM) shared_mem analyzer $(LOG_FILE)
@@ -54,4 +54,3 @@ clean:
 	make -C App clean
 	make -C Enclave clean
 	$(RM) -r $(MK_DIR)/*.mk
-

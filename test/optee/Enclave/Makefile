@@ -92,7 +92,8 @@ LDFLAGS += --sort-section=alignment
 LDFLAGS += -z max-page-size=4096
 
 OPTEE_LIB_DIRS=$(LIB_DIRS) $(TA_DEV_DIR)/lib
-LIBS = gp utils utee mbedtls dl
+LIBS = gp
+LIBS += utils utee mbedtls dl
 LOADLIBES = $(addprefix -L,$(OPTEE_LIB_DIRS))
 LDLIBS = --start-group $(addprefix -l,$(LIBS)) --end-group
 
@@ -108,7 +109,7 @@ $(OBJS): %.o: %.c
 		--rename-section .rodata.str1.1=.rodata.str1.1.$^ \
 		$@
 
-$(UUID_ELF): Enclave.o user_ta_header.o
+$(UUID_ELF): $(OBJS)
 	$(LD$(sm)) $(LDFLAGS) --as-needed $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 # used in profiler

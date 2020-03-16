@@ -33,7 +33,7 @@
 #define USER_TA_HEADER_DEFINES_H
 
 /* To get the TA UUID definition */
-#include <edger/Enclave.h>
+#include "edger/Enclave.h"
 
 #define TA_UUID				TA_REF_UUID
 
