@@ -1,8 +1,8 @@
 ## sm := ta_arm64
-include ./mk/conf.mk
+include ${TA_DEV_DIR}/mk/conf.mk
 CROSS_COMPILE=$(TOOLPREFIX)
 # nostdinc$(sm)
-include  ./mk/gcc.mk
+include  ${TA_DEV_DIR}/mk/gcc.mk
 
 SRCS := $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
