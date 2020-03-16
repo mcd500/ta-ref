@@ -39,9 +39,11 @@ edger:
 clean:
 	$(RM) *.client *.eapp_riscv
 	make -f profiler.mk clean
+	make -f edger_glue.mk optee_clean EDGER_TYPE=NONE
 	#make -f api.mk clean
 
 # clean build files including dependencies
 mrproper: clean
-	make -f profiler.mk mrproper
+	make -f edger_glue.mk optee_mrproper EDGER_TYPE=NONE
+	make -f profiler.mk mrproper EDGER_TYPE=NONE
 	#make -f api.mk mrproper

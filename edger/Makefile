@@ -75,4 +75,4 @@ clean:
 
 mrproper: clean
 	make -C $(EDGER_DIR) clean
-	$(RM) include/*.h $(FLATCC_LIB)
+	$(RM) -f include/*.h $(FLATCC_LIB)

@@ -42,9 +42,17 @@ sgx_build:
 sgx_clean:
 	$(RM) -r $(EDGER_INCLUDE_DIR) lib/libEnclave*
 
+optee_clean:
+	$(RM) -r $(EDGER_INCLUDE_DIR)
+
+optee_mrproper: optee_clean
+	make clean -C $(TOPDIR)/edger -f optee.mk
+
+
 sgx_mrproper: sgx_clean
 	make clean -C $(TOPDIR)/edger -f sgx.mk
 
 optee_build:
 	make build -C $(TOPDIR)/edger -f optee.mk
+	mkdir -p $(EDGER_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/edger/*.h $(EDGER_INCLUDE_DIR)

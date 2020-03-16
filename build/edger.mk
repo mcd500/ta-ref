@@ -35,3 +35,5 @@ edger_imports: $(EDGER_BIN)
 
 clean:
 	$(RM) -r ${EDGER_DIR}/target/include $(FLATCC_LIB) $(FLATCC_INCLUDE_DIR)
+
+mrproper: clean
