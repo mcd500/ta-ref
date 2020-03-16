@@ -66,12 +66,19 @@ int main(void)
 				     TEEC_NONE, TEEC_NONE);
 
     // only TA_REF_RUN_ALL is defined
-    printf("Invoking all ref tests in Enclave\n");
+#ifdef APP_VERBOSE
+    printf("start TEEC_InvokeCommand\n");
+#endif
     res = TEEC_InvokeCommand(&sess, TA_REF_RUN_ALL, &op,
 			     &err_origin);
-    if (res != TEEC_SUCCESS)
+    if (res != TEEC_SUCCESS) {
       errx(1, "TEEC_InvokeCommand failed with code 0x%x origin 0x%x",
 	   res, err_origin);
+    } else {
+#ifdef APP_VERBOSE
+        printf("res = TEEC_SUCCESS; TEEC_InvokeCommand succeeded!\n");
+#endif
+    }
 
     // Done
     TEEC_CloseSession(&sess);

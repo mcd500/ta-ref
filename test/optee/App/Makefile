@@ -5,6 +5,7 @@ OPTEE_INCLUDE_DIRS = $(INCLUDE_DIRS) $(OPTEE_DIR)/optee_client/public
 
 CFLAGS = -Wall
 CFLAGS += $(addprefix -I,$(OPTEE_INCLUDE_DIRS))
+CFLAGS += $(DEBUG_FLAGS)
 
 LIBS = teec
 LDFLAGS = $(addprefix -L,$(LIB_DIRS))

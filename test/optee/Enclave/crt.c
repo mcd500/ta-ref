@@ -35,15 +35,12 @@
 #include "assert.h"
 #include "crt.h"
 
-//#include <string_ext.h>
-
 #include "edger/Enclave_t.h"
 #include "gp_test.h"
 
 #ifdef PERF_ENABLE
-#include "../../profiler/profiler.h"
+#include "profiler/profiler.h"
 #endif
-
 /*
  * Called when the instance of the TA is created. This is the first call in
  * the TA.
