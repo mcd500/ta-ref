@@ -5,7 +5,7 @@ variables:
     DOCKERHUB_REPO: vc707/test
     KEYSTONE_IMAGE: vc707/test:ta_ref_keystone_devel
     SGX_IMAGE: vc707/test:ta_ref_sgx_devel
-    OPTEE_QEMU_IMAGE: vc707/test:ta_ref_optee_qemu_image
+    OPTEE_QEMU_IMAGE: vc707/test:ta_ref_optee_qemu_devel
     CONTAINER_ROOT_DIR: /home/main/ref-ta
     WORKDIR: ${CONTAINER_ROOT_DIR}
     TEE: dummy
@@ -175,7 +175,6 @@ sgx_x64_hw_profiler:
 #     script:
 #         - 'echo dummy'
 
-
 optee_qemu_v8:
     variables:
         TEE: optee
@@ -184,7 +183,7 @@ optee_qemu_v8:
         # TODO: this is too nasy, so we use `image:` tag
         SCRIPT: "source env/${TEE}.sh &&
           make select &&
-          make build CRYPT_TYPE=MBEDCRYPT &&
+          make build &&
           make test &&
           make run"
     stage: test
