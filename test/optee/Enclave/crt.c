@@ -79,7 +79,11 @@ TEE_Result run_all_test(uint32_t param_types,
 				    void __maybe_unused **sess_ctx)
 {
     uint32_t exp_param_types = TEE_PARAM_TYPES(
+#ifdef PERF_ENABLE
+            TEE_PARAM_TYPE_MEMREF_OUTPUT,
+#else
             TEE_PARAM_TYPE_NONE,
+#endif
             TEE_PARAM_TYPE_NONE,
             TEE_PARAM_TYPE_NONE,
             TEE_PARAM_TYPE_NONE

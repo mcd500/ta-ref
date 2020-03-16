@@ -18,7 +18,7 @@ __profiler_get_data_ptr(void) {
 	return res;
 }
 
-void __attribute__((no_instrument_function,hot)) __profiler_map_info(void) {
+void NO_PERF __profiler_map_info(void) {
 	__profiler_head = (struct __profiler_header *)perf_buffer;
     __profiler_head->size = PERF_SIZE;
     __profiler_head->idx = 0;

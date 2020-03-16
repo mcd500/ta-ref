@@ -94,14 +94,33 @@ LDFLAGS += --sort-section=alignment
 LDFLAGS += -z max-page-size=4096
 
 OPTEE_LIB_DIRS=$(LIB_DIRS) $(TA_DEV_DIR)/lib
+
 LIBS = gp
 LIBS += utils utee mbedtls dl
+
+# perf settings if enable
+ifeq ($(PROFILER), ON)
+CFLAGS += -DPERF_ENABLE
+LIBS += profiler
+PERF_OBJS := Enclave.c
+PERF_OPTION := -finstrument-functions
+else
+PERF_OBJS =
+PERF_OPTION =
+endif
+
+
 LOADLIBES = $(addprefix -L,$(OPTEE_LIB_DIRS))
 LDLIBS = --start-group $(addprefix -l,$(LIBS)) --end-group
 
+OUTFILES=$(UUID_TA) $(UUID_NM)
+ifeq ($(DEBUG_TYPE), DEBUG)
+OUTFILES += $(UUID_DMP)
+endif
+
 all: build
 
-build: $(UUID_TA) $(UUID_NM)
+build: $(OUTFILES)
 
 $(OBJS): %.o: %.c
 	$(CC$(sm)) -c $(CFLAGS) $^ -o $@
