@@ -1,8 +1,10 @@
+ifneq ($(TA_DEV_DIR),)
 ## sm := ta_arm64
 include ${TA_DEV_DIR}/mk/conf.mk
 CROSS_COMPILE=$(TOOLPREFIX)
 # nostdinc$(sm)
 include  ${TA_DEV_DIR}/mk/gcc.mk
+endif
 
 SRCS := $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
