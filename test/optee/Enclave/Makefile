@@ -106,10 +106,10 @@ build: $(UUID_TA) $(UUID_NM)
 $(OBJS): %.o: %.c
 	$(CC$(sm)) -c $(CFLAGS) $^ -o $@
 	# see compile.mk(TODO: Is this necessary?)
-	$(OBJCOPY$(sm)) \
-		--rename-section .rodata=.rodata.$^ \
-		--rename-section .rodata.str1.1=.rodata.str1.1.$^ \
-		$@
+	# $(OBJCOPY$(sm)) \
+	# 	--rename-section .rodata=.rodata.$^ \
+	# 	--rename-section .rodata.str1.1=.rodata.str1.1.$^ \
+	# 	$@
 
 $(UUID_ELF): $(OBJS)
 	$(LD$(sm)) $(LDFLAGS) --as-needed $^ $(LOADLIBES) $(LDLIBS) -o $@
