@@ -6,8 +6,6 @@ ANALYZER_DIR = $(TOPDIR)/profiler/analyzer
 LIB_NAMES = appprofiler profiler
 LIBS = $(patsubst %,lib/lib%.a,$(LIB_NAMES))
 
-PROFILER_HEADER = profiler.h profiler_data.h $(TEE)/tee_profiler.h
-
 all:
 	make -C $(PROFILER_DIR)
 	$(SLN) $(PROFILER_DIR)/*profiler.a lib
