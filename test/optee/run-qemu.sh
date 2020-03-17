@@ -1,8 +1,5 @@
 #!/bin/bash
 
-socat TCP4-LISTEN:${PORT},reuseaddr - > ${LOG_FILE} 2>&1 &
-sleep 1
-
 cd ${OPTEE_DIR}/out/bin && ${OPTEE_DIR}/qemu/aarch64-softmmu/qemu-system-aarch64 \
 	-nographic \
 	-serial mon:stdio -serial tcp:localhost:${PORT} \

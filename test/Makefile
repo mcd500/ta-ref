@@ -72,11 +72,18 @@ build: common
 image:
 	make -C $(TEE) image
 
+SEED := $(shell bash -c 'echo $$RANDOM')
+ifndef $(PPORT)
+PPORT ?= $(shell expr $(SEED) % 30000 + 10000)
+else
+PPORT = $(PORT)
+endif
+
 run:
-	make -C $(TEE) run
+	make -C $(TEE) run PORT=$(PPORT)
 
 qemu:
-	make -C $(TEE) qemu
+	make -C $(TEE) qemu PORT=$(PPORT)
 
 clean:
 	$(RM) $(OBJS) $(LIBS)
