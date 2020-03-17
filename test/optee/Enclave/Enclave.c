@@ -16,4 +16,5 @@ int main(void) {
     gp_symmetric_key_gcm_verify_test();
 
     gp_asymmetric_key_sign_test();
+    return 0;
 }
