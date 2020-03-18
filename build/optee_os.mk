@@ -31,7 +31,13 @@ all: $(TARGETS)
 
 build:
 	$(RM) ${OPTEE_OUTBR_DIR}/build/optee_*/.stamp_*
-	make -C ${OPTEE_DIR}/optee_os $(OPTEE_OS_COMMON_EXTRA_FLAGS) CROSS_COMPILE="$(TOOLPREFIX)" CROSS_COMPILE_core="$(TOOLPREFIX)" CROSS_COMPILE_ta_arm64="$(TOOLPREFIX)" CROSS_COMPILE_ta_arm32="$(TOOLPREFIX32)" $(OPTEE_OS_FLAGS)
+	make -C ${OPTEE_DIR}/optee_os \
+		$(OPTEE_OS_COMMON_EXTRA_FLAGS) \
+		CROSS_COMPILE="$(TOOLPREFIX)" \
+		CROSS_COMPILE_core="$(TOOLPREFIX)" \
+		CROSS_COMPILE_ta_arm64="$(TOOLPREFIX)" \
+		CROSS_COMPILE_ta_arm32="$(TOOLPREFIX32)" \
+		$(OPTEE_OS_FLAGS)
 
 # In The following settings, we customize some flags to build optee_os libraries.
 include $(TOPDIR)/api/$(TEE)/build.mk
