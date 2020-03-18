@@ -193,3 +193,22 @@ optee_qemu_v8:
         - shell
     script:
         - 'echo dummy'
+
+optee_qemu_v8_profiler:
+    variables:
+        TEE: optee
+        IMAGE: ${OPTEE_QEMU_IMAGE}
+        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
+        # TODO: this is too nasy, so we use `image:` tag
+        SCRIPT: "source env/${TEE}.sh &&
+          make select &&
+          make build PROFILER=ON &&
+          make test PROFILER=ON &&
+          make run"
+    stage: test
+    only:
+        - master
+    tags:
+        - shell
+    script:
+        - 'echo dummy'
