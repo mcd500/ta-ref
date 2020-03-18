@@ -73,17 +73,17 @@ image:
 	make -C $(TEE) image
 
 SEED := $(shell bash -c 'echo $$RANDOM')
-ifndef $(PPORT)
-PPORT ?= $(shell expr $(SEED) % 30000 + 10000)
+ifeq ($(PORT),0)
+PORT := $(shell expr $(SEED) % 30000 + 10000)
 else
-PPORT = $(PORT)
+
 endif
 
 run:
-	make -C $(TEE) run PORT=$(PPORT)
+	make -C $(TEE) run PORT=$(PORT)
 
 qemu:
-	make -C $(TEE) qemu PORT=$(PPORT)
+	make -C $(TEE) qemu PORT=$(PORT)
 
 clean:
 	$(RM) $(OBJS) $(LIBS)

@@ -15,8 +15,6 @@ OPTEE_INCLUDE_DIRS = $(TA_DEV_DIR)/include $(INCLUDE_DIRS) $(CURDIR) ${OPTEE_DIR
 CFLAGS += $(addprefix -I,$(OPTEE_INCLUDE_DIRS))
 ASFLAGS += $(addprefix -I,$(OPTEE_INCLUDE_DIRS))
 
-OPTEE_LIB_DIRS=$(LIB_DIRS)
-
 # perf settings if enable
 ifeq ($(PROFILER), ON)
 CFLAGS += -DPERF_ENABLE
@@ -31,7 +29,7 @@ endif
 LIBS = gp
 LIBS += utils utee mbedtls dl $(PERF_LIBS)
 
-LOADLIBES = $(addprefix -L,$(OPTEE_LIB_DIRS))
+LOADLIBES = $(addprefix -L,$(LIB_DIRS))
 LDLIBS = --start-group $(addprefix -l,$(LIBS)) --end-group
 
 OUTFILES=$(UUID_TA) $(UUID_NM)

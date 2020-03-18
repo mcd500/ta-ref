@@ -48,12 +48,29 @@ INCLUDE_DIRS = $(TA_DEV_DIR)/include ${OPTEE_DIR}/optee_os/lib/libutee
 CFLAGS += $(addprefix -I,$(INCLUDE_DIRS))
 ASFLAGS += $(addprefix -I,$(INCLUDE_DIRS))
 
+
+# perf settings if enable
+ifeq ($(PROFILER), ON)
+#CFLAGS += -DPERF_ENABLE
+PERF_OBJS := $(UTEE_SOBJS)
+PERF_OPTION := -finstrument-functions
+else
+PERF_OBJS =
+PERF_OPTION =
+endif
+
+
 $(UTEE_SOBJS): %.o: %.c
 	$(CC$(sm)) -c $(CFLAGS) $^ -o $@
+# ignore old rules
+$(PERF_OBJS): %.o: %.c
+	$(CC$(sm)) -c $(CFLAGS) $(PERF_OPTION) $^ -o $@
+
 $(UTEE_AOBJS): %.o: %.S
 	$(CC$(sm)) -c $(ASFLAGS) $^ -o $@
 
 $(LIBUTEE): $(UTEE_SOBJS) $(UTEE_AOBJS)
+	unlink $(LIBUTEE)
 	$(AR$(sm)) rcs $@ $^
 
 clean:

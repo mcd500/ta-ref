@@ -16,6 +16,7 @@ else
 export DEBUG_FLAGS = -O2
 endif
 
+PORT ?= 0
 
 .PHONY: build test run clean mrproper
 
