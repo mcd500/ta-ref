@@ -12,7 +12,7 @@ DEPENDS=edger
 PROFILER=OFF
 
 ifeq ($(PROFILER),ON)
-DEPENDS += profiler
+DEPENDS += profiler optee_os
 endif
 
 .PHONY: all clean mrproper
@@ -23,6 +23,9 @@ all: build
 build: depends
 
 depends: $(DEPENDS)
+
+optee_os:
+	make -f optee_os.mk
 
 profiler:
 	make -f profiler.mk

@@ -10,6 +10,6 @@ static char perf_buffer[PERF_SIZE];
 static inline uint64_t NO_PERF tee_rdtsc(void)
 {
     uint64_t cycles;
-    asm volatile("mrs %0, cntvct_el0" : "=r"(cycles));
+    asm volatile("mrs %0, cntpct_el0" : "=r"(cycles));
     return cycles;
 }
