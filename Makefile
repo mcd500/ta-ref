@@ -1,3 +1,4 @@
+export TOPDIR=$(CURDIR)
 BUILD_DIR=build
 TEST_DIR=test
 
