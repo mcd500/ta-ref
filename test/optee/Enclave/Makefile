@@ -7,6 +7,11 @@ include  ${TA_DEV_DIR}/mk/gcc.mk
 endif
 
 SRCS := $(wildcard *.c)
+PRE_SRCS := $(wildcard ${OPTEE_DIR}/optee_os/lib/libutee/*.c) $(wildcard ${OPTEE_DIR}/optee_os/lib/libutee/arch/arm/*.c)
+PRE_SRCS := $(filter-out /home/main/optee/optee_os/lib/libutee/errno.c, $(PRE_SRCS))
+PRE_AS := ${OPTEE_DIR}/optee_os/lib/libutee/arch/arm/utee_syscalls_a64.S
+PRE_AS_OBJS := $(PRE_AS:.S=.o)
+PRE_OBJS := $(PRE_SRCS:.c=.o)
 OBJS := $(SRCS:.c=.o)
 # The UUID for the Trusted Application
 UUID := a6f77c1e-96fe-4a0e-9e74-262582a4c8f1
@@ -21,7 +26,6 @@ SIGN_ENCRYPT := ${TA_DEV_DIR}/scripts/sign_encrypt.py
 WARNS ?= 3
 
 comp-cflags$(sm) = -std=gnu99
-#comp-aflags$(sm) =
 #comp-cppflags$(sm) =
 
 # update cflags
@@ -55,7 +59,6 @@ comp-cflags-warns-2:= $(comp-cflags-warns-1) $(comp-cflags-warns-medium)
 comp-cflags-warns-3:= $(comp-cflags-warns-2) $(comp-cflags-warns-low)
 
 cppflags$(sm)  := $($(sm)-platform-cppflags) $(CPPFLAGS_$(sm))
-#aflags$(sm)    := $($(sm)-platform-aflags)
 cflags$(sm)    := $($(sm)-platform-cflags) $(CFLAGS_$(sm))
 
 CFG_TEE_TA_LOG_LEVEL ?= 2
@@ -72,9 +75,12 @@ cppflags$(sm) += $(strip \
 			-D$(var)=1, \
 			$(if $(filter xn x,x$($(var))),,-D$(var)='$($(var))'))))
 
-OPTEE_INCLUDE_DIRS = $(INCLUDE_DIRS) $(CURDIR) $(TA_DEV_DIR)/include
+cppflags$(sm) += -DCFG_TA_BIGNUM_MAX_BITS=2048
+
+OPTEE_INCLUDE_DIRS = $(TA_DEV_DIR)/include $(INCLUDE_DIRS) $(CURDIR) ${OPTEE_DIR}/optee_os/lib/libutee
 
 DEFAULT_CFLAGS = $(comp-cflags$(sm)) $(comp-cflags-warns-$(WARNS)) $(comp-cflags-warns-$(COMPILER_$(sm))) $(cflags$(sm)) $(nostdinc$(sm)) $(cppflags$(sm))
+DEFAULT_ASFLAGS = $($(sm)-platform-aflags) $(nostdinc$(sm)) $(aflags-$(sm))
 
 
 # remove default debug & optimization option
@@ -86,6 +92,11 @@ CFLAGS += $(addprefix -I,$(OPTEE_INCLUDE_DIRS))
 # TODO: Does this need??
 #CFLAGS += -D__FILE_ID__=$(subst -,_,$(subst /,_,$(subst .,_,$1)))
 
+ASFLAGS = $(filter-out -g0 -g1 -g -g3 -O -O1 -O2 -O3 -O0 -Os -Ofast -Og, $(DEFAULT_ASFLAGS))
+ASFLAGS += $(DEBUG_FLAGS)
+ASFLAGS += $(addprefix -I,$(OPTEE_INCLUDE_DIRS))
+
+
 # see link-ldflags in link.mk
 LINKER_SCRIPT=ta.ld
 LDFLAGS = -e__ta_entry -pie
@@ -93,21 +104,21 @@ LDFLAGS += -T $(LINKER_SCRIPT)
 LDFLAGS += --sort-section=alignment
 LDFLAGS += -z max-page-size=4096
 
-OPTEE_LIB_DIRS=$(LIB_DIRS) $(TA_DEV_DIR)/lib
-
-LIBS = gp
-LIBS += utils utee mbedtls dl
+OPTEE_LIB_DIRS=$(LIB_DIRS) $(TA_DEV_DIR)/lib $(CURDIR)
 
 # perf settings if enable
 ifeq ($(PROFILER), ON)
 CFLAGS += -DPERF_ENABLE
-LIBS += profiler
+PERF_LIBS += profiler
 PERF_OBJS := Enclave.c
 PERF_OPTION := -finstrument-functions
 else
 PERF_OBJS =
 PERF_OPTION =
 endif
+
+LIBS = gp
+LIBS += utils perfutee mbedtls dl $(PERF_LIBS)
 
 
 LOADLIBES = $(addprefix -L,$(OPTEE_LIB_DIRS))
@@ -120,7 +131,17 @@ endif
 
 all: build
 
-build: $(OUTFILES)
+build: libperfutee.a $(OUTFILES)
+
+# if profiler=ON
+$(PRE_OBJS): %.o: %.c
+	$(CC$(sm)) -c $(CFLAGS) $^ -o $@
+$(PRE_AS_OBJS): %.o: %.S
+	$(CC$(sm)) -c $(ASFLAGS) $^ -o $@
+
+libperfutee.a: $(PRE_OBJS) $(PRE_AS_OBJS)
+	$(AR$(sm)) rcs $@ $^
+
 
 $(OBJS): %.o: %.c
 	$(CC$(sm)) -c $(CFLAGS) $^ -o $@
