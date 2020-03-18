@@ -37,6 +37,11 @@
 // For the UUID
 #include <edger/Enclave.h>
 
+#ifdef PERF_ENABLE
+#define BUF_SIZE 65536
+#define LOG_FILE "shared_mem"
+#endif
+
 // Similar to samples in optee_examples
 
 int main(void)
@@ -74,8 +79,6 @@ int main(void)
     );
 
 #ifdef PERF_ENABLE
-#define BUF_SIZE 65536
-#define LOG_FILE "shared_mem"
     static char buf[BUF_SIZE];
     op.params[0].tmpref.buffer = (void*)buf;
     op.params[0].tmpref.size = BUF_SIZE;
@@ -97,20 +100,11 @@ int main(void)
     }
 
 #ifdef PERF_ENABLE
-    int i;
-    int cnt = 0;
-    for(i = 0; i < BUF_SIZE; i++) {
-        if(buf[i]) cnt++;
+    FILE* fp = fopen(LOG_FILE, "w");
+    fwrite(op.params[0].tmpref.buffer, sizeof(char),BUF_SIZE, fp);
+    if(fclose(fp) == -1) {
+        return 0;
     }
-    printf("cnt: %d\n", cnt);
-    // int fd = open(LOG_FILE, O_RDWR | O_CREAT, (mode_t)0600);
-    // if(fd == -1) return 0;
-    // if(write(fd, op.params[0].tmpref.buffer, BUF_SIZE) <= 0) {
-    //     return 0;
-    // }
-    // if(close(fd) == -1) {
-    //     return 0;
-    // }
 #endif
 
     // Done

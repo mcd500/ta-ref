@@ -11,6 +11,7 @@ expect \"*?ogin\" { send \"root\r\" }
 expect \"# \" { send \"./optee_ref_ta\r\" }
 expect \"*start*\"
 expect \"*succeed*\"
+expect \"# \" { send \"./analyzer shared_mem a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.nm\r\" }
 expect \"# \" { send \"poweroff\r\" }
 
 expect \"*?RROR:   QEMU System Off: operation not handled.\" { send \"\001c\" }
