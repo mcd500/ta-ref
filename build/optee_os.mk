@@ -27,11 +27,7 @@ TARGETS += build
 # CFG_DEBUG_INFO=n
 
 .PHONY: all
-all: import $(TARGETS)
-
-#default libraries
-import:
-	$(SLN) /home/main/optee/optee_os/out/arm/export-ta_arm64/lib/lib*.a lib/
+all: $(TARGETS)
 
 build:
 	$(RM) ${OPTEE_OUTBR_DIR}/build/optee_*/.stamp_*

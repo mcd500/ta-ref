@@ -5,7 +5,7 @@ endif
 include ./general.mk
 
 #DEPENDS=crypto
-DEPENDS=edger
+DEPENDS=edger api_import
 # MBEDCRYPT or WOLFCRYPT
 # CRYPT_TYPE=MBEDCRYPT
 
@@ -24,7 +24,10 @@ build: depends
 
 depends: $(DEPENDS)
 
-api:
+api_import:
+	$(SLN) ${TA_DEV_DIR}/lib/lib*.a lib/
+
+api: api_import
 	make -f optee_os.mk
 
 profiler:
