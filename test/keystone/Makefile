@@ -13,7 +13,7 @@ enclave:
 image:
 	make -f image.mk
 
-# TODO: implement dependent on MODE
+# TODO: implement dependent on MACHINE
 run:
 	./run-apps.sh
 

@@ -10,7 +10,7 @@ MK_DIR = Enclave/mk
 LOG_FILE = /tmp/tee.log
 
 # LIB_DIRS INCLUDE_DIRS
-MODE ?= SIM
+MACHINE ?= SIM
 
 OPTEE_LIB_DIRS = $(LIB_DIRS)
 

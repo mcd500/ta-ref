@@ -1,4 +1,4 @@
-ifneq ($(MODE), HW)
+ifneq ($(MACHINE), HW)
 LIBRARY_SUFFIX = _sim
 else
 LIBRARY_SUFFIX =

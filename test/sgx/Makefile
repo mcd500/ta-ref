@@ -1,5 +1,5 @@
 # LIB_DIRS INCLUDE_DIRS
-MODE ?= SIM
+MACHINE ?= SIM
 APP_BIN := sgx_app
 ENCLAVE_LIB := enclave.signed.so
 ENCLAVE_NM := $(ENCLAVE_LIB:.signed.so=.nm)

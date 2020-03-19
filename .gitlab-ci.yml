@@ -92,7 +92,7 @@ sgx_x64_sim:
         SCRIPT: "source env/${TEE}.sh &&
           make select &&
           make build &&
-          make test MODE=SIM &&
+          make test MACHINE=SIM &&
           make run"
     stage: test
     only:
@@ -111,7 +111,7 @@ sgx_x64_sim_profiler:
         SCRIPT: "source env/${TEE}.sh &&
           make select &&
           make build PROFILER=ON &&
-          make test MODE=SIM PROFILER=ON &&
+          make test MACHINE=SIM PROFILER=ON &&
           make run PROFILER=ON"
     stage: test
     only:
@@ -130,7 +130,7 @@ sgx_x64_hw:
         SCRIPT: "source env/${TEE}.sh &&
           make select &&
           make build &&
-          make test MODE=HW"
+          make test MACHINE=HW"
     stage: test
     only:
         - master
@@ -148,7 +148,7 @@ sgx_x64_hw_profiler:
         SCRIPT: "source env/${TEE}.sh &&
           make select &&
           make build PROFILER=ON &&
-          make test MODE=HW PROFILER=ON"
+          make test MACHINE=HW PROFILER=ON"
     stage: test
     only:
         - master

@@ -8,7 +8,7 @@ export DEBUG_TYPE ?= DEBUG
 export PROFILER ?= OFF
 # almost not implemented
 ## keystone => SIM, SIFIVE, sgx: SIM, HW, optee: SIM, ..
-export MODE ?= SIM
+export MACHINE ?= SIM
 
 ifeq ($(DEBUG_TYPE), DEBUG)
 export DEBUG_FLAGS = -g -O0 -DAPP_VERBOSE -DENCLAVE_VERBOSE
