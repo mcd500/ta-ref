@@ -58,7 +58,9 @@ ASFLAGS += $(addprefix -I,$(INCLUDE_DIRS))
 # perf settings if enable
 ifeq ($(PROFILER), ON)
 #CFLAGS += -DPERF_ENABLE
-PERF_OBJS := $(UTEE_SOBJS)
+# exclude trace_ext.c
+PERF_SRCS := $(wildcard ${OPTEE_DIR}/optee_os/lib/libutee/tee_*.c) $(wildcard ${OPTEE_DIR}/optee_os/lib/libutee/arch/arm/*.c)
+PERF_OBJS := $(PERF_SRCS:.c=.o)
 PERF_OPTION := -finstrument-functions
 else
 PERF_OBJS =
