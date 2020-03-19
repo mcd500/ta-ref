@@ -1,4 +1,4 @@
-ifneq ($(MACHINE), HW)
+ifeq ($(MACHINE), SIM)
 LIBRARY_SUFFIX = _sim
 else
 LIBRARY_SUFFIX =
@@ -19,7 +19,6 @@ LIBS += sgx_tstdc sgx_tcxx sgx_tcrypto sgx_tservice$(LIBRARY_SUFFIX)
 # perf settings if enable
 ifeq ($(PROFILER), ON)
 CFLAGS += -DPERF_ENABLE
-#LDFLAGS += -lprofiler
 LIBS += profiler
 PERF_SRCS := Enclave.c
 PERF_OBJS := $(PERF_SRCS:.c=.o)

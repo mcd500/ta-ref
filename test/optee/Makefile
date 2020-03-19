@@ -10,8 +10,6 @@ MK_DIR = Enclave/mk
 LOG_FILE = /tmp/tee.log
 
 # LIB_DIRS INCLUDE_DIRS
-MACHINE ?= SIM
-
 OPTEE_LIB_DIRS = $(LIB_DIRS)
 
 .PHONY: build app enclave image run

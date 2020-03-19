@@ -12,7 +12,7 @@ else
 DEBUG_FLAGS += -DNDEBUG -UEDEBUG -UDEBUG
 endif
 
-ifneq ($(MACHINE), HW)
+ifeq ($(MACHINE), SIM)
 LIBRARY_SUFFIX = _sim
 else
 LIBRARY_SUFFIX =
