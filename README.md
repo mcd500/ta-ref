@@ -77,6 +77,8 @@ If you want to clean build directory only, try `make clean`. Otherwise, `make mr
 
 ```sh
 .
+├── Makefile .. Bunch of Commands
+├── README.md .. THIS FILE!
 ├── api ... TEE_** functions
 │   ├── include
 │   ├── keystone
