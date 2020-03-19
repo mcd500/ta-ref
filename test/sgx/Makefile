@@ -3,6 +3,7 @@ MACHINE ?= SIM
 APP_BIN := sgx_app
 ENCLAVE_LIB := enclave.signed.so
 ENCLAVE_NM := $(ENCLAVE_LIB:.signed.so=.nm)
+ANALYZER_BIN := analyzer
 
 SGX_LIB_DIRS = $(LIB_DIRS) $(SGX_LIBRARY_DIR)
 
@@ -21,7 +22,7 @@ image:
 
 # Assume that we are build on x86_64 machine, so qemu is not necessary to run.
 JOBS = demo
-ifeq ($(PROFILER), ON)
+ifneq ("$(wildcard $(ANALYZER_BIN))","")
 JOBS += analyze
 endif
 run: $(JOBS)

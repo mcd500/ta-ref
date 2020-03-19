@@ -4,7 +4,6 @@
 
 int profiler_write(void *ptr, uint64_t sz) {
     int retval;
-    ocall_print_string(&retval, "unmap\n");
     sgx_status_t val;
     int fd;
     val = ocall_open_file(&fd, LOG_FILE, O_RDWR | O_CREAT, (mode_t)0600);
