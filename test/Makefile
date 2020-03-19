@@ -74,16 +74,16 @@ image:
 
 SEED := $(shell bash -c 'echo $$RANDOM')
 ifeq ($(PORT),0)
-PORT := $(shell expr $(SEED) % 30000 + 10000)
+PPORT := $(shell expr $(SEED) % 30000 + 10000)
 else
-
+PPORT := $(PORT)
 endif
 
 run:
-	make -C $(TEE) run PORT=$(PORT)
+	make -C $(TEE) run PORT=$(PPORT)
 
 qemu:
-	make -C $(TEE) qemu PORT=$(PORT)
+	make -C $(TEE) qemu PORT=$(PPORT)
 
 clean:
 	$(RM) $(OBJS) $(LIBS)
