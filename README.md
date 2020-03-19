@@ -75,6 +75,38 @@ If you want to clean build directory only, try `make clean`. Otherwise, `make mr
 
 # Implementation
 
+```sh
+.
+├── api ... TEE_** functions
+│   ├── include
+│   ├── keystone
+│   ├── optee
+│   └── sgx
+├── build .. output directory to `make build`
+│   ├── include
+│   └── lib
+├── crypto .. crypto libraries
+│   ├── ed25519
+│   ├── mbedtls
+│   ├── tiny_AES_c
+│   ├── tiny_sha3
+│   └── wolfssl
+├── edger .. edger libraries
+├── env .. arch-dependent shell scripts loaded at the very beggging
+│   ├── keystone.sh
+│   ├── optee.sh
+│   ├── sgx_x64.sh
+│   └── sgx_x86.sh
+├── profiler .. profiler add-in (enable by `PROFILER=ON` in make)
+└── test .. test including Global Platform libraries
+    ├── gp
+    ├── include
+    ├── keystone
+    ├── lib
+    ├── optee
+    └── sgx
+```
+
 + We rely on `TEE`(environment variable) to switch TEE-dependent build which defines in $(TEE).sh. This shell script also exports each tee-related variable for convenience.
 
 + This repo consists of three phases; build phase, test phase and demo phase:
