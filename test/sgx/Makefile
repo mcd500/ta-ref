@@ -9,7 +9,7 @@ SGX_LIB_DIRS = $(LIB_DIRS) $(SGX_LIBRARY_DIR)
 
 .PHONY: build app enclave image run
 
-build: app enclave
+build: app enclave image
 
 app:
 	make -C App LIB_DIRS="$(SGX_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)"

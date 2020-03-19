@@ -12,13 +12,17 @@ OUT_DIR=$(CURDIR)
 
 .PHONY: all clean
 
-all: image
+TARGET += $(MACHINE)_image
 
-image: ship
+all: $(TARGET)
 
-ship:
-	nm $(ENCLAVE_LIB) > $(ENCLAVE_NM)
+SIM_image: SIM_ship
+
+SIM_ship: $(ENCLAVE_NM)
 	install $(APP_BIN) $(ENCLAVE_LIB) $(ENCLAVE_NM) $(ANALYZER_BIN) $(OUT_DIR)
+
+$(ENCLAVE_NM):
+	nm $(ENCLAVE_LIB) > $(ENCLAVE_NM)
 
 clean:
 	$(RM) $(APP_BIN) $(ENCLAVE_LIB) $(ENCLAVE_NM) $(ANALYZER_BIN)
