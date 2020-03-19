@@ -60,7 +60,9 @@ ifeq ($(PROFILER), ON)
 #CFLAGS += -DPERF_ENABLE
 # exclude trace_ext.c
 PERF_SRCS := $(wildcard ${OPTEE_DIR}/optee_os/lib/libutee/tee_*.c) $(wildcard ${OPTEE_DIR}/optee_os/lib/libutee/arch/arm/*.c)
-PERF_OBJS := $(PERF_SRCS:.c=.o)
+PERF_SOBJS := $(PERF_SRCS:.c=.o)
+PERF_AS := ${OPTEE_DIR}/optee_os/lib/libutee/arch/arm/utee_syscalls_a64.S
+PERF_AOBJS := $(PERF_AS:.S=.o)
 PERF_OPTION := -finstrument-functions
 else
 PERF_OBJS =
@@ -71,10 +73,13 @@ endif
 $(UTEE_SOBJS): %.o: %.c
 	$(CC$(sm)) -c $(CFLAGS) $^ -o $@
 # ignore old rules
-$(PERF_OBJS): %.o: %.c
+$(PERF_SOBJS): %.o: %.c
 	$(CC$(sm)) -c $(CFLAGS) $(PERF_OPTION) $^ -o $@
 
 $(UTEE_AOBJS): %.o: %.S
+	$(CC$(sm)) -c $(ASFLAGS) $^ -o $@
+# ignore old rules
+$(PERF_AOBJS): %.o: %.S
 	$(CC$(sm)) -c $(ASFLAGS) $^ -o $@
 
 $(LIBUTEE): $(UTEE_SOBJS) $(UTEE_AOBJS)
