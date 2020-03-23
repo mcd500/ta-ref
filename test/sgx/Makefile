@@ -27,14 +27,14 @@ image:
 	make -f image.mk
 
 # Assume that we are build on x86_64 machine, so qemu is not necessary to run.
-JOBS = demo
 ifneq ("$(wildcard $(ANALYZER_BIN))","")
-JOBS += analyze
+ANALYZER=ON
+else
+ANALYZER=OFF
 endif
-run: $(JOBS)
 
-demo:
-	./$(APP_BIN)
+run: $(JOBS)
+	make -f run.mk ANALYZER=$(ANALYZER)
 
 analyze:
 	./analyzer shared_mem $(ENCLAVE_NM)

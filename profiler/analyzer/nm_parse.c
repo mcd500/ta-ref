@@ -58,7 +58,7 @@ struct list* parse_nm(const char *fname) {
         char func_name[256];
         sscanf(line, "%16lx %c %s", &addr, &type, func_name);
         if(addr >= MAX_ADDR) {
-            fprintf(stderr, "too big addr %10lx, %s\n", addr, func_name);
+            fprintf(stderr, "too big addr 0x%16lx, %s\n", addr, func_name);
             return NULL;
         }
         nm_pool[idx].type = type;
