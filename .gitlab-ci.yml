@@ -201,3 +201,41 @@ optee_qemu_v8_profiler:
         - shell
     script:
         - 'echo dummy'
+
+optee_rpi3:
+    variables:
+        TEE: optee
+        IMAGE: ${OPTEE_QEMU_IMAGE}
+        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
+        # TODO: this is too nasy, so we use `image:` tag
+        SCRIPT: "source env/${TEE}.sh &&
+          make select &&
+          make build &&
+          make test MACHINE=RPI3 &&
+          make run MACHINE=RPI3"
+    stage: optee
+    only:
+        - master
+    tags:
+        - shell
+    script:
+        - 'echo dummy'
+
+optee_rpi3_profiler:
+    variables:
+        TEE: optee
+        IMAGE: ${OPTEE_QEMU_IMAGE}
+        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
+        # TODO: this is too nasy, so we use `image:` tag
+        SCRIPT: "source env/${TEE}.sh &&
+          make select &&
+          make build PROFILER=ON &&
+          make test PROFILER=ON MACHINE=RPI3 &&
+          make run MACHINE=RPI3"
+    stage: optee
+    only:
+        - master
+    tags:
+        - shell
+    script:
+        - 'echo dummy'
