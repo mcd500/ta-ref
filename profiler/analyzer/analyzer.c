@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
         __profiler_nsec_t nsec = data->nsec;
         if(i == 0) {
             baseaddr = (unsigned long)data->callee;
-            printf("baseaddr: 0x%08lx\n", baseaddr);
+            printf("baseaddr: 0x%016lx\n", baseaddr);
             res.start = nsec;
             res.end = 0;
             continue;
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
                 printf(FORMAT, res.idx, res.depth, addr, get_func_name(table, addr), duration);
                 break;
             default:
-                fprintf(stderr, "dir is something wrong!\n");
+                fprintf(stderr, "direction is something wrong!: %ld, data->direction\n");
                 return 0;
         }
     }
