@@ -1,14 +1,26 @@
-TARGETS = $(MACHINE)_demo
+TARGETS = $(MACHINE)_run
+
+ifneq ("$(wildcard ./analyzer)","")
+TARGETS += $(MACHINE)_analyze
+endif
 
 RUN_SCRIPT := ../ssh_script/run-gitlab.sh
 APP_BIN := sgx_app
 
-NUC_COMMAND := ./${APP_BIN} && test -f analyzer && ./analyzer shared_mem enclave.nm
+ANALYZE_COMMAND := ./analyzer shared_mem enclave.nm
 
-all: $(TARGETS)
+COMMAND := ./${APP_BIN} && test -f analyzer && $(ANALYZE_COMMAND)
 
-SIM_demo:
-	./$(APP_BIN)
+all: $(MACHINE)_demo
+
+SIM_demo: $(TARGETS)
+
+SIM_run:
+	./sgx_app
+
+SIM_analyze:
+	$(ANALYZE_COMMAND)
+
 
 NUC_demo:
-	COMMAND="$(NUC_COMMAND)" USER=$(TEST_USER) IP_ADDR=$(NUC_IP_ADDR) ${RUN_SCRIPT}
+	COMMAND="$(COMMAND)" USER=$(TEST_USER) IP_ADDR=$(NUC_IP_ADDR) ${RUN_SCRIPT}
