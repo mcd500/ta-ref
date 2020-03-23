@@ -1,10 +1,9 @@
 TARGETS = $(MACHINE)_demo
-ifeq ($(ANALYZER), ON)
-TARGETS += analyze
-endif
 
-RUN_SCRIPT := ../script/run-gitlab.sh
-COMMAND := ./sgx_app && test -f analyzer && ./analyzer shared_mem enclave.nm
+RUN_SCRIPT := ../ssh_script/run-gitlab.sh
+APP_BIN := sgx_app
+
+NUC_COMMAND := ./${APP_BIN} && test -f analyzer && ./analyzer shared_mem enclave.nm
 
 all: $(TARGETS)
 
@@ -12,6 +11,4 @@ SIM_demo:
 	./$(APP_BIN)
 
 NUC_demo:
-	COMMAND="$(COMMAND)" USER=$(TEST_USER) IP_ADDR=$(NUC_IP_ADDR) ${RUN_SCRIPT}
-
-analyze:
+	COMMAND="$(NUC_COMMAND)" USER=$(TEST_USER) IP_ADDR=$(NUC_IP_ADDR) ${RUN_SCRIPT}

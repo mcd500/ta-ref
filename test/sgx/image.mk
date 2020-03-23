@@ -12,8 +12,8 @@ else
 ANALYZER_BIN=
 endif
 
-NUC_SHIP_SCRIPT = ../script/ship-gitlab.sh
-NUC_CLEAN_SCRIPT = ../script/clean-gitlab.sh
+NUC_SHIP_SCRIPT = ../ssh_script/ship-gitlab.sh
+NUC_CLEAN_SCRIPT = ../ssh_script/clean-gitlab.sh
 
 .PHONY: all clean
 
