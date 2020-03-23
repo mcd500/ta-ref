@@ -22,11 +22,14 @@ after_script:
     - test $(find build/include -mindepth 1 | wc -l) -eq 1
     - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "source env/${TEE}.sh && make select mrproper"
 
+# see env/ directory
 stages:
-    - build
-    - test
+    - keystone
+    - sgx_x64
+    - sgx_x32
+    - optee
 
-keystone_mbedcrypt:
+keystone_qemu_mbedcrypt:
     variables:
         TEE: keystone
         IMAGE: ${KEYSTONE_IMAGE}
@@ -37,7 +40,7 @@ keystone_mbedcrypt:
           make build CRYPT_TYPE=MBEDCRYPT &&
           make test &&
           make run"
-    stage: test
+    stage: keystone
     only:
         - master
     tags:
@@ -45,7 +48,7 @@ keystone_mbedcrypt:
     script:
         - 'echo dummy'
 
-keystone_profiler:
+keystone_qemu_profiler:
     variables:
         TEE: keystone
         IMAGE: ${KEYSTONE_IMAGE}
@@ -56,7 +59,7 @@ keystone_profiler:
           make build PROFILER=ON &&
           make test PROFILER=ON &&
           make run"
-    stage: test
+    stage: keystone
     only:
         - master
     tags:
@@ -64,7 +67,7 @@ keystone_profiler:
     script:
         - 'echo dummy'
 
-keystone_wolfcrypt:
+keystone_qemu_wolfcrypt:
     variables:
         TEE: keystone
         IMAGE: ${KEYSTONE_IMAGE}
@@ -75,7 +78,7 @@ keystone_wolfcrypt:
           make build CRYPT_TYPE=WOLFCRYPT &&
           make test &&
           make run"
-    stage: test
+    stage: keystone
     only:
         - master
     tags:
@@ -83,6 +86,7 @@ keystone_wolfcrypt:
     script:
         - 'echo dummy'
 
+### SGX (x64) ###
 sgx_x64_sim:
     variables:
         TEE: sgx_x64
@@ -94,7 +98,7 @@ sgx_x64_sim:
           make build &&
           make test MACHINE=SIM &&
           make run"
-    stage: test
+    stage: sgx_x64
     only:
         - master
     tags:
@@ -113,7 +117,7 @@ sgx_x64_sim_profiler:
           make build PROFILER=ON &&
           make test MACHINE=SIM PROFILER=ON &&
           make run PROFILER=ON"
-    stage: test
+    stage: sgx_x64
     only:
         - master
     tags:
@@ -132,7 +136,7 @@ sgx_x64_intel_nuc:
           make build &&
           make test MACHINE=NUC &&
           make run MACHINE=NUC"
-    stage: test
+    stage: sgx_x64
     only:
         - master
     tags:
@@ -151,7 +155,7 @@ sgx_x64_intel_nuc_profiler:
           make build PROFILER=ON &&
           make test MACHINE=NUC PROFILER=ON &&
           make run MACHINE=NUC"
-    stage: test
+    stage: sgx_x64
     only:
         - master
     tags:
@@ -159,6 +163,7 @@ sgx_x64_intel_nuc_profiler:
     script:
         - 'echo dummy'
 
+### OPTEE ###
 optee_qemu_v8:
     variables:
         TEE: optee
@@ -170,7 +175,7 @@ optee_qemu_v8:
           make build &&
           make test &&
           make run"
-    stage: test
+    stage: optee
     only:
         - master
     tags:
