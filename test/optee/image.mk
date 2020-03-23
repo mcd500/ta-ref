@@ -16,23 +16,30 @@ endif
 .PHONY: all clean
 
 TARGET += $(MACHINE)_image
+OUT_FILES := $(APP_BIN) $(UUID_NM) $(ANALYZER_BIN) $(UUID_TA)
+
+RPI3_SHIP_SCRIPT := ../ssh_script/ship-gitlab.sh
+RPI3_CLEAN_SCRIPT := ../ssh_script/clean-gitlab.sh
 
 all: $(TARGET)
 
-# image: ship
-# 	make -C $(OPTEE_OUTBR_DIR) all
-# rpi3_image:
-# 	scp $(APP_BIN) $(UUID_NM) $(ANALYZER_BIN) /home/main/ta-ref/profiler/analyzer/analyzer gitlab@192.168.100.114:/home/gitlab
-RPI3_image:
-	ssh gitlab@$(RPI3_IP) test -f /lib/optee_armtz/$(UUID_TA_NAME)
-	scp  $(APP_BIN) $(UUID_NM) $(ANALYZER_BIN) $(ANALYZER_BIN) gitlab@$(RPI3_IP):/home/gitlab
-
-SIM_image: ship
+SIM_image: SIM_ship
 	make -C $(OPTEE_OUTBR_DIR) all
 
-ship: clean
-	install -m 0755 $(APP_BIN) $(UUID_NM) $(ANALYZER_BIN) $(TARGET_DIR)/root/
+SIM_ship: SIM_clean
+	install -m 0755 $(OUT_FILES) $(TARGET_DIR)/root/
 	install -m 0444 $(UUID_TA) $(TARGET_DIR)/lib/optee_armtz/
+
+RPI3_image: RPI3_clean RPI3_ship
+
+# check `sudo ln -sf /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib/optee_armtz/` in advance.
+RPI3_ship:
+	FILES="$(OUT_FILES)" USER=$(TEST_USER) IP_ADDR=$(RPI3_IP_ADDR) ${RPI3_SHIP_SCRIPT}
+
+SIM_clean: clean
 
 clean:
 	$(RM) $(TARGET_DIR)/root/* $(TARGET_DIR)/lib/optee_armtz/$(UUID_TA)
+
+RPI3_clean:
+	USER=$(TEST_USER) IP_ADDR=$(RPI3_IP_ADDR) ${RPI3_CLEAN_SCRIPT}

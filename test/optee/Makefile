@@ -1,10 +1,3 @@
-# ifeq ($(PROFILER),ON)
-# ENCLAVE_PERF_WRAPPER= -DENCLAVE_PERF_WRAPPER
-# else
-# ENCLAVE_PERF_WRAPPER=
-# endif
-
-
 export user-ta-version ?= 1
 MK_DIR = Enclave/mk
 LOG_FILE = /tmp/tee.log
@@ -25,22 +18,11 @@ enclave:
 image:
 	make -f image.mk
 
-# Assume that we are build on x86_64 machine, so qemu is not necessary to run.
-JOBS = demo
-ifeq ($(PROFILER), ON)
-JOBS += analyze
-endif
+run:
+	make -f run.mk
 
-run: $(JOBS)
-
-socat:
-	socat TCP4-LISTEN:$(PORT),reuseaddr - | tee /dev/stdout &
-
-demo: socat
-	PORT=$(PORT) LOG_FILE=$(LOG_FILE) ./run-apps.sh
-
-qemu: socat
-	PORT=$(PORT) LOG_FILE=$(LOG_FILE) ./run-qemu.sh
+qemu:
+	make -f run.mk qemu
 
 clean:
 	$(RM) shared_mem analyzer $(LOG_FILE)
