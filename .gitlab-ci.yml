@@ -121,7 +121,7 @@ sgx_x64_sim_profiler:
     script:
         - 'echo dummy'
 
-sgx_x64_hw:
+sgx_x64_intel_nuc:
     variables:
         TEE: sgx_x64
         IMAGE: ${SGX_IMAGE}
@@ -140,7 +140,7 @@ sgx_x64_hw:
     script:
         - 'echo dummy'
 
-sgx_x64_hw_profiler:
+sgx_x64_intel_nuc_profiler:
     variables:
         TEE: sgx_x64
         IMAGE: ${SGX_IMAGE}
