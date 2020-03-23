@@ -6,6 +6,8 @@ UUID := a6f77c1e-96fe-4a0e-9e74-262582a4c8f1
 UUID_NM := $(UUID).nm
 APP_BIN := optee_ref_ta
 
+LOG_FILE = /tmp/tee.log
+
 ANALYZE_COMMAND := ./analyzer shared_mem ${UUID_NM}
 
 RPI3_COMMAND := sudo ./${APP_BIN} && test -f analyzer && ${ANALYZE_COMMAND}

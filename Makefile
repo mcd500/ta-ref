@@ -16,8 +16,6 @@ else
 export DEBUG_FLAGS = -O2
 endif
 
-PORT ?= 0
-
 .PHONY: build test run clean mrproper
 
 build: select
@@ -31,7 +29,7 @@ run:
 	make -C $(TEST_DIR) run TEE=$(TEE)
 
 qemu:
-	make -C $(TEST_DIR) qemu TEE=$(TEE) PORT=$(PORT)
+	make -C $(TEST_DIR) qemu TEE=$(TEE)
 
 # build test only
 build_test:
