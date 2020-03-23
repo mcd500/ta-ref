@@ -26,15 +26,8 @@ enclave:
 image:
 	make -f image.mk
 
-# Assume that we are build on x86_64 machine, so qemu is not necessary to run.
-ifneq ("$(wildcard $(ANALYZER_BIN))","")
-ANALYZER=ON
-else
-ANALYZER=OFF
-endif
-
-run: $(JOBS)
-	make -f run.mk ANALYZER=$(ANALYZER)
+run:
+	make -f run.mk
 
 analyze:
 	./analyzer shared_mem $(ENCLAVE_NM)
