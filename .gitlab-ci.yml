@@ -149,7 +149,7 @@ sgx_x64_intel_nuc_profiler:
         SCRIPT: "source env/${TEE}.sh &&
           make select &&
           make build PROFILER=ON &&
-          make test MACHINE=NUC PROFILER=ON
+          make test MACHINE=NUC PROFILER=ON &&
           make run MACHINE=NUC"
     stage: test
     only:
