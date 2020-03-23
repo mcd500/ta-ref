@@ -194,7 +194,7 @@ optee_qemu_v8_profiler:
           make build PROFILER=ON &&
           make test PROFILER=ON &&
           make run"
-    stage: test
+    stage: optee
     only:
         - master
     tags:
