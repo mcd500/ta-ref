@@ -8,7 +8,8 @@ Note) We recommend that we use docker images because we export multiple environm
 |---|---|
 |keystone|vc707/test:ta_ref_keystone_devel|
 |intel_sgx|vc707/test:ta_ref_sgx_devel|
-|optee|vc707/ta_ref_optee_qemu_devel|
+|optee(qemu v8)|vc707/ta_ref_optee_qemu_devel|
+|optee(raspberry pi3)|vc707/ta_ref_rpi3_qemu_devel|
 
 For more information, see [GitLab CI job configuration file](http://192.168.100.100/vc707/ta-ref/-/blob/master/.gitlab-ci.yml).
 
@@ -56,6 +57,7 @@ make run
 ```sh
 git clone --recursive http://192.168.100.100/vc707/ta-ref.git
 cd ta-ref
+# You can use qemu_v8 image or rpi3 image. See above table.
 docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_optee_qemu_devel
 ```
 
