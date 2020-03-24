@@ -6,6 +6,7 @@ variables:
     KEYSTONE_IMAGE: vc707/test:ta_ref_keystone_devel
     SGX_IMAGE: vc707/test:ta_ref_sgx_devel
     OPTEE_QEMU_IMAGE: vc707/test:ta_ref_optee_qemu_devel
+    OPTEE_RPI3_IMAGE: vc707/test:ta_ref_optee_rpi3_devel
     CONTAINER_ROOT_DIR: /home/main/ta-ref
     WORKDIR: ${CONTAINER_ROOT_DIR}
     TEE: dummy
@@ -205,7 +206,7 @@ optee_qemu_v8_profiler:
 optee_rpi3:
     variables:
         TEE: optee
-        IMAGE: ${OPTEE_QEMU_IMAGE}
+        IMAGE: ${OPTEE_RPI3_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
         SCRIPT: "source env/${TEE}.sh &&
@@ -224,7 +225,7 @@ optee_rpi3:
 optee_rpi3_profiler:
     variables:
         TEE: optee
-        IMAGE: ${OPTEE_QEMU_IMAGE}
+        IMAGE: ${OPTEE_RPI3_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
         SCRIPT: "source env/${TEE}.sh &&
