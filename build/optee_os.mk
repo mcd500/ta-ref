@@ -1,9 +1,15 @@
 TOPDIR=$(CURDIR)/..
 
+ifeq ($(MACHINE), SIM)
+PLATFORM=vexpress-qemu_armv8a
+else ifeq ($(MACHINE), RPI3)
+PLATFORM=rpi3
+endif
+
 COMPILE_S_KERNEL := 64
 COMPILE_S_USER := $(COMPILE_S_KERNEL)
 include ${OPTEE_DIR}/build/common.mk
-OPTEE_OS_FLAGS = CFG_TEE_CORE_LOG_LEVEL=3 PLATFORM=vexpress-qemu_armv8a
+OPTEE_OS_FLAGS = CFG_TEE_CORE_LOG_LEVEL=3 PLATFORM=$(PLATFORM)
 OPTEE_OS_FLAGS += CFG_TEE_BENCHMARK=n CFG_ARM64_core=y
 OPTEE_OS_FLAGS += DEBUG=0
 
@@ -41,6 +47,7 @@ build:
 
 # In The following settings, we customize some flags to build optee_os libraries.
 include $(TOPDIR)/api/$(TEE)/build.mk
+OPTEE_OS_DIR := ${OPTEE_DIR}/optee_os
 
 # build libutee.a
 UTEE_SRCS := $(wildcard ${OPTEE_DIR}/optee_os/lib/libutee/*.c) $(wildcard ${OPTEE_DIR}/optee_os/lib/libutee/arch/arm/*.c)
@@ -50,7 +57,7 @@ UTEE_AS := ${OPTEE_DIR}/optee_os/lib/libutee/arch/arm/utee_syscalls_a64.S
 UTEE_AOBJS := $(UTEE_AS:.S=.o)
 UTEE_SOBJS := $(UTEE_SRCS:.c=.o)
 
-INCLUDE_DIRS = $(TA_DEV_DIR)/include ${OPTEE_DIR}/optee_os/lib/libutee
+INCLUDE_DIRS = $(TA_DEV_DIR)/include ${OPTEE_OS_DIR}/lib/libutee ${OPTEE_OS_DIR}/lib/libmpa/include
 CFLAGS += $(addprefix -I,$(INCLUDE_DIRS))
 ASFLAGS += $(addprefix -I,$(INCLUDE_DIRS))
 

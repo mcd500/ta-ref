@@ -139,7 +139,6 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t cmd_id,
 				      uint32_t param_types, TEE_Param params[4])
 {
-
     switch (cmd_id) {
     case TA_REF_RUN_ALL:
       return run_all_test(param_types, params, sess_ctx);

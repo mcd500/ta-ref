@@ -210,7 +210,7 @@ optee_rpi3:
         # TODO: this is too nasy, so we use `image:` tag
         SCRIPT: "source env/${TEE}.sh &&
           make select &&
-          make build &&
+          make build MACHINE=RPI3 &&
           make test MACHINE=RPI3 &&
           make run MACHINE=RPI3"
     stage: optee
@@ -229,7 +229,7 @@ optee_rpi3_profiler:
         # TODO: this is too nasy, so we use `image:` tag
         SCRIPT: "source env/${TEE}.sh &&
           make select &&
-          make build PROFILER=ON &&
+          make build PROFILER=ON MACHINE=RPI3 &&
           make test PROFILER=ON MACHINE=RPI3 &&
           make run MACHINE=RPI3"
     stage: optee

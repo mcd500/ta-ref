@@ -11,6 +11,8 @@ UUID_TA := $(UUID).ta
 UUID_NM := $(UUID).nm
 PEM_PATH := ${TA_DEV_DIR}/keys/default_ta.pem
 SIGN_ENCRYPT := ${TA_DEV_DIR}/scripts/sign_encrypt.py
+# old version(~3.7.0)
+#SIGN_ENCRYPT := ${CURDIR}/old_sign.py
 OPTEE_INCLUDE_DIRS = $(TA_DEV_DIR)/include $(INCLUDE_DIRS) $(CURDIR) ${OPTEE_DIR}/optee_os/lib/libutee
 CFLAGS += $(addprefix -I,$(OPTEE_INCLUDE_DIRS))
 ASFLAGS += $(addprefix -I,$(OPTEE_INCLUDE_DIRS))
