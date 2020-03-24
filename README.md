@@ -54,17 +54,37 @@ make run
 
 ## optee
 
+To configure images in raspberry pi3, see [tutorial](http://192.168.100.100/vc707/tee-ta-reference/-/blob/master/ref-ta/op-tee/README.md).
+
+### qemu_v8
+
 ```sh
 git clone --recursive http://192.168.100.100/vc707/ta-ref.git
 cd ta-ref
-# You can use qemu_v8 image or rpi3 image. See above table.
 docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_optee_qemu_devel
 ```
 
 Next, build && test:
 
 ```sh
-source env/optee.sh
+source env/optee_qemu.sh
+make build
+make test
+make run
+```
+
+### raspberry pi3
+
+```sh
+git clone --recursive http://192.168.100.100/vc707/ta-ref.git
+cd ta-ref
+docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_optee_rpi3_devel
+```
+
+Next, build && test:
+
+```sh
+source env/optee_rpi3.sh
 make build
 make test
 make run

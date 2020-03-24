@@ -25,7 +25,7 @@ endif
 CFLAGS = $(addprefix -I, $(INCLUDE_DIRS))
 PERF_SIZE=65536
 
-CFLAGS += -DPERF_SIZE=$(PERF_SIZE)
+CFLAGS += -DPERF_SIZE=$(PERF_SIZE) -D$(MACHINE)
 CFLAGS += -Wall -Wpedantic
 CFLAGS += -static
 
