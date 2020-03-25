@@ -127,8 +127,7 @@ sgx_x64_sim_profiler:
 
 sgx_x64_intel_nuc:
     variables:
-        TEE: sgx_x64
-        ENVS: env/${TEE}.sh
+        ENVS: env/sgx_x64.sh
         IMAGE: ${SGX_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
