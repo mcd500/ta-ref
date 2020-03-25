@@ -84,5 +84,5 @@ qemu:
 clean:
 	$(RM) $(OBJS) $(LIBS)
 	make -C keystone clean
-	make -C sgx clean
+	make -C sgx clean MACHINE=NONE
 	make -C optee clean

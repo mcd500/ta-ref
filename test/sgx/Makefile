@@ -9,6 +9,7 @@ SGX_LIB_DIRS = $(LIB_DIRS) $(SGX_LIBRARY_DIR)
 # check MACHINE
 ifeq ($(MACHINE),SIM) # default
 else ifeq ($(MACHINE),NUC) # Intel(R) Pentium(R) Silver J5005
+else ifeq ($(MACHINE),NONE)
 else
 $(error MACHINE variable is either SIM or NUC)
 endif
