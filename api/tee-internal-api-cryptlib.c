@@ -398,7 +398,7 @@ TEE_Result TEE_AEEncryptFinal(TEE_OperationHandle operation,
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
-    if (tagLen == NULL || *tagLen != 16*8) {
+    if (tagLen == NULL || *tagLen != 16) {
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
@@ -432,7 +432,7 @@ TEE_Result TEE_AEEncryptFinal(TEE_OperationHandle operation,
       TEE_Panic(0);
     }
 
-    *tagLen = 16*8;
+    *tagLen = 16;
     *destLen = srcLen;
     operation->aegcm_state = GCM_ST_FINAL;
    

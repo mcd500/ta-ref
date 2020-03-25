@@ -75,7 +75,7 @@ void gp_symmetric_key_gcm_verify_test(void)
     //  rv = TEE_AEUpdateAAD(handle, aad, 16);
     //  GP_ASSERT(rv, "TEE_AEUpdateAAD fails");
 
-    unsigned int taglen = 16*8;
+    unsigned int taglen = 16;
     memset(tag, 0, 16);
 
     outlen = CIPHER_LENGTH;
