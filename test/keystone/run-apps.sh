@@ -1,7 +1,8 @@
 #!/bin/bash
+
 expect -c '
     set timeout 60
-    set env(HOST_PORT) 3396
+    send_user \"$env(PORT)\n\"
     spawn "./run-qemu.sh"
     expect "*?ogin" { send "root\r" }
     expect "*?assword" { send "sifive\r" }

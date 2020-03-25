@@ -1,8 +1,6 @@
 #!/bin/bash -x
 
-export HOST_PORT=${HOST_PORT:="$((3000 + RANDOM % 3000))"}
-
-echo "**** Running QEMU SSH on port ${HOST_PORT} ****\n"
+echo "**** Running QEMU SSH on port ${PORT} ****\n"
 
 DEBUG=""
 
@@ -20,6 +18,6 @@ ${KEYSTONE_DIR}/riscv-qemu/riscv64-softmmu/qemu-system-riscv64 \
     -nographic \
     -machine virt \
     -kernel ${KEYSTONE_DIR}/hifive-work/riscv-pk/bbl \
-    -netdev user,id=net0,net=192.168.100.1/24,dhcpstart=192.168.100.128,hostfwd=tcp::${HOST_PORT}-:22 \
+    -netdev user,id=net0,net=192.168.100.1/24,dhcpstart=192.168.100.128,hostfwd=tcp::${PORT}-:22 \
     -device virtio-net-device,netdev=net0
 

@@ -13,12 +13,11 @@ enclave:
 image:
 	make -f image.mk
 
-# TODO: implement dependent on MACHINE
 run:
-	./run-apps.sh
+	make -f run.mk
 
 qemu:
-	./run-qemu.sh
+	make -f run.mk qemu
 
 clean:
 	make -f image.mk clean
