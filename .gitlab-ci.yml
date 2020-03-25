@@ -9,7 +9,6 @@ variables:
     OPTEE_RPI3_IMAGE: vc707/test:ta_ref_optee_rpi3_devel
     CONTAINER_ROOT_DIR: /home/main/ta-ref
     WORKDIR: ${CONTAINER_ROOT_DIR}
-    TEE: dummy
 
 before_script:
     - docker login -u ${GITLAB_USER} -p ${DOCKERHUB_PASSWD}
@@ -32,8 +31,7 @@ stages:
 
 keystone_qemu_mbedcrypt:
     variables:
-        TEE: keystone
-        ENVS: env/${TEE}.sh
+        ENVS: env/keystone.sh
         IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
@@ -52,8 +50,7 @@ keystone_qemu_mbedcrypt:
 
 keystone_qemu_profiler:
     variables:
-        TEE: keystone
-        ENVS: env/${TEE}.sh
+        ENVS: env/keystone.sh
         IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
@@ -72,8 +69,7 @@ keystone_qemu_profiler:
 
 keystone_qemu_wolfcrypt:
     variables:
-        TEE: keystone
-        ENVS: env/${TEE}.sh
+        ENVS: env/keystone.sh
         IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
@@ -93,8 +89,7 @@ keystone_qemu_wolfcrypt:
 ### SGX (x64) ###
 sgx_x64_sim:
     variables:
-        TEE: sgx_x64
-        ENVS: env/${TEE}.sh
+        ENVS: env/sgx_x64.sh
         IMAGE: ${SGX_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
@@ -113,8 +108,7 @@ sgx_x64_sim:
 
 sgx_x64_sim_profiler:
     variables:
-        TEE: sgx_x64
-        ENVS: env/${TEE}.sh
+        ENVS: env/sgx_x64.sh
         IMAGE: ${SGX_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
@@ -153,8 +147,7 @@ sgx_x64_intel_nuc:
 
 sgx_x64_intel_nuc_profiler:
     variables:
-        TEE: sgx_x64
-        ENVS: env/${TEE}.sh
+        ENVS: env/sgx_x64.sh
         IMAGE: ${SGX_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
@@ -174,8 +167,7 @@ sgx_x64_intel_nuc_profiler:
 ### OPTEE ###
 optee_qemu_v8:
     variables:
-        TEE: optee
-        ENVS: env/${TEE}_qemu.sh
+        ENVS: env/optee_qemu.sh
         IMAGE: ${OPTEE_QEMU_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
@@ -194,8 +186,7 @@ optee_qemu_v8:
 
 optee_qemu_v8_profiler:
     variables:
-        TEE: optee
-        ENVS: env/${TEE}_qemu.sh
+        ENVS: env/optee_qemu.sh
         IMAGE: ${OPTEE_QEMU_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
@@ -214,8 +205,7 @@ optee_qemu_v8_profiler:
 
 optee_rpi3:
     variables:
-        TEE: optee
-        ENVS: env/${TEE}_rpi3.sh
+        ENVS: env/optee_rpi3.sh
         IMAGE: ${OPTEE_RPI3_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
@@ -234,8 +224,7 @@ optee_rpi3:
 
 optee_rpi3_profiler:
     variables:
-        TEE: optee
-        ENVS: env/${TEE}_rpi3.sh
+        ENVS: env/optee_rpi3.sh
         IMAGE: ${OPTEE_RPI3_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
