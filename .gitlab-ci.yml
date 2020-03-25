@@ -86,6 +86,44 @@ keystone_qemu_wolfcrypt:
     script:
         - 'echo dummy'
 
+keystone_hifive:
+    variables:
+        ENVS: env/keystone.sh
+        IMAGE: ${KEYSTONE_IMAGE}
+        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
+        # TODO: this is too nasy, so we use `image:` tag
+        SCRIPT: "source ${ENVS} &&
+          make select &&
+          make build &&
+          make test MACHINE=HIFIVE &&
+          make run MACHINE=HIFIVE"
+    stage: keystone
+    only:
+        - master
+    tags:
+        - shell
+    script:
+        - 'echo dummy'
+
+keystone_hifive_profiler:
+    variables:
+        ENVS: env/keystone.sh
+        IMAGE: ${KEYSTONE_IMAGE}
+        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
+        # TODO: this is too nasy, so we use `image:` tag
+        SCRIPT: "source ${ENVS} &&
+          make select &&
+          make build PROFILER=ON &&
+          make test MACHINE=HIFIVE PROFILER=ON&&
+          make run MACHINE=HIFIVE"
+    stage: keystone
+    only:
+        - master
+    tags:
+        - shell
+    script:
+        - 'echo dummy'
+
 ### SGX (x64) ###
 sgx_x64_sim:
     variables:
