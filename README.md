@@ -11,6 +11,8 @@ Note) We recommend that we use docker images because we export multiple environm
 |optee(qemu v8)|vc707/ta_ref_optee_qemu_devel|
 |optee(raspberry pi3)|vc707/ta_ref_rpi3_qemu_devel|
 
+The vc707/test is private repository in dockerhub so that we need password. See Settings > Variables > DOCKERHUB_PASSWD key.
+
 For more information, see [GitLab CI job configuration file](http://192.168.100.100/vc707/ta-ref/-/blob/master/.gitlab-ci.yml).
 
 ## keystone
