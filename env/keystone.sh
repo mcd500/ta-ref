@@ -20,3 +20,7 @@ export KEYSTONE_SDK_LIB_DIR=${KEYSTONE_SDK_DIR}/lib
 # ${KEYSTONE_SDK_DIR}/lib are used in almost all packages including keyedge, so that we take it for granted that the libraries are implicitly loaded in compile phase.
 export CPATH=${KEYSTONE_SDK_LIB_DIR}/edge/include:${KEYSTONE_SDK_LIB_DIR}/host/include:${CPATH}
 export ENCLAVE_CPATH=${KEYSTONE_SDK_LIB_DIR}/app/include:${CPATH}
+
+# when MACHINE=HIFIVE
+export TEST_USER=gitlab
+export HIFIVE_IP_ADDR=192.168.100.110

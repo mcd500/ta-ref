@@ -22,7 +22,17 @@ HIFIVE_SHIP_SCRIPT := ../ssh_script/ship-gitlab.sh
 
 .PHONY: all clean
 
-image: ship
+HIFIVE_image: HIFIVE_ship
+
+HIFIVE_ship: $(ENCLAVE_NM) HIFIVE_clean
+	FILES="$(OUT_FILES)" USER=$(TEST_USER) IP_ADDR=$(HIFIVE_IP_ADDR) ${HIFIVE_SHIP_SCRIPT}
+
+
+HIFIVE_clean:
+	USER=$(TEST_USER) IP_ADDR=$(HIFIVE_IP_ADDR) ${HIFIVE_CLEAN_SCRIPT}
+
+
+SIM_image: SIM_ship
 	make -C $(KEYSTONE_DIR) image
 
 # In Keystone, Four items are required to run Enclave program; App.client, Enclave.eapp_riscv, eyrie OS runtime(eyrie-rt) and keystone-driver module.
