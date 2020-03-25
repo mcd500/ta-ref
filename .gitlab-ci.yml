@@ -17,11 +17,11 @@ before_script:
     - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "${SCRIPT}"
 
 after_script:
-    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "source env/${TEE}.sh && make select clean"
+    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "source ${ENVS} && make select clean"
     # TODO: we want to fail CI if false.
     - test $(find build/lib -mindepth 1 | wc -l) -eq 1
     - test $(find build/include -mindepth 1 | wc -l) -eq 1
-    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "source env/${TEE}.sh && make select mrproper"
+    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "source ${ENVS} && make select mrproper"
 
 # see env/ directory
 stages:
@@ -33,10 +33,11 @@ stages:
 keystone_qemu_mbedcrypt:
     variables:
         TEE: keystone
+        ENVS: env/${TEE}.sh
         IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source env/${TEE}.sh &&
+        SCRIPT: "source ${ENVS} &&
           make select &&
           make build CRYPT_TYPE=MBEDCRYPT &&
           make test &&
@@ -52,10 +53,11 @@ keystone_qemu_mbedcrypt:
 keystone_qemu_profiler:
     variables:
         TEE: keystone
+        ENVS: env/${TEE}.sh
         IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source env/${TEE}.sh &&
+        SCRIPT: "source ${ENVS} &&
           make select &&
           make build PROFILER=ON &&
           make test PROFILER=ON &&
@@ -71,10 +73,11 @@ keystone_qemu_profiler:
 keystone_qemu_wolfcrypt:
     variables:
         TEE: keystone
+        ENVS: env/${TEE}.sh
         IMAGE: ${KEYSTONE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source env/${TEE}.sh &&
+        SCRIPT: "source ${ENVS} &&
           make select &&
           make build CRYPT_TYPE=WOLFCRYPT &&
           make test &&
@@ -91,10 +94,11 @@ keystone_qemu_wolfcrypt:
 sgx_x64_sim:
     variables:
         TEE: sgx_x64
+        ENVS: env/${TEE}.sh
         IMAGE: ${SGX_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source env/${TEE}.sh &&
+        SCRIPT: "source ${ENVS} &&
           make select &&
           make build &&
           make test MACHINE=SIM &&
@@ -110,10 +114,11 @@ sgx_x64_sim:
 sgx_x64_sim_profiler:
     variables:
         TEE: sgx_x64
+        ENVS: env/${TEE}.sh
         IMAGE: ${SGX_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source env/${TEE}.sh &&
+        SCRIPT: "source ${ENVS} &&
           make select &&
           make build PROFILER=ON &&
           make test MACHINE=SIM PROFILER=ON &&
@@ -129,10 +134,11 @@ sgx_x64_sim_profiler:
 sgx_x64_intel_nuc:
     variables:
         TEE: sgx_x64
+        ENVS: env/${TEE}.sh
         IMAGE: ${SGX_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source env/${TEE}.sh &&
+        SCRIPT: "source ${ENVS} &&
           make select &&
           make build &&
           make test MACHINE=NUC &&
@@ -148,10 +154,11 @@ sgx_x64_intel_nuc:
 sgx_x64_intel_nuc_profiler:
     variables:
         TEE: sgx_x64
+        ENVS: env/${TEE}.sh
         IMAGE: ${SGX_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source env/${TEE}.sh &&
+        SCRIPT: "source ${ENVS} &&
           make select &&
           make build PROFILER=ON &&
           make test MACHINE=NUC PROFILER=ON &&
@@ -168,10 +175,11 @@ sgx_x64_intel_nuc_profiler:
 optee_qemu_v8:
     variables:
         TEE: optee
+        ENVS: env/${TEE}_qemu.sh
         IMAGE: ${OPTEE_QEMU_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source env/${TEE}_qemu.sh &&
+        SCRIPT: "source ${ENVS} &&
           make select &&
           make build &&
           make test &&
@@ -187,10 +195,11 @@ optee_qemu_v8:
 optee_qemu_v8_profiler:
     variables:
         TEE: optee
+        ENVS: env/${TEE}_qemu.sh
         IMAGE: ${OPTEE_QEMU_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source env/${TEE}_qemu.sh &&
+        SCRIPT: "source ${ENVS} &&
           make select &&
           make build PROFILER=ON &&
           make test PROFILER=ON &&
@@ -206,10 +215,11 @@ optee_qemu_v8_profiler:
 optee_rpi3:
     variables:
         TEE: optee
+        ENVS: env/${TEE}_rpi3.sh
         IMAGE: ${OPTEE_RPI3_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source env/${TEE}_rpi3.sh &&
+        SCRIPT: "source ${ENVS} &&
           make select &&
           make build &&
           make test &&
@@ -225,10 +235,11 @@ optee_rpi3:
 optee_rpi3_profiler:
     variables:
         TEE: optee
+        ENVS: env/${TEE}_rpi3.sh
         IMAGE: ${OPTEE_RPI3_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source env/${TEE}_rpi3.sh &&
+        SCRIPT: "source ${ENVS} &&
           make select &&
           make build PROFILER=ON &&
           make test PROFILER=ON &&
