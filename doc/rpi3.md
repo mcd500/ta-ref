@@ -1,17 +1,18 @@
 # raspberry pi3 tutorial
 
+In this chapter, we configure image based on [3.8.0](https://github.com/OP-TEE/manifest/tree/3.8.0).
+
 ## build tee-ta-reference and fetch rootfs image
 
 ```sh
 $ docker run  -it -v $(pwd):/home/main/shared -v ${pwd}:/home/main/ta-ref --rm -w /home/main/ta-ref vc707/test:optee_rpi3_ver38
-# inside docker
-# fetch rootfs.cpio.gz
+# inside docker. import rootfs.cpio.gz from the container to local
 $ cp /home/main/optee/out-br/images/rootfs.cpio.gz /home/main/shared
 ```
 
-### write image to sd card
+## write image to sd card
 
-Write image to sd card according to `make img-help` in optee build.
+Write the above image to sd card according to `make img-help` @ optee_build:
 
 ```
 # no longer use docker container!
@@ -113,7 +114,7 @@ $ cd ../ && sudo umount ./media
 # make sure that SD card is unmounted by `lsblk` or `mount -v`.
 ```
 
-### create debian(buster: 10) environment
+## create debian(buster: 10) environment
 
 From this section, we configure debian(buster) for chroot environment.
 
@@ -141,6 +142,7 @@ Then, prepare the script(we call `debian_chroot.sh`) to dive into debian environ
 ```sh
 ROOTFS=/debian_rootfs
 mount --bind /dev ${ROOTFS}/dev
+# To avoid the sudo error, `sudo: no tty present and no askpass program specified`
 mount -t devpts devpts ${ROOTFS}/dev/pts
 mount --bind /sys ${ROOTFS}/sys
 mount --bind /proc ${ROOTFS}/proc
@@ -149,7 +151,7 @@ chroot ${ROOTFS} /bin/bash
 
 ### copy tee_ref_ta and related files
 
-Then copy files from tee-te-reference;
+Then copy files from base image to chroot environment;
 
 + usr/lib/{libteec.so.1.0.0, libteec.so.1}
 + usr/sbin/tee-supplicant
@@ -163,7 +165,9 @@ mkdir -p ./${ROOTFS}/lib/optee_armtz/
 cd ../ && sudo umount ./mnt
 ```
 
-### TEE api test in debian chroot environment
+## TEE api test in raspberry pi3
+
+### Launch ssh daemon
 
 Insert the SD card in the raspberry pi board and poweron. exec ssh and tee-supplicant daemon **in chroot environment**:
 
@@ -185,12 +189,17 @@ dhclient
 /etc/init.d/ssh restart
 ```
 
+If necessary, We can add user and configure `sudoers` file.
+
+### Test TEE and GP APIs
+
 Finally, test TEE API and `gp_**` function. See http://192.168.100.100/vc707/ta-ref#raspberry-pi3:
 
 ```sh
-git clone --recursive http://192.168.100.100/vc707/ta-ref.git
-cd ta-ref
+git clone --recursive http://192.168.100.100/vc707/ta-ref.git && cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_optee_rpi3_devel
+# inside docker
+cd ta-ref
 source env/optee_rpi3.sh
 make build PROFILER=ON
 # scp from local to raspberry pi3.
