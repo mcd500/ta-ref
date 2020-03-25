@@ -117,6 +117,7 @@ If you want to clean build directory only, try `make clean`. Otherwise, `make mr
 │   ├── tiny_AES_c
 │   ├── tiny_sha3
 │   └── wolfssl
+├── doc .. documentation
 ├── edger .. edger libraries
 ├── env .. arch-dependent shell scripts loaded at the very beggging
 │   ├── keystone.sh
