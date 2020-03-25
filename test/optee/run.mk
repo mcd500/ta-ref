@@ -4,6 +4,7 @@ TARGETS = $(MACHINE)_demo
 RUN_SCRIPT := ../ssh_script/run-gitlab.sh
 CHECK_SCRIPT := ./check-gitlab.sh
 UUID := a6f77c1e-96fe-4a0e-9e74-262582a4c8f1
+UUID_TA := $(UUID).ta
 UUID_NM := $(UUID).nm
 APP_BIN := optee_ref_ta
 
@@ -22,7 +23,7 @@ RPI3_demo: check_demo
 	COMMAND="$(RPI3_COMMAND)" USER=$(TEST_USER) IP_ADDR=$(RPI3_IP_ADDR) ${RUN_SCRIPT}
 
 check_demo:
-	USER=$(TEST_USER) IP_ADDR=$(RPI3_IP_ADDR) ${CHECK_SCRIPT}
+	USER=$(TEST_USER) IP_ADDR=$(RPI3_IP_ADDR) UUID_TA=$(UUID_TA) ${CHECK_SCRIPT}
 
 socat:
 	socat TCP4-LISTEN:$(PORT),reuseaddr - | tee /dev/stdout &
