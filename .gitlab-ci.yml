@@ -3,7 +3,8 @@ variables:
     GITLAB_USER: vc707
     RPI3_IP_ADDR: 192.168.100.61
     DOCKERHUB_REPO: vc707/test
-    KEYSTONE_IMAGE: vc707/test:ta_ref_keystone_devel
+    KEYSTONE_QEMU_IMAGE: vc707/test:ta_ref_keystone_qemu_devel
+    KEYSTONE_HIFIVE_IMAGE: vc707/test:ta_ref_keystone_hifive_devel
     SGX_IMAGE: vc707/test:ta_ref_sgx_devel
     OPTEE_QEMU_IMAGE: vc707/test:ta_ref_optee_qemu_devel
     OPTEE_RPI3_IMAGE: vc707/test:ta_ref_optee_rpi3_devel
@@ -32,7 +33,7 @@ stages:
 keystone_qemu_mbedcrypt:
     variables:
         ENVS: env/keystone.sh
-        IMAGE: ${KEYSTONE_IMAGE}
+        IMAGE: ${KEYSTONE_QEMU_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
         SCRIPT: "source ${ENVS} &&
@@ -51,7 +52,7 @@ keystone_qemu_mbedcrypt:
 keystone_qemu_profiler:
     variables:
         ENVS: env/keystone.sh
-        IMAGE: ${KEYSTONE_IMAGE}
+        IMAGE: ${KEYSTONE_QEMU_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
         SCRIPT: "source ${ENVS} &&
@@ -70,7 +71,7 @@ keystone_qemu_profiler:
 keystone_qemu_wolfcrypt:
     variables:
         ENVS: env/keystone.sh
-        IMAGE: ${KEYSTONE_IMAGE}
+        IMAGE: ${KEYSTONE_QEMU_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
         SCRIPT: "source ${ENVS} &&
@@ -89,7 +90,7 @@ keystone_qemu_wolfcrypt:
 keystone_hifive:
     variables:
         ENVS: env/keystone.sh
-        IMAGE: ${KEYSTONE_IMAGE}
+        IMAGE: ${KEYSTONE_HIFIVE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
         SCRIPT: "source ${ENVS} &&
@@ -108,7 +109,7 @@ keystone_hifive:
 keystone_hifive_profiler:
     variables:
         ENVS: env/keystone.sh
-        IMAGE: ${KEYSTONE_IMAGE}
+        IMAGE: ${KEYSTONE_HIFIVE_IMAGE}
         VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
         # TODO: this is too nasy, so we use `image:` tag
         SCRIPT: "source ${ENVS} &&
