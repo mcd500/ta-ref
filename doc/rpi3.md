@@ -201,6 +201,7 @@ docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_optee_rpi3_dev
 # inside docker
 cd ta-ref
 source env/optee_rpi3.sh
+make select
 make build PROFILER=ON
 # scp from local to raspberry pi3.
 make test PROFILER=ON

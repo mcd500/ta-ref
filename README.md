@@ -2,14 +2,14 @@
 
 Improvement of http://192.168.100.100/vc707/tee-ta-reference. Please feel free to share your idea!
 
-Note) We recommend that we use docker images because we export multiple environment variables at the very beginning of build phase.
-
-|TEE|docker image|
+|TEE(MACHINE)|docker image|
 |---|---|
-|keystone|vc707/test:ta_ref_keystone_devel|
-|intel_sgx|vc707/test:ta_ref_sgx_devel|
-|optee(qemu v8)|vc707/ta_ref_optee_qemu_devel|
-|optee(raspberry pi3)|vc707/ta_ref_rpi3_qemu_devel|
+|keystone(SIM/HIFIVE)|vc707/test:ta_ref_keystone_devel|
+|intel_sgx(SIM/NIC)|vc707/test:ta_ref_sgx_devel|
+|optee(qemu v8: SIM)|vc707/ta_ref_optee_qemu_devel|
+|optee(RPI3)|vc707/ta_ref_rpi3_qemu_devel|
+
+Note) `SIM` indicates qemu or local environment.
 
 The vc707/test is private repository in dockerhub so that we need password. See Settings > Variables > DOCKERHUB_PASSWD key.
 
@@ -29,12 +29,33 @@ Next, build && test:
 
 ```sh
 source env/keystone.sh
+make select
+```
+
+### qemu
+
+```sh
+# MACHINE=SIM by default
 make build
 # or make build CRYPT_TYPE=(MBEDCRYPT|WOLFCRYPT)
 make test
 # show demo
 make run
 ```
+
+### Hifive
+
+```sh
+make build
+make test MACHINE=HIFIVE
+# show demo
+make run MACHINE=HIFIVE
+```
+
+
+### vc707
+
+(not yet)
 
 ## intel-sgx
 
@@ -48,11 +69,25 @@ Next, build && test:
 
 ```sh
 source env/sgx_x64.sh
+make select
+```
+
+### local
+
+```sh
+# MACHINE=SIM by default
 make build
 make test
 make run
 ```
 
+### Intel NUC
+
+```sh
+make build
+make test MACHINE=NUC
+make run MACHINE=NUC
+```
 
 ## optee
 
@@ -70,6 +105,7 @@ Next, build && test:
 
 ```sh
 source env/optee_qemu.sh
+make select
 make build
 make test
 make run
@@ -87,6 +123,7 @@ Next, build && test:
 
 ```sh
 source env/optee_rpi3.sh
+make select
 make build
 make test
 make run
