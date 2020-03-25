@@ -54,7 +54,7 @@ make run
 
 ## optee
 
-To configure images in raspberry pi3, see [tutorial](http://192.168.100.100/vc707/tee-ta-reference/-/blob/master/ref-ta/op-tee/README.md).
+To configure images in raspberry pi3, see [tutorial](http://192.168.100.100/vc707/ta-ref/-/blob/master/doc/rpi3.md).
 
 ### qemu_v8
 
