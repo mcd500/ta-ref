@@ -24,7 +24,7 @@ For preparation:
 git clone --recursive http://192.168.100.100/vc707/ta-ref.git
 cd ta-ref
 # for hifive, select `vc707/test:ta_ref_keystone_hifive_devel`
-docker run -it --rm -v $(pwd):/home/keystone/ta-ref vc707/test:ta_ref_keystone_qemu_devel
+docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_keystone_qemu_devel
 ```
 
 Next, build && test:
@@ -132,7 +132,7 @@ make test
 make run
 ```
 
-# delete
+# cleanup
 
 If you want to clean build directory only, try `make clean`. Otherwise, `make mrproper` will clean objects for all directories completely.
 
