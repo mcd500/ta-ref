@@ -12,29 +12,28 @@ Improvement of http://192.168.100.100/vc707/tee-ta-reference. Please feel free t
 
 Note) `SIM` indicates qemu or local environment.
 
+THe Dockerfile in each containers is [here](http://192.168.100.100/vc707/dockerfiles/-/tree/master/ta-ref).
 The vc707/test is private repository in dockerhub so that we need password. See Settings > Variables > DOCKERHUB_PASSWD key.
 
 For more information, see [GitLab CI job configuration file](http://192.168.100.100/vc707/ta-ref/-/blob/master/.gitlab-ci.yml).
 
 ## keystone
 
-For preparation:
-
 ```sh
 git clone --recursive http://192.168.100.100/vc707/ta-ref.git
 cd ta-ref
-# for hifive, select `vc707/test:ta_ref_keystone_hifive_devel`
-docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_keystone_qemu_devel
 ```
 
 Next, build && test:
 
+### qemu
+
 ```sh
+docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_keystone_qemu_devel
+cd ta-ref
 source env/keystone.sh
 make select
 ```
-
-### qemu
 
 ```sh
 # MACHINE=SIM by default
@@ -46,6 +45,13 @@ make run
 ```
 
 ### Hifive
+
+```sh
+docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_keystone_hifive_devel
+cd ta-ref
+source env/keystone.sh
+make select
+```
 
 ```sh
 make build
@@ -101,6 +107,7 @@ To configure images in raspberry pi3, see [tutorial](http://192.168.100.100/vc70
 git clone --recursive http://192.168.100.100/vc707/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_optee_qemu_devel
+cd ta-ref
 ```
 
 Next, build && test:
@@ -119,6 +126,7 @@ make run
 git clone --recursive http://192.168.100.100/vc707/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_optee_rpi3_devel
+cd ta-ref
 ```
 
 Next, build && test:
