@@ -4,7 +4,7 @@ endif
 
 include ./general.mk
 
-DEPENDS=edger crypto
+DEPENDS=edger crypto eyrie
 EDGER_TYPE=KEYEDGE
 # MBEDCRYPT or WOLFCRYPT
 CRYPT_TYPE=MBEDCRYPT
@@ -32,6 +32,9 @@ edger:
 
 crypto:
 	make -f crypto.mk
+
+eyrie:
+	make -f eyrie_os.mk
 
 api: depends
 	make -f api.mk CRYPT_TYPE=$(CRYPT_TYPE)
