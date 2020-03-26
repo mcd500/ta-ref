@@ -18,6 +18,8 @@ OUT_FILES = $(EYRIE_BIN) $(APP_BIN) $(ENCLAVE_BIN) $(ENCLAVE_NM) $(ANALYZER_BIN)
 HIFIVE_CLEAN_SCRIPT := ../ssh_script/clean-gitlab.sh
 HIFIVE_SHIP_SCRIPT := ../ssh_script/ship-gitlab.sh
 
+SIM_OUT_DIR=$(BUILDROOT_OVERLAY_DIR)/root/out
+
 .PHONY: all clean
 
 all: $(TARGET)
@@ -37,7 +39,8 @@ SIM_image: SIM_ship
 
 # In Keystone, Four items are required to run Enclave program; App.client, Enclave.eapp_riscv, eyrie OS runtime(eyrie-rt) and keystone-driver module.
 SIM_ship: $(ENCLAVE_NM)
-	install $(OUT_FILES) $(BUILDROOT_OVERLAY_DIR)/root
+	mkdir -p $(SIM_OUT_DIR)
+	install $(OUT_FILES) $(SIM_OUT_DIR)
 
 $(ENCLAVE_NM):
 	nm $(ENCLAVE_BIN) > $(ENCLAVE_NM)
