@@ -2,21 +2,11 @@
 
 echo "**** Running QEMU SSH on port ${PORT} ****\n"
 
-DEBUG=""
-
-while [ "$1" != "" ]; do
-if [ "$1" = "-debug" ]; then
-  DEBUG="-s -S -d in_asm -D debug.log"
-  shift
-fi
-done
-
 BOOTROM_ELF=${KEYSTONE_DIR}/build/bootrom.build/bootrom.bin
 BBL_BIN=${KEYSTONE_DIR}/build/riscv-pk.build/bbl
 ROOTFS=${KEYSTONE_DIR}/build/buildroot.build/images/rootfs.ext2
 qemu-system-riscv64 \
-    $DEBUG \
-    -m 2G \
+    -m 4G \
     -bios ${BOOTROM_ELF} \
     -nographic \
     -machine virt \

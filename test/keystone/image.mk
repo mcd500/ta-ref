@@ -37,7 +37,7 @@ SIM_image: SIM_ship
 
 # In Keystone, Four items are required to run Enclave program; App.client, Enclave.eapp_riscv, eyrie OS runtime(eyrie-rt) and keystone-driver module.
 SIM_ship: $(ENCLAVE_NM)
-	install $(OUT_FILES) $(BUILDROOT_OVERLAY_DIR)
+	install $(OUT_FILES) $(BUILDROOT_OVERLAY_DIR)/root
 
 $(ENCLAVE_NM):
 	nm $(ENCLAVE_BIN) > $(ENCLAVE_NM)
