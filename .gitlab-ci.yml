@@ -115,7 +115,7 @@ keystone_hifive_profiler:
         SCRIPT: "source ${ENVS} &&
           make select &&
           make build PROFILER=ON &&
-          make test MACHINE=HIFIVE PROFILER=ON&&
+          make test MACHINE=HIFIVE PROFILER=ON &&
           make run MACHINE=HIFIVE"
     stage: keystone
     only:
