@@ -21,6 +21,10 @@ export KEYSTONE_SDK_LIB_DIR=${KEYSTONE_SDK_DIR}/lib
 export CPATH=${KEYSTONE_SDK_LIB_DIR}/edge/include:${KEYSTONE_SDK_LIB_DIR}/host/include:${CPATH}
 export ENCLAVE_CPATH=${KEYSTONE_SDK_LIB_DIR}/app/include:${CPATH}
 
+export BUILDROOT_OVERLAY_DIR=${KEYSTONE_DIR}/build/overlay/root
+export KEYSTONE_DRIVER_MODULE=${KEYSTONE_DIR}/build/buildroot.build/target/root/keystone-driver.ko
+
+
 # when MACHINE=HIFIVE
 export TEST_USER=gitlab
 export HIFIVE_IP_ADDR=192.168.100.110

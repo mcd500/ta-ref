@@ -1,8 +1,6 @@
 # `make image` uses ${KEYSTONE_DIR} specific toolchains and settings, so we disable expanded settings.
 unexport CC AR CXX LINK AS SLN
 
-BUILDROOT_OVERLAY_DIR=${KEYSTONE_DIR}/buildroot_overlay/root
-KEYSTONE_DRIVER_MODULE := ${KEYSTONE_DIR}/hifive-work/linux-keystone-driver/keystone-driver.ko
 EYRIE_BIN=$(KEYSTONE_DIR)/sdk/rts/eyrie/eyrie-rt
 APP_BIN=App/App.client
 ENCLAVE_BIN=Enclave/Enclave.eapp_riscv
@@ -22,6 +20,8 @@ HIFIVE_SHIP_SCRIPT := ../ssh_script/ship-gitlab.sh
 
 .PHONY: all clean
 
+all: $(TARGET)
+
 HIFIVE_image: HIFIVE_ship
 
 HIFIVE_ship: $(ENCLAVE_NM) HIFIVE_clean
@@ -33,7 +33,7 @@ HIFIVE_clean:
 
 
 SIM_image: SIM_ship
-	make -C $(KEYSTONE_DIR) image
+	make -C $(KEYSTONE_DIR)/build image
 
 # In Keystone, Four items are required to run Enclave program; App.client, Enclave.eapp_riscv, eyrie OS runtime(eyrie-rt) and keystone-driver module.
 SIM_ship: $(ENCLAVE_NM)
