@@ -23,7 +23,7 @@ OBJS =$(SRCS:.cpp=.o)
 # PERF_OPTION =
 # endif
 
-ifneq ($(SEED), "")
+ifneq ($(SEED), 0)
 CXXFLAGS += -DSEED=$(SEED)
 endif
 

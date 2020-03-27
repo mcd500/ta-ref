@@ -3,21 +3,19 @@
 #ifdef SEED
 #include <stdlib.h>
 #define getrandom seed_random
-
 static ssize_t seed_random(void *buf, size_t buflen, unsigned int flags) {
     (flags); // not used
-    // truncate
-    buflen = (buflen/4)*4;
+    const ssize_t ss = sizeof(unsigned int);
     unsigned int retval;
     unsigned int *b = (unsigned int*)buf;
     ssize_t idx = 0;
-    srandom((unsigned)SEED);
+    srandom((unsigned int)SEED);
     while(buflen) {
         retval = random();
-        buflen -= 4;
+        buflen -= ss;
         b[idx++] = retval;
     }
-    return idx*4;
+    return idx*ss;
 }
 #else
 #include <sys/random.h>

@@ -4,7 +4,7 @@ KEYSTONE_LIB_DIRS = $(LIB_DIRS) $(KEYSTONE_SDK_LIB_DIR)
 ifeq ($(MACHINE), SIM)
 SEED := 0x0102030405060708
 else
-SEED :=
+SEED := 0
 endif
 
 .PHONY: build image run app enclave
