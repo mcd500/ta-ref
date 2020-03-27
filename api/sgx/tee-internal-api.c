@@ -53,7 +53,7 @@ void TEE_GetREETime(TEE_Time *time)
     ree_time_t ree_time;
     int retval;
 
-    pr_deb("TEE_GetREETime(): start");
+    pr_deb("TEE_GetREETime(): start\n");
 
     /* REE time */
     ocall_ree_time(&retval, &ree_time);
@@ -66,7 +66,7 @@ void TEE_GetREETime(TEE_Time *time)
 
 void TEE_GetSystemTime(TEE_Time *time)
 {
-    pr_deb("TEE_GetSystemTime(): start");
+    pr_deb("TEE_GetSystemTime(): start\n");
     TEE_GetREETime(time);
 // Unfortunatelly, trusted time doesn't work on linux.
 #if 0
@@ -136,7 +136,7 @@ void TEE_GetSystemTime(TEE_Time *time)
 
 TEE_Result GetRelTimeStart(uint64_t start)
 {
-    pr_deb("GetRelTimeStart(): start");
+    pr_deb("GetRelTimeStart(): start\n");
 
     return 0;
 }
@@ -144,7 +144,7 @@ TEE_Result GetRelTimeStart(uint64_t start)
 
 TEE_Result GetRelTimeEnd(uint64_t end)
 {
-    pr_deb("GetRelTimeEnd(): start");
+    pr_deb("GetRelTimeEnd(): start\n");
 
     return 0;
 }
@@ -333,7 +333,7 @@ TEE_Result TEE_CreatePersistentObject(uint32_t storageID, const void *objectID,
                                       uint32_t initialDataLen,
                                       TEE_ObjectHandle *object)
 {
-    pr_deb("TEE_CreatePersistentObject(): start");
+    pr_deb("TEE_CreatePersistentObject(): start\n");
 
     // Not yet attribtes, initialData adn initialDataLen support
 
@@ -346,7 +346,7 @@ TEE_Result TEE_OpenPersistentObject(uint32_t storageID, const void *objectID,
                                     uint32_t objectIDLen, uint32_t flags,
                                     TEE_ObjectHandle *object)
 {
-    pr_deb("TEE_OpenPersistentObject(): start");
+    pr_deb("TEE_OpenPersistentObject(): start\n");
 
     return OpenPersistentObject(storageID, objectID, objectIDLen,
 				flags, object, 0);
@@ -355,7 +355,7 @@ TEE_Result TEE_OpenPersistentObject(uint32_t storageID, const void *objectID,
 
 TEE_Result TEE_GetObjectInfo1(TEE_ObjectHandle object, TEE_ObjectInfo *objectInfo)
 {
-    pr_deb("TEE_GetObjectInfo1(): start");
+    pr_deb("TEE_GetObjectInfo1(): start\n");
 
     return 0;
 }
@@ -364,7 +364,7 @@ TEE_Result TEE_GetObjectInfo1(TEE_ObjectHandle object, TEE_ObjectInfo *objectInf
 TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
                                uint32_t size)
 {
-    pr_deb("TEE_WriteObjectData(): start");
+    pr_deb("TEE_WriteObjectData(): start\n");
 
     if (!object
 	|| !(object->flags & TEE_HANDLE_FLAG_PERSISTENT)) {
@@ -410,7 +410,7 @@ TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
 TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
                               uint32_t size, uint32_t *count)
 {
-    pr_deb("TEE_ReadObjectData(): start");
+    pr_deb("TEE_ReadObjectData(): start\n");
 
     if (!object
 	|| !(object->flags & TEE_HANDLE_FLAG_PERSISTENT)) {
@@ -463,7 +463,7 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
 
 void TEE_CloseObject(TEE_ObjectHandle object)
 {
-    pr_deb("TEE_CloseObject(): start");
+    pr_deb("TEE_CloseObject(): start\n");
 
     if (!object
 	|| !(object->flags & TEE_HANDLE_FLAG_PERSISTENT)) {
@@ -490,7 +490,7 @@ void TEE_CloseObject(TEE_ObjectHandle object)
 
 void TEE_GenerateRandom(void *randomBuffer, uint32_t randomBufferLen)
 {
-    pr_deb("TEE_GenerateRandom(): start");
+    pr_deb("TEE_GenerateRandom(): start\n");
 
     sgx_read_rand(randomBuffer, (size_t)randomBufferLen);
 

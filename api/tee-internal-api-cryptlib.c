@@ -59,7 +59,7 @@ TEE_Result TEE_AllocateOperation(TEE_OperationHandle *operation,
                                  uint32_t algorithm, uint32_t mode,
                                  uint32_t maxKeySize)
 {
-    pr_deb("TEE_AllocateOperation(): start");
+    pr_deb("TEE_AllocateOperation(): start\n");
 
     if (mode == TEE_MODE_DIGEST) {
       if (algorithm != TEE_ALG_SHA256) {
@@ -119,7 +119,7 @@ TEE_Result TEE_AllocateOperation(TEE_OperationHandle *operation,
 
 void TEE_FreeOperation(TEE_OperationHandle operation)
 {
-    pr_deb("TEE_FreeOperation(): start");
+    pr_deb("TEE_FreeOperation(): start\n");
 
     if (operation) {
       int mode = operation->mode;
@@ -150,7 +150,7 @@ void TEE_FreeOperation(TEE_OperationHandle operation)
 void TEE_DigestUpdate(TEE_OperationHandle operation,
                       const void *chunk, uint32_t chunkSize)
 {
-    pr_deb("TEE_FreeOperation(): start");
+    pr_deb("TEE_FreeOperation(): start\n");
 
     if (!operation
 	|| operation->mode != TEE_MODE_DIGEST
@@ -170,7 +170,7 @@ void TEE_DigestUpdate(TEE_OperationHandle operation,
 TEE_Result TEE_DigestDoFinal(TEE_OperationHandle operation, const void *chunk,
                              uint32_t chunkLen, void *hash, uint32_t *hashLen)
 {
-    pr_deb("TEE_DigestDoFinal(): start");
+    pr_deb("TEE_DigestDoFinal(): start\n");
 
     if (!operation
 	|| operation->mode != TEE_MODE_DIGEST
@@ -250,7 +250,7 @@ TEE_Result TEE_AEInit(TEE_OperationHandle operation, const void *nonce,
                       uint32_t nonceLen, uint32_t tagLen, uint32_t AADLen,
                       uint32_t payloadLen)
 {
-    pr_deb("TEE_AEInit(): start");
+    pr_deb("TEE_AEInit(): start\n");
 
     if (!operation
 	|| operation->alg != TEE_ALG_AES_GCM) {
@@ -258,17 +258,17 @@ TEE_Result TEE_AEInit(TEE_OperationHandle operation, const void *nonce,
     }
 
     if (nonceLen != 16) {
-      pr_deb("TEE_AEInit(): only 16-byte nonce is supported");
+      pr_deb("TEE_AEInit(): only 16-byte nonce is supported\n");
       return TEE_ERROR_NOT_SUPPORTED;
     }
 
     if (AADLen > 16) {
-      pr_deb("TEE_AEInit(): only less than 16-byte AAD is supported");
+      pr_deb("TEE_AEInit(): only less than 16-byte AAD is supported\n");
       return TEE_ERROR_NOT_SUPPORTED;
     }
 
     if (tagLen != 128) {
-      pr_deb("TEE_AEInit(): only 128-bit tag is supported");
+      pr_deb("TEE_AEInit(): only 128-bit tag is supported\n");
       return TEE_ERROR_NOT_SUPPORTED;
     }
 
@@ -340,7 +340,7 @@ void TEE_AEUpdateAAD(TEE_OperationHandle operation, const void *AADdata,
 TEE_Result TEE_AEUpdate(TEE_OperationHandle operation, const void *srcData,
                         uint32_t srcLen, void *destData, uint32_t *destLen)
 {
-    pr_deb("TEE_AEUpdate(): start");
+    pr_deb("TEE_AEUpdate(): start\n");
 
     if (!operation
 	|| operation->alg != TEE_ALG_AES_GCM) {
@@ -387,7 +387,7 @@ TEE_Result TEE_AEEncryptFinal(TEE_OperationHandle operation,
                               void *destData, uint32_t *destLen, void *tag,
                               uint32_t *tagLen)
 {
-    pr_deb("TEE_AEEncryptFinal(): start");
+    pr_deb("TEE_AEEncryptFinal(): start\n");
 
     if (!operation
 	|| operation->alg != TEE_ALG_AES_GCM) {
@@ -445,7 +445,7 @@ TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
                               void *destData, uint32_t *destLen, void *tag,
                               uint32_t tagLen)
 {
-    pr_deb("TEE_AEDecryptFinal(): start");
+    pr_deb("TEE_AEDecryptFinal(): start\n");
 
     if (!operation
 	|| operation->alg != TEE_ALG_AES_GCM) {
@@ -505,7 +505,7 @@ TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
 void TEE_CipherInit(TEE_OperationHandle operation, const void *nonce,
 		    uint32_t nonceLen)
 {
-    pr_deb("TEE_CipherInit(): start");
+    pr_deb("TEE_CipherInit(): start\n");
 
     if (!operation
 	|| operation->alg != TEE_ALG_AES_CBC_NOPAD) {
@@ -513,7 +513,7 @@ void TEE_CipherInit(TEE_OperationHandle operation, const void *nonce,
     }
 
     if (nonceLen != 16) {
-      pr_deb("TEE_CipherInit(): only 16-byte nonce is supported");
+      pr_deb("TEE_CipherInit(): only 16-byte nonce is supported\n");
       TEE_Panic(0);
     }
 
@@ -553,7 +553,7 @@ void TEE_CipherInit(TEE_OperationHandle operation, const void *nonce,
 TEE_Result TEE_CipherUpdate(TEE_OperationHandle operation, const void *srcData,
                         uint32_t srcLen, void *destData, uint32_t *destLen)
 {
-    pr_deb("TEE_CipherUpdate(): start");
+    pr_deb("TEE_CipherUpdate(): start\n");
 
     // !! Do check
 
@@ -609,7 +609,7 @@ TEE_Result TEE_CipherDoFinal(TEE_OperationHandle operation, const void *srcData,
 TEE_Result TEE_GenerateKey(TEE_ObjectHandle object, uint32_t keySize,
 			   const TEE_Attribute *params, uint32_t paramCount)
 {
-    pr_deb("TEE_GenerateKey(): start");
+    pr_deb("TEE_GenerateKey(): start\n");
 
     if (!object
 	|| (object->flags & TEE_HANDLE_FLAG_KEY_SET)) {
@@ -642,7 +642,7 @@ TEE_Result TEE_AllocateTransientObject(TEE_ObjectType objectType,
                                        uint32_t maxKeySize,
                                        TEE_ObjectHandle *object)
 {
-    pr_deb("TEE_AllocateTransientObject(): start");
+    pr_deb("TEE_AllocateTransientObject(): start\n");
 
     if (!(objectType == TEE_TYPE_ECDH_KEYPAIR
 	  || objectType == TEE_TYPE_ECDSA_KEYPAIR
@@ -667,7 +667,7 @@ TEE_Result TEE_AllocateTransientObject(TEE_ObjectType objectType,
 void TEE_InitRefAttribute(TEE_Attribute *attr, uint32_t attributeID,
                           const void *buffer, uint32_t length)
 {
-    pr_deb("TEE_InitRefAttribute(): start");
+    pr_deb("TEE_InitRefAttribute(): start\n");
 
     if (!attr) {
       TEE_Panic(0);
@@ -684,7 +684,7 @@ void TEE_InitRefAttribute(TEE_Attribute *attr, uint32_t attributeID,
 void TEE_InitValueAttribute(TEE_Attribute *attr, uint32_t attributeID,
                            uint32_t a, uint32_t b)
 {
-    pr_deb("TEE_InitValueAttribute(): start");
+    pr_deb("TEE_InitValueAttribute(): start\n");
 
     if (!attr) {
       TEE_Panic(0);
@@ -700,7 +700,7 @@ void TEE_InitValueAttribute(TEE_Attribute *attr, uint32_t attributeID,
 
 void TEE_FreeTransientObject(TEE_ObjectHandle object)
 {
-    pr_deb("TEE_FreeTransientObject(): start");
+    pr_deb("TEE_FreeTransientObject(): start\n");
 
     if (!object) {
       return;
@@ -726,7 +726,7 @@ TEE_Result TEE_AsymmetricSignDigest(TEE_OperationHandle operation,
                                     uint32_t digestLen, void *signature,
                                     uint32_t *signatureLen)
 {
-    pr_deb("TEE_AsymmetricSignDigest(): start");
+    pr_deb("TEE_AsymmetricSignDigest(): start\n");
 
     if (!operation
 	|| operation->mode != TEE_MODE_SIGN
@@ -774,7 +774,7 @@ TEE_Result TEE_AsymmetricVerifyDigest(TEE_OperationHandle operation,
                                       uint32_t digestLen, const void *signature,
                                       uint32_t signatureLen)
 {
-    pr_deb("TEE_AsymmetricVerifyDigest(): start");
+    pr_deb("TEE_AsymmetricVerifyDigest(): start\n");
 
     if (!operation
 	|| operation->mode != TEE_MODE_VERIFY
