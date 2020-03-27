@@ -6,9 +6,17 @@ TEST_DIR=test
 ## sgx option(DEBUG, RELEASE, PRERELEASE)
 export DEBUG_TYPE ?= DEBUG
 export PROFILER ?= OFF
-# almost not implemented
-## keystone => SIM, SIFIVE, sgx: SIM, HW, optee: SIM, ..
 export MACHINE ?= SIM
+
+# TEE-MACHINE validation
+ifeq ($(MACHINE), SIM)
+else ifeq ($(TEE)_$(MACHINE), keystone_HIFIVE)
+else ifeq ($(TEE)_$(MACHINE), optee_RPI3)
+else ifeq ($(TEE)_$(MACHINE), sgx_NUC)
+else
+$(error "tee=$(TEE) on machine=$(MACHINE) is not implemented!")
+endif
+
 
 ifeq ($(DEBUG_TYPE), DEBUG)
 export DEBUG_FLAGS = -g -O0 -DAPP_VERBOSE -DENCLAVE_VERBOSE

@@ -6,7 +6,7 @@ Improvement of http://192.168.100.100/vc707/tee-ta-reference. Please feel free t
 |---|---|
 |keystone(qemu: SIM)|vc707/test:ta_ref_keystone_qemu_devel|
 |keystone(HIFIVE)|vc707/test:ta_ref_keystone_hifive_devel|
-|intel_sgx(SIM/NIC)|vc707/test:ta_ref_sgx_devel|
+|intel_sgx(SIM/NUC)|vc707/test:ta_ref_sgx_devel|
 |optee(qemu v8: SIM)|vc707/ta_ref_optee_qemu_devel|
 |optee(RPI3)|vc707/ta_ref_rpi3_qemu_devel|
 
