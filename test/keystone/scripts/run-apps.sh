@@ -7,7 +7,7 @@ screen -L -dmS qemu /bin/bash -c "PORT=${PORT} ${CURDIR}/run-qemu.sh"
 sleep 7
 
 if [ "${ANALYZE}" = "ON" ]; then
-${CURDIR}/expect/analyze.sh
+${CURDIR}/expect/analyze.expect
 else
-${CURDIR}/expect/demo.sh
+${CURDIR}/expect/demo.expect
 fi
