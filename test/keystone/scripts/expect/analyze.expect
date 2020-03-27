@@ -1,14 +1,25 @@
 #!/usr/bin/expect
 
 set timeout 30
-spawn ssh root@localhost -p $::env(PORT)
+set PORT $::env(PORT)
+set USER $::env(USER)
+set IP_ADDR $::env(IP_ADDR)
+set PASSWD $::env(PASSWD)
+set PS1 $::env(PS1)
+
+spawn ssh $USER@$IP_ADDR -p $PORT
 expect "*(yes/no)? " { 
     send "yes\r"
     expect "*?assword" {
-        send "sifive\r"
+        send "$PASSWD\r"
     }
 }
+expect "$PS1" {
+    send "export PS1=\"# \"\r"
+}
+
 expect "# " {
+    # We may ignore the case, `insmod` command may not found.
     send "insmod keystone-driver.ko\r"
 }
 
@@ -38,7 +49,7 @@ expect "# " {
 }
 
 expect "# " {
-    send "poweroff\r"
+    send "exit\r"
 }
 
 expect eof

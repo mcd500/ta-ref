@@ -1,13 +1,27 @@
-HIFIVE_RUN_SCRIPT := ../ssh_script/run-gitlab.sh
-
-RUN_COMMAND := ./App.client  Enclave.eapp_riscv eyrie-rt
-ANALYZE_COMMAND := ./analyzer shared_mem Enclave.nm
-ANALYZER_BIN=$(TOPDIR)/profiler/analyzer/analyzer
-
-HIFIVE_COMMAND := $(RUN_COMMAND) && test -f analyzer && ${ANALYZE_COMMAND}
+LAUNCH_QEMU_SCRIPT := ./scripts/launch-qemu.sh
+SIM_RUN_SCRIPT := ./scripts/test-qemu.sh
+HIFIVE_RUN_SCRIPT := ./scripts/test-gitlab.sh
 
 TARGET := $(MACHINE)_demo
 
+ifeq ($(MACHINE), SIM)
+USER=root
+IP_ADDR=localhost
+PASSWD=sifive
+#PORT=$(PORT)
+RUN_SCRIPT=$(SIM_RUN_SCRIPT)
+else ifeq ($(MACHINE), HIFIVE)
+USER=gitlab
+IP_ADDR=$(HIFIVE_IP_ADDR)
+PASSWD=gitlab
+#default ssh port
+PORT=22
+RUN_SCRIPT=$(HIFIVE_RUN_SCRIPT)
+else
+$(error spefify MACHINE to be either SIM or HIFIVE!)
+endif
+
+ANALYZER_BIN=$(TOPDIR)/profiler/analyzer/analyzer
 ifneq ("$(wildcard $(ANALYZER_BIN))","")
 ANALYZE=ON
 else
@@ -18,11 +32,9 @@ all: $(TARGET)
 
 qemu: qemu
 
-HIFIVE_demo:
-	COMMAND="$(HIFIVE_COMMAND)" USER=$(TEST_USER) IP_ADDR=$(HIFIVE_IP_ADDR) ${HIFIVE_RUN_SCRIPT}
+$(MACHINE)_demo:
+	PORT=$(PORT) USER=$(USER) IP_ADDR=$(IP_ADDR) PASSWD=$(PASSWD) ANALYZE=$(ANALYZE) $(RUN_SCRIPT)
 
-SIM_demo:
-	PORT=${PORT} ANALYZE=$(ANALYZE) ./scripts/run-apps.sh
-
+# launch only
 qemu:
-	PORT=${PORT} ./scripts/run-qemu.sh
+	PORT=$(PORT) $(LAUNCH_QEMU_SCRIPT)
