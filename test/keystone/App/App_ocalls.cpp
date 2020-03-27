@@ -3,7 +3,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/time.h>
-#include <sys/random.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <cstdio>
@@ -11,6 +10,7 @@
 #include <cstring>
 
 #include "edger/Enclave_u.h"
+#include "random.h"
 
 EDGE_EXTERNC_BEGIN
 
