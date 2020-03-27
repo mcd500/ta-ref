@@ -25,6 +25,10 @@ ifneq ($(KEYSTONE_SDK_LIB_DIR),)
 INCLUDE_DIRS += $(KEYSTONE_SDK_LIB_DIR)/app/include
 endif
 
+ifeq ($(DEBUG_TYPE), DEBUG)
+CFLAGS += -DDEBUG
+endif
+
 
 CFLAGS += $(addprefix -I,$(INCLUDE_DIRS))
 CFLAGS += -DCRYPTLIB=$(CRYPT_TYPE)
