@@ -23,12 +23,7 @@ OBJS =$(SRCS:.cpp=.o)
 # PERF_OPTION =
 # endif
 
-ifeq ($(DEBUG_TYPE), DEBUG)
-DEBUG_OPTION = -g -O0
-else
-DEBUG_OPTION =
-endif
-CXXFLAGS += $(DEBUG_OPTION)
+CXXFLAGS += $(DEBUG_FLAGS)
 
 
 # TODO: flatccrt library is used only for Enclave_u library, so we want merge flatccrt with Enclave_u

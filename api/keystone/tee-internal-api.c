@@ -482,7 +482,7 @@ void TEE_GenerateRandom(void *randomBuffer, uint32_t randomBufferLen)
 
 void TEE_GenerateRandom(void *randomBuffer, uint32_t randomBufferLen)
 {
-    pr_deb("TEE_GenerateRandom(): start\n");
+    pr_deb("TEE_GenerateRandom(0x%lx, %lu): start\n", randomBuffer, randomBufferLen);
 
     int ret = ocall_getrandom(randomBuffer, (size_t)randomBufferLen, 0);
     if (ret != randomBufferLen) {
