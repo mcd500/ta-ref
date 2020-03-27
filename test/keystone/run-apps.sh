@@ -1,12 +1,14 @@
 #!/bin/bash
 
-PORT=${PORT} ./run-qemu.sh &
-sleep 2
+#PORT=${PORT} ./run-qemu.sh > /dev/null 2>&1 &
+## waiting for booting..
+#sleep 5
 
 expect -c "
     set timeout 60
-    spawn ssh -p ${PORT} root@127.0.0.1
-    expect \"*(yes/no)? \" { send \"yes\r\" }
+    send_user \"$env(PORT)\n\"
+    spawn \"./run-qemu.sh\"
+    expect \"*?ogin\" { send \"root\r\" }
     expect \"*?assword\" { send \"sifive\r\" }
     expect \"\# \" { send \"insmod keystone-driver.ko\r\" }
     expect \"\# \" { send \"cd out\r\" }
@@ -17,3 +19,5 @@ expect -c "
     expect \"\# \" { send \"poweroff\r\" }
     expect eof
 "
+
+exit
