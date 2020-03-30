@@ -7,6 +7,13 @@ export AS = $(TOOLPREFIX)as
 export SLN = ln -sf
 export TOPDIR=$(CURDIR)/..
 
+ANALYZER_BIN=$(TOPDIR)/profiler/analyzer/analyzer
+ifneq ("$(wildcard $(ANALYZER_BIN))","")
+export ANALYZE=ON
+else
+export ANALYZE=OFF
+endif
+
 TOPDIR=$(CURDIR)/..
 
 # build as $(LIB)
