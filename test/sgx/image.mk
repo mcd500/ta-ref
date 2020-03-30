@@ -1,6 +1,6 @@
 APP_BIN=App/sgx_app
 ENCLAVE_LIB=Enclave/enclave.signed.so
-ENCLAVE_NM = Enclave.nm
+ENCLAVE_NM = Enclave/Enclave.nm
 
 OUT_DIR=$(CURDIR)
 OUT_FILES=$(APP_BIN) $(ENCLAVE_LIB)

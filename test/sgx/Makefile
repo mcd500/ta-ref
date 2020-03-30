@@ -1,7 +1,7 @@
 # LIB_DIRS INCLUDE_DIRS
 APP_BIN := sgx_app
 ENCLAVE_LIB := enclave.signed.so
-ENCLAVE_NM := $(ENCLAVE_LIB:.signed.so=.nm)
+ENCLAVE_NM = Enclave.nm
 ANALYZER_BIN := analyzer
 
 SGX_LIB_DIRS = $(LIB_DIRS) $(SGX_LIBRARY_DIR)
