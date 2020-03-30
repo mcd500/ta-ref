@@ -40,7 +40,7 @@ expect "# " {
 }
 
 expect "# " {
-    send "poweroff\r"
+    send "exit\r"
 }
 
 expect eof
