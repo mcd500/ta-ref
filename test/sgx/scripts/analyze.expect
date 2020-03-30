@@ -25,18 +25,18 @@ expect "# " {
 }
 
 expect "# " {
-    send "sudo ./optee_ref_ta\r"
-    expect "*start" {} timeout {
+    send "./sgx_app\r"
+    expect "main start" {} timeout {
         exit 1
     }
-    expect "*succeed" {} timeout {
+    expect "main end" {} timeout {
         exit 1
     }
 }
 
 expect "# " {
     send "ls -lsa .\r"
-    expect "analyzer" {} timeout {
+    expect "shared_mem" {} timeout {
         exit 1
     }
 }

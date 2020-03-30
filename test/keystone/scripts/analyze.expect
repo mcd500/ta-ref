@@ -39,6 +39,9 @@ expect "# " {
 
 expect "# " {
     send "ls -lsa .\r"
+    expect "shared_mem" {} timeout {
+        exit 1
+    }
 }
 
 expect "# " {

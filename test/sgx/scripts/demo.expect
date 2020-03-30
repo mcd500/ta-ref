@@ -7,7 +7,6 @@ set IP_ADDR $::env(IP_ADDR)
 set PASSWD $::env(PASSWD)
 set PS1 $::env(PS1)
 
-# optee doesn't hold ssh in qemu
 spawn ssh $USER@$IP_ADDR -p $PORT
 expect "*(yes/no)? " { 
     send "yes\r"
@@ -15,7 +14,6 @@ expect "*(yes/no)? " {
         send "$PASSWD\r"
     }
 }
-
 expect "$PS1" {
     send "export PS1=\"# \"\r"
 }
@@ -25,27 +23,17 @@ expect "# " {
 }
 
 expect "# " {
-    send "sudo ./optee_ref_ta\r"
-    expect "*start" {} timeout {
+    send "./sgx_app\r"
+    expect "main start" {} timeout {
         exit 1
     }
-    expect "*succeed" {} timeout {
+    expect "main end" {} timeout {
         exit 1
     }
 }
 
 expect "# " {
     send "ls -lsa .\r"
-    expect "analyzer" {} timeout {
-        exit 1
-    }
-}
-
-expect "# " {
-    send "./analyzer shared_mem Enclave.nm\r"
-    expect "baseaddr: 0x" {} timeout {
-        exit 1
-    }
 }
 
 expect "# " {
@@ -55,3 +43,4 @@ expect "# " {
 expect eof
 
 exit
+

@@ -1,6 +1,6 @@
 APP_BIN=App/sgx_app
 ENCLAVE_LIB=Enclave/enclave.signed.so
-ENCLAVE_NM = $(ENCLAVE_LIB:.signed.so=.nm)
+ENCLAVE_NM = Enclave.nm
 
 OUT_DIR=$(CURDIR)
 OUT_FILES=$(APP_BIN) $(ENCLAVE_LIB)
@@ -12,8 +12,8 @@ else
 ANALYZER_BIN=
 endif
 
-NUC_SHIP_SCRIPT = ../ssh_script/ship-gitlab.sh
-NUC_CLEAN_SCRIPT = ../ssh_script/clean-gitlab.sh
+NUC_SHIP_SCRIPT = ../scripts/ship-gitlab.sh
+NUC_CLEAN_SCRIPT = ../scripts/clean-gitlab.sh
 
 .PHONY: all clean
 

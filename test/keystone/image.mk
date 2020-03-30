@@ -15,8 +15,8 @@ endif
 TARGET = $(MACHINE)_image
 OUT_FILES = $(EYRIE_BIN) $(APP_BIN) $(ENCLAVE_BIN) $(ENCLAVE_NM) $(ANALYZER_BIN) $(KEYSTONE_DRIVER_MODULE)
 
-HIFIVE_CLEAN_SCRIPT := ../ssh_script/clean-gitlab.sh
-HIFIVE_SHIP_SCRIPT := ../ssh_script/ship-gitlab.sh
+HIFIVE_CLEAN_SCRIPT := ../scripts/clean-gitlab.sh
+HIFIVE_SHIP_SCRIPT := ../scripts/ship-gitlab.sh
 
 SIM_OUT_DIR=$(BUILDROOT_OVERLAY_DIR)/root/out
 

@@ -18,8 +18,8 @@ endif
 TARGET += $(MACHINE)_image
 OUT_FILES := $(APP_BIN) $(UUID_NM) $(ANALYZER_BIN) $(UUID_TA)
 
-RPI3_SHIP_SCRIPT := ../ssh_script/ship-gitlab.sh
-RPI3_CLEAN_SCRIPT := ../ssh_script/clean-gitlab.sh
+RPI3_SHIP_SCRIPT := ../scripts/ship-gitlab.sh
+RPI3_CLEAN_SCRIPT := ../scripts/clean-gitlab.sh
 
 all: $(TARGET)
 
