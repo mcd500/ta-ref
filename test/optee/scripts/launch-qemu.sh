@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/bin/bash -x
+
+echo "**** Running QEMU SSH on port ${PORT} ****\n"
 
 cd ${OPTEE_DIR}/out/bin && ${OPTEE_DIR}/qemu/aarch64-softmmu/qemu-system-aarch64 \
 	-nographic \
@@ -10,5 +12,8 @@ cd ${OPTEE_DIR}/out/bin && ${OPTEE_DIR}/qemu/aarch64-softmmu/qemu-system-aarch64
 	-bios bl1.bin \
 	-initrd ${OPTEE_OUTBR_DIR}/images/rootfs.cpio.gz \
 	-kernel Image -no-acpi \
-	-append 'console=ttyAMA0,38400 keep_bootcon root=/dev/vda2'; \
+	-append 'console=ttyAMA0,38400 keep_bootcon root=/dev/vda2' \
+    -netdev user,id=net0,hostfwd=tcp::${PORT}-:22 \
+    -device virtio-net-device,netdev=net0;
     cd -
+

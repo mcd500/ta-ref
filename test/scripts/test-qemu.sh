@@ -23,3 +23,4 @@ screen -S qemu -X poweroff
 
 # cleanup
 pkill screen
+screen -wipe

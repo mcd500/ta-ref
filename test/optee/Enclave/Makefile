@@ -8,7 +8,7 @@ UUID_ELF := $(UUID).elf
 UUID_STRIPPED_ELF := $(UUID_ELF:.elf=.stripped.elf)
 UUID_DMP := $(UUID).dmp
 UUID_TA := $(UUID).ta
-UUID_NM := $(UUID).nm
+UUID_NM := Enclave.nm
 PEM_PATH := ${TA_DEV_DIR}/keys/default_ta.pem
 SIGN_ENCRYPT := ${TA_DEV_DIR}/scripts/sign_encrypt.py
 # old version(~3.7.0)

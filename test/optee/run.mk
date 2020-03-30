@@ -1,35 +1,42 @@
 # MACHINE = SIM or RPI3
 TARGETS = $(MACHINE)_demo
 
-RUN_SCRIPT := ../ssh_script/run-gitlab.sh
-CHECK_SCRIPT := ./check-gitlab.sh
-UUID := a6f77c1e-96fe-4a0e-9e74-262582a4c8f1
-UUID_TA := $(UUID).ta
-UUID_NM := $(UUID).nm
-APP_BIN := optee_ref_ta
+LAUNCH_QEMU_SCRIPT := ./scripts/launch-qemu.sh
+SIM_RUN_SCRIPT := ../scripts/test-qemu.sh
+RPI3_RUN_SCRIPT := ../scripts/test-gitlab.sh
+
+UUID_NM := Enclave.nm
 
 LOG_FILE = /tmp/tee.log
 
-ANALYZE_COMMAND := ./analyzer shared_mem ${UUID_NM}
-
-RPI3_COMMAND := sudo ./${APP_BIN} && test -f analyzer && ${ANALYZE_COMMAND}
+ifeq ($(MACHINE), SIM)
+USER=root
+IP_ADDR=localhost
+#PORT= # default
+#RUN_SCRIPT=$(SIM_RUN_SCRIPT)
+RUN_SCRIPT=./scripts/run-qemu.sh
+#DEPENDS=socat
+else ifeq ($(MACHINE), RPI3)
+USER=gitlab
+IP_ADDR=$(RPI3_IP_ADDR)
+PASSWD=gitlab
+#default ssh port
+PORT=22
+RUN_SCRIPT=$(RPI3_RUN_SCRIPT)
+else
+$(error spefify MACHINE to be either SIM or RPI3!)
+endif
 
 all: $(TARGETS)
 
 # launch qemu only(for debug)
 qemu: SIM_qemu
 
-RPI3_demo: check_demo
-	COMMAND="$(RPI3_COMMAND)" USER=$(TEST_USER) IP_ADDR=$(RPI3_IP_ADDR) ${RUN_SCRIPT}
-
-check_demo:
-	USER=$(TEST_USER) IP_ADDR=$(RPI3_IP_ADDR) UUID_TA=$(UUID_TA) ${CHECK_SCRIPT}
+$(MACHINE)_demo: $(DEPENDS)
+	PORT=$(PORT) USER=$(USER) IP_ADDR=$(IP_ADDR) PASSWD=$(PASSWD) ANALYZE=$(ANALYZE) $(RUN_SCRIPT)
 
 socat:
 	socat TCP4-LISTEN:$(PORT),reuseaddr - | tee /dev/stdout &
 
-SIM_demo: socat
-	PORT=$(PORT) LOG_FILE=$(LOG_FILE) ./run-apps.sh
-
 SIM_qemu: socat
-	PORT=$(PORT) LOG_FILE=$(LOG_FILE) ./run-qemu.sh
+	PORT=$(PORT) LOG_FILE=$(LOG_FILE) $(LAUNCH_QEMU_SCRIPT)

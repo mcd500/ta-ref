@@ -3,7 +3,7 @@ APP_BIN=App/optee_ref_ta
 
 # The UUID for the Trusted Application
 UUID := a6f77c1e-96fe-4a0e-9e74-262582a4c8f1
-UUID_NM := Enclave/$(UUID).nm
+UUID_NM := Enclave/Enclave.nm
 UUID_TA_NAME = $(UUID).ta
 UUID_TA := Enclave/$(UUID_TA_NAME)
 
