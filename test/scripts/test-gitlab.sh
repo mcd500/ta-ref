@@ -10,8 +10,4 @@ export IP_ADDR=${IP_ADDR}
 export PASSWD=${PASSWD}
 export PS1="$ "
 
-if [ "${ANALYZE}" = "ON" ]; then
-${CURDIR}/expect/analyze.expect
-else
-${CURDIR}/expect/demo.expect
-fi
+source ${CURDIR}/expect.sh ANALYZE=${ANALYZE}

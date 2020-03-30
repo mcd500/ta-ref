@@ -1,6 +1,6 @@
-LAUNCH_QEMU_SCRIPT := ./scripts/launch-qemu.sh
-SIM_RUN_SCRIPT := ./scripts/test-qemu.sh
-HIFIVE_RUN_SCRIPT := ./scripts/test-gitlab.sh
+LAUNCH_QEMU_SCRIPT := ../scripts/launch-qemu.sh
+SIM_RUN_SCRIPT := ../scripts/test-qemu.sh
+HIFIVE_RUN_SCRIPT := ../scripts/test-gitlab.sh
 
 TARGET := $(MACHINE)_demo
 

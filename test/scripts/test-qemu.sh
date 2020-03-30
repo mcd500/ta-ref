@@ -13,14 +13,13 @@ export PASSWD=${PASSWD}
 export PS1="# "
 
 # That would display enclave outputs!
-screen -L -dmS qemu /bin/bash -c "${CURDIR}/launch-qemu.sh"
+screen -L -dmS qemu /bin/bash -c "${CURDIR}/../${TEE}/scripts/launch-qemu.sh"
 # waiting for booting..
 sleep 7
 
-if [ "${ANALYZE}" = "ON" ]; then
-${CURDIR}/expect/analyze.expect
-else
-${CURDIR}/expect/demo.expect
-fi
+source ${CURDIR}/expect.sh ANALYZE=${ANALYZE}
 
 screen -S qemu -X poweroff
+
+# cleanup
+pkill screen
