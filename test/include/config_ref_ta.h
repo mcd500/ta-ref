@@ -37,6 +37,6 @@
 #include "edger/Enclave_t.h"
 #include "tee-ta-internal.h"
 
-#define tee_printf printf
+int tee_printf(const char* fmt, ...);
 
 #endif

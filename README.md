@@ -179,6 +179,7 @@ If you want to clean build directory only, try `make clean`. Otherwise, `make mr
     ├── keystone
     ├── lib
     ├── optee
+    ├── scripts .. scripts for `make run` or `make qemu`
     └── sgx
 ```
 

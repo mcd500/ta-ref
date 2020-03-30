@@ -118,8 +118,8 @@ void gp_asymmetric_key_sign_test(void)
     TEE_FreeTransientObject(keypair);
 
     if (verify_ok == TEE_SUCCESS) {
-      printf("verify ok\n");
+      tee_printf("verify ok\n");
     } else {
-      printf("verify fails\n");
+      tee_printf("verify fails\n");
     }
 }
