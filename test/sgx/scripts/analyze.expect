@@ -32,6 +32,9 @@ expect "# " {
     expect "main end" {} timeout {
         exit 1
     }
+    expect "Info: Enclave successfully returned" {} timeout {
+        exit 1
+    }
 }
 
 expect "# " {
