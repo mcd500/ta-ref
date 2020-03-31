@@ -104,6 +104,15 @@ int main(void)
 #endif
     res = TEEC_InvokeCommand(&sess, TA_REF_RUN_ALL, &op,
 			     &err_origin);
+
+    // emit all at once for real machine.
+#ifdef ENCLAVE_VERBOSE
+    printf("--- enclave log start---\n");
+    char *b = op.params[1].tmpref.buffer;
+    printf("%s\n", b);
+    printf("--- enclave log end---\n");
+#endif
+
     if (res != TEEC_SUCCESS) {
       errx(1, "TEEC_InvokeCommand failed with code 0x%x origin 0x%x",
 	   res, err_origin);
@@ -119,14 +128,6 @@ int main(void)
     if(fclose(fp) == -1) {
         return 0;
     }
-#endif
-
-    // emit all at once
-#ifdef ENCLAVE_VERBOSE
-    printf("--- enclave log start---\n");
-    char *b = op.params[1].tmpref.buffer;
-    printf("%s\n", b);
-    printf("--- enclave log end---\n");
 #endif
 
     // Done
