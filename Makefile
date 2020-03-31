@@ -19,7 +19,9 @@ endif
 
 
 ifeq ($(DEBUG_TYPE), DEBUG)
-export DEBUG_FLAGS = -g -O0 -DAPP_VERBOSE -DENCLAVE_VERBOSE
+export DEBUG_FLAGS = -g -O0
+else ifeq ($(DEBUG_TYPE), RELEASE)
+export DEBUG_FLAGS = -O3
 else
 export DEBUG_FLAGS = -O2
 endif

@@ -38,5 +38,15 @@
 #include "tee-ta-internal.h"
 
 int tee_printf(const char* fmt, ...);
+#ifdef GP_VERBOSE
+#define GP_ASSERT(rv,msg) \
+  do { \
+    if ((rv)) { \
+      tee_printf("%s:%d %s (%x)\n", __FUNCTION__, __LINE__, (msg), rv); return; \
+    } \
+  } while(0)
+#else
+#define GP_ASSERT(rv,msg)
+#endif
 
 #endif

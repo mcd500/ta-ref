@@ -14,6 +14,10 @@ else
 export ANALYZE=OFF
 endif
 
+ifeq ($(DEBUG_TYPE), DEBUG)
+export DEBUG_FLAGS += -DAPP_VERBOSE -DENCLAVE_VERBOSE -DGP_VERBOSE
+endif
+
 TOPDIR=$(CURDIR)/..
 
 # build as $(LIB)

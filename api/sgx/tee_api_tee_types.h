@@ -116,23 +116,4 @@ struct __TEE_ObjectHandle
 // Minimal constant definitions
 
 #define TEE_HANDLE_NULL 0
-
-// defined in tee_api_defines.h
-// enum Data_Flag_Constants {
-//   TEE_DATA_FLAG_ACCESS_READ = 0x00000001,
-//   TEE_DATA_FLAG_ACCESS_WRITE = 0x00000002,
-//   //TEE_DATA_FLAG_ACCESS_WRITE_META = 0x00000004,
-//   //TEE_DATA_FLAG_SHARE_READ = 0x00000010,
-//   //TEE_DATA_FLAG_SHARE_WRITE = 0x00000020,
-//   TEE_DATA_FLAG_OVERWRITE = 0x00000400
-// };
-
-// Move this to the better place
-#define GP_ASSERT(rv,msg) \
-  do { \
-    if ((rv)) { \
-      printf("%s:%d %s (%x)\n", __FUNCTION__, __LINE__, (msg), rv); return; \
-    } \
-  } while(0)
-
 #endif

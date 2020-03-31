@@ -6,7 +6,6 @@
 #define BUF_SIZE 65536
 char print_buf[BUF_SIZE];
 size_t print_pos;
-#endif
 
 static inline unsigned int _strlen(const char* str)
 {
@@ -18,7 +17,6 @@ static inline unsigned int _strlen(const char* str)
 // for trace GP API
 int tee_printf(const char* fmt, ...)
 {
-#ifdef ENCLAVE_VERBOSE
   char *buf = &print_buf[print_pos];
   va_list ap;
 
@@ -29,7 +27,7 @@ int tee_printf(const char* fmt, ...)
   print_pos += res-1;
   printf("%s", buf);
   return res;
-#else
-  return 0;
-#endif
 }
+#else
+int tee_printf(const char* fmt, ...) { return 0; }
+#endif
