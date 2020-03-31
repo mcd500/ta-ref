@@ -37,6 +37,7 @@
 
 #include "edger/Enclave_t.h"
 #include "gp_test.h"
+int tee_printf(const char* fmt, ...);
 
 #ifdef PERF_ENABLE
 #include "profiler/profiler.h"
@@ -76,17 +77,29 @@ void TA_DestroyEntryPoint(void)
  */
 
 extern uintptr_t __ImageBase[];
+#ifdef PERF_ENABLE
+#define TEE_PARAM_TYPE0 TEE_PARAM_TYPE_MEMREF_OUTPUT
+#else
+#define TEE_PARAM_TYPE0 TEE_PARAM_TYPE_NONE
+#endif
+
+#ifdef ENCLAVE_VERBOSE
+#include <string.h>
+#define TEE_PARAM_TYPE1 TEE_PARAM_TYPE_MEMREF_OUTPUT
+extern char print_buf[];
+extern size_t print_pos;
+#define BUF_SIZE 65536
+#else
+#define TEE_PARAM_TYPE1 TEE_PARAM_TYPE_NONE
+#endif
+
 TEE_Result run_all_test(uint32_t param_types,
 				    TEE_Param __maybe_unused params[4],
 				    void __maybe_unused **sess_ctx)
 {
     uint32_t exp_param_types = TEE_PARAM_TYPES(
-#ifdef PERF_ENABLE
-            TEE_PARAM_TYPE_MEMREF_OUTPUT,
-#else
-            TEE_PARAM_TYPE_NONE,
-#endif
-            TEE_PARAM_TYPE_NONE,
+            TEE_PARAM_TYPE0,
+            TEE_PARAM_TYPE1,
             TEE_PARAM_TYPE_NONE,
             TEE_PARAM_TYPE_NONE
     );
@@ -99,18 +112,19 @@ TEE_Result run_all_test(uint32_t param_types,
     (void)&sess_ctx;
 
 #ifdef PERF_ENABLE
-    printf("enclave ELF address: 0x%lx\n", __ImageBase);
+    tee_printf("enclave ELF address: 0x%lx\n", __ImageBase);
     __profiler_map_info();
 #endif
 
 #ifdef ENCLAVE_VERBOSE
-    printf("ecall_ta_main() start\n");
+    tee_printf("ecall_ta_main() start\n");
 #endif
 
     main();
 
 #ifdef ENCLAVE_VERBOSE
-    printf("ecall_ta_main() end\n");
+    tee_printf("ecall_ta_main() end\n");
+    memmove(params[1].memref.buffer, print_buf, params[1].memref.size);
 #endif
 
 #ifdef PERF_ENABLE

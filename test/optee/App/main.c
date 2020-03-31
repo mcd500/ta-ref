@@ -37,9 +37,13 @@
 // For the UUID
 #include <edger/Enclave.h>
 
-#ifdef PERF_ENABLE
 #define BUF_SIZE 65536
+#ifdef PERF_ENABLE
 #define LOG_FILE "shared_mem"
+#endif
+
+#ifdef ENCLAVE_VERBOSE
+static char print_buf[BUF_SIZE];
 #endif
 
 // Similar to samples in optee_examples
@@ -73,7 +77,12 @@ int main(void)
 #else
             TEEC_NONE,
 #endif
+// for tee_printf
+#ifdef ENCLAVE_VERBOSE
+            TEEC_MEMREF_TEMP_OUTPUT,
+#else
             TEEC_NONE,
+#endif
 			TEEC_NONE,
             TEEC_NONE
     );
@@ -82,6 +91,11 @@ int main(void)
     static char buf[BUF_SIZE];
     op.params[0].tmpref.buffer = (void*)buf;
     op.params[0].tmpref.size = BUF_SIZE;
+#endif
+
+#ifdef ENCLAVE_VERBOSE
+    op.params[1].tmpref.buffer = (void*)print_buf;
+    op.params[1].tmpref.size = BUF_SIZE;
 #endif
 
     // only TA_REF_RUN_ALL is defined
@@ -105,6 +119,14 @@ int main(void)
     if(fclose(fp) == -1) {
         return 0;
     }
+#endif
+
+    // emit all at once
+#ifdef ENCLAVE_VERBOSE
+    printf("--- enclave log start---\n");
+    char *buf = op.params[1].tmpref.buffer;
+    printf("%s\n", buf);
+    printf("--- enclave log end---\n");
 #endif
 
     // Done

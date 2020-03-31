@@ -8,6 +8,7 @@ RPI3_RUN_SCRIPT := ../scripts/test-gitlab.sh
 UUID_NM := Enclave.nm
 
 LOG_FILE = /tmp/tee.log
+SMP := 1
 
 ifeq ($(MACHINE), SIM)
 USER=root
@@ -32,11 +33,11 @@ all: $(TARGETS)
 # launch qemu only(for debug)
 qemu: SIM_qemu
 
-$(MACHINE)_demo: $(DEPENDS)
-	PORT=$(PORT) USER=$(USER) IP_ADDR=$(IP_ADDR) PASSWD=$(PASSWD) ANALYZE=$(ANALYZE) $(RUN_SCRIPT)
+$(MACHINE)_demo: socat $(DEPENDS)
+	SMP=${SMP} PORT=$(PORT) USER=$(USER) IP_ADDR=$(IP_ADDR) PASSWD=$(PASSWD) ANALYZE=$(ANALYZE) $(RUN_SCRIPT)
 
 socat:
-	socat TCP4-LISTEN:$(PORT),reuseaddr - | tee /dev/stdout &
+	socat TCP4-LISTEN:$(PORT),reuseaddr - | tee /tmp/tee.log &
 
 SIM_qemu: socat
-	PORT=$(PORT) LOG_FILE=$(LOG_FILE) $(LAUNCH_QEMU_SCRIPT)
+	SMP=${SMP} PORT=$(PORT) LOG_FILE=$(LOG_FILE) $(LAUNCH_QEMU_SCRIPT)
