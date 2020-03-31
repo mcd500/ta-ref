@@ -124,8 +124,8 @@ int main(void)
     // emit all at once
 #ifdef ENCLAVE_VERBOSE
     printf("--- enclave log start---\n");
-    char *buf = op.params[1].tmpref.buffer;
-    printf("%s\n", buf);
+    char *b = op.params[1].tmpref.buffer;
+    printf("%s\n", b);
     printf("--- enclave log end---\n");
 #endif
 
