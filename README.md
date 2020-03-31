@@ -32,7 +32,6 @@ Next, build && test:
 docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_keystone_qemu_devel
 cd ta-ref
 source env/keystone.sh
-make select
 ```
 
 ```sh
@@ -50,7 +49,6 @@ make run
 docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_keystone_hifive_devel
 cd ta-ref
 source env/keystone.sh
-make select
 ```
 
 ```sh
@@ -77,7 +75,6 @@ Next, build && test:
 
 ```sh
 source env/sgx_x64.sh
-make select
 ```
 
 ### local
@@ -114,7 +111,6 @@ Next, build && test:
 
 ```sh
 source env/optee_qemu.sh
-make select
 make build
 make test
 make run
@@ -134,7 +130,6 @@ Next, build && test:
 ```sh
 # incuding MACHINE=RPI3 environment variable
 source env/optee_rpi3.sh
-make select
 make build
 make test
 make run
