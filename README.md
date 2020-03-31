@@ -135,6 +135,11 @@ make test
 make run
 ```
 
+# Options
+
++ `PROFILER=[ON/OFF] .. enable/disable profiler(default: OFF)
++ `DEBUG_TYPE=[DEBUG/PRERELEASE/RELEASE]` .. debug type including optimization(default: DEBUG)
+
 # cleanup
 
 If you want to clean build directory only, try `make clean`. Otherwise, `make mrproper` will clean objects for all directories completely.
