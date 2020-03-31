@@ -32,6 +32,8 @@ SIM_run:
 SIM_analyze:
 	$(ANALYZE_COMMAND)
 
+ssh:
+	sshpass -p ${PASSWD} ssh ${USER}@${IP_ADDR}
 
 NUC_demo:
 	PORT=$(PORT) USER=$(USER) IP_ADDR=$(IP_ADDR) PASSWD=$(PASSWD) ANALYZE=$(ANALYZE) $(RUN_SCRIPT)

@@ -24,6 +24,9 @@ run:
 qemu:
 	make -C $(TEST_DIR) qemu TEE=$(TEE)
 
+ssh:
+	make -C $(TEST_DIR) ssh TEE=$(TEE)
+
 # build test only
 build_test:
 	make -C $(TEST_DIR) build TEE=$(TEE)

@@ -36,6 +36,9 @@ qemu: SIM_qemu
 $(MACHINE)_demo: socat $(DEPENDS)
 	SMP=${SMP} PORT=$(PORT) USER=$(USER) IP_ADDR=$(IP_ADDR) PASSWD=$(PASSWD) ANALYZE=$(ANALYZE) $(RUN_SCRIPT)
 
+ssh:
+	sshpass -p ${PASSWD} ssh ${USER}@${IP_ADDR}
+
 socat:
 	socat TCP4-LISTEN:$(PORT),reuseaddr - | tee /tmp/tee.log &
 

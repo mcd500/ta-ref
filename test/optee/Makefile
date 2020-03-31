@@ -23,6 +23,9 @@ run:
 qemu:
 	make -f run.mk qemu
 
+ssh:
+	make -f run.mk ssh
+
 clean:
 	$(RM) shared_mem analyzer $(LOG_FILE)
 	make -f image.mk clean

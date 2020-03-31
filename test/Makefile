@@ -92,6 +92,9 @@ run:
 qemu:
 	make -C $(TEE) qemu
 
+ssh:
+	make -C $(TEE) ssh
+
 clean:
 	$(RM) $(OBJS) $(LIBS)
 	make -C keystone clean

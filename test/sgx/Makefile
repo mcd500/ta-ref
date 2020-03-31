@@ -30,6 +30,9 @@ image:
 run:
 	make -f run.mk
 
+ssh:
+	make ssh -f run.mk
+
 analyze:
 	./analyzer shared_mem $(ENCLAVE_NM)
 

@@ -31,3 +31,6 @@ $(MACHINE)_demo:
 # launch only
 qemu:
 	PORT=$(PORT) $(LAUNCH_QEMU_SCRIPT)
+
+ssh:
+	sshpass -p ${PASSWD} ssh ${USER}@${IP_ADDR}
