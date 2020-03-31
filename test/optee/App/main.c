@@ -40,11 +40,18 @@
 #define BUF_SIZE 65536
 #ifdef PERF_ENABLE
 #define LOG_FILE "shared_mem"
+#define TEEC_PARAM_TYPE0 TEEC_MEMREF_TEMP_OUTPUT
+#else
+#define TEEC_PARAM_TYPE0 TEEC_NONE
 #endif
 
 #ifdef ENCLAVE_VERBOSE
 static char print_buf[BUF_SIZE];
+#define TEEC_PARAM_TYPE1 TEEC_MEMREF_TEMP_OUTPUT
+#else
+#define TEEC_PARAM_TYPE1 TEEC_NONE
 #endif
+
 
 // Similar to samples in optee_examples
 
@@ -72,17 +79,8 @@ int main(void)
     // No arguments, ATM
     memset(&op, 0, sizeof(op));
     op.paramTypes = TEEC_PARAM_TYPES(
-#ifdef PERF_ENABLE
-            TEEC_MEMREF_TEMP_OUTPUT,
-#else
-            TEEC_NONE,
-#endif
-// for tee_printf
-#ifdef ENCLAVE_VERBOSE
-            TEEC_MEMREF_TEMP_OUTPUT,
-#else
-            TEEC_NONE,
-#endif
+            TEEC_PARAM_TYPE0,
+            TEEC_PARAM_TYPE1,
 			TEEC_NONE,
             TEEC_NONE
     );
@@ -108,8 +106,7 @@ int main(void)
     // emit all at once for real machine.
 #ifdef ENCLAVE_VERBOSE
     printf("--- enclave log start---\n");
-    char *b = op.params[1].tmpref.buffer;
-    printf("%s\n", b);
+    printf("%s\n", (char*)op.params[1].tmpref.buffer);
     printf("--- enclave log end---\n");
 #endif
 

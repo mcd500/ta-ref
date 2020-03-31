@@ -23,11 +23,11 @@ int tee_printf(const char* fmt, ...)
   va_list ap;
 
   va_start(ap, fmt);
-  vsnprintf(buf, BUF_SIZE-print_pos, fmt, ap);
+  vsnprintf(buf, BUF_SIZE - print_pos, fmt, ap);
   va_end(ap);
   int res = (int)_strlen(buf) + 1;
   print_pos += res-1;
-  printf("%s", buf, print_pos);
+  printf("%s", buf);
   return res;
 #else
   return 0;
