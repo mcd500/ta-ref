@@ -6,6 +6,7 @@ Improvement of http://192.168.100.100/vc707/tee-ta-reference. Please feel free t
 |---|---|
 |keystone(qemu: SIM)|vc707/test:ta_ref_keystone_qemu_devel|
 |keystone(HIFIVE)|vc707/test:ta_ref_keystone_hifive_devel|
+|keystone(VC707)|vc707/test:ta_ref_keystone_vc707_devel|
 |intel_sgx(SIM/NUC)|vc707/test:ta_ref_sgx_devel|
 |optee(qemu v8: SIM)|vc707/test:ta_ref_optee_qemu_devel|
 |optee(RPI3)|vc707/test:ta_ref_optee_rpi3_devel|
@@ -24,7 +25,7 @@ git clone --recursive http://192.168.100.100/vc707/ta-ref.git
 cd ta-ref
 ```
 
-Next, build && test:
+Next, build && test. We support qemu, hifive and vc707:
 
 ### qemu
 
@@ -61,7 +62,18 @@ make run MACHINE=HIFIVE
 
 ### vc707
 
-(not yet)
+```sh
+docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_keystone_vc707_devel
+cd ta-ref
+source env/keystone.sh
+```
+
+```sh
+make build
+make test MACHINE=HIFIVE
+# show demo
+make run MACHINE=HIFIVE
+```
 
 ## intel-sgx
 
@@ -71,7 +83,7 @@ cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_sgx_devel
 ```
 
-Next, build && test:
+Next, build && test. We support local environment and Intel NUC:
 
 ```sh
 source env/sgx_x64.sh
@@ -98,16 +110,19 @@ make run MACHINE=NUC
 
 To configure images in raspberry pi3, see [tutorial](http://192.168.100.100/vc707/ta-ref/-/blob/master/doc/rpi3.md).
 
-### qemu_v8
-
 ```sh
 git clone --recursive http://192.168.100.100/vc707/ta-ref.git
 cd ta-ref
+```
+
+Next, build && test. We support qemu and Raspberry Pi3:
+
+### qemu_v8
+
+```sh
 docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_optee_qemu_devel
 cd ta-ref
 ```
-
-Next, build && test:
 
 ```sh
 source env/optee_qemu.sh
@@ -119,8 +134,6 @@ make run
 ### raspberry pi3
 
 ```sh
-git clone --recursive http://192.168.100.100/vc707/ta-ref.git
-cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_optee_rpi3_devel
 cd ta-ref
 ```
