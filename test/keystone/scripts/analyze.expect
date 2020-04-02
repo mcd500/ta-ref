@@ -13,6 +13,7 @@ expect "*(yes/no)? " {
     }
 }
 expect "*?" {
+expect "*." {
     send "export PS1=\"# \"\r"
 }
 
