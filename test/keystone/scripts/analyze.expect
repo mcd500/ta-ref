@@ -12,7 +12,6 @@ expect "*(yes/no)? " {
         send "$PASSWD\r"
     }
 }
-expect "*?" {
 expect "*." {
     send "export PS1=\"# \"\r"
 }

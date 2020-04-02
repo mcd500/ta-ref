@@ -1,4 +1,5 @@
 TARGET_DIR=$(OPTEE_DIR)/out-br/target
+SIM_GITLAB_DIR=$(TARGET_DIR)/home/gitlab/out
 APP_BIN=App/optee_ref_ta
 
 # The UUID for the Trusted Application
@@ -34,7 +35,8 @@ SIM_image: SIM_ship
 	make -C $(OPTEE_OUTBR_DIR) all
 # overriding
 SIM_ship: SIM_clean
-	install -m 0755 $(OUT_FILES) $(TARGET_DIR)/root/
+	mkdir -p $(SIM_GITLAB_DIR)
+	install -m 0755 $(OUT_FILES) $(SIM_GITLAB_DIR)
 	install -m 0444 $(UUID_TA) $(TARGET_DIR)/lib/optee_armtz/
 
 SIM_clean: clean

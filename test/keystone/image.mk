@@ -15,7 +15,7 @@ endif
 TARGET = $(MACHINE)_image
 OUT_FILES = $(EYRIE_BIN) $(APP_BIN) $(ENCLAVE_BIN) $(ENCLAVE_NM) $(ANALYZER_BIN) $(KEYSTONE_DRIVER_MODULE)
 
-SIM_OUT_DIR=$(BUILDROOT_OVERLAY_DIR)/root/out
+SIM_OUT_DIR=$(BUILDROOT_OVERLAY_DIR)/home/gitlab/out
 
 include ./machine.mk
 .PHONY: all clean

@@ -20,7 +20,7 @@ expect "*." {
 }
 
 expect "# " {
-    send "cd out\r"
+    send "cd /home/gitlab/out\r"
 }
 
 expect "# " {
