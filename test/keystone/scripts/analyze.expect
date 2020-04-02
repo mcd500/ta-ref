@@ -5,8 +5,6 @@ set PORT $::env(PORT)
 set USER $::env(USER)
 set IP_ADDR $::env(IP_ADDR)
 set PASSWD $::env(PASSWD)
-set PS1 $::env(PS1)
-
 spawn ssh $USER@$IP_ADDR -p $PORT
 expect "*(yes/no)? " { 
     send "yes\r"
@@ -14,7 +12,7 @@ expect "*(yes/no)? " {
         send "$PASSWD\r"
     }
 }
-expect "$PS1" {
+expect "*?" {
     send "export PS1=\"# \"\r"
 }
 

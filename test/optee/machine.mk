@@ -21,5 +21,4 @@ PASSWD=gitlab
 #default ssh port
 PORT=22
 RUN_SCRIPT=$(RPI3_RUN_SCRIPT)
-PS1="$ "
 endif

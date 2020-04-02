@@ -8,6 +8,5 @@ export PORT=${PORT}
 export USER=${USER}
 export IP_ADDR=${IP_ADDR}
 export PASSWD=${PASSWD}
-export PS1="${PS1}"
 
 source ${CURDIR}/expect.sh ANALYZE=${ANALYZE}

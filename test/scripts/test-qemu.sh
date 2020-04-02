@@ -9,9 +9,6 @@ export USER=${USER}
 export IP_ADDR=${IP_ADDR}
 export PASSWD=${PASSWD}
 
-# TODO: change PS1 variable on remote host
-export PS1="# "
-
 # That would display enclave outputs!
 screen -L -dmS qemu /bin/bash -c "${CURDIR}/../${TEE}/scripts/launch-qemu.sh"
 # waiting for booting..

@@ -16,11 +16,9 @@ USER=gitlab
 PASSWD=gitlab
 PORT=22
 IP_ADDR=$(HIFIVE_IP_ADDR)
-PS1="$ "
 else ifeq ($(MACHINE), VC707)
 USER=root
 PASSWD=sifive
 PORT=22
 IP_ADDR=$(VC707_IP_ADDR)
-PS1="\# "
 endif
