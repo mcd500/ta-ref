@@ -1,3 +1,4 @@
+# settings dependent on $(MACHINE)
 SIM_RUN_SCRIPT := ./scripts/run-qemu.sh
 
 RPI3_SHIP_SCRIPT := ../scripts/ship-gitlab.sh
@@ -20,4 +21,5 @@ PASSWD=gitlab
 #default ssh port
 PORT=22
 RUN_SCRIPT=$(RPI3_RUN_SCRIPT)
+PS1="$ "
 endif

@@ -12,30 +12,30 @@ else
 ANALYZER_BIN=
 endif
 
-NUC_SHIP_SCRIPT = ../scripts/ship-gitlab.sh
-NUC_CLEAN_SCRIPT = ../scripts/clean-gitlab.sh
-
+include ./machine.mk
 .PHONY: all clean
 
 TARGET += $(MACHINE)_image
 
 all: $(TARGET)
 
+NUC_image: NUC_clean NUC_ship
+
+NUC_ship: $(ENCLAVE_NM)
+	FILES="$(OUT_FILES)" USER=$(USER) PASSWD=$(PASSWD) IP_ADDR=$(IP_ADDR) $(SHIP_SCRIPT)
+
+$(ENCLAVE_NM):
+	nm $(ENCLAVE_LIB) > $(ENCLAVE_NM)
+
+$(MACHINE)_clean:
+	USER=$(TEST_USER) PASSWD=$(PASSWD) IP_ADDR=$(IP_ADDR) ${NUC_CLEAN_SCRIPT}
+
 SIM_image: SIM_ship
 	install $(OUT_FILES) $(OUT_DIR)
 
 SIM_ship: $(ENCLAVE_NM)
 
-NUC_image: NUC_clean NUC_ship
-
-NUC_ship: $(ENCLAVE_NM)
-	FILES="$(OUT_FILES)" USER=$(TEST_USER) IP_ADDR=$(NUC_IP_ADDR) ${NUC_SHIP_SCRIPT}
-
-$(ENCLAVE_NM):
-	nm $(ENCLAVE_LIB) > $(ENCLAVE_NM)
+SIM_clean: clean
 
 clean:
 	$(RM) $(APP_BIN) $(ENCLAVE_LIB) $(ENCLAVE_NM) $(ANALYZER_BIN)
-
-NUC_clean:
-	USER=$(TEST_USER) IP_ADDR=$(NUC_IP_ADDR) ${NUC_CLEAN_SCRIPT}
