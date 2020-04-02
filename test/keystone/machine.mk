@@ -23,6 +23,4 @@ PASSWD=sifive
 PORT=22
 IP_ADDR=$(VC707_IP_ADDR)
 PS1="\# "
-else
-$(error spefify MACHINE to be either SIM or HIFIVE!)
 endif
