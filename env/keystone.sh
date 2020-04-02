@@ -30,3 +30,5 @@ export KEYSTONE_DRIVER_MODULE=${KEYSTONE_BUILD_DIR}/buildroot.build/target/root/
 # when MACHINE=HIFIVE
 export TEST_USER=gitlab
 export HIFIVE_IP_ADDR=192.168.100.110
+export VC707_USER=root
+export VC707_IP_ADDR=192.168.100.112

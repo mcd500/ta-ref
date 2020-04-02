@@ -26,12 +26,6 @@ expect "# " {
 
 expect "# " {
     send "./sgx_app\r"
-    expect "main start" {} timeout {
-        exit 1
-    }
-    expect "main end" {} timeout {
-        exit 1
-    }
     expect "Info: Enclave successfully returned" {} timeout {
         exit 1
     }

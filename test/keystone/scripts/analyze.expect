@@ -19,12 +19,11 @@ expect "$PS1" {
 }
 
 expect "# " {
-    # We may ignore the case, `insmod` command may not found.
-    send "insmod keystone-driver.ko\r"
+    send "lsmod keystone_driver | grep keystone_driver || insmod keystone_driver.ko\r"
 }
 
 expect "# " {
-    send "cd out\r"
+    send "cd /home/gitlab/out\r"
 }
 
 expect "# " {

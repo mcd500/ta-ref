@@ -1,6 +1,7 @@
 # TEE-MACHINE validation
 ifeq ($(MACHINE), SIM)
 else ifeq ($(TEE)_$(MACHINE), keystone_HIFIVE)
+else ifeq ($(TEE)_$(MACHINE), keystone_VC707)
 else ifeq ($(TEE)_$(MACHINE), optee_RPI3)
 else ifeq ($(TEE)_$(MACHINE), sgx_NUC)
 else
@@ -18,9 +19,10 @@ endif
 ifeq ($(DEBUG_TYPE), DEBUG)
 export DEBUG_FLAGS = -g -O0
 else ifeq ($(DEBUG_TYPE), RELEASE)
-export DEBUG_FLAGS = -O3
+#export DEBUG_FLAGS = -O1 # nothing
+export DEBUG_FLAGS = -O0
 else ifeq ($(DEBUG_TYPE), PRERELEASE)
-export DEBUG_FLAGS = -O2
+export DEBUG_FLAGS = -O0
 else
 $(error "DEBUG_TYPE is either DEBUG, PRERELEASE or RELEASE")
 endif

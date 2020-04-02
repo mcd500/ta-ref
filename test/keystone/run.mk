@@ -1,6 +1,7 @@
 LAUNCH_QEMU_SCRIPT := ./scripts/launch-qemu.sh
 SIM_RUN_SCRIPT := ../scripts/test-qemu.sh
 HIFIVE_RUN_SCRIPT := ../scripts/test-gitlab.sh
+VC707_RUN_SCRIPT := ../scripts/test-root.sh
 
 TARGET := $(MACHINE)_demo
 
@@ -17,6 +18,13 @@ PASSWD=gitlab
 #default ssh port
 PORT=22
 RUN_SCRIPT=$(HIFIVE_RUN_SCRIPT)
+else ifeq ($(MACHINE), VC707)
+USER=root
+IP_ADDR=$(VC707_IP_ADDR)
+PASSWD=sifive
+#default ssh port
+PORT=22
+RUN_SCRIPT=$(VC707_RUN_SCRIPT)
 else
 $(error spefify MACHINE to be either SIM or HIFIVE!)
 endif
