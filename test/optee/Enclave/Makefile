@@ -21,12 +21,13 @@ ASFLAGS += $(addprefix -I,$(OPTEE_INCLUDE_DIRS))
 ifeq ($(PROFILER), ON)
 CFLAGS += -DPERF_ENABLE
 PERF_LIBS += profiler
-PERF_OBJS := Enclave.c
+PERF_SRCS := Enclave.c
 PERF_OPTION := -finstrument-functions
 else
-PERF_OBJS =
+PERF_SRCS :=
 PERF_OPTION =
 endif
+PERF_OBJS := $(PERF_SRCS:.c=.o)
 
 LIBS = gp
 LIBS += utils utee mbedtls dl $(PERF_LIBS)
@@ -45,11 +46,8 @@ build: $(OUTFILES)
 
 $(OBJS): %.o: %.c
 	$(CC$(sm)) -c $(CFLAGS) $^ -o $@
-	# see compile.mk(TODO: Is this necessary?)
-	# $(OBJCOPY$(sm)) \
-	# 	--rename-section .rodata=.rodata.$^ \
-	# 	--rename-section .rodata.str1.1=.rodata.str1.1.$^ \
-	# 	$@
+$(PERF_OBJS): %.o: %.c
+	$(CC$(sm)) -c $(CFLAGS) $(PERF_OPTION) $^ -o $@
 
 $(UUID_ELF): $(OBJS)
 	$(LD$(sm)) $(LDFLAGS) --as-needed $^ $(LOADLIBES) $(LDLIBS) -o $@
