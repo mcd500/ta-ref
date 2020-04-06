@@ -1,6 +1,3 @@
-[submodule "edger/keedger8r"]
-	path = edger/keedger8r
-	url = git@192.168.100.100:rinkai/keedger8r.git
 [submodule "crypto/ed25519"]
 	path = crypto/ed25519
 	url = https://github.com/orlp/ed25519/
@@ -15,4 +12,5 @@
 	url = https://github.com/mjosaarinen/tiny_sha3
 [submodule "crypto/wolfssl"]
 	path = crypto/wolfssl
-	url = git@192.168.100.100:rinkai/wolfssl.git
+	url = https://github.com/wolfSSL/wolfssl
+    branch = v4.3.0-stable
