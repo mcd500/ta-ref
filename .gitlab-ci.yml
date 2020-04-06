@@ -44,7 +44,7 @@ keystone_qemu_mbedcrypt:
           make run"
     stage: keystone
     only:
-        - master
+        - fix_git_clone
     tags:
         - shell
     script:
