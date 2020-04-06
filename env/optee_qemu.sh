@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export TEE=optee
-#export MACHINE=SIM
+export MACHINE=SIM
 # this must not be used because optee_os assume that ARCH=arm
 #export ARCH=aarch64
 export ENABLE_TEE_ENVS=1
