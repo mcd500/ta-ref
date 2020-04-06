@@ -1,6 +1,6 @@
 variables:
     GITLAB_URL: http://192.168.100.100
-    GITLAB_USER: vc707
+    DOCKERHUB_USER: vc707
     RPI3_IP_ADDR: 192.168.100.61
     DOCKERHUB_REPO: vc707/test
     KEYSTONE_QEMU_IMAGE: vc707/test:ta_ref_keystone_qemu_devel
@@ -13,7 +13,7 @@ variables:
     WORKDIR: ${CONTAINER_ROOT_DIR}
 
 before_script:
-    - docker login -u ${GITLAB_USER} -p ${DOCKERHUB_PASSWD}
+    - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWD}
     - git submodule update --init --recursive
     - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "${SCRIPT}"
 
