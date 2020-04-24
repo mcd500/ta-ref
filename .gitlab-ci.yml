@@ -26,10 +26,7 @@ after_script:
 
 # see env/ directory
 stages:
-    - keystone
-    - sgx_x64
-    - sgx_x32
-    - optee
+    - test
 
 keystone_qemu_mbedcrypt:
     variables:
@@ -42,7 +39,7 @@ keystone_qemu_mbedcrypt:
           make build CRYPT_TYPE=MBEDCRYPT &&
           make test &&
           make run"
-    stage: keystone
+    stage: test
     only:
         - master
     tags:
@@ -61,7 +58,7 @@ keystone_qemu_profiler:
           make build PROFILER=ON &&
           make test PROFILER=ON &&
           make run"
-    stage: keystone
+    stage: test
     only:
         - master
     tags:
@@ -80,7 +77,7 @@ keystone_qemu_wolfcrypt:
           make build CRYPT_TYPE=WOLFCRYPT &&
           make test &&
           make run"
-    stage: keystone
+    stage: test
     only:
         - master
     tags:
@@ -99,7 +96,7 @@ keystone_hifive:
           make build &&
           make test MACHINE=HIFIVE &&
           make run MACHINE=HIFIVE"
-    stage: keystone
+    stage: test
     only:
         - master
     tags:
@@ -118,7 +115,7 @@ keystone_hifive_profiler:
           make build PROFILER=ON &&
           make test MACHINE=HIFIVE PROFILER=ON &&
           make run MACHINE=HIFIVE"
-    stage: keystone
+    stage: test
     only:
         - master
     tags:
@@ -137,7 +134,7 @@ keystone_vc707:
           make build &&
           make test MACHINE=VC707 &&
           make run MACHINE=VC707"
-    stage: keystone
+    stage: test
     only:
         - master
     tags:
@@ -156,7 +153,7 @@ keystone_vc707_profiler:
           make build PROFILER=ON &&
           make test MACHINE=VC707 PROFILER=ON &&
           make run MACHINE=VC707"
-    stage: keystone
+    stage: test
     only:
         - master
     tags:
@@ -176,7 +173,7 @@ sgx_x64_sim:
           make build &&
           make test MACHINE=SIM &&
           make run"
-    stage: sgx_x64
+    stage: test
     only:
         - master
     tags:
@@ -195,7 +192,7 @@ sgx_x64_sim_profiler:
           make build PROFILER=ON &&
           make test MACHINE=SIM PROFILER=ON &&
           make run PROFILER=ON"
-    stage: sgx_x64
+    stage: test
     only:
         - master
     tags:
@@ -214,7 +211,7 @@ sgx_x64_intel_nuc:
           make build &&
           make test MACHINE=NUC &&
           make run MACHINE=NUC"
-    stage: sgx_x64
+    stage: test
     only:
         - master
     tags:
@@ -233,7 +230,7 @@ sgx_x64_intel_nuc_profiler:
           make build PROFILER=ON &&
           make test MACHINE=NUC PROFILER=ON &&
           make run MACHINE=NUC"
-    stage: sgx_x64
+    stage: test
     only:
         - master
     tags:
@@ -253,7 +250,7 @@ optee_qemu_v8:
           make build &&
           make test &&
           make run"
-    stage: optee
+    stage: test
     only:
         - master
     tags:
@@ -272,7 +269,7 @@ optee_qemu_v8_profiler:
           make build PROFILER=ON &&
           make test PROFILER=ON &&
           make run"
-    stage: optee
+    stage: test
     only:
         - master
     tags:
@@ -291,7 +288,7 @@ optee_rpi3:
           make build &&
           make test &&
           make run"
-    stage: optee
+    stage: test
     only:
         - master
     tags:
@@ -310,7 +307,7 @@ optee_rpi3_profiler:
           make build PROFILER=ON &&
           make test PROFILER=ON &&
           make run"
-    stage: optee
+    stage: test
     only:
         - master
     tags:
