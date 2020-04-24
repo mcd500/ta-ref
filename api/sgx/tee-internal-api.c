@@ -63,76 +63,16 @@ void TEE_GetREETime(TEE_Time *time)
     return;
 }
 
-
 void TEE_GetSystemTime(TEE_Time *time)
 {
+    unsigned long cycles;
+	uint32_t eax, edx;
     pr_deb("TEE_GetSystemTime(): start\n");
-    TEE_GetREETime(time);
-// Unfortunatelly, trusted time doesn't work on linux.
-#if 0
-    sgx_status_t rtn;
-    sgx_time_source_nonce_t nonce;
-    sgx_time_t base;
-    int busy_retry_times = 2;
-
-    // Get trusted time
-    // Unfortunatelly, trusted time doesn't work on linux. See
-    // https://software.intel.com/en-us/forums/intel-software-guard-extensions-intel-sgx/topic/820329
-    do {
-      rtn = sgx_create_pse_session();
-    } while (rtn == SGX_ERROR_BUSY && busy_retry_times--);
-    if (rtn != SGX_SUCCESS) {
-      pr_deb("sgx trusted time is not supported code=0x%x\n", rtn);
-      TEE_GetREETime(time);
-      pr_deb ("Fallback to REE time %u sec %u millis\n",
-	      time.seconds, time.millis);
-      return;
-    }
-
-    rtn = sgx_get_trusted_time(&base, &nonce);
-    sgx_close_pse_session();
-    if (rtn != SGX_SUCCESS) {
-      switch (rtn) {
-      case SGX_ERROR_SERVICE_UNAVAILABLE:
-	/* Architecture Enclave Service Manager is not installed or not
-	   working properly.*/
-	pr_deb("get_trusted_time: service unavailable\n");
-	break;
-      case SGX_ERROR_SERVICE_TIMEOUT:
-	/* retry the operation*/
-	pr_deb("get_trusted_time: service timeout\n");
-	break;
-      case SGX_ERROR_BUSY:
-	/* retry the operation later*/
-	pr_deb("get_trusted_time: service busy\n");
-	break;
-      default:
-	/*other errors*/
-	pr_deb("get_trusted_time: unknown error\n");
-	break;
-      }
-      TEE_GetREETime(time);
-      pr_deb ("Fallback to REE time %u sec %u millis\n",
-	      time.seconds, time.millis);
-      return;
-    }
-
-    // Only time precision in seconds.
-    time->seconds = (uint32_t)base;
-    time->millis = 0;
-#if 0
-    // sgx_time_t is unsigned 64bit
-    pr_deb ("trusted time %llu sec\n", base);
-    // Dump nonce
-    pr_deb("nonce: ");
-    for (int i = 0; i < sizeof(nonce); i++) {
-      pr_deb ("%02x", ((uint8_t *)&nonce)[i]);
-    }
-    pr_deb("\n");
-#endif
-#endif
+    asm volatile("rdtsc" : "=a"(eax), "=d"(edx));
+    cycles = ((unsigned long long)edx << 32) | eax;
+    time->seconds = cycles / 1000;
+    time->millis = cycles % 1000;
 }
-
 
 TEE_Result GetRelTimeStart(uint64_t start)
 {
