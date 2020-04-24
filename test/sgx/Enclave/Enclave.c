@@ -29,29 +29,23 @@
  */
 
 #include "gp_test.h"
+#include "bench.h"
 //#include "tools.h"
 
 /* ecall_print_aes:
  *   testing symmetric key verification
  */
+#define BSIZE 2
 int main(void)
 {
-    gp_random_test();
+    TEE_Time start[BSIZE];
+    TEE_Time end[BSIZE];
+    int unit = 1;
+    record(CPU_INSENTIVE, start, end, BSIZE, unit);
+    unit = 100;
+    record(MEMORY_INSENTIVE, start, end, BSIZE, unit);
+    unit = 100;
+    record(IO_INSENTIVE, start ,end, BSIZE, unit);
 
-    gp_ree_time_test();
-
-    gp_trusted_time_test();
-
-    gp_secure_storage_test();
-
-    gp_message_digest_test();
-
-    gp_symmetric_key_enc_verify_test();
-
-    gp_symmetric_key_gcm_verify_test();
-
-//    gp_symmetric_key_dec_verify_test();
-
-    gp_asymmetric_key_sign_test();
-//    gp_asymmetric_key_verify_test();
+    return 0;
 }

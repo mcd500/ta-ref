@@ -14,7 +14,11 @@ LIB=libtee_api.a
 ifeq ($(PROFILER), ON)
 PERF_SRCS := $(OBJS)
 PERF_OBJS := $(PERF_SRCS:.c=.o)
+ifeq ($(BENCHMARK), ON)
+PERF_OPTION :=
+else
 PERF_OPTION := -finstrument-functions
+endif
 else
 PERF_OBJS =
 PERF_OPTION =

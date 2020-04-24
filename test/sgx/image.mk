@@ -38,4 +38,4 @@ SIM_ship: $(ENCLAVE_NM)
 SIM_clean: clean
 
 clean:
-	$(RM) $(APP_BIN) $(ENCLAVE_LIB) $(ENCLAVE_NM) $(ANALYZER_BIN)
+	$(RM) $(APP_BIN) $(ENCLAVE_LIB) $(ENCLAVE_NM)

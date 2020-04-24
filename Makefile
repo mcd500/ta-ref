@@ -6,6 +6,7 @@ TEST_DIR=test
 ## sgx option(DEBUG, RELEASE, PRERELEASE)
 export DEBUG_TYPE ?= DEBUG
 export PROFILER ?= OFF
+export BENCHMARK ?= OFF
 export MACHINE ?= SIM
 include ./validation.mk
 

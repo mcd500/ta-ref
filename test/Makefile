@@ -26,10 +26,16 @@ GP_OBJS=$(GP_SRCS:.c=.o)
 TOOL_SRCS=$(wildcard *.c)
 TOOL_OBJS=$(TOOL_SRCS:.c=.o)
 
-OBJS=$(GP_OBJS) $(TOOL_OBJS)
+BENCH_SRCS=$(wildcard benchmark/*.c)
+BENCH_OBJS=$(BENCH_SRCS:.c=.o)
+
+OBJS=$(GP_OBJS) $(TOOL_OBJS) $(BENCH_OBJS)
 GP_LIB=lib/libgp.a
 TOOL_LIB=lib/libetools.a
-LIBS = $(GP_LIB) $(TOOL_LIB)
+
+# optional, but this lightweight library
+BENCH_LIB=lib/libbench.a
+LIBS = $(GP_LIB) $(TOOL_LIB) $(BENCH_LIB)
 
 COMMON_INCLUDE_DIRS=$(TOPDIR)/build/include $(TOPDIR)/api/include $(TOPDIR)/api/$(TEE) $(CURDIR)/include
 INCLUDE_DIRS = $(COMMON_INCLUDE_DIRS)
@@ -46,7 +52,7 @@ LIB_DIRS = $(TOPDIR)/build/lib $(CURDIR)/lib
 ifeq ($(PROFILER), ON)
 CFLAGS += -DPERF_ENABLE
 LDFLAGS += -lprofiler
-PERF_OBJS := $(GP_OBJS)
+PERF_OBJS := $(GP_OBJS) benchmark/bench.o
 PERF_OPTION := -finstrument-functions
 else
 PERF_OBJS =
@@ -61,11 +67,13 @@ CFLAGS += $(addprefix -fno-builtin-,puts putchar printf)
 all: common build image
 
 # build global platform(tee-intedependent) and tools code
-common: $(GP_LIB) $(TOOL_LIB)
+common: $(GP_LIB) $(TOOL_LIB) $(BENCH_LIB)
 
 $(GP_LIB): $(GP_OBJS)
 	$(AR) $@ $^
 $(TOOL_LIB): $(TOOL_OBJS)
+	$(AR) $@ $^
+$(BENCH_LIB): $(BENCH_OBJS)
 	$(AR) $@ $^
 
 $(OBJS): %.o: %.c

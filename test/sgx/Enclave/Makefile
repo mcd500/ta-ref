@@ -12,6 +12,7 @@ CFLAGS += $(addprefix -I, $(INCLUDE_DIRS))
 
 LIBS = tee_api mbedtls tiny_AES_c tiny_sha3 ed25519 wolfssl
 LIBS += gp etools
+LIBS += bench
 LIBS += Enclave_t
 # default
 LIBS += sgx_tstdc sgx_tcxx sgx_tcrypto sgx_tservice$(LIBRARY_SUFFIX)
