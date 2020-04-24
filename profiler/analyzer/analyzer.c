@@ -11,6 +11,8 @@
 #include "nm_parse.h"
 
 #define BUF_MAX 65536
+#define CAPTION "+ perf result"
+#define COLS "idx,depth,addr,funcname,start[clocks],end,duration"
 #define FORMAT "%ld,%ld,0x%08lx,%s,%ld,%ld,%ld\n"
 
 int main(int argc, char *argv[]) {
@@ -42,12 +44,14 @@ int main(int argc, char *argv[]) {
     count = header->idx;
 
     unsigned long baseaddr;
+    printf(CAPTION "\n");
     for(i = 0; i < count; i++, data++) {
         struct result res;
         __profiler_nsec_t nsec = data->nsec;
         if(i == 0) {
             baseaddr = (unsigned long)data->callee;
             printf("baseaddr: 0x%016lx\n", baseaddr);
+            printf(COLS "\n");
             res.start = nsec;
             res.end = 0;
             continue;
