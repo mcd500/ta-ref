@@ -26,12 +26,6 @@ expect "# " {
 
 expect "# " {
     send "./App.client  Enclave.eapp_riscv eyrie-rt\r"
-    expect "main start\r" {} timeout {
-        exit 1
-    }
-    expect "main end\r" {} timeout {
-        exit 1
-    }
 }
 
 expect "# " {
