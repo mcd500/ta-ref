@@ -214,10 +214,14 @@ TEE_Result OpenPersistentObject(uint32_t storageID, const void *objectID,
       return TEE_ERROR_ACCESS_DENIED;
     }
 
+#if CRYPTLIB==NONE
+    // do nothing
+#else
     if (set_object_key(objectID, objectIDLen, handle)) {
       free(handle);
       return TEE_ERROR_SECURITY; // better error needed or TEE panic?
     }
+#endif
 
     *object = handle;
 
@@ -286,6 +290,8 @@ TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
                          object->persist_iv, buffer, data);
 #elif CRYPTLIB==WOLFCRYPT
     wc_AesCbcEncrypt(&(object->persist_ctx), data, buffer, size);
+#elif CRYPTLIB==NONE
+    // do nothing
 #else
     memcpy(data, buffer, size);
     AES_CBC_encrypt_buffer(&(object->persist_ctx), data, size);
@@ -373,6 +379,8 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
     wc_AesCbcDecrypt(&(object->persist_ctx), data, buffer, size);
     memcpy(buffer, data, size);
     free(data);
+#elif CRYPTLIB==NONE
+    // do nothing
 #else
     AES_CBC_decrypt_buffer(&(object->persist_ctx), buffer, size);
 #endif
@@ -394,6 +402,8 @@ void TEE_CloseObject(TEE_ObjectHandle object)
     mbedtls_aes_free(&(object->persist_ctx));
 #elif CRYPTLIB==WOLFCRYPT
     wc_AesFree(&(object->persist_ctx));
+#elif CRYPTLIB==NONE
+    // do nothing
 #else
     memset(&(object->persist_ctx), 0, sizeof(object->persist_ctx));
 #endif
