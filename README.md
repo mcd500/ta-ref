@@ -151,8 +151,9 @@ make run
 # Options
 
 + `PROFILER=[ON/OFF] .. enable/disable profiler(default: OFF)
-+ `BENCHMARK=[ON/OFF]` .. enable/disable benchmark mode(default: OFF)
++ `BENCHMARK=[ON/OFF]` .. enable/disable benchmark mode. In this mode, automatically set `PROFILER=OFF` and `CRYPT_TYPE=NONE`(default: OFF)
 + `DEBUG_TYPE=[DEBUG/PRERELEASE/RELEASE]` .. debug type including optimization(default: DEBUG)
++ `CRYPT_TYPE`=[MBEDCRYPT/WOLFCRYPT/NONE]`
 
 # cleanup
 

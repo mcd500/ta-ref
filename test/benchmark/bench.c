@@ -16,6 +16,7 @@
 #include "config_bench.h"
 #include <stdarg.h>
 
+#define SPLITS 16
 static int NO_PERF test_printf(const char* fmt, ...)
 {
   char buf[BUFSIZ] = { '\0' };
@@ -38,7 +39,7 @@ static void cpu_benchmark() {
     }
 }
 
-static char buf[BUF_SIZE];
+static char *buf;
 static void memory_benchmark(void) {
     int c;
     int i;
@@ -57,6 +58,8 @@ static const char filename[] = "benchmark";
 // from secure_stoage.c
 static void io_benchmark(void) {
     TEE_Result rv;
+    int i;
+    char *b;
 
     /* write */
     TEE_ObjectHandle object;
@@ -67,16 +70,23 @@ static void io_benchmark(void) {
 				    TEE_HANDLE_NULL,
 				    NULL, 0,
 				    &object);
-    rv = TEE_WriteObjectData(object, (const char *)buf, BUF_SIZE);
+    for(i = 0; i < SPLITS; i++) {
+        b = &buf[i*BUF_SIZE/SPLITS];
+        rv = TEE_WriteObjectData(object, (const char *)b, BUF_SIZE/SPLITS);
+    }
     TEE_CloseObject(object);
 
+    b = &buf;
     /* read */
     rv = TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
 				  filename, strlen(filename),
 				  TEE_DATA_FLAG_ACCESS_READ,
 				  &object);
     uint32_t count;
-    rv = TEE_ReadObjectData(object, (char *)buf, BUF_SIZE, &count);
+    for(i = 0; i < SPLITS; i++) {
+        b = &buf[i*BUF_SIZE/SPLITS];
+        rv = TEE_ReadObjectData(object, (char *)b, BUF_SIZE/SPLITS, &count);
+    }
     TEE_CloseObject(object);
     return;
 }
@@ -102,8 +112,14 @@ static uint64_t NO_PERF time_diff(TEE_Time *t1, TEE_Time *t2) {
     return t2->seconds*1000+t2->millis - t1->seconds*1000-t1->millis;
 }
 
+static int buf_flag = 1;
 void NO_PERF init() {
     int i;
+    if(buf_flag) {
+        buf = malloc(BUF_SIZE);
+        if(!buf) TEE_Panic(i);
+        buf_flag = 0;
+    }
     // write
     for(i = 0; i < BUF_SIZE; i++) {
         buf[i] = (char)(255-(i&255));
