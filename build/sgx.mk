@@ -7,7 +7,11 @@ include ./general.mk
 DEPENDS=edger crypto
 EDGER_TYPE=EDGER8R
 # MBEDCRYPT or WOLFCRYPT
+ifeq ($(BENCHMARK), ON)
+CRYPT_TYPE=NONE
+else
 CRYPT_TYPE=MBEDCRYPT
+endif
 
 PROFILER=OFF
 

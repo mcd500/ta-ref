@@ -7,7 +7,11 @@ include ./general.mk
 DEPENDS=edger crypto eyrie
 EDGER_TYPE=KEYEDGE
 # MBEDCRYPT or WOLFCRYPT
+ifeq ($(BENCHMARK), ON)
+CRYPT_TYPE=NONE
+else
 CRYPT_TYPE=MBEDCRYPT
+endif
 
 ifeq ($(PROFILER),ON)
 # after edger because of use of Enclave_t header

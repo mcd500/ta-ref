@@ -151,6 +151,7 @@ make run
 # Options
 
 + `PROFILER=[ON/OFF] .. enable/disable profiler(default: OFF)
++ `BENCHMARK=[ON/OFF]` .. enable/disable benchmark mode(default: OFF)
 + `DEBUG_TYPE=[DEBUG/PRERELEASE/RELEASE]` .. debug type including optimization(default: DEBUG)
 
 # cleanup
