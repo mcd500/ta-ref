@@ -132,7 +132,7 @@ $ export ROOTFS=debian_rootfs
 $ sudo mkdir -p ${ROOTFS}
 # select debian-buster to match libc version between buildroot and debian
 # see https://packages.debian.org/ja/buster/libc6-dev
-$ sudo debootstrap --arch=arm64 --foreign --include=libc6-dev,ifupdown,netbase,iproute,openssh-server,file,sudo,less buster ./${ROOTFS}
+$ sudo debootstrap --arch=arm64 --foreign --include=libc6-dev,ifupdown,netbase,iproute2,openssh-server,file,sudo,less buster ./${ROOTFS}
 $ sudo cp `which qemu-aarch64-static` ./${ROOTFS}/usr/bin
 $ sudo chroot ./${ROOTFS} debootstrap/debootstrap --second-stage
 ```
