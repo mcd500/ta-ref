@@ -1,6 +1,6 @@
 #!/usr/bin/expect
 
-set timeout 30
+set timeout 1200
 set PORT $::env(PORT)
 set USER $::env(USER)
 set IP_ADDR $::env(IP_ADDR)

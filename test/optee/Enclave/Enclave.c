@@ -9,11 +9,11 @@ int main(void)
 {
     TEE_Time start[BSIZE];
     TEE_Time end[BSIZE];
-    int unit = 1;
+    int unit = 10;
     record(CPU_INSENTIVE, start, end, BSIZE, unit);
     unit = 10;
     record(MEMORY_INSENTIVE, start, end, BSIZE, unit);
-    unit = 1;
+    unit = 10;
     record(IO_INSENTIVE, start ,end, BSIZE, unit);
 
     return 0;
