@@ -16,7 +16,7 @@
 #include "config_bench.h"
 #include <stdarg.h>
 
-#define SPLITS 32
+#define SPLITS 16
 
 static void cpu_benchmark() {
     uint64_t a;
