@@ -39,7 +39,6 @@ static void cpu_benchmark() {
     }
 }
 
-static char *buf;
 static void memory_benchmark(void) {
     int c;
     int i;
@@ -76,7 +75,6 @@ static void io_benchmark(void) {
     }
     TEE_CloseObject(object);
 
-    b = &buf;
     /* read */
     rv = TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
 				  filename, strlen(filename),
@@ -112,14 +110,9 @@ static uint64_t NO_PERF time_diff(TEE_Time *t1, TEE_Time *t2) {
     return t2->seconds*1000+t2->millis - t1->seconds*1000-t1->millis;
 }
 
-static int buf_flag = 1;
 void NO_PERF init() {
     int i;
-    if(buf_flag) {
-        buf = malloc(BUF_SIZE);
-        if(!buf) TEE_Panic(i);
-        buf_flag = 0;
-    }
+    tee_init();
     // write
     for(i = 0; i < BUF_SIZE; i++) {
         buf[i] = (char)(255-(i&255));
