@@ -16,17 +16,7 @@
 #include "config_bench.h"
 #include <stdarg.h>
 
-#define SPLITS 16
-static int NO_PERF test_printf(const char* fmt, ...)
-{
-  char buf[BUFSIZ] = { '\0' };
-  va_list ap;
-  va_start(ap, fmt);
-  vsnprintf(buf, BUFSIZ, fmt, ap);
-  va_end(ap);
-  ocall_print_string_wrapper(buf);
-  return 0;
-}
+#define SPLITS 32
 
 static void cpu_benchmark() {
     uint64_t a;

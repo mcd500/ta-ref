@@ -15,7 +15,7 @@ expect "*(yes/no)? " {
     }
 }
 
-expect * {
+expect "$ " {
     send "export PS1=\"# \"\r"
 }
 
@@ -25,12 +25,6 @@ expect "# " {
 
 expect "# " {
     send "sudo ./optee_ref_ta\r"
-    expect "*start" {} timeout {
-        exit 1
-    }
-    expect "*succeed" {} timeout {
-        exit 1
-    }
 }
 
 expect "# " {

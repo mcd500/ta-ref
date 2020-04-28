@@ -29,7 +29,8 @@ PERF_OPTION =
 endif
 PERF_OBJS := $(PERF_SRCS:.c=.o)
 
-LIBS = gp
+LIBS = bench
+LIBS += gp
 LIBS += utils utee mbedtls dl $(PERF_LIBS)
 
 LOADLIBES = $(addprefix -L,$(LIB_DIRS))

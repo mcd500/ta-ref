@@ -70,7 +70,11 @@ PERF_SRCS := $(wildcard ${OPTEE_DIR}/optee_os/lib/libutee/tee_*.c) $(wildcard ${
 PERF_SOBJS := $(PERF_SRCS:.c=.o)
 PERF_AS := ${OPTEE_DIR}/optee_os/lib/libutee/arch/arm/utee_syscalls_a64.S
 PERF_AOBJS := $(PERF_AS:.S=.o)
+ifeq ($(BENCHMARK), OFF)
 PERF_OPTION := -finstrument-functions
+else
+PERF_OPTION :=
+endif
 else
 PERF_OBJS =
 PERF_OPTION =
