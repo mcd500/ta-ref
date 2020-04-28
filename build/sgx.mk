@@ -13,8 +13,6 @@ else
 CRYPT_TYPE=MBEDCRYPT
 endif
 
-PROFILER=OFF
-
 ifeq ($(PROFILER),ON)
 DEPENDS += profiler
 endif
