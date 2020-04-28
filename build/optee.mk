@@ -9,8 +9,6 @@ DEPENDS=edger api_import
 # MBEDCRYPT or WOLFCRYPT
 # CRYPT_TYPE=MBEDCRYPT
 
-PROFILER=OFF
-
 ifeq ($(PROFILER),ON)
 DEPENDS += profiler api
 endif
