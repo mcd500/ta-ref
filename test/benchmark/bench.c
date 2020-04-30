@@ -96,8 +96,12 @@ static void NO_PERF benchmark(int type) {
     return;
 }
 
+static uint64_t NO_PERF time_to_millis(TEE_Time *time) {
+    return (uint64_t)time->seconds*1000 + (uint64_t)time->millis;
+}
+
 static uint64_t NO_PERF time_diff(TEE_Time *t1, TEE_Time *t2) {
-    return t2->seconds*1000+t2->millis - t1->seconds*1000-t1->millis;
+    return time_to_millis(t2) - time_to_millis(t1);
 }
 
 void NO_PERF init() {
@@ -150,7 +154,7 @@ void NO_PERF record(int type, TEE_Time *start, TEE_Time *end, int size, int unit
 
     test_printf("type,unit,start,end,diff[ms]\n");
     for(i = 0; i < size; i++) {
-        test_printf("%d,%d,%lu,%lu,%lu\n", type, unit, start[i],end[i],time_diff(&start[i], &end[i]));
+        test_printf("%d,%d,%lu,%lu,%lu\n", type, unit, time_to_millis(&start[i]),time_to_millis(&end[i]),time_diff(&start[i], &end[i]));
     }
     return;
 }
