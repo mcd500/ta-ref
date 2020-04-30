@@ -109,23 +109,24 @@ void NO_PERF init() {
     }
 }
 
-static void time_test(int type, TEE_Time *time) {
+void time_test(char type, TEE_Time *time, int idx) {
     switch(type) {
         case SYSTEM_TIME_TEST:
-            TEE_GetSystemTime(&time);
+            TEE_GetSystemTime(&time[idx]);
             break;
+
         case REE_TIME_TEST:
-            TEE_GetREETime(&time);
-            break;
+            TEE_GetREETime(&time[idx]);
         default:
             break;
     }
+    return;
 }
 
 void NO_PERF tee_time_tests(int type, TEE_Time *time, int size) {
     int i;
     for(i = 0; i < size; i++) {
-        time_test(type, &time[i]);
+        time_test(type, time, i);
     }
 
     test_printf("type,label,elapse[ms]\n");
