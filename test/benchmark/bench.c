@@ -109,6 +109,33 @@ void NO_PERF init() {
     }
 }
 
+static void time_test(int type, TEE_Time *time) {
+    switch(type) {
+        case SYSTEM_TIME_TEST:
+            TEE_GetSystemTime(&time);
+            break;
+        case REE_TIME_TEST:
+            TEE_GetREETime(&time);
+            break;
+        default:
+            break;
+    }
+}
+
+void NO_PERF tee_time_tests(int type, TEE_Time *time, int size) {
+    int i;
+    for(i = 0; i < size; i++) {
+        time_test(type, &time[i]);
+    }
+
+    test_printf("type,label,elapse[ms]\n");
+    for(i = 0; i < size; i++) {
+        TEE_Time *t = &time[i];
+        test_printf("%d,%s,%llu\n", type, labels[type], (uint64_t)t->seconds*1000+t->millis);
+    }
+    return;
+}
+
 void NO_PERF record(int type, TEE_Time *start, TEE_Time *end, int size, int unit) {
     int i;
     int u;
