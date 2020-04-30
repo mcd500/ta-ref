@@ -38,6 +38,7 @@
 #include <edger/Enclave.h>
 
 #define BUF_SIZE 65536
+#define PRINT_BUF_SIZE 131072
 #ifdef PERF_ENABLE
 #define LOG_FILE "shared_mem"
 #define TEEC_PARAM_TYPE0 TEEC_MEMREF_TEMP_OUTPUT
@@ -46,7 +47,7 @@
 #endif
 
 #ifdef ENCLAVE_VERBOSE
-static char print_buf[BUF_SIZE];
+static char print_buf[PRINT_BUF_SIZE];
 #define TEEC_PARAM_TYPE1 TEEC_MEMREF_TEMP_OUTPUT
 #else
 #define TEEC_PARAM_TYPE1 TEEC_NONE
@@ -93,7 +94,7 @@ int main(void)
 
 #ifdef ENCLAVE_VERBOSE
     op.params[1].tmpref.buffer = (void*)print_buf;
-    op.params[1].tmpref.size = BUF_SIZE;
+    op.params[1].tmpref.size = PRINT_BUF_SIZE;
 #endif
 
     // only TA_REF_RUN_ALL is defined
