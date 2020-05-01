@@ -1,5 +1,5 @@
 #include <stdarg.h>
-static int buf_flag = 0;
+static int buf_flag = 1;
 static char *buf;
 
 static void NO_PERF tee_init() {
