@@ -35,16 +35,19 @@
 /* ecall_print_aes:
  *   testing symmetric key verification
  */
-#define BSIZE 2
+#define BSIZE 100
+#define COUNTS 500
 int main(void)
 {
-    TEE_Time start[BSIZE];
-    TEE_Time end[BSIZE];
-    int unit = 1;
-    record(CPU_INSENTIVE, start, end, BSIZE, unit);
-    unit = 100;
-    record(MEMORY_INSENTIVE, start, end, BSIZE, unit);
-    unit = 100;
+    static TEE_Time start[BSIZE];
+    static TEE_Time end[BSIZE];
+    // static TEE_Time time[COUNTS] = {0};
+    // tee_time_tests(REE_TIME_TEST, time, COUNTS);
+    // tee_time_tests(SYSTEM_TIME_TEST, time, COUNTS);
+    // record(CPU_INSENTIVE, start, end, BSIZE, 2);
+    // int unit = 15;
+    // record(MEMORY_INSENTIVE, start, end, BSIZE, unit);
+    int unit = 20;
     record(IO_INSENTIVE, start ,end, BSIZE, unit);
 
     return 0;

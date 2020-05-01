@@ -1,7 +1,8 @@
+#include <stdarg.h>
 static char buf[BUF_SIZE];
 static int buf_flag = 1;
 
-static void tee_init(void) {}
+static void NO_PERF tee_init(void) {}
 static int NO_PERF test_printf(const char* fmt, ...)
 {
   char buf[BUFSIZ] = { '\0' };

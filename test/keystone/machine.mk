@@ -12,8 +12,8 @@ PASSWD=sifive
 #PORT=$(PORT)
 RUN_SCRIPT := $(SIM_RUN_SCRIPT)
 else ifeq ($(MACHINE), HIFIVE)
-USER=gitlab
-PASSWD=gitlab
+USER=root
+PASSWD=sifive
 PORT=22
 IP_ADDR=$(HIFIVE_IP_ADDR)
 else ifeq ($(MACHINE), VC707)

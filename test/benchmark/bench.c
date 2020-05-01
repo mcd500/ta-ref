@@ -16,9 +16,9 @@
 #include "config_bench.h"
 #include <stdarg.h>
 
-#define SPLITS 16
+#define SPLITS 32
 
-static void cpu_benchmark() {
+static void NO_PERF cpu_benchmark() {
     uint64_t a;
     uint64_t b;
     uint64_t c = 0;
@@ -29,7 +29,7 @@ static void cpu_benchmark() {
     }
 }
 
-static void memory_benchmark(void) {
+static void NO_PERF memory_benchmark(void) {
     int c;
     int i;
     char sum = 0;
@@ -45,7 +45,7 @@ static void memory_benchmark(void) {
 
 static const char filename[] = "benchmark";
 // from secure_stoage.c
-static void io_benchmark(void) {
+static void NO_PERF io_benchmark(void) {
     TEE_Result rv;
     int i;
     char *b;
@@ -79,19 +79,22 @@ static void io_benchmark(void) {
     return;
 }
 
-static void NO_PERF benchmark(int type) {
-    switch(type) {
-        case MEMORY_INSENTIVE:
-            memory_benchmark();
-            break;
-        case CPU_INSENTIVE:
-            cpu_benchmark();
-            break;
-        case IO_INSENTIVE:
-            io_benchmark();
-            break;
-        default:
-            break;
+static void benchmark(int type, int unit) {
+    int i;
+    for(i = 0; i < unit; i++) {
+        switch(type) {
+            case MEMORY_INSENTIVE:
+                memory_benchmark();
+                break;
+            case CPU_INSENTIVE:
+                cpu_benchmark();
+                break;
+            case IO_INSENTIVE:
+                io_benchmark();
+                break;
+            default:
+                break;
+        }
     }
     return;
 }
@@ -146,9 +149,8 @@ void NO_PERF record(int type, TEE_Time *start, TEE_Time *end, int size, int unit
     int u;
     init();
     for(i=0; i < size; i++) {
-      u = unit;
       TEE_GetREETime(&start[i]);
-      while(u--) benchmark(type);
+      benchmark(type, unit);
       TEE_GetREETime(&end[i]);
     }
 
