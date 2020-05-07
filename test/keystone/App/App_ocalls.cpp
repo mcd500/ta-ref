@@ -11,7 +11,12 @@
 
 #include "edger/Enclave_u.h"
 #include "random.h"
+
+#ifdef APP_VERBOSE
+#define NO_PERF
+#else
 #define NO_PERF __attribute__((no_instrument_function))
+#endif
 
 EDGE_EXTERNC_BEGIN
 
