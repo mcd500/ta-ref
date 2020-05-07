@@ -11,10 +11,11 @@
 
 #include "edger/Enclave_u.h"
 #include "random.h"
+#define NO_PERF __attribute__((no_instrument_function))
 
 EDGE_EXTERNC_BEGIN
 
-unsigned int ocall_print_string(const char* str){
+unsigned int NO_PERF ocall_print_string(const char* str){
   printf("%s",str);
   return strlen(str);
 }
