@@ -23,7 +23,7 @@ include ./machine.mk
 
 all: $(TARGET)
 
-$(MACHINE)_ship: $(NM) $(MACHINE)_clean
+$(MACHINE)_ship: analyzer_nm $(MACHINE)_clean
 	FILES="$(OUT_FILES)" USER=$(USER) PASSWD=$(PASSWD) IP_ADDR=$(IP_ADDR) $(SHIP_SCRIPT)
 
 $(MACHINE)_clean:
