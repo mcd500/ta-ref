@@ -9,8 +9,14 @@
 #include "App_ocalls.h"
 # define MAX_PATH FILENAME_MAX
 
+#ifdef APP_VERBOSE
+#define NO_PERF
+#else
+#define NO_PERF __attribute__((no_instrument_function))
+#endif
+
 /* OCall functions */
-unsigned int ocall_print_string(const char *str)
+unsigned int NO_PERF ocall_print_string(const char *str)
 {
     /* Proxy/Bridge will check the length and null-terminate 
      * the input string to prevent buffer overflow. 

@@ -17,6 +17,7 @@ SIM_run:
 
 SIM_analyze:
 	./analyzer shared_mem enclave.nm
+	./analyzer app_shared_mem App.nm
 
 ssh:
 	sshpass -p ${PASSWD} ssh ${USER}@${IP_ADDR}

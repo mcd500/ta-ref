@@ -45,6 +45,13 @@ expect "# " {
 }
 
 expect "# " {
+    send "./analyzer app_shared_mem App.nm\r"
+    expect "baseaddr: 0x" {} timeout {
+        exit 1
+    }
+}
+
+expect "# " {
     send "exit\r"
 }
 

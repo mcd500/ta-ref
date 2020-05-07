@@ -115,7 +115,7 @@ main_destory_out:
 
 main_out:
 #ifdef PERF_ENABLE
-    __profiler_map_info();
+    __profiler_unmap_info();
 #endif
     return ret;
 }
