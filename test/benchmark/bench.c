@@ -29,17 +29,22 @@ static void NO_PERF cpu_benchmark() {
     }
 }
 
+#define INC 390625
 static void NO_PERF memory_benchmark(void) {
     int c;
     int i;
     char sum = 0;
+    int idx = 0;
     // write
     for(i = 0; i < BUF_SIZE; i++) {
-        buf[i] = (char)(i&255);
+        buf[idx] = (char)(i&255);
+        idx = (idx+INC)%BUF_SIZE;
     }
     // read
+    idx = 0;
     for(i = 0; i < BUF_SIZE; i++) {
-        sum += buf[i];
+        sum += buf[idx];
+        idx = (idx+INC)%BUF_SIZE;
     }
 }
 

@@ -11,7 +11,7 @@
 #include <cstring>
 
 #include "edger/Enclave_u.h"
-#ifdef PERF_ENABLE
+#ifdef APP_PERF_ENABLE
 #include "profiler/profiler.h"
 #endif
 
@@ -21,7 +21,7 @@ const char* runtime_path = "eyrie-rt";
 
 int main(int argc, char** argv)
 {
-#ifdef PERF_ENABLE
+#ifdef APP_PERF_ENABLE
   __profiler_map_info();
 #endif
   Keystone enclave;
@@ -43,7 +43,7 @@ int main(int argc, char** argv)
                            enclave.getSharedBufferSize());
 
   enclave.run();
-#ifdef PERF_ENABLE
+#ifdef APP_PERF_ENABLE
   __profiler_unmap_info();
 #endif
 
