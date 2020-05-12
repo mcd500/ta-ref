@@ -28,8 +28,8 @@ LOAD_LIBRARIES += $(addprefix -l, Enclave_u pthread)
 LDFLAGS = $(addprefix -L,$(LIB_DIRS)) $(LOAD_LIBRARIES)
 
 # perf settings if enable
-ifeq ($(PROFILER), ON)
-CXXFLAGS += -DPERF_ENABLE
+ifeq ($(APP_PROFILER), ON)
+CXXFLAGS += -DAPP_PERF_ENABLE
 LDFLAGS += -lappprofiler -Wl,--defsym,__ImageBase=0
 PERF_SRCS := App_ocalls.cpp
 PERF_OBJS := $(PERF_SRCS:.cpp=.o)

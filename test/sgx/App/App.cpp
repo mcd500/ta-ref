@@ -45,7 +45,7 @@
 #include "App.h"
 #include "edger/Enclave_u.h"
 #include "types.h"
-#ifdef PERF_ENABLE
+#ifdef APP_PERF_ENABLE
 #include "profiler/profiler.h"
 #endif
 
@@ -89,7 +89,7 @@ int initialize_enclave(void)
 /* Application entry */
 int SGX_CDECL main(int argc, char *argv[])
 {
-#ifdef PERF_ENABLE
+#ifdef APP_PERF_ENABLE
     __profiler_map_info();
 #endif
     (void)(argc);
@@ -114,7 +114,7 @@ main_destory_out:
     printf("Info: Enclave successfully returned.\n");
 
 main_out:
-#ifdef PERF_ENABLE
+#ifdef APP_PERF_ENABLE
     __profiler_unmap_info();
 #endif
     return ret;
