@@ -5,11 +5,10 @@
 extern uintptr_t __ImageBase[];
 static char perf_buffer[PERF_SIZE];
 
-static inline uint64_t NO_PERF tee_rdtsc(void)
+static inline uint64_t tee_rdtscp(uint8_t *id)
 {
-    unsigned long cycles;
-	uint32_t eax, edx;
-    asm volatile("rdtsc" : "=a"(eax), "=d"(edx));
-    cycles = ((unsigned long long)edx << 32) | eax;
-    return cycles;
+  uint32_t hi, lo, aux;
+  __asm__ volatile("rdtscp" : "=a" (lo), "=d" (hi), "=c" (aux));
+  if(id) *id = aux;
+  return ((uint64_t)hi << 32) | lo;
 }

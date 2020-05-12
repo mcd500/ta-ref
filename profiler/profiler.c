@@ -16,7 +16,7 @@ void NO_PERF __profiler_map_info(void) {
 	__profiler_head = (struct __profiler_header *)perf_buffer;
     __profiler_head->size = PERF_SIZE;
     __profiler_head->idx = 0;
-    __profiler_head->start = tee_rdtsc();
+    __profiler_head->start = tee_rdtscp(NULL);
     __cyg_profile_func((void*)__ImageBase, START);
 }
 
@@ -24,9 +24,11 @@ static inline void NO_PERF __cyg_profile_func(void * const this_fn, enum directi
 	if (__profiler_head == NULL)
 		return;
     struct __profiler_data * const data = __profiler_get_data_ptr();
-    uint64_t clocks = tee_rdtsc();
+    uint8_t id;
+    uint64_t clocks = tee_rdtscp(&id);
     data->nsec = clocks - __profiler_head->start;
     data->direction = dir;
+    data->hartid = id;
     data->callee = (uintptr_t)this_fn;
 }
 

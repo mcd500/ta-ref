@@ -12,8 +12,8 @@
 
 #define BUF_MAX 65536
 #define CAPTION "+ perf result"
-#define COLS "idx,depth,addr,funcname,start[clocks],end,duration"
-#define FORMAT "%ld,%ld,0x%08lx,%s,%ld,%ld,%ld\n"
+#define COLS "idx,start_core_id,end_core_id,depth,addr,funcname,start[clocks],end,duration"
+#define FORMAT "%ld,%d,%d,%ld,0x%08lx,%s,%ld,%ld,%ld\n"
 
 int main(int argc, char *argv[]) {
     static char buf[BUF_MAX];
@@ -59,6 +59,7 @@ int main(int argc, char *argv[]) {
         switch(data->direction) {
             case CALL:
                 res.callee = data->callee;
+                res.start_hartid = data->hartid;
                 res.start = nsec; res.end = 0;
                 res.idx = i;
                 push(res);
@@ -67,12 +68,13 @@ int main(int argc, char *argv[]) {
                 if(is_empty()) return 0;
                 res = pop();
                 res.end = nsec;
+                res.end_hartid = data->hartid;
                 __profiler_nsec_t duration = res.end - res.start;
                 unsigned long addr = (unsigned long)res.callee - (unsigned long)baseaddr;
-                printf(FORMAT, res.idx, res.depth, addr, get_func_name(table, addr), res.start, res.end, duration);
+                printf(FORMAT, res.idx, res.start_hartid, res.end_hartid, res.depth, addr, get_func_name(table, addr), res.start, res.end, duration);
                 break;
             default:
-                fprintf(stderr, "direction is something wrong!: %ld, data->direction\n");
+                fprintf(stderr, "direction is something wrong!: %d, data->direction\n");
                 return 0;
         }
     }

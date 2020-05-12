@@ -29,7 +29,7 @@ static void NO_PERF cpu_benchmark() {
     }
 }
 
-#define INC 390625
+#define INC 390625 // 5**8
 static void NO_PERF memory_benchmark(void) {
     int c;
     int i;

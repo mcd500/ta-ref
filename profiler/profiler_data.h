@@ -10,17 +10,17 @@
 #define PERF_SIZE 8192
 #endif
 
-typedef uint64_t  __profiler_nsec_t;
-typedef uint8_t __profiler_direction_t;
-
 enum direction_t {
     START = 0,
 	CALL = 1,
 	RET  = 2,
 };
 
+typedef uint64_t __profiler_nsec_t;
+
 struct __profiler_data {
-    __profiler_direction_t direction;
+    uint8_t direction;
+    uint8_t hartid;
 	__profiler_nsec_t nsec;
     uintptr_t 		callee;
 };
