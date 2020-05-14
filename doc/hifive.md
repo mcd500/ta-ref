@@ -50,3 +50,21 @@ sudo dd if=fsbl.bin of=/dev/sdb4 bs=4096 conv=fsync
 # power on
 sudo screen /dev/ttyUSB1 115200
 ```
+
+# How to run debian
+
+```
+# disable DHCP and SSH
+pkill -9 udhcpc dropbear
+mount /dev/mmcblk0p2 /mnt
+mount --bind /dev /mnt/dev
+mount --bind /sys /mnt/sys
+mount --bind /proc /mnt/proc
+mount -t devpts devpts /mnt/dev/pts
+chroot /mnt /bin/bash
+# dive into debian buster
+# re-enable DHCP and SSH
+dhclient
+/etc/init.d/ssh restart
+# check ip-address with `ip addr`
+```
