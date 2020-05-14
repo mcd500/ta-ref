@@ -18,7 +18,7 @@ The below files should be prepared:
 
 Note) Keystone v0.4 image could not get the linux kernel running even if we specify `cmake .. -Dsifive=y` in build step). We suggest that the old version of [keystone-sample-image](http://docs.keystone-enclave.org/en/latest/Getting-Started/Running-Keystone-with-QEMU.html) should be used.
 
-If we want to develop keystone, we should build with `make image`:
+If we want to develop keystone( e.g) improve secure monitor etc) , we should build with `make image`:
 
 ```sh
 docker run -it --rm vc707/test:keystone_old
