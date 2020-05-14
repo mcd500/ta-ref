@@ -29,6 +29,6 @@ export KEYSTONE_DRIVER_MODULE=${KEYSTONE_BUILD_DIR}/buildroot.build/target/root/
 
 # when MACHINE=HIFIVE
 export TEST_USER=root
-export HIFIVE_IP_ADDR=192.168.1.22
+export HIFIVE_IP_ADDR=192.168.1.20
 export VC707_USER=root
 export VC707_IP_ADDR=192.168.100.112
