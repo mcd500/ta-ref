@@ -11,9 +11,9 @@
 The below files should be prepared:
 
 |file|docker image|remarks|partition|
-|---|---|---|
+|---|---|---|---|
 |bbl.bin|[vc707/test:keystone_old](http://192.168.100.100/rinkai/dockerfiles/-/blob/master/keystone/old/Dockerfile)|risc-pk(sm) + linux kernel|1st partition|
-|rootfs|[]()|debian image(including keystone-driver)|2nd partition|
+|rootfs|directly write to sd card|debian image(including keystone-driver)|2nd partition|
 |fsbl.bin|[vc707/test:hifive_bootloader](http://192.168.100.100/rinkai/dockerfiles/-/blob/master/riscv_toolchain_qemu/hifive_bootloader/Dockerfile)|1st stage bootloader|4th partition|
 
 Note) Keystone v0.4 image could not get the linux kernel running even if we specify `cmake .. -Dsifive=y` in build step). We suggest that the old version of [keystone-sample-image](http://docs.keystone-enclave.org/en/latest/Getting-Started/Running-Keystone-with-QEMU.html) should be used.
