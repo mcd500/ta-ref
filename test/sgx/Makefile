@@ -37,7 +37,7 @@ analyze:
 	./analyzer shared_mem $(ENCLAVE_NM)
 
 clean:
-	$(RM) $(ENCLAVE_LIB) $(ENCLAVE_NM) $(APP_BIN) shared_mem analyzer
+	$(RM) $(ENCLAVE_LIB) $(ENCLAVE_NM) $(APP_BIN) shared_mem analyzer benchmark
 	make -f image.mk clean
 	make -C App clean
 	make -C Enclave clean
