@@ -56,6 +56,8 @@ sudo screen /dev/ttyUSB1 115200
 ```
 # disable DHCP and SSH
 pkill -9 udhcpc dropbear
+ifdown eth0
+
 mount /dev/mmcblk0p2 /mnt
 mount --bind /dev /mnt/dev
 mount --bind /sys /mnt/sys
