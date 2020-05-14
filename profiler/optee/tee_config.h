@@ -13,9 +13,16 @@ static char perf_buffer[PERF_SIZE];
 #define COMMAND "mrs %0, cntpct_el0"
 #endif
 
-static inline uint64_t NO_PERF tee_rdtsc(void)
+static inline uint64_t NO_PERF tee_rdtscp(uint8_t *id)
 {
     uint64_t cycles;
     asm volatile(COMMAND : "=r"(cycles));
+    if(id) {
+        // uint32_t aff;
+        // asm volatile ("mrs %0, MPIDR_EL1"
+        //             : "=r"(aff));
+        // *id = aff & 255;
+        *id = 0;
+    }
     return cycles;
 }

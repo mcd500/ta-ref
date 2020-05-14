@@ -11,8 +11,14 @@ static inline uint64_t NO_PERF tee_rdtscp(uint8_t *id)
     asm volatile ("rdcycle %0" : "=r" (cycles));
     if(id) {
         uint64_t x;
-        asm volatile("mv %0, t6" : "=r" (x) );
-        *id = x;
+        // eyrie OS put the hartid on tp register.
+        asm volatile("mv %0, tp" : "=r" (x) );
+        if(!(x & (1<<4))) {
+            x = 255;
+        } else {
+            x = x & ~(1<<4);
+        }
+        *id = (uint8_t)x;
     }
     return cycles;
 }
