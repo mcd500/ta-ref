@@ -4,7 +4,7 @@
 /* ecall_print_aes:
  *   testing symmetric key verification
  */
-#define BSIZE 1000
+#define BSIZE 15
 #define COUNTS 500
 int main(void)
 {

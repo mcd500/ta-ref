@@ -1,101 +1,32 @@
-// sample
-// #define COUNT 2
-// int main(void) {
-//     init();
-//     TEE_Time start[COUNT];
-//     TEE_Time end[COUNT];
-//     record(MEMORY_INSENTIVE, start, end, COUNT);
-//     record(IO_INSENTIVE, start ,end, COUNT);
-//     record(CPU_INSENTIVE, start, end, COUNT);
-//     return 0;
-// }
-
 #include "tee_api_types.h"
-#include "config_ref_ta.h"
 #include "bench.h"
 #include "config_bench.h"
+#include "tee_def.h"
 #include <stdarg.h>
 
-#define SPLITS 32
-
-static void NO_PERF cpu_benchmark() {
-    uint64_t a;
-    uint64_t b;
-    uint64_t c = 0;
-    for(a = OFFSET; a < OFFSET+MULT_SIZE; a++) {
-        for(b = OFFSET; b < OFFSET+MULT_SIZE; b++) {
-            c += (a * b);
-         }
-    }
-}
-
-#define INC 390625 // 5**8
-static void NO_PERF memory_benchmark(void) {
-    int c;
-    int i;
-    char sum = 0;
-    int idx = 0;
-    // write
-    for(i = 0; i < BUF_SIZE; i++) {
-        buf[idx] = (char)(i&255);
-        idx = (idx+INC)%BUF_SIZE;
-    }
-    // read
-    idx = 0;
-    for(i = 0; i < BUF_SIZE; i++) {
-        sum += buf[idx];
-        idx = (idx+INC)%BUF_SIZE;
-    }
-}
-
-static const char filename[] = "benchmark";
-// from secure_stoage.c
-static void NO_PERF io_benchmark(void) {
-    TEE_Result rv;
-    int i;
-    char *b;
-
-    /* write */
-    TEE_ObjectHandle object;
-    rv = TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
-				    filename, strlen(filename),
-				    (TEE_DATA_FLAG_ACCESS_WRITE
-				     | TEE_DATA_FLAG_OVERWRITE),
-				    TEE_HANDLE_NULL,
-				    NULL, 0,
-				    &object);
-    for(i = 0; i < SPLITS; i++) {
-        b = &buf[i*BUF_SIZE/SPLITS];
-        rv = TEE_WriteObjectData(object, (const char *)b, BUF_SIZE/SPLITS);
-    }
-    TEE_CloseObject(object);
-
-    /* read */
-    rv = TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
-				  filename, strlen(filename),
-				  TEE_DATA_FLAG_ACCESS_READ,
-				  &object);
-    uint32_t count;
-    for(i = 0; i < SPLITS; i++) {
-        b = &buf[i*BUF_SIZE/SPLITS];
-        rv = TEE_ReadObjectData(object, (char *)b, BUF_SIZE/SPLITS, &count);
-    }
-    TEE_CloseObject(object);
-    return;
-}
+static char labels[][256] = {
+    "TEE_GetREETime",
+    "TEE_GetSystemTime",
+    "cpu sensitive",
+    "memory sensitive",
+    "io sensitive",
+};
 
 static void benchmark(int type, int unit) {
     int i;
     for(i = 0; i < unit; i++) {
         switch(type) {
-            case MEMORY_INSENTIVE:
-                memory_benchmark();
+            case SEQUENTIAL_MEMORY_SENSITIVE:
+                sequential_memory_benchmark(buf, BUF_SIZE);
                 break;
-            case CPU_INSENTIVE:
+            case RANDOM_MEMORY_SENSITIVE:
+                random_memory_benchmark(buf, BUF_SIZE);
+                break;
+            case CPU_SENSITIVE:
                 cpu_benchmark();
                 break;
-            case IO_INSENTIVE:
-                io_benchmark();
+            case IO_SENSITIVE:
+                io_benchmark(buf, BUF_SIZE);
                 break;
             default:
                 break;

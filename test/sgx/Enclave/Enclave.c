@@ -29,14 +29,13 @@
  */
 
 #include "gp_test.h"
-#include "bench.h"
+#include "config_bench.h"
 //#include "tools.h"
 
 /* ecall_print_aes:
  *   testing symmetric key verification
  */
-#define BSIZE 100
-#define COUNTS 500
+#define BSIZE 50
 int main(void)
 {
     static TEE_Time start[BSIZE];
@@ -44,11 +43,12 @@ int main(void)
     // static TEE_Time time[COUNTS] = {0};
     // tee_time_tests(REE_TIME_TEST, time, COUNTS);
     // tee_time_tests(SYSTEM_TIME_TEST, time, COUNTS);
-    // record(CPU_INSENTIVE, start, end, BSIZE, 2);
-    // int unit = 15;
-    // record(MEMORY_INSENTIVE, start, end, BSIZE, unit);
-    int unit = 20;
-    record(IO_INSENTIVE, start ,end, BSIZE, unit);
-
+    int unit;
+    // record(CPU_SENSITIVE, start, end, BSIZE, 2);
+    // record(CPU_SENSITIVE, start, end, BSIZE, 2);
+    record(SEQUENTIAL_MEMORY_SENSITIVE, start, end, BSIZE, 20);
+    // record(RANDOM_MEMORY_SENSITIVE, start, end, BSIZE, 20);
+    // int unit = 20;
+    // record(IO_SENSITIVE, start ,end, BSIZE, unit);
     return 0;
 }
