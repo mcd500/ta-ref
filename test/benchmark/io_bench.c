@@ -34,7 +34,7 @@ void NO_PERF io_benchmark(char *buf, int size) {
     uint32_t count;
     for(i = 0; i < SPLITS; i++) {
         b = &buf[i*size/SPLITS];
-        rv = TEE_ReadObjectData(object, (char *)b, size/SPLITS, &count);
+        rv = TEE_ReadObjectData(object, (const char *)b, size/SPLITS, &count);
     }
     TEE_CloseObject(object);
     return;

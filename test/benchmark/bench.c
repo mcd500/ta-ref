@@ -16,6 +16,12 @@ static void benchmark(int type, int unit) {
     int i;
     for(i = 0; i < unit; i++) {
         switch(type) {
+            case REE_TIME_TEST:
+                ree_time_test();
+                break;
+            case SYSTEM_TIME_TEST:
+                system_time_test();
+                break;
             case SEQUENTIAL_MEMORY_SENSITIVE:
                 sequential_memory_benchmark(buf, BUF_SIZE);
                 break;
