@@ -47,9 +47,9 @@ int main(void)
     // tee_time_tests(REE_TIME_TEST, time, COUNTS);
     // tee_time_tests(SYSTEM_TIME_TEST, time, COUNTS);
     // record(CPU_SENSITIVE, start, end, BSIZE, 2);
-    record(SEQUENTIAL_MEMORY_SENSITIVE, start, end, BSIZE, 20);
-    record(RANDOM_MEMORY_SENSITIVE, start, end, BSIZE, 20);
-    // int unit = 20;
-    // record(IO_SENSITIVE, start ,end, BSIZE, unit);
+    record(SEQUENTIAL_MEMORY_SENSITIVE, start, end, BSIZE, 1);
+    record(RANDOM_MEMORY_SENSITIVE, start, end, BSIZE, 1);
+    record(IO_READ_SENSITIVE, start ,end, BSIZE, 1);
+    record(IO_WRITE_SENSITIVE, start ,end, BSIZE, 1);
     return 0;
 }

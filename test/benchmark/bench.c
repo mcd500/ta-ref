@@ -34,8 +34,11 @@ static void benchmark(int type, int unit) {
             case CPU_DOUBLE_SENSITIVE:
                 cpu_double_benchmark();
                 break;
-            case IO_SENSITIVE:
-                io_benchmark(buf, BUF_SIZE);
+            case IO_READ_SENSITIVE:
+                io_read_benchmark(buf, "benchmark", BUF_SIZE);
+                break;
+            case IO_WRITE_SENSITIVE:
+                io_write_benchmark(buf, "benchmark", BUF_SIZE);
                 break;
             default:
                 break;

@@ -32,16 +32,16 @@
 #include "config_bench.h"
 //#include "tools.h"
 
-#define BSIZE 300
+#define BSIZE 200
 
 int main(void)
 {
     static TEE_Time start[BSIZE];
     static TEE_Time end[BSIZE];
-    record(CPU_DOUBLE_SENSITIVE, start, end, BSIZE, 1);
-    // record(CPU_INSENTIVE, start, end, BSIZE, 1);
-    // record(SEQUENTIAL_MEMORY_SENSITIVE, start, end, BSIZE, unit);
-    // record(RANDOM_MEMORY_SENSITIVE, start, end, BSIZE, unit);
-    // record(IO_SENSITIVE, start ,end, BSIZE, 1);
+    // record(CPU_DOUBLE_SENSITIVE, start, end, BSIZE, 1);
+    record(SEQUENTIAL_MEMORY_SENSITIVE, start, end, BSIZE, 1);
+    record(RANDOM_MEMORY_SENSITIVE, start, end, BSIZE, 1);
+    record(IO_READ_SENSITIVE, start ,end, BSIZE, 1);
+    record(IO_WRITE_SENSITIVE, start ,end, BSIZE, 1);
     return 0;
 }
