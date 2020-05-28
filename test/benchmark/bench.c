@@ -28,8 +28,11 @@ static void benchmark(int type, int unit) {
             case RANDOM_MEMORY_SENSITIVE:
                 random_memory_benchmark(buf, BUF_SIZE);
                 break;
-            case CPU_SENSITIVE:
-                cpu_benchmark();
+            case CPU_INT_SENSITIVE:
+                cpu_int_benchmark();
+                break;
+            case CPU_DOUBLE_SENSITIVE:
+                cpu_double_benchmark();
                 break;
             case IO_SENSITIVE:
                 io_benchmark(buf, BUF_SIZE);
