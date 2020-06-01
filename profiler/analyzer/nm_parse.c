@@ -4,7 +4,7 @@
 
 #define BUF_SIZE 512
 #define POOL_SIZE 30000
-#define MAX_ADDR 0xFFFFFF
+#define MAX_ADDR 0xFFFFFFFF
 static struct nm_info nm_pool[POOL_SIZE];
 static int idx = 0;
 

@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define HASH_SIZE 8192
+#define HASH_SIZE 65536
 
 struct nm_info {
     char type;

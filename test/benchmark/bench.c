@@ -35,6 +35,7 @@ static void benchmark(int type, int unit) {
                 cpu_double_benchmark();
                 break;
             case IO_READ_SENSITIVE:
+                memset(buf, 0, BUF_SIZE);
                 io_read_benchmark(buf, "benchmark", BUF_SIZE);
                 break;
             case IO_WRITE_SENSITIVE:
@@ -58,7 +59,7 @@ static uint64_t NO_PERF time_diff(TEE_Time *t1, TEE_Time *t2) {
 void NO_PERF init() {
     int i;
     tee_init();
-    // write
+    // write for memory/io write benchmark
     for(i = 0; i < BUF_SIZE; i++) {
         buf[i] = (char)(255-(i&255));
     }

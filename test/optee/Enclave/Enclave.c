@@ -1,7 +1,7 @@
 #include "gp_test.h"
 #include "config_bench.h"
 
-#define BSIZE 10
+#define BSIZE 200
 int main(void)
 {
     static TEE_Time start[BSIZE];
