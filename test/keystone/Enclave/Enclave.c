@@ -28,20 +28,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+//#include "tools.h" // for printf-debug
 #include "gp_test.h"
-#include "config_bench.h"
-//#include "tools.h"
 
-#define BSIZE 200
+int main(void) {
+  gp_random_test();
 
-int main(void)
-{
-    static TEE_Time start[BSIZE];
-    static TEE_Time end[BSIZE];
-    // record(CPU_DOUBLE_SENSITIVE, start, end, BSIZE, 1);
-    record(SEQUENTIAL_MEMORY_SENSITIVE, start, end, BSIZE, 1);
-    record(RANDOM_MEMORY_SENSITIVE, start, end, BSIZE, 1);
-    record(IO_READ_SENSITIVE, start ,end, BSIZE, 1);
-    record(IO_WRITE_SENSITIVE, start ,end, BSIZE, 1);
-    return 0;
+  gp_ree_time_test();
+
+  gp_trusted_time_test();
+
+  gp_secure_storage_test();
+
+  gp_message_digest_test();
+
+  gp_symmetric_key_enc_verify_test();
+
+  gp_symmetric_key_gcm_verify_test();
+  // symmetric_key_dec_verify_test();
+
+  gp_asymmetric_key_sign_test();
+
+  // asymmetric_key_verify_test();
+  return 0;
 }

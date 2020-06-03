@@ -27,29 +27,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 #include "gp_test.h"
-#include "config_bench.h"
 //#include "tools.h"
 
 /* ecall_print_aes:
  *   testing symmetric key verification
  */
-#define BSIZE 200
 int main(void)
 {
-    static TEE_Time start[BSIZE];
-    static TEE_Time end[BSIZE];
-    // record(REE_TIME_TEST, start, end, BSIZE, 1);
-    // record(SYSTEM_TIME_TEST, start, end, BSIZE, 1);
-    // record(CPU_DOUBLE_SENSITIVE, start, end, BSIZE, 1);
-    // static TEE_Time time[COUNTS] = {0};
-    // tee_time_tests(REE_TIME_TEST, time, COUNTS);
-    // tee_time_tests(SYSTEM_TIME_TEST, time, COUNTS);
-    // record(CPU_SENSITIVE, start, end, BSIZE, 2);
-    record(SEQUENTIAL_MEMORY_SENSITIVE, start, end, BSIZE, 1);
-    record(RANDOM_MEMORY_SENSITIVE, start, end, BSIZE, 1);
-    record(IO_READ_SENSITIVE, start ,end, BSIZE, 1);
-    record(IO_WRITE_SENSITIVE, start ,end, BSIZE, 1);
-    return 0;
+    gp_random_test();
+
+    gp_ree_time_test();
+
+    gp_trusted_time_test();
+
+    gp_secure_storage_test();
+
+    gp_message_digest_test();
+
+    gp_symmetric_key_enc_verify_test();
+
+    gp_symmetric_key_gcm_verify_test();
+
+//    gp_symmetric_key_dec_verify_test();
+
+    gp_asymmetric_key_sign_test();
+//    gp_asymmetric_key_verify_test();
 }
