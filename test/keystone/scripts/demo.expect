@@ -7,7 +7,7 @@ set IP_ADDR $::env(IP_ADDR)
 set PASSWD $::env(PASSWD)
 
 spawn ssh $USER@$IP_ADDR -p $PORT
-expect "(yes/no*" { 
+expect "(yes/no*" {
     send "yes\r"
     expect "*?assword" {
         send "$PASSWD\r"

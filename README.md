@@ -3,7 +3,7 @@
 Improvement of http://192.168.100.100/vc707/tee-ta-reference. Please feel free to share your idea!
 
 |TEE(MACHINE)|docker image|version|
-|---|---|
+|---|---|---|
 |keystone(qemu: SIM)|trasioteam/ta_ref_devel:keystone_qemu|v0.4|
 |keystone(HIFIVE)|trasioteam/ta_ref_devel:keystone_hifive|v0.4|
 |keystone(VC707)|trasioteam/ta_ref_devel:keystone_vc707|keysonte_old|
