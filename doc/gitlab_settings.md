@@ -16,7 +16,7 @@ Registering runner... succeeded                     runner=Rgo2sZ2Z
 Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded!
 ```
 
-This settings is reflected on `/etc/gitlab-runner/config.toml`. You can edit this file directly:
+This settings is reflected on `/etc/gitlab-runner/config.toml`
 
 ```sh
 # see https://qiita.com/South_/items/f9cc9f1413d52c076fd2#%E4%B8%A6%E5%88%97%E5%AE%9F%E8%A1%8C%E6%95%B0%E3%82%92%E5%A2%97%E3%82%84%E3%81%99
@@ -44,9 +44,15 @@ check_interval = 0
     shm_size = 0
 ```
 
+<<<<<<< HEAD
 ## gitlab-ci.yml settings
 
 For each repository, configure CI in yml file, gitlab-ci.yml. In gitlab-ci.yml, specify `tags:` with `ref-ta` as follows:
+=======
+## gitlab-ci settings
+
+In gitlab-ci, specify `tags` with `ref-ta` as follows:
+>>>>>>> 24fcd72... Fix ci
 
 ```yml
 job1:

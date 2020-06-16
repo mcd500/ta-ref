@@ -1,316 +1,38 @@
 variables:
-    GITLAB_URL: http://192.168.100.100
-    DOCKERHUB_USER: vc707
-    RPI3_IP_ADDR: 192.168.100.61
-    DOCKERHUB_REPO: vc707/test
-    KEYSTONE_QEMU_IMAGE: vc707/test:ta_ref_keystone_qemu_devel
-    KEYSTONE_HIFIVE_IMAGE: vc707/test:ta_ref_keystone_hifive_devel
-    KEYSTONE_VC707_IMAGE: vc707/test:ta_ref_keystone_vc707_devel
-    SGX_IMAGE: vc707/test:ta_ref_sgx_devel
-    OPTEE_QEMU_IMAGE: vc707/test:ta_ref_optee_qemu_devel
-    OPTEE_RPI3_IMAGE: vc707/test:ta_ref_optee_rpi3_devel
-    CONTAINER_ROOT_DIR: /home/main/ta-ref
-    WORKDIR: ${CONTAINER_ROOT_DIR}
+    DOCKER_IMAGE: trasioteam/ta_ref_devel
 
-before_script:
-    - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWD}
-    - git submodule update --init --recursive
-    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "${SCRIPT}"
-
-after_script:
-    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "source ${ENVS} && make select clean"
-    # TODO: we want to fail CI if false.
-    - test $(find build/lib -mindepth 1 | wc -l) -eq 1
-    - test $(find build/include -mindepth 1 | wc -l) -eq 1
-    - docker run -v ${VOLUME} -w ${WORKDIR} --rm ${IMAGE} /bin/bash -c "source ${ENVS} && make select mrproper"
-
-# see env/ directory
-stages:
-    - test
-
-keystone_qemu_mbedcrypt:
+.test_template: &test_definition
     variables:
-        ENVS: env/keystone.sh
-        IMAGE: ${KEYSTONE_QEMU_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build CRYPT_TYPE=MBEDCRYPT &&
-          make test &&
-          make run"
-    stage: test
+        ENVS: env/dummy.sh
+    tags:
+        - ref-ta
     only:
         - master
-    tags:
-        - shell
-    script:
-        - 'echo dummy'
+    stage: test
+    before_script:
+        - git submodule update --init --recursive
+        - source ${ENVS}
 
-keystone_qemu_profiler:
+keystone_qemu_default:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
-        IMAGE: ${KEYSTONE_QEMU_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build PROFILER=ON &&
-          make test PROFILER=ON &&
-          make run"
-    stage: test
-    only:
-        - master
-    tags:
-        - shell
     script:
-        - 'echo dummy'
+        - make build test run
 
-keystone_qemu_wolfcrypt:
-    variables:
-        ENVS: env/keystone.sh
-        IMAGE: ${KEYSTONE_QEMU_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build CRYPT_TYPE=WOLFCRYPT &&
-          make test &&
-          make run"
-    stage: test
-    only:
-        - master
-    tags:
-        - shell
-    script:
-        - 'echo dummy'
-
-keystone_hifive:
-    variables:
-        ENVS: env/keystone.sh
-        IMAGE: ${KEYSTONE_HIFIVE_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build &&
-          make test MACHINE=HIFIVE &&
-          make run MACHINE=HIFIVE"
-    stage: test
-    only:
-        - master
-    tags:
-        - shell
-    script:
-        - 'echo dummy'
-
-keystone_hifive_profiler:
-    variables:
-        ENVS: env/keystone.sh
-        IMAGE: ${KEYSTONE_HIFIVE_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build PROFILER=ON &&
-          make test MACHINE=HIFIVE PROFILER=ON &&
-          make run MACHINE=HIFIVE"
-    stage: test
-    only:
-        - master
-    tags:
-        - shell
-    script:
-        - 'echo dummy'
-
-keystone_vc707:
-    variables:
-        ENVS: env/keystone.sh
-        IMAGE: ${KEYSTONE_VC707_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build &&
-          make test MACHINE=VC707 &&
-          make run MACHINE=VC707"
-    stage: test
-    only:
-        - master
-    tags:
-        - shell
-    script:
-        - 'echo dummy'
-
-keystone_vc707_profiler:
-    variables:
-        ENVS: env/keystone.sh
-        IMAGE: ${KEYSTONE_VC707_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build PROFILER=ON &&
-          make test MACHINE=VC707 PROFILER=ON &&
-          make run MACHINE=VC707"
-    stage: test
-    only:
-        - master
-    tags:
-        - shell
-    script:
-        - 'echo dummy'
-
-### SGX (x64) ###
-sgx_x64_sim:
+sgx_sim_default:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh
-        IMAGE: ${SGX_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build &&
-          make test MACHINE=SIM &&
-          make run"
-    stage: test
-    only:
-        - master
-    tags:
-        - shell
     script:
-        - 'echo dummy'
+        - make build test run
 
-sgx_x64_sim_profiler:
-    variables:
-        ENVS: env/sgx_x64.sh
-        IMAGE: ${SGX_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build PROFILER=ON &&
-          make test MACHINE=SIM PROFILER=ON &&
-          make run PROFILER=ON"
-    stage: test
-    only:
-        - master
-    tags:
-        - shell
-    script:
-        - 'echo dummy'
-
-sgx_x64_intel_nuc:
-    variables:
-        ENVS: env/sgx_x64.sh
-        IMAGE: ${SGX_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build &&
-          make test MACHINE=NUC &&
-          make run MACHINE=NUC"
-    stage: test
-    only:
-        - master
-    tags:
-        - shell
-    script:
-        - 'echo dummy'
-
-sgx_x64_intel_nuc_profiler:
-    variables:
-        ENVS: env/sgx_x64.sh
-        IMAGE: ${SGX_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build PROFILER=ON &&
-          make test MACHINE=NUC PROFILER=ON &&
-          make run MACHINE=NUC"
-    stage: test
-    only:
-        - master
-    tags:
-        - shell
-    script:
-        - 'echo dummy'
-
-### OPTEE ###
-optee_qemu_v8:
+optee_qemu_default:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:optee_qemu_v8
     variables:
         ENVS: env/optee_qemu.sh
-        IMAGE: ${OPTEE_QEMU_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build &&
-          make test &&
-          make run"
-    stage: test
-    only:
-        - master
-    tags:
-        - shell
     script:
-        - 'echo dummy'
-
-optee_qemu_v8_profiler:
-    variables:
-        ENVS: env/optee_qemu.sh
-        IMAGE: ${OPTEE_QEMU_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build PROFILER=ON &&
-          make test PROFILER=ON &&
-          make run"
-    stage: test
-    only:
-        - master
-    tags:
-        - shell
-    script:
-        - 'echo dummy'
-
-optee_rpi3:
-    variables:
-        ENVS: env/optee_rpi3.sh
-        IMAGE: ${OPTEE_RPI3_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build &&
-          make test &&
-          make run"
-    stage: test
-    only:
-        - master
-    tags:
-        - shell
-    script:
-        - 'echo dummy'
-
-optee_rpi3_profiler:
-    variables:
-        ENVS: env/optee_rpi3.sh
-        IMAGE: ${OPTEE_RPI3_IMAGE}
-        VOLUME: ${CI_PROJECT_DIR}:${CONTAINER_ROOT_DIR}
-        # TODO: this is too nasy, so we use `image:` tag
-        SCRIPT: "source ${ENVS} &&
-          make select &&
-          make build PROFILER=ON &&
-          make test PROFILER=ON &&
-          make run"
-    stage: test
-    only:
-        - master
-    tags:
-        - shell
-    script:
-        - 'echo dummy'
+        - make build test run
