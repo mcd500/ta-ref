@@ -7,21 +7,17 @@ set IP_ADDR $::env(IP_ADDR)
 set PASSWD $::env(PASSWD)
 
 spawn ssh $USER@$IP_ADDR -p $PORT
-expect "*(yes/no)? " { 
+expect "*(yes/no" {
     send "yes\r"
     expect "*?assword" {
         send "$PASSWD\r"
     }
 }
-expect * {
-    send "export PS1=\"# \"\r"
-}
-
-expect "# " {
+expect "$ " {
     send "cd /home/gitlab/out\r"
 }
 
-expect "# " {
+expect "$ " {
     send "./sgx_app\r"
     expect "main start" {} timeout {
         exit 1
@@ -34,11 +30,11 @@ expect "# " {
     }
 }
 
-expect "# " {
+expect "$ " {
     send "ls -lsa .\r"
 }
 
-expect "# " {
+expect "$ " {
     send "exit\r"
 }
 

@@ -6,7 +6,7 @@ set timeout 10
 
 spawn ssh ${USER}@${IP_ADDR} /bin/bash -c \'rm -rf /home/gitlab/out && mkdir -p /home/gitlab/out\'
 
-expect \"*(yes/no)? \" { send \"yes\r\" }
+expect \"*(yes/no\" { send \"yes\r\" }
 expect \"*password: \" { send \"${PASSWD}\r\" }
 expect eof
 "

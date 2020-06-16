@@ -8,7 +8,7 @@ set PASSWD $::env(PASSWD)
 
 # optee doesn't hold ssh in qemu
 spawn ssh $USER@$IP_ADDR -p $PORT
-expect "*(yes/no)? " { 
+expect "(yes/no*" {
     send "yes\r"
     expect "*?assword" {
         send "$PASSWD\r"
@@ -16,39 +16,35 @@ expect "*(yes/no)? " {
 }
 
 expect "$ " {
-    send "export PS1=\"# \"\r"
-}
-
-expect "# " {
     send "cd /home/gitlab/out\r"
 }
 
-expect "# " {
+expect "$ " {
     send "./sgx_app\r"
     expect "Info: Enclave successfully returned" {} timeout {
         exit 1
     }
 }
 
-expect "# " {
+expect "$ " {
     send "ls -lsa .\r"
     expect "shared_mem" {} timeout {
         exit 1
     }
 }
 
-expect "# " {
-    send "./analyzer shared_mem Enclave.nm\r"
+expect "$ " {
+    send "test -f shared_mem && ./analyzer shared_mem Enclave.nm\r"
     expect "baseaddr: 0x" {} timeout {
         exit 1
     }
 }
 
-expect "# " {
+expect "$ " {
     send "test -f app_shared_mem && ./analyzer app_shared_mem App.nm\r"
 }
 
-expect "# " {
+expect "$ " {
     send "exit\r"
 }
 

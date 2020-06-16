@@ -6,7 +6,7 @@ set timeout 20
 
 spawn scp ${FILES} ${USER}@${IP_ADDR}:/home/gitlab/out
 
-expect \"*(yes/no)? \" { send \"yes\r\" }
+expect \"*(yes/no\" { send \"yes\r\" }
 expect \"*password: \" { send \"${PASSWD}\r\" }
 expect eof
 "

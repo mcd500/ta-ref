@@ -29,6 +29,14 @@ sgx_sim_default:
     script:
         - make build test run
 
+sgx_nuc_default:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:sgx
+    variables:
+        ENVS: env/sgx_x64.sh
+    script:
+        - MACHINE=NUC make build test run
+
 optee_qemu_default:
     <<: *test_definition
     image: ${DOCKER_IMAGE}:optee_qemu_v8
