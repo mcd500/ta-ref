@@ -2,21 +2,18 @@
 
 Improvement of http://192.168.100.100/vc707/tee-ta-reference. Please feel free to share your idea!
 
-|TEE(MACHINE)|docker image|
+|TEE(MACHINE)|docker image|version|
 |---|---|
-|keystone(qemu: SIM)|vc707/test:ta_ref_keystone_qemu_devel|
-|keystone(HIFIVE)|vc707/test:ta_ref_keystone_hifive_devel|
-|keystone(VC707)|vc707/test:ta_ref_keystone_vc707_devel|
-|intel_sgx(SIM/NUC)|vc707/test:ta_ref_sgx_devel|
-|optee(qemu v8: SIM)|vc707/test:ta_ref_optee_qemu_devel|
-|optee(RPI3)|vc707/test:ta_ref_optee_rpi3_devel|
+|keystone(qemu: SIM)|trasioteam/ta_ref_devel:keystone_qemu|v0.4|
+|keystone(HIFIVE)|trasioteam/ta_ref_devel:keystone_hifive|v0.4|
+|keystone(VC707)|trasioteam/ta_ref_devel:keystone_vc707|keysonte_old|
+|intel_sgx(SIM/NUC)|trasioteam/ta_ref_devel:sgx|2.8
+|optee(qemu v8: SIM)|trasioteam/ta_ref_devel:optee_qemu_v8|3.9.0|
+|optee(RPI3)|trasioteam/ta_ref_devel:optee_rpi3|3.9.0|
 
 Note) `SIM` indicates qemu or local environment.
 
-THe Dockerfile in each containers is [here](http://192.168.100.100/vc707/dockerfiles/-/tree/master/ta-ref).
-The vc707/test is private repository in dockerhub so that we need password. See Settings > Variables > DOCKERHUB_PASSWD key.
-
-For more information, see [GitLab CI job configuration file](http://192.168.100.100/vc707/ta-ref/-/blob/master/.gitlab-ci.yml).
+For each Docker images, see [rinkai/dockerfiles and GitLab CI job configuration file](http://192.168.100.100/vc707/ta-ref/-/blob/master/.gitlab-ci.yml).
 
 ## keystone
 
@@ -30,7 +27,7 @@ Next, build && test. We support qemu, hifive and vc707:
 ### qemu
 
 ```sh
-docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_keystone_qemu_devel
+docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_qemu
 cd ta-ref
 source env/keystone.sh
 ```
@@ -47,7 +44,7 @@ make run
 ### Hifive
 
 ```sh
-docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_keystone_hifive_devel
+docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_hifive
 cd ta-ref
 source env/keystone.sh
 ```
@@ -63,7 +60,7 @@ make run MACHINE=HIFIVE
 ### vc707
 
 ```sh
-docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_keystone_vc707_devel
+docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_vc707
 cd ta-ref
 source env/keystone.sh
 ```
@@ -80,7 +77,7 @@ make run MACHINE=HIFIVE
 ```sh
 git clone --recursive http://192.168.100.100/vc707/ta-ref.git
 cd ta-ref
-docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_sgx_devel
+docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:sgx
 ```
 
 Next, build && test. We support local environment and Intel NUC:
@@ -120,7 +117,7 @@ Next, build && test. We support qemu and Raspberry Pi3:
 ### qemu_v8
 
 ```sh
-docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_optee_qemu_devel
+docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:optee_qemu_v8
 cd ta-ref
 ```
 
@@ -134,7 +131,7 @@ make run
 ### raspberry pi3
 
 ```sh
-docker run -it --rm -v $(pwd):/home/main/ta-ref vc707/test:ta_ref_optee_rpi3_devel
+docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:optee_rpi3
 cd ta-ref
 ```
 

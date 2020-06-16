@@ -38,7 +38,7 @@
 #include <edger/Enclave.h>
 
 #define BUF_SIZE 65536
-#define PRINT_BUF_SIZE 131072
+#define PRINT_BUF_SIZE 16384
 #ifdef PERF_ENABLE
 #define LOG_FILE "shared_mem"
 #define TEEC_PARAM_TYPE0 TEEC_MEMREF_TEMP_OUTPUT
