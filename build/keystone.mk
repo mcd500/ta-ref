@@ -5,7 +5,7 @@ endif
 include ./general.mk
 
 # TODO: customize eyrie
-DEPENDS=edger crypto
+DEPENDS=eyrie edger crypto
 EDGER_TYPE=KEYEDGE
 # MBEDCRYPT or WOLFCRYPT
 ifeq ($(BENCHMARK), ON)

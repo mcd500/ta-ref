@@ -19,4 +19,5 @@ all: eyrie
 # see ${KEYSTONE_SDK_DIR}/rts/eyrie/build.sh
 eyrie:
 	make -C $(EYRIE_SOURCE_DIR) clean
-	make -C $(EYRIE_SOURCE_DIR) OPTIONS_FLAGS="$(EYRIE_FLAGS)"
+	# only work for toolchains in ${KEYSTONE_DIR}/riscv/bin
+	PATH=${KEYSTONE_DIR}/riscv/bin:${PATH} make -C $(EYRIE_SOURCE_DIR) OPTIONS_FLAGS="$(EYRIE_FLAGS)"
