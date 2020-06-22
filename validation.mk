@@ -1,5 +1,6 @@
 # TEE-MACHINE validation
 ifeq ($(MACHINE), SIM)
+else ifeq ($(TEE)_$(MACHINE), keystone_TRVSIM)
 else ifeq ($(TEE)_$(MACHINE), keystone_HIFIVE)
 else ifeq ($(TEE)_$(MACHINE), keystone_VC707)
 else ifeq ($(TEE)_$(MACHINE), optee_RPI3)

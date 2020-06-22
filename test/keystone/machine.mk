@@ -11,6 +11,11 @@ IP_ADDR=localhost
 PASSWD=sifive
 #PORT=$(PORT)
 RUN_SCRIPT := $(SIM_RUN_SCRIPT)
+else ifeq ($(MACHINE), TRVSIM)
+USER=root
+PASSWD=sifive
+PORT=10022
+IP_ADDR=192.168.1.33
 else ifeq ($(MACHINE), HIFIVE)
 USER=root
 PASSWD=sifive

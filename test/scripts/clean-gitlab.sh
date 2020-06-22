@@ -2,11 +2,11 @@
 
 rm -f ~/.ssh/known_hosts
 expect -c "
-set timeout 10
+set timeout 60
 
-spawn ssh ${USER}@${IP_ADDR} /bin/bash -c \'rm -rf /home/gitlab/out && mkdir -p /home/gitlab/out\'
+spawn ssh -p ${PORT} ${USER}@${IP_ADDR} /bin/bash -c \'rm -rf /home/gitlab/out && mkdir -p /home/gitlab/out\'
 
-expect \"*(yes/no\" { send \"yes\r\" }
+expect \"?\" { send \"yes\r\" }
 expect \"*password: \" { send \"${PASSWD}\r\" }
 expect eof
 "
