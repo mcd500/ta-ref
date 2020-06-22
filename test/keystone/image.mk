@@ -32,7 +32,7 @@ $(MACHINE)_clean:
 $(MACHINE)_image: $(MACHINE)_ship
 
 SIM_image: SIM_ship
-	make -C $(KEYSTONE_DIR)/build image
+	make -C $(KEYSTONE_DIR) image
 
 # In Keystone, Four items are required to run Enclave program; App.client, Enclave.eapp_riscv, eyrie OS runtime(eyrie-rt) and keystone-driver module.
 SIM_ship: analyzer_nm

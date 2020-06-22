@@ -22,9 +22,8 @@ export KEYSTONE_SDK_LIB_DIR=${KEYSTONE_SDK_DIR}/lib
 export CPATH=${KEYSTONE_SDK_LIB_DIR}/edge/include:${KEYSTONE_SDK_LIB_DIR}/host/include:${CPATH}
 export ENCLAVE_CPATH=${KEYSTONE_SDK_LIB_DIR}/app/include:${CPATH}
 
-export KEYSTONE_BUILD_DIR=${KEYSTONE_DIR}/build
-export BUILDROOT_OVERLAY_DIR=${KEYSTONE_BUILD_DIR}/overlay
-export KEYSTONE_DRIVER_MODULE=${KEYSTONE_BUILD_DIR}/buildroot.build/target/root/keystone-driver.ko
+export BUILDROOT_OVERLAY_DIR=${KEYSTONE_DIR}/buildroot_overlay
+export KEYSTONE_DRIVER_MODULE=${KEYSTONE_DIR}/hifive-work/linux-keystone-driver/keystone-driver.ko
 
 
 # when MACHINE=HIFIVE

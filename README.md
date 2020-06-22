@@ -4,9 +4,10 @@ Improvement of http://192.168.100.100/vc707/tee-ta-reference. Please feel free t
 
 |TEE(MACHINE)|docker image|version|
 |---|---|---|
-|keystone(qemu: SIM)|trasioteam/ta_ref_devel:keystone_qemu|v0.4|
-|keystone(HIFIVE)|trasioteam/ta_ref_devel:keystone_hifive|v0.4|
-|keystone(VC707)|trasioteam/ta_ref_devel:keystone_vc707|keysonte_old|
+|keystone(qemu: SIM)|trasioteam/ta_ref_devel:keystone_qemu|v0.3|
+|keystone(TRVSIM)|trasioteam/ta_ref_devel:trvsim|v0.3|
+|keystone(HIFIVE)|trasioteam/ta_ref_devel:keystone_hifive|v0.3|
+|keystone(VC707)|trasioteam/ta_ref_devel:keystone_vc707|v0.3|
 |intel_sgx(SIM/NUC)|trasioteam/ta_ref_devel:sgx|2.8
 |optee(qemu v8: SIM)|trasioteam/ta_ref_devel:optee_qemu_v8|3.9.0|
 |optee(RPI3)|trasioteam/ta_ref_devel:optee_rpi3|3.9.0|
@@ -40,6 +41,23 @@ make test
 # show demo
 make run
 ```
+
+### TRV simulator
+
+```sh
+docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:trvsim
+cd ta-ref
+source env/keystone.sh
+```
+
+```sh
+export MACHINE=TRVSIM
+make build
+make test
+# show demo
+make run
+```
+
 
 ### Hifive
 
