@@ -5,8 +5,8 @@ NUC_RUN_SCRIPT := ../scripts/test-gitlab.sh
 
 ifeq ($(MACHINE), SIM)
 else ifeq ($(MACHINE), NUC)
-USER=${TEST_USER}
-IP_ADDR=$(NUC_IP_ADDR)
+USER=gitlab
+IP_ADDR=192.168.100.116
 PASSWD=gitlab
 SHIP_SCRIPT := $(NUC_SHIP_SCRIPT)
 CLEAN_SCRIPT := $(NUC_CLEAN_SCRIPT)

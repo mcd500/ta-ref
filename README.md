@@ -1,4 +1,4 @@
-# ref-ta
+# ta-ref
 
 Improvement of http://192.168.100.100/vc707/tee-ta-reference. Please feel free to share your idea!
 
@@ -48,6 +48,27 @@ make run
 
 ### TRV simulator
 
+#### preparation
+
+Install TRV simulator, create binaries and launch it:
+
+```sh
+# 1. install TRV simulator according to https://github.com/trasio-org/private-docs/wiki#trustedrv-system-simulator
+# 2. create bbl, vmlinux, fsbl.bin and sdimage.bin
+git clone http://192.168.100.100/rinkai/hifive_imager
+cd hifive_imager
+# For the first time, it takes long minutes.
+sudo make
+# 3. launch the licence server.
+# 4. launch the TRV simulator. see also https://github.com/trasio-org/private-docs/blob/master/keystone-with-debian-userland.md#%E5%AE%9F%E8%A1%8C%E7%94%A8%E3%81%AE%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%82%92%E4%BD%9C%E6%88%90.
+```
+
+Make sure that when we launch TRV simulator, `--override trasio_fpga/SiFiveFU540/ethBridge/redir` is set to `tcp:10022:10.0.2.15:22`.
+
+#### build and run ta-ref
+
+Check `test/keystone/machine.mk` to set IP address(localhost or remote) and port(usually 10022) and build & run as following:
+
 ```sh
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_trvsim
 cd ta-ref
@@ -62,14 +83,15 @@ make test
 make run
 ```
 
-
-### Hifive
+### Unleashed Hifive board
 
 ```sh
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_hifive
 cd ta-ref
 source env/keystone.sh
 ```
+
+Check `test/keystone/machine.mk` to set Hifive IP address and port and build & run as following:
 
 ```sh
 make build

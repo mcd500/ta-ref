@@ -12,6 +12,3 @@ export TOOLPREFIX=${OPTEE_TOOLCHAIN_DIR}/aarch64-linux-gnu-
 export TOOLPREFIX32=${OPTEE_DIR}/toolchains/aarch32/bin/arm-linux-gnueabihf-
 
 export TA_DEV_DIR=${OPTEE_DIR}/optee_os/out/arm/export-ta_arm64
-# when MACHINE=PRI3
-export TEST_USER=gitlab
-export RPI3_IP_ADDR=192.168.1.18

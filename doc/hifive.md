@@ -40,6 +40,8 @@ See [the link](http://docs.keystone-enclave.org/en/latest/Getting-Started/Runnin
 sudo dd if=bbl.bin of=/dev/sdb1 bs=4096 conv=fsync
 # write rootfs on /dev/sdb2
 sudo dd if=fsbl.bin of=/dev/sdb4 bs=4096 conv=fsync
+# or
+sudo dd if=sdimage.bin of=/dev/sdb bs=4096 conv=fsync
 ```
 
 # run keystone on hifive

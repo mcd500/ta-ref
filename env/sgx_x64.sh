@@ -16,7 +16,3 @@ export SGX_CXXFLAGS="${SGX_FLAGS} -Wnon-virtual-dtor -std=c++11"
 
 # ${SGX_INCLUDE_DIR} is used in almost all packages including edger8r, so that we take it for granted that the libraries are implicitly loaded in compile phase.
 export CPATH=${SGX_INCLUDE_DIR}
-
-# when MACHINE=NUC
-export TEST_USER=gitlab
-export NUC_IP_ADDR=192.168.100.116

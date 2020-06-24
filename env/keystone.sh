@@ -24,10 +24,3 @@ export ENCLAVE_CPATH=${KEYSTONE_SDK_LIB_DIR}/app/include:${CPATH}
 
 export BUILDROOT_OVERLAY_DIR=${KEYSTONE_DIR}/buildroot_overlay
 export KEYSTONE_DRIVER_MODULE=${KEYSTONE_DIR}/hifive-work/linux-keystone-driver/keystone-driver.ko
-
-
-# when MACHINE=HIFIVE
-export TEST_USER=root
-export HIFIVE_IP_ADDR=192.168.1.20
-export VC707_USER=root
-export VC707_IP_ADDR=192.168.100.112
