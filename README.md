@@ -59,16 +59,11 @@ git clone http://192.168.100.100/rinkai/hifive_imager
 cd hifive_imager
 # For the first time, it takes long minutes.
 sudo make
-# 3. launch the licence server and TRV simulator. Prepare your licence file and mac address.
-export PATH_TO_LICENCE_FILE=...
-export MAC_ADDR=...
-# You can launch background with `-d`
-docker run --rm -v $(pwd):/tmp/image -v ${PATH_TO_LICENCE_FILE}:/home/trv/Imperas.20191106/OVPsim.lic --name trvsim -p 10022:10022 --hostname ${TRVSIM} --mac-address ${MAC_ADDR} trasioteam/riscv_toolchain:trvsim
+# 3. launch the licence server.
+# 4. launch the TRV simulator. see also https://github.com/trasio-org/private-docs/blob/master/keystone-with-debian-userland.md#%E5%AE%9F%E8%A1%8C%E7%94%A8%E3%81%AE%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%82%92%E4%BD%9C%E6%88%90.
 ```
 
-The number 10022 is the redirect port from the docker container to the host PC.
-
-(TODO: Very confusing docker option should be fixed using `docker-compose`)
+Make sure that when we launch TRV simulator, `--override trasio_fpga/SiFiveFU540/ethBridge/redir` is set to `tcp:10022:10.0.2.15:22`.
 
 #### build and run ta-ref
 
@@ -86,12 +81,6 @@ make build
 make test
 # show demo
 make run
-```
-
-Lastly, stop container:
-
-```sh
-docker stop trvsim
 ```
 
 ### Unleashed Hifive board
