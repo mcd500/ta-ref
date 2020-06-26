@@ -22,16 +22,11 @@ For each Docker images, see [rinkai/dockerfiles and GitLab CI job configuration 
 
 ## keystone
 
-```sh
-git clone --recursive http://192.168.100.100/vc707/ta-ref.git
-cd ta-ref
-```
-
-Next, build && test. We support qemu, hifive and vc707:
-
 ### qemu
 
 ```sh
+git clone --recursive http://192.168.100.100/vc707/ta-ref.git
+cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_qemu
 cd ta-ref
 source env/keystone.sh
@@ -53,23 +48,27 @@ make run
 Install TRV simulator, create binaries and launch it:
 
 ```sh
-# 1. install TRV simulator according to https://github.com/trasio-org/private-docs/wiki#trustedrv-system-simulator
-# 2. create bbl, vmlinux, fsbl.bin and sdimage.bin
+# 1. create bbl, vmlinux, fsbl.bin and sdimage.bin
 git clone http://192.168.100.100/rinkai/hifive_imager
 cd hifive_imager
-# For the first time, it takes long minutes.
 sudo make
-# 3. launch the licence server.
-# 4. launch the TRV simulator. see also https://github.com/trasio-org/private-docs/blob/master/keystone-with-debian-userland.md#%E5%AE%9F%E8%A1%8C%E7%94%A8%E3%81%AE%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%82%92%E4%BD%9C%E6%88%90.
+# 2. launch the licence server and the TRV simulator.
+## Note) You can use docker image or launch manually. see  see also https://github.com/trasio-org/private-docs/blob/master/keystone-with-debian-userland.md#%E5%AE%9F%E8%A1%8C%E7%94%A8%E3%81%AE%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%82%92%E4%BD%9C%E6%88%90.
+export PATH_TO_LICENCE_PATH=$(pwd)/OVPsim.lic
+export MAC_ADDR=...
+## The `-d` option is allowed to launch TRV simulator in background mode.
+docker run --rm -v $(pwd):/tmp/image -v ${PATH_TO_LICENCE_PATH}:/home/trv/Imperas.20191106/OVPsim.lic --name trvsim -p 10022:10022 --hostname trv --mac-address ${MAC_ADDR} trasioteam/riscv_toolchain:trvsim
 ```
 
-Make sure that when we launch TRV simulator, `--override trasio_fpga/SiFiveFU540/ethBridge/redir` is set to `tcp:10022:10.0.2.15:22`.
+Dockerfile for TRV simulator is [here](http://192.168.100.100/rinkai/dockerfiles/-/tree/master/riscv/trvsim)(expired 2020.6.29). You can access the docker machine by `ssh -p 10022 -o "StrictHostKeyChecking no" root@${IP_ADDR}`.
 
 #### build and run ta-ref
 
 Check `test/keystone/machine.mk` to set IP address(localhost or remote) and port(usually 10022) and build & run as following:
 
 ```sh
+git clone --recursive http://192.168.100.100/vc707/ta-ref.git
+cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_trvsim
 cd ta-ref
 source env/keystone.sh
@@ -83,9 +82,17 @@ make test
 make run
 ```
 
+Lastly, stop TRV docker container:
+
+```sh
+docker stop trvsim
+```
+
 ### Unleashed Hifive board
 
 ```sh
+git clone --recursive http://192.168.100.100/vc707/ta-ref.git
+cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_hifive
 cd ta-ref
 source env/keystone.sh
