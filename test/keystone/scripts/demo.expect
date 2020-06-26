@@ -19,7 +19,7 @@ expect "# " {
 }
 
 expect "# " {
-    send "lsmod keystone_driver | grep keystone_driver || insmod keystone-driver.ko\r"
+    send "insmod keystone-driver.ko; true\r"
 }
 
 expect "# " {
