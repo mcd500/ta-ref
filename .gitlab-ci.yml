@@ -54,7 +54,7 @@ optee_qemu_teep:
     <<: *test_definition
     image: ${DOCKER_IMAGE_OPTEE}:qemu_optee_teep
     variables:
-        ENVS: env/optee_qemu.sh
+        ENVS: env/optee_qemu_teep.sh
     script:
         - echo "Hi"
         - make build test run
