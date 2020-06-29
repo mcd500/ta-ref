@@ -2,7 +2,7 @@ export user-ta-version ?= 1
 MK_DIR = Enclave/mk
 
 # LIB_DIRS INCLUDE_DIRS
-OPTEE_LIB_DIRS = $(LIB_DIRS)
+OPTEE_LIB_DIRS = $(LIB_DIRS) $(OPTEE_DIR)/out-br/target/usr/lib
 
 .PHONY: build app enclave image run
 
