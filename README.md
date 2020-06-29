@@ -1,6 +1,6 @@
 # ta-ref
 
-Improvement of http://192.168.100.100/vc707/tee-ta-reference. Please feel free to share your idea!
+Improvement of http://192.168.100.100/rinkai/tee-ta-reference. Please feel free to share your idea!
 
 ## Docker image table
 
@@ -18,14 +18,14 @@ Improvement of http://192.168.100.100/vc707/tee-ta-reference. Please feel free t
 
 Note) `SIM` indicates qemu or local environment.
 
-For each Docker images, see [rinkai/dockerfiles and GitLab CI job configuration file](http://192.168.100.100/vc707/ta-ref/-/blob/master/.gitlab-ci.yml).
+For each Docker images, see [rinkai/dockerfiles and GitLab CI job configuration file](http://192.168.100.100/rinkai/ta-ref/-/blob/master/.gitlab-ci.yml).
 
 ## keystone
 
 ### qemu
 
 ```sh
-git clone --recursive http://192.168.100.100/vc707/ta-ref.git
+git clone --recursive http://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_qemu
 cd ta-ref
@@ -67,7 +67,7 @@ Dockerfile for TRV simulator is [here](http://192.168.100.100/rinkai/dockerfiles
 Check `test/keystone/machine.mk` to set IP address(localhost or remote) and port(usually 10022) and build & run as following:
 
 ```sh
-git clone --recursive http://192.168.100.100/vc707/ta-ref.git
+git clone --recursive http://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_trvsim
 cd ta-ref
@@ -91,7 +91,7 @@ docker stop trvsim
 ### Unleashed Hifive board
 
 ```sh
-git clone --recursive http://192.168.100.100/vc707/ta-ref.git
+git clone --recursive http://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_hifive
 cd ta-ref
@@ -126,7 +126,7 @@ make run MACHINE=HIFIVE
 ## intel-sgx
 
 ```sh
-git clone --recursive http://192.168.100.100/vc707/ta-ref.git
+git clone --recursive http://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:sgx
 ```
@@ -156,10 +156,10 @@ make run MACHINE=NUC
 
 ## optee
 
-To configure images in raspberry pi3, see [tutorial](http://192.168.100.100/vc707/ta-ref/-/blob/master/doc/rpi3.md).
+To configure images in raspberry pi3, see [tutorial](http://192.168.100.100/rinkai/ta-ref/-/blob/master/doc/rpi3.md).
 
 ```sh
-git clone --recursive http://192.168.100.100/vc707/ta-ref.git
+git clone --recursive http://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 ```
 
