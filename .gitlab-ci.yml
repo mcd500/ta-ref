@@ -1,5 +1,6 @@
 variables:
     DOCKER_IMAGE: trasioteam/ta_ref_devel
+    DOCKER_IMAGE_OPTEE: trasioteam/optee
 
 .test_template: &test_definition
     variables:
@@ -47,3 +48,13 @@ optee_qemu_default:
         ENVS: env/optee_qemu.sh
     script:
         - make build test run
+
+
+optee_qemu_teep:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE_OPTEE}:qemu_optee_teep
+    variables:
+        ENVS: env/optee_qemu.sh
+    script:
+        - echo "Hi"
+#        - make build test run
