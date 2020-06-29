@@ -57,4 +57,4 @@ optee_qemu_teep:
         ENVS: env/optee_qemu.sh
     script:
         - echo "Hi"
-#        - make build test run
+        - make build test run
