@@ -5,9 +5,9 @@ In this chapter, we configure image based on [3.8.0](https://github.com/OP-TEE/m
 ## build tee-ta-reference and fetch rootfs image
 
 ```sh
-$ docker run  -it -v $(pwd):/home/main/shared -v ${pwd}:/home/main/ta-ref --rm -w /home/main/ta-ref vc707/test:optee_rpi3_ver38
+$ docker run  -it -v $(pwd):/home/out -v ${pwd}:/home/main/ta-ref --rm -w /home/main/ta-ref trasioteam/optee:rpi3_3.9.0
 # inside docker. import rootfs.cpio.gz from the container to local
-$ cp /home/main/optee/out-br/images/rootfs.cpio.gz /home/main/shared
+$ cp /home/main/optee/out-br/images/rootfs.cpio.gz /home/out
 ```
 
 ## write image to sd card
@@ -187,9 +187,16 @@ kill -9 ${SUPP_PROCESS_NUM}
 tee-supplicant -d
 dhclient
 /etc/init.d/ssh restart
-# optional
-adduser ***
+# optional settings
+adduser gitlab
 EDITOR=vim visudo
+ # Allow members of group sudo to execute any command
+-%sudo  ALL=(ALL:ALL) ALL
++%sudo  ALL=(ALL:ALL) NOPASSWD:ALL
+
+adduser gitlab # set password to 'gitlab'
+usermod -aG sudo gitlab
+sudo sh -c 'echo 127.0.1.1 buildroot >> /etc/hosts'
 ```
 
 If necessary, We can add user and configure `sudoers` file.

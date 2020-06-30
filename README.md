@@ -12,7 +12,7 @@ Improvement of http://192.168.100.100/vc707/tee-ta-reference. Please feel free t
 |keystone(TRVSIM)|trasioteam/ta_ref_devel:keystone_trvsim|v0.3|
 |keystone(HIFIVE)|trasioteam/ta_ref_devel:keystone_hifive|v0.3|
 |keystone(VC707)|trasioteam/ta_ref_devel:keystone_vc707|v0.3|
-|intel_sgx(SIM/NUC)|trasioteam/ta_ref_devel:sgx|2.8
+|intel_sgx(SIM/NUC)|trasioteam/ta_ref_devel:sgx|2.8|
 |optee(qemu v8: SIM)|trasioteam/ta_ref_devel:optee_qemu_v8|3.9.0|
 |optee(RPI3)|trasioteam/ta_ref_devel:optee_rpi3|3.9.0|
 
@@ -195,6 +195,8 @@ make build
 make test
 make run
 ```
+
+Make sure that `ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib/optee_armtz/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta` for the first time, or the error occurs, `optee_ref_ta: TEEC_Opensession failed with code 0xffff0008 origin 0x3`.
 
 # Options
 
