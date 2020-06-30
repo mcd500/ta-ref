@@ -1,6 +1,6 @@
 # ta-ref
 
-Improvement of http://192.168.100.100/rinkai/tee-ta-reference. Please feel free to share your idea!
+Improvement of https://192.168.100.100/rinkai/tee-ta-reference. Please feel free to share your idea!
 
 ## Docker image table
 
@@ -18,14 +18,14 @@ Improvement of http://192.168.100.100/rinkai/tee-ta-reference. Please feel free 
 
 Note) `SIM` indicates qemu or local environment.
 
-For each Docker images, see [rinkai/dockerfiles and GitLab CI job configuration file](http://192.168.100.100/rinkai/ta-ref/-/blob/master/.gitlab-ci.yml).
+For each Docker images, see [rinkai/dockerfiles and GitLab CI job configuration file](https://192.168.100.100/rinkai/ta-ref/-/blob/master/.gitlab-ci.yml).
 
 ## keystone
 
 ### qemu
 
 ```sh
-git clone --recursive http://192.168.100.100/rinkai/ta-ref.git
+git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_qemu
 cd ta-ref
@@ -49,7 +49,7 @@ Install TRV simulator, create binaries and launch it:
 
 ```sh
 # 1. create bbl, vmlinux, fsbl.bin and sdimage.bin
-git clone http://192.168.100.100/rinkai/hifive_imager
+git clone https://192.168.100.100/rinkai/hifive_imager
 cd hifive_imager
 sudo make
 # 2. launch the licence server and the TRV simulator.
@@ -60,14 +60,14 @@ export MAC_ADDR=...
 docker run --rm -v $(pwd):/tmp/image -v ${PATH_TO_LICENCE_PATH}:/home/trv/Imperas.20191106/OVPsim.lic --name trvsim -p 10022:10022 --hostname trv --mac-address ${MAC_ADDR} trasioteam/riscv_toolchain:trvsim
 ```
 
-Dockerfile for TRV simulator is [here](http://192.168.100.100/rinkai/dockerfiles/-/tree/master/riscv/trvsim)(expired 2020.6.29). You can access the docker machine by `ssh -p 10022 -o "StrictHostKeyChecking no" root@${IP_ADDR}`.
+Dockerfile for TRV simulator is [here](https://192.168.100.100/rinkai/dockerfiles/-/tree/master/riscv/trvsim)(expired 2020.6.29). You can access the docker machine by `ssh -p 10022 -o "StrictHostKeyChecking no" root@${IP_ADDR}`.
 
 #### build and run ta-ref
 
 Check `test/keystone/machine.mk` to set IP address(localhost or remote) and port(usually 10022) and build & run as following:
 
 ```sh
-git clone --recursive http://192.168.100.100/rinkai/ta-ref.git
+git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_trvsim
 cd ta-ref
@@ -91,7 +91,7 @@ docker stop trvsim
 ### Unleashed Hifive board
 
 ```sh
-git clone --recursive http://192.168.100.100/rinkai/ta-ref.git
+git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_hifive
 cd ta-ref
@@ -126,7 +126,7 @@ make run MACHINE=HIFIVE
 ## intel-sgx
 
 ```sh
-git clone --recursive http://192.168.100.100/rinkai/ta-ref.git
+git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:sgx
 ```
@@ -156,10 +156,10 @@ make run MACHINE=NUC
 
 ## optee
 
-To configure images in raspberry pi3, see [tutorial](http://192.168.100.100/rinkai/ta-ref/-/blob/master/doc/rpi3.md).
+To configure images in raspberry pi3, see [tutorial](https://192.168.100.100/rinkai/ta-ref/-/blob/master/doc/rpi3.md).
 
 ```sh
-git clone --recursive http://192.168.100.100/rinkai/ta-ref.git
+git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 ```
 
