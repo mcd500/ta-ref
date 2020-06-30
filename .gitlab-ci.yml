@@ -14,6 +14,7 @@ variables:
         - git submodule update --init --recursive
         - source ${ENVS}
     after_script:
+        - source ${ENVS}
         # cleanup
         - make mrproper
 
