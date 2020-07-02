@@ -52,7 +52,7 @@ optee_qemu_default:
 
 optee_rpi3_default:
     <<: *test_definition
-    image: ${DOCKER_IMAGE}:optee_qemu_rpi3
+    image: ${DOCKER_IMAGE}:optee_rpi3
     variables:
         ENVS: env/optee_rpi3.sh
     script:
