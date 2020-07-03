@@ -37,7 +37,7 @@ keystone_trvsim_default:
         PORT: 10022
         CONTAINER_NAME: trvsim_${CI_COMMIT_SHORT_SHA}
         WAIT_TIME: 30
-        TA_REF_WORKDIR=/home/main/ref-ta
+        TA_REF_WORKDIR: /home/main/ref-ta
     tags:
         - shell
     only:
