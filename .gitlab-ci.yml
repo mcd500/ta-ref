@@ -18,6 +18,37 @@ variables:
         # cleanup
         - make mrproper
 
+# TODO: to be more short!
+.trvsim_shell_template: &trvsim_definition
+    variables:
+        # OVPSIM_LICENCE and MAC_ADDR are defined in CI/CD settings -> Variables.
+        ENVS: env/dummy.sh
+        SDIMAGE_URL: http://192.168.100.100:2000/keystone_trvsim_hifive_sdimage.tar.xz
+        IMAGE_DIR: ${CI_PROJECT_DIR}/image
+        CONTAINER_IMAGE_DIR: /tmp/image
+        CONTAINER_OVPSIM_PATH: /home/trv/Imperas.20200628/OVPsim.lic
+        PORT: 10022
+        CONTAINER_NAME: trvsim_${CI_COMMIT_SHORT_SHA}
+        WAIT_TIME: 10
+    tags:
+        - shell
+    only:
+        - master
+    stage: test
+    before_script:
+        # launch TRV simulator at background
+        - mkdir -p ${IMAGE_DIR}
+        - wget ${SDIMAGE_URL} -o /dev/null
+        - tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IMAGE_DIR}
+        - docker run --rm -d -v ${IMAGE_DIR}:${CONTAINER_IMAGE_DIR} -v ${OVPSIM_LICENCE}:${CONTAINER_OVPSIM_PATH} --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --hostname trvsim --mac-address ${MAC_ADDR} trasioteam/riscv_toolchain:trvsim
+        - rm -f ~/.ssh/known_hosts
+        - sleep ${WAIT_TIME}
+    after_script:
+        # cleanup
+        - docker exec ${CONTAINER_NAME} cat "uart0.log"
+        - docker exec ${CONTAINER_NAME} cat "uart1.log"
+        - docker stop ${CONTAINER_NAME}
+
 keystone_qemu_default:
     <<: *test_definition
     image: ${DOCKER_IMAGE}:keystone_qemu
@@ -25,6 +56,17 @@ keystone_qemu_default:
         ENVS: env/keystone.sh
     script:
         - make build test run
+
+keystone_trvsim_default:
+    <<: *trvsim_definition
+    variables:
+        CONTAINER_IMAGE: ${DOCKER_IMAGE}:keystone_qemu
+        ENVS: env/keystone.sh
+        CONTAINER_WORKDIR: /home/main/ref-ta
+    script:
+        # update this repo
+        - git submodule update --init --recursive
+        - docker run -v ${CI_PROJECT_DIR}:${CONTAINER_WORKDIR} -w ${CONTAINER_WORKDIR} --rm ${CONTAINER_IMAGE} /bin/bash -c "source ${ENVS} && MACHINE=TRVSIM make build test run; make mrproper"
 
 sgx_sim_default:
     <<: *test_definition
