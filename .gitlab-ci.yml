@@ -37,6 +37,7 @@ keystone_trvsim_default:
         PORT: 10022
         CONTAINER_NAME: trvsim_${CI_COMMIT_SHORT_SHA}
         WAIT_TIME: 30
+        TA_REF_WORKDIR=/home/main/ref-ta
     tags:
         - shell
     only:
@@ -53,7 +54,7 @@ keystone_trvsim_default:
     script:
         # update this repo
         - git submodule update --init --recursive
-        - WORKDIR=/home/main/ref-ta docker run --rm -v ${CI_PROJECT_DIR}:${WORKDIR} -w ${WORKDIR} ${DOCKER_IMAGE}:keystone_qemu /bin/bash -c "source env/keystone.sh && MACHINE=TRVSIM make build test run; make mrproper"
+        - docker run --rm -v ${CI_PROJECT_DIR}:${TA_REF_WORKDIR} -w ${TA_REF_WORKDIR} ${DOCKER_IMAGE}:keystone_qemu /bin/bash -c "source env/keystone.sh && MACHINE=TRVSIM make build test run; make mrproper"
     after_script:
         # cleanup
         - docker exec ${CONTAINER_NAME} cat "uart0.log"
