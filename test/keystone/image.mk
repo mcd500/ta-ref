@@ -38,6 +38,9 @@ SIM_image: SIM_ship
 SIM_ship: analyzer_nm
 	mkdir -p $(SIM_OUT_DIR)
 	install $(OUT_FILES) $(SIM_OUT_DIR)
+SIM_clean:
+	# do nothing
+	true
 
 analyzer_nm: $(ENCLAVE_NM) $(APP_NM)
 
