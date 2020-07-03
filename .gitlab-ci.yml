@@ -65,7 +65,9 @@ optee_qemu_teep:
         ENVS: env/optee_qemu_teep.sh
     script:
         - echo "Hi"
+        - echo ${OPTEE_DIR}
         - pwd
+        - ls -la /
         - ls -la
-        - cd ~; ls -la; pwd; cd ..
+        - cd ~; pwd; ls -la; cd /
         - make build test run
