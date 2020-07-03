@@ -19,7 +19,7 @@ expect "# " {
 }
 
 expect "# " {
-    send "insmod keystone-driver.ko; true\r"
+    send "insmod keystone-driver.ko; sleep 2; true\r"
 }
 
 expect "# " {

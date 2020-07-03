@@ -20,7 +20,7 @@ else ifeq ($(MACHINE), HIFIVE)
 USER=root
 PASSWD=sifive
 PORT=22
-IP_ADDR=192.168.1.20
+IP_ADDR=192.168.100.64
 else ifeq ($(MACHINE), VC707)
 USER=root
 PASSWD=sifive
