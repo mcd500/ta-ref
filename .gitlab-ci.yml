@@ -36,7 +36,7 @@ keystone_trvsim_default:
         CONTAINER_OVPSIM_PATH: /home/trv/Imperas.20200628/OVPsim.lic
         PORT: 10022
         CONTAINER_NAME: trvsim_${CI_COMMIT_SHORT_SHA}
-        WAIT_TIME: 30
+        WAIT_TIME: 60
         TA_REF_WORKDIR: /home/main/ref-ta
     tags:
         - shell
