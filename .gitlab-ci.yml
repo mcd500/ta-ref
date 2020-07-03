@@ -66,8 +66,8 @@ optee_qemu_teep:
     script:
         - echo "Hi"
         - echo ${OPTEE_DIR}
-        - pwd
         - ls -la /
+        - pwd
         - ls -la
-        - cd ~; pwd; ls -la; cd /
+        - cd ~; pwd; ls -la; cd /builds/rinkai/ta-ref
         - make build test run
