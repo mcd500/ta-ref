@@ -18,8 +18,15 @@ variables:
         # cleanup
         - make mrproper
 
-# TODO: to be more short!
-.trvsim_shell_template: &trvsim_definition
+keystone_qemu_default:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:keystone_qemu
+    variables:
+        ENVS: env/keystone.sh
+    script:
+        - make build test run
+
+keystone_trvsim_default:
     variables:
         # OVPSIM_LICENCE and MAC_ADDR are defined in CI/CD settings -> Variables.
         ENVS: env/dummy.sh
@@ -43,30 +50,15 @@ variables:
         - docker run --rm -d -v ${IMAGE_DIR}:${CONTAINER_IMAGE_DIR} -v ${OVPSIM_LICENCE}:${CONTAINER_OVPSIM_PATH} --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --hostname trvsim --mac-address ${MAC_ADDR} trasioteam/riscv_toolchain:trvsim
         - rm -f ~/.ssh/known_hosts
         - sleep ${WAIT_TIME}
+    script:
+        # update this repo
+        - git submodule update --init --recursive
+        - WORKDIR=/home/main/ref-ta docker run -v ${CI_PROJECT_DIR}:${WORKDIR} -w ${WORKDIR} --rm ${DOCKER_IMAGE}:keystone_qemu /bin/bash -c "source env/keystone.sh && MACHINE=TRVSIM make build test run; make mrproper"
     after_script:
         # cleanup
         - docker exec ${CONTAINER_NAME} cat "uart0.log"
         - docker exec ${CONTAINER_NAME} cat "uart1.log"
         - docker stop ${CONTAINER_NAME}
-
-keystone_qemu_default:
-    <<: *test_definition
-    image: ${DOCKER_IMAGE}:keystone_qemu
-    variables:
-        ENVS: env/keystone.sh
-    script:
-        - make build test run
-
-keystone_trvsim_default:
-    <<: *trvsim_definition
-    variables:
-        CONTAINER_IMAGE: ${DOCKER_IMAGE}:keystone_qemu
-        ENVS: env/keystone.sh
-        CONTAINER_WORKDIR: /home/main/ref-ta
-    script:
-        # update this repo
-        - git submodule update --init --recursive
-        - docker run -v ${CI_PROJECT_DIR}:${CONTAINER_WORKDIR} -w ${CONTAINER_WORKDIR} --rm ${CONTAINER_IMAGE} /bin/bash -c "source ${ENVS} && MACHINE=TRVSIM make build test run; make mrproper"
 
 sgx_sim_default:
     <<: *test_definition
