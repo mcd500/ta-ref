@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <string>
 #include <cstring>
+#include <time.h>
 
 #include "edger/Enclave_u.h"
 #include "random.h"
@@ -17,6 +18,10 @@
 #else
 #define NO_PERF __attribute__((no_instrument_function))
 #endif
+
+bool load_invoke_command(invoke_command_t* ret);
+int store_invoke_callback_file(const char *name, const char *out, size_t out_len);
+
 
 EDGE_EXTERNC_BEGIN
 
@@ -49,6 +54,16 @@ int ocall_write_file(int fdesc, const char *buf,  unsigned int len)
 #ifdef APP_VERBOSE
   printf("@[SE] write desc %d buf %x len %d-> %d\n",fdesc,buf,len,rtn);
 #endif
+  return rtn;
+}
+
+int ocall_invoke_command_callback_write(const char* str, const char *buf,  unsigned int len)
+{
+  int rtn = 0;
+#ifdef APP_VERBOSE
+  printf("@[SE] ocall_invoke_command_callback_write. name=%s, len=%d\n", str, len);
+#endif
+  rtn = store_invoke_callback_file(str, buf, len);
   return rtn;
 }
 
@@ -135,6 +150,135 @@ ob196_t ocall_getrandom196(unsigned int flags)
   return ret;
 }
 
+invoke_command_t ocall_invoke_command_polling(void)
+{
+  invoke_command_t ret;
+  ret.param1_fd = -1;
+#ifdef APP_VERBOSE
+  printf("@[SE] ocall_invoke_command_polling\n");
+#endif
+  bool res = load_invoke_command(&ret);
+  if (!res) {
+#ifdef APP_VERBOSE
+  printf("@[SE] ocall_invoke_command_polling waiting invoke command input\n");
+#endif
+    // polling wait time
+    sleep(5);
+    ret.commandID = 0;
+    return ret;
+  }
+  return ret;
+}
+
+int ocall_invoke_command_callback(invoke_command_t cb_cmd)
+{
+  int rtn = 0;
+#ifdef APP_VERBOSE
+  printf("@[SE] ocall_invoke_command_callback\n");
+#endif
+  rtn = store_invoke_callback_file(cb_cmd.params0_buffer, cb_cmd.params1_buffer, cb_cmd.params1_size);
+  return rtn;
+}
+
 #endif
 
 EDGE_EXTERNC_END
+
+bool load_invoke_command(invoke_command_t *ret) {
+  const char* invoke_file = "invoke.csv";
+  // open invoke command text
+  int desc = open(invoke_file, O_RDONLY);
+  if (desc < 0) {
+    printf("%s:%d\n", __FILE__, __LINE__);
+    return false;
+  }
+
+  char buf[256];
+  int n;
+  n = read(desc, buf, sizeof(buf));
+  close(desc);
+  // remove file to reset
+  remove(invoke_file);
+  if (n == -1) {
+    printf("%s:%d\n", __FILE__, __LINE__);
+    return false;
+  }
+
+  // load commandID and value
+  char *tp;
+  // commanID
+  tp = strtok(buf, ",");
+  if (tp == NULL) {
+    printf("%s:%d\n", __FILE__, __LINE__);
+    return false;
+  }
+  ret->commandID = atoi(tp);
+
+  // TA name
+  tp = strtok(NULL, ",");
+  if (tp == NULL) {
+    printf("%s:%d\n", __FILE__, __LINE__);
+    return false;
+  }
+  strcpy(ret->params0_buffer, tp);
+  ret->params0_size = strlen(ret->params0_buffer);
+
+  // access
+  tp = strtok(NULL, ",");
+  if (tp == NULL) {
+    printf("%s:%d\n", __FILE__, __LINE__);
+    return true;
+  }
+  int access;
+  if (!strcmp(tp, "in")) {
+    access = O_RDONLY;
+  } else if (!strcmp(tp, "out")) {
+    access = O_RDWR | O_CREAT;
+  } else {
+    printf("%s:%d\n", __FILE__, __LINE__);
+    return true;
+  }
+  tp = strtok(NULL, ",");
+  if (tp == NULL) {
+    printf("%s:%d\n", __FILE__, __LINE__);
+    return false;
+  }
+  int fd = open(tp, access);
+  if (fd < 0)  {
+    printf("%s:%d\n", __FILE__, __LINE__);
+    return false;
+  }
+  ret->param1_fd = fd;
+  return true;
+}
+
+int store_invoke_callback_file(const char *name, const char *out, size_t out_len) {
+#ifdef APP_VERBOSE
+  printf("@[SE] store_invoke_callback_file. name=%s\n", name);
+#endif
+
+  char fname[256];
+  snprintf(fname, sizeof(fname), "%s.eapp_riscv", name);
+
+#ifdef APP_VERBOSE
+  printf("@[SE] start to write file. name=%s\n", fname);
+#endif
+  // write into file(create new file)
+  int desc = open(fname, O_WRONLY | O_CREAT, 644);
+  if (desc < 0) {
+    printf("failed to open file in store_invoke_callback_file. fname=%s\n", fname);
+    return -1;
+  }
+  int rtn = write(desc, out, out_len);
+  if (rtn < 0) {
+    printf("failed to write file in store_invoke_callback_file. fname=%s\n", fname);
+    close(desc);
+    return -1;
+  }
+  close(desc);
+
+#ifdef APP_VERBOSE
+  printf("Success to store callback file. fname=%s\n", fname);
+#endif
+  return 0;
+}

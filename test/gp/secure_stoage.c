@@ -38,11 +38,11 @@
 
 void gp_secure_storage_test(void)
 {
-    static unsigned char data[DATA_LENGTH] = {
+    static unsigned char data[] = {
      // 0x00,0x01,...,0xff
 #include "test.dat"
     };
-    unsigned char buf[DATA_LENGTH];
+    static unsigned char buf[DATA_LENGTH];
 
     TEE_Result rv;
 

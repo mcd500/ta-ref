@@ -10,6 +10,7 @@ void gp_message_digest_test(void);
 void gp_symmetric_key_enc_verify_test(void);
 void gp_symmetric_key_gcm_verify_test(void);
 void gp_asymmetric_key_sign_test(void);
+void gp_invokecommand_test(void);
 
 #if defined(__cplusplus)
 }
