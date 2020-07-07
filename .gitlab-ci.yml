@@ -96,6 +96,14 @@ optee_qemu_default:
     script:
         - make build test run
 
+optee_qemu_teep:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:optee_qemu_teep
+    variables:
+        ENVS: env/optee_qemu_teep.sh
+    script:
+        - make build test run
+
 optee_rpi3_default:
     <<: *test_definition
     image: ${DOCKER_IMAGE}:optee_rpi3
