@@ -221,6 +221,7 @@ If you want to clean build directory only, try `make clean`. Otherwise, `make mr
 │   ├── keystone
 │   ├── optee
 │   └── sgx
+├── gp ... Global Platform API
 ├── build .. output directory to `make build`
 │   ├── include
 │   └── lib
@@ -238,8 +239,9 @@ If you want to clean build directory only, try `make clean`. Otherwise, `make mr
 │   ├── sgx_x64.sh
 │   └── sgx_x86.sh
 ├── profiler .. profiler add-in (enable by `PROFILER=ON` in make)
-└── test .. test including Global Platform libraries
-    ├── gp
+├── benchmark .. profiler add-in (enable by `BENCHMARK=ON` in make)
+
+└── test .. test
     ├── include
     ├── keystone
     ├── lib

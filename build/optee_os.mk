@@ -22,7 +22,7 @@ OPTEE_OS_FLAGS += CFG_FTRACE_SUPPORT=y
 TARGETS += $(LIBUTEE)
 endif
 
-TARGETS += build
+TARGETS += build bind
 
 
 # TODO: nodebug
@@ -97,7 +97,13 @@ $(LIBUTEE): $(UTEE_SOBJS) $(UTEE_AOBJS)
 	unlink $(LIBUTEE)
 	$(AR$(sm)) rcs $@ $^
 
+API_INCLUDE_DIR=$(CURDIR)/include/api
+bind:
+	mkdir -p $(API_INCLUDE_DIR)
+	$(SLN) $(TOPDIR)/api/include/*.h $(API_INCLUDE_DIR)
+	$(SLN) $(TOPDIR)/api/$(TEE)/*.h $(API_INCLUDE_DIR)
+
 clean:
-	$(RM) -r $(LIBUTEE) ./lib/*.a
+	$(RM) -r $(LIBUTEE) ./lib/*.a $(API_INCLUDE_DIR)
 
 mrproper: clean

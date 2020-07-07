@@ -24,9 +24,7 @@ endif
 OUT_DIR=out
 all: build
 
-TARGETS=depends api gp benchmark
-
-build: $(TARGETS)
+build: depends api gp benchmark
 
 depends: $(DEPENDS)
 

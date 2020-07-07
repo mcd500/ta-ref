@@ -36,7 +36,6 @@
 #include "crt.h"
 
 #include "edger/Enclave_t.h"
-#include "gp_test.h"
 int tee_printf(const char* fmt, ...);
 
 #ifdef PERF_ENABLE

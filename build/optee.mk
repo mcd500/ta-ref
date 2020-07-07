@@ -18,7 +18,7 @@ endif
 OUT_DIR=out
 all: build
 
-build: depends
+build: depends gp benchmark
 
 depends: $(DEPENDS)
 
@@ -34,17 +34,24 @@ profiler:
 edger:
 	make optee_build -f edger_glue.mk EDGER_TYPE=NONE
 
-# crypto:
-# 	make -f crypto.mk
+gp: api
+	make -f gp.mk
+
+benchmark:
+	make -f benchmark.mk
 
 clean:
 	$(RM) *.client *.eapp_riscv
 	make -f profiler.mk clean
 	make -f edger_glue.mk optee_clean EDGER_TYPE=NONE
 	make -f optee_os.mk clean
+	make -f gp.mk clean
+	make -f benchmark.mk clean
 
 # clean build files including dependencies
 mrproper: clean
 	make -f edger_glue.mk optee_mrproper EDGER_TYPE=NONE
 	make -f profiler.mk mrproper EDGER_TYPE=NONE
 	make -f optee_os.mk mrproper
+	make -f gp.mk mrproper
+	make -f benchmark.mk mrproper

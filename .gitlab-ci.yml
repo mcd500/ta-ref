@@ -8,7 +8,7 @@ variables:
     tags:
         - ref-ta
     only:
-        - master
+        - separate
     stage: test
     before_script:
         - git submodule update --init --recursive
