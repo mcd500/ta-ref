@@ -24,10 +24,7 @@ endif
 OUT_DIR=out
 all: build
 
-TARGETS=depends api gp
-ifeq ($(BENCHMARK), ON)
-TARGETS += benchmark
-endif
+TARGETS=depends api gp benchmark
 
 build: $(TARGETS)
 
