@@ -29,6 +29,7 @@
  */
 
 #include "config_ref_ta.h"
+#define TA_MAX_SIZE 32768
 
 #define TEEP_AGENT_TA_NONE      0
 #define TEEP_AGENT_TA_EXIT    999
@@ -138,7 +139,7 @@ TEE_Result TA_EXPORT TA_InvokeCommandEntryPoint(void *sessionContext,
 
 int teep_message_load_ta(char *ta_uuid, int taimg_fd)
 {
-  static char out[2560];
+  static char out[TA_MAX_SIZE];
   unsigned int out_len = sizeof(out);
   tee_printf("teep_message_load_ta -in. ta_uuid=[[%s]], taimg_fd=%d\n", ta_uuid, taimg_fd);
   // load TA from SecureStorage
@@ -166,7 +167,7 @@ int teep_message_load_ta(char *ta_uuid, int taimg_fd)
 
 int teep_message_install_ta(char *ta_uuid, int taimg_fd)
 {
-  static char taimg_buf[2480]; // ta binary size
+  static char taimg_buf[TA_MAX_SIZE]; // ta binary size
   unsigned int buf_len = sizeof(taimg_buf);
   tee_printf("teep_message_install_ta -in. ta_uuid=[[%s]], taimg_fd=%d\n", ta_uuid, taimg_fd);
   TEE_Result rv;
