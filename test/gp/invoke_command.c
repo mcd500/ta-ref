@@ -37,6 +37,7 @@
 #define TEEP_AGENT_TA_INSTALL   2
 #define TEEP_AGENT_TA_DELETE    3
 
+#ifdef TEE==keystone
 void runInvokeCommand(invoke_command_t ret_cmd)
 {
     uint32_t type;
@@ -250,3 +251,4 @@ int teep_message_delete_ta(char *ta_uuid)
 #endif
   return 0;
 }
+#endif
