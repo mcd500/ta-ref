@@ -24,20 +24,14 @@ TOPDIR=$(CURDIR)/..
 TOOL_SRCS=$(wildcard *.c)
 TOOL_OBJS=$(TOOL_SRCS:.c=.o)
 
-BENCH_SRCS=$(wildcard benchmark/*.c)
-BENCH_OBJS=$(BENCH_SRCS:.c=.o)
-
-OBJS=$(TOOL_OBJS) $(BENCH_OBJS)
+OBJS=$(TOOL_OBJS)
 TOOL_LIB=lib/libetools.a
 
-# optional, but this lightweight library
-BENCH_LIB=lib/libbench.a
-LIBS = $(TOOL_LIB) $(BENCH_LIB)
+LIBS = $(TOOL_LIB)
 
 COMMON_INCLUDE_DIRS=$(TOPDIR)/build/include $(TOPDIR)/api/include $(TOPDIR)/api/$(TEE) $(CURDIR)/include
 INCLUDE_DIRS = $(COMMON_INCLUDE_DIRS)
 
-INCLUDE_DIRS += benchmark/$(TEE)
 ifneq ($(KEYSTONE_SDK_LIB_DIR),)
 # Global Platform uses eapp library in keystone-sdk.
 INCLUDE_DIRS += $(KEYSTONE_SDK_LIB_DIR)/app/include
@@ -51,7 +45,6 @@ LIB_DIRS = $(TOPDIR)/build/lib $(CURDIR)/lib
 ifeq ($(PROFILER), ON)
 CFLAGS += -DPERF_ENABLE
 LDFLAGS += -lprofiler
-PERF_OBJS := benchmark/bench.o
 PERF_OPTION := -finstrument-functions
 else
 PERF_OBJS =
@@ -66,11 +59,9 @@ CFLAGS += $(addprefix -fno-builtin-,puts putchar printf)
 all: common build image
 
 # build global platform(tee-intedependent) and tools code
-common: $(TOOL_LIB) $(BENCH_LIB)
+common: $(TOOL_LIB)
 
 $(TOOL_LIB): $(TOOL_OBJS)
-	$(AR) $@ $^
-$(BENCH_LIB): $(BENCH_OBJS)
 	$(AR) $@ $^
 
 $(OBJS): %.o: %.c

@@ -24,7 +24,12 @@ endif
 OUT_DIR=out
 all: build
 
-build: depends api gp
+TARGETS=depends api gp
+ifeq ($(BENCHMARK), ON)
+TARGETS += benchmark
+endif
+
+build: $(TARGETS)
 
 depends: $(DEPENDS)
 
@@ -47,6 +52,9 @@ api: depends
 gp: api
 	make -f gp.mk
 
+benchmark:
+	make -f benchmark.mk
+
 clean:
 	make -f profiler.mk clean
 	make -f edger.mk clean EDGER_TYPE=$(EDGER_TYPE)
@@ -54,6 +62,7 @@ clean:
 	make -f crypto.mk clean
 	make -f api.mk clean
 	make -f gp.mk clean
+	make -f benchmark.mk clean
 
 # clean build files including dependencies
 mrproper: clean
@@ -62,3 +71,4 @@ mrproper: clean
 	make -f crypto.mk mrproper
 	make -f api.mk mrproper
 	make -f gp.mk mrproper
+	make -f benchmark.mk mrproper

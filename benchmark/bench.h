@@ -1,5 +1,5 @@
 #pragma once
-#include "config_ref_ta.h"
+#include "gp/config_ref_ta.h"
 
 #define NO_PERF __attribute__((no_instrument_function))
 void NO_PERF ree_time_test(void);
