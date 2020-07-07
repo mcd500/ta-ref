@@ -34,6 +34,6 @@ edger_imports: $(EDGER_BIN)
 	$(SLN) ${EDGER_DIR}/target/include/*.h $(EDGER_INCLUDE_DIR)
 
 clean:
-	$(RM) -r ${EDGER_DIR}/target/include $(FLATCC_LIB) $(FLATCC_INCLUDE_DIR)
+	$(RM) -r $(FLATCC_LIB) $(FLATCC_INCLUDE_DIR)
 
 mrproper: clean
