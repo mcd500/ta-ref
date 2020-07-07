@@ -1,7 +1,6 @@
 variables:
     DOCKER_IMAGE: trasioteam/ta_ref_devel
     DOCKER_IMAGE_OPTEE: trasioteam/optee
-    BRANCH: separate
 
 .test_template: &test_definition
     variables:
@@ -9,7 +8,7 @@ variables:
     tags:
         - ref-ta
     only:
-        - ${BRANCH}
+        - master
     stage: test
     before_script:
         - git submodule update --init --recursive
@@ -52,7 +51,7 @@ keystone_trvsim_default:
     tags:
         - shell
     only:
-        - ${BRANCH}
+        - master
     stage: test
     before_script:
         # launch TRV simulator at background
