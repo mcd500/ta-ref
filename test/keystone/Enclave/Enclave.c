@@ -49,7 +49,7 @@ int main(void) {
 
   gp_asymmetric_key_sign_test();
 
-  gp_invokecommand_test();
+  // gp_invokecommand_test();
 
   // asymmetric_key_verify_test();
   return 0;
