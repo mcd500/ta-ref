@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#include "gp_test.h"
+#include "gp/gp_test.h"
 //#include "tools.h"
 
 /* ecall_print_aes:

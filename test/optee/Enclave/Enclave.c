@@ -28,7 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "gp_test.h"
+#include "gp/gp_test.h"
 
 int main(void) {
     gp_random_test();

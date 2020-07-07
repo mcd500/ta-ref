@@ -24,15 +24,15 @@ endif
 CFLAGS += $(DEBUG_FLAGS)
 
 .PHONY: all clean
-all: $(GP_LIB)
+all: $(LIB)
 
 $(OBJS): %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 # override old rules
 $(PERF_OBJS): %.o: %.c
 	$(CC) $(CFLAGS) $(PERF_OPTION) -o $@ -c $^
-PERF_OBJS := $(GP_OBJS)
-$(GP_LIB): $(GP_OBJS)
+PERF_OBJS := $(OBJS)
+$(LIB): $(OBJS)
 	$(AR) $@ $^
 
 clean:

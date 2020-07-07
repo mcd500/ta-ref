@@ -29,7 +29,7 @@
  */
 
 //#include "tools.h" // for printf-debug
-#include "gp_test.h"
+#include "gp/gp_test.h"
 
 int main(void) {
   gp_random_test();

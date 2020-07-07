@@ -66,6 +66,8 @@ CFLAGS += $(addprefix -fno-builtin-,puts putchar printf)
 all: common build image
 
 # build global platform(tee-intedependent) and tools code
+common: $(TOOL_LIB) $(BENCH_LIB)
+
 $(TOOL_LIB): $(TOOL_OBJS)
 	$(AR) $@ $^
 $(BENCH_LIB): $(BENCH_OBJS)

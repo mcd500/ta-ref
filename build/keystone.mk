@@ -61,3 +61,4 @@ mrproper: clean
 	make -f edger.mk mrproper EDGER_TYPE=$(EDGER_TYPE)
 	make -f crypto.mk mrproper
 	make -f api.mk mrproper
+	make -f gp.mk mrproper
