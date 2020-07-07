@@ -24,7 +24,7 @@ endif
 OUT_DIR=out
 all: build
 
-build: depends api
+build: depends api gp
 
 depends: $(DEPENDS)
 
@@ -44,12 +44,16 @@ eyrie:
 api: depends
 	make -f api.mk CRYPT_TYPE=$(CRYPT_TYPE)
 
+gp: api
+	make -f gp.mk
+
 clean:
 	make -f profiler.mk clean
 	make -f edger.mk clean EDGER_TYPE=$(EDGER_TYPE)
 	make -f edger_glue.mk clean EDGER_TYPE=$(EDGER_TYPE)
 	make -f crypto.mk clean
 	make -f api.mk clean
+	make -f gp.mk clean
 
 # clean build files including dependencies
 mrproper: clean
