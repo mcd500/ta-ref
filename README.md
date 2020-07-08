@@ -20,6 +20,22 @@ Note) `SIM` indicates qemu or local environment.
 
 For each Docker images, see [rinkai/dockerfiles and GitLab CI job configuration file](https://192.168.100.100/rinkai/ta-ref/-/blob/master/.gitlab-ci.yml).
 
+# Build & Run
+
+We can build and run with almost the same command:
+
+```sh
+# In the above container
+source env/${ENVFILE}.
+make build test run MACHINE=${MACHINE} TEST_DIR=${TEST_DIR}
+```
+
++ ENVFILE .. This file declares environment variables. Check `env` directory.
+
++ `MACHINE`(default: SIM):HIFIVE, TRVSIM, VC707, NUC, RPI3 can be specified.
+
++ `TEST_DIR`(default: test_mini) : This repository supports multiple test suites. For example, `TEST_DIR=test_gp` builds and runs under `test_gp` directory, GP API test suite.
+
 ## keystone
 
 ### qemu
@@ -34,11 +50,7 @@ source env/keystone.sh
 
 ```sh
 # MACHINE=SIM by default
-make build
-# or make build CRYPT_TYPE=(MBEDCRYPT|WOLFCRYPT)
-make test
-# show demo
-make run
+make build test run TEST_DIR=test_gp
 ```
 
 ### TRV simulator
@@ -75,11 +87,7 @@ source env/keystone.sh
 ```
 
 ```sh
-export MACHINE=TRVSIM
-make build
-make test
-# show demo
-make run
+make build test run MACHINE=TRVSIM TEST_DIR=test_gp
 ```
 
 Lastly, stop TRV docker container:
@@ -101,10 +109,7 @@ source env/keystone.sh
 Check `test/keystone/machine.mk` to set Hifive IP address and port and build & run as following:
 
 ```sh
-make build
-make test MACHINE=HIFIVE
-# show demo
-make run MACHINE=HIFIVE
+make build test run MACHINE=HIFIVE TEST_DIR=test_gp
 ```
 
 
@@ -117,10 +122,7 @@ source env/keystone.sh
 ```
 
 ```sh
-make build
-make test MACHINE=HIFIVE
-# show demo
-make run MACHINE=HIFIVE
+make build test run MACHINE=HIFIVE TEST_DIR=test_gp
 ```
 
 ## intel-sgx
@@ -141,17 +143,13 @@ source env/sgx_x64.sh
 
 ```sh
 # MACHINE=SIM by default
-make build
-make test
-make run
+make build test run TEST_DIR=test_gp
 ```
 
 ### Intel NUC
 
 ```sh
-make build
-make test MACHINE=NUC
-make run MACHINE=NUC
+make build test run MACHINE=NUC TEST_DIR=NUC
 ```
 
 ## optee
@@ -174,9 +172,7 @@ cd ta-ref
 
 ```sh
 source env/optee_qemu.sh
-make build
-make test
-make run
+make build test run TEST_DIR=test_gp
 ```
 
 ### raspberry pi3
@@ -191,9 +187,7 @@ Next, build && test:
 ```sh
 # incuding MACHINE=RPI3 environment variable
 source env/optee_rpi3.sh
-make build
-make test
-make run
+make build test run MACHINE=RPI3 TEST_DIR=test_gp
 ```
 
 Make sure that `ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib/optee_armtz/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta` for the first time, or the error occurs, `optee_ref_ta: TEEC_Opensession failed with code 0xffff0008 origin 0x3`.
@@ -240,14 +234,8 @@ If you want to clean build directory only, try `make clean`. Otherwise, `make mr
 │   └── sgx_x86.sh
 ├── profiler .. profiler add-in (enable by `PROFILER=ON` in make)
 ├── benchmark .. profiler add-in (enable by `BENCHMARK=ON` in make)
-
-└── test .. test
-    ├── include
-    ├── keystone
-    ├── lib
-    ├── optee
-    ├── scripts .. scripts for `make run` or `make qemu`
-    └── sgx
+├── test_mini .. minimum test
+└── test_gp .. test for GP API
 ```
 
 + We rely on `TEE`(environment variable) to switch TEE-dependent build which defines in $(TEE).sh. This shell script also exports each tee-related variable for convenience.

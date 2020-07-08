@@ -2,14 +2,15 @@ variables:
     DOCKER_IMAGE: trasioteam/ta_ref_devel
     DOCKER_IMAGE_OPTEE: trasioteam/optee
 
+stages:
+    - test_mini
+    - test_gp
+
 .test_template: &test_definition
     variables:
         ENVS: env/dummy.sh
     tags:
         - ref-ta
-    only:
-        - master
-    stage: test
     before_script:
         - git submodule update --init --recursive
         - source ${ENVS}
@@ -18,23 +19,46 @@ variables:
         # cleanup
         - make mrproper
 
+
 keystone_qemu_default:
     <<: *test_definition
     image: ${DOCKER_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
+        TEST_DIR: test_mini
+    stage: test_mini
     script:
-        - make build test run
+        - make build test run TEST_DIR=${TEST_DIR}
+keystone_qemu_test_gp:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:keystone_qemu
+    variables:
+        ENVS: env/keystone.sh
+        TEST_DIR: test_gp
+    stage: test_gp
+    script:
+        - make build test run TEST_DIR=${TEST_DIR}
 
 keystone_hifive_default:
     <<: *test_definition
     image: ${DOCKER_IMAGE}:keystone_hifive
     variables:
         ENVS: env/keystone.sh
+        TEST_DIR: test_mini
+    stage: test_mini
     script:
-        - MACHINE=HIFIVE make build test run
+        - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
+keystone_hifive_test_gp:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:keystone_hifive
+    variables:
+        ENVS: env/keystone.sh
+        TEST_DIR: test_gp
+    stage: test_gp
+    script:
+        - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
 
-keystone_trvsim_default:
+keystone_trvsim_test_gp:
     variables:
         # OVPSIM_LICENCE and MAC_ADDR are defined in CI/CD settings -> Variables.
         ENVS: env/dummy.sh
@@ -48,11 +72,10 @@ keystone_trvsim_default:
         TA_REF_WORKDIR: /home/main/ref-ta
         TA_REF_CONTAINER_IMAGE: ${DOCKER_IMAGE}:keystone_trvsim
         ENV: env/keystone.sh
+        TEST_DIR: test_gp
     tags:
         - shell
-    only:
-        - master
-    stage: test
+    stage: test_gp
     before_script:
         # launch TRV simulator at background
         - mkdir -p ${IMAGE_DIR}
@@ -64,7 +87,7 @@ keystone_trvsim_default:
     script:
         # update this repo
         - git submodule update --init --recursive
-        - docker run --rm -v ${CI_PROJECT_DIR}:${TA_REF_WORKDIR} -w ${TA_REF_WORKDIR} ${TA_REF_CONTAINER_IMAGE} /bin/bash -c "source ${ENV} && MACHINE=TRVSIM make build test run"
+        - docker run --rm -v ${CI_PROJECT_DIR}:${TA_REF_WORKDIR} -w ${TA_REF_WORKDIR} ${TA_REF_CONTAINER_IMAGE} /bin/bash -c "source ${ENV} && make build test run MACHINE=TRVSIM TEST_DIR=${TEST_DIR}"
     after_script:
         - docker run --rm -v ${CI_PROJECT_DIR}:${TA_REF_WORKDIR} -w ${TA_REF_WORKDIR} ${TA_REF_CONTAINER_IMAGE} /bin/bash -c "source ${ENV} && make mrproper"
         # cleanup
@@ -77,46 +100,84 @@ sgx_sim_default:
     image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh
+        TEST_DIR: test_mini
+    stage: test_mini
     script:
-        - make build test run
+        - make build test run TEST_DIR=${TEST_DIR}
+sgx_sim_test_gp:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:sgx
+    variables:
+        ENVS: env/sgx_x64.sh
+        TEST_DIR: test_gp
+    stage: test_gp
+    script:
+        - make build test run TEST_DIR=${TEST_DIR}
 
 sgx_nuc_default:
     <<: *test_definition
     image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh
+        TEST_DIR: test_mini
+    stage: test_mini
     script:
-        - MACHINE=NUC make build test run
+        - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR}
+sgx_nuc_test_gp:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:sgx
+    variables:
+        ENVS: env/sgx_x64.sh
+        TEST_DIR: test_gp
+    stage: test_gp
+    script:
+        - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR}
 
 optee_qemu_default:
     <<: *test_definition
     image: ${DOCKER_IMAGE}:optee_qemu_v8
     variables:
         ENVS: env/optee_qemu.sh
+        TEST_DIR: test_mini
+    stage: test_mini
     script:
-        - make build test run
-
-optee_qemu_teep:
+        - make build test run TEST_DIR=${TEST_DIR}
+optee_qemu_test_gp:
     <<: *test_definition
-    image: ${DOCKER_IMAGE}:optee_qemu_teep
+    image: ${DOCKER_IMAGE}:optee_qemu_v8
     variables:
-        ENVS: env/optee_qemu_teep.sh
+        ENVS: env/optee_qemu.sh
+        TEST_DIR: test_gp
+    stage: test_gp
     script:
-        - make build test run
+        - make build test run TEST_DIR=${TEST_DIR}
 
 optee_rpi3_default:
     <<: *test_definition
     image: ${DOCKER_IMAGE}:optee_rpi3
     variables:
         ENVS: env/optee_rpi3.sh
+        TEST_DIR: test_mini
+    stage: test_mini
     script:
-        - make build test run
+        - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR}
+optee_rpi3_test_gp:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:optee_rpi3
+    variables:
+        ENVS: env/optee_rpi3.sh
+        TEST_DIR: test_gp
+    stage: test_gp
+    script:
+        - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR}
 
 optee_qemu_teep:
     <<: *test_definition
     image: ${DOCKER_IMAGE_OPTEE}:qemu_optee_teep
     variables:
         ENVS: env/optee_qemu_teep.sh
+        TEST_DIR: test_gp
+    stage: test_gp
     script:
         - echo "Hi"
         - echo ${OPTEE_DIR}
@@ -124,4 +185,4 @@ optee_qemu_teep:
         - pwd
         - ls -la
         - cd ~; pwd; ls -la; cd /builds/rinkai/ta-ref
-        - make build test run
+        - make build test run TEST_DIR=${TEST_DIR}

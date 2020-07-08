@@ -1,0 +1,5 @@
+*.o
+*.a
+*.so
+*.nm
+sgx_app

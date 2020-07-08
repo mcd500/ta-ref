@@ -1,0 +1,29 @@
+#!/usr/bin/expect
+
+set timeout 30
+set PORT $::env(PORT)
+set USER $::env(USER)
+set IP_ADDR $::env(IP_ADDR)
+set PASSWD $::env(PASSWD)
+
+spawn sshpass -p ${PASSWD} ssh -p ${PORT} -o "StrictHostKeyChecking no" $USER@$IP_ADDR
+
+expect "$ " {
+    send "cd /home/gitlab/out\r"
+}
+
+expect "$ " {
+    send "./sgx_app\r"
+    expect "Info: Enclave successfully returned" {} timeout {
+        exit 1
+    }
+}
+
+expect "$ " {
+    send "exit\r"
+}
+
+expect eof
+
+exit
+
