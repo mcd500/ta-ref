@@ -95,6 +95,17 @@ keystone_trvsim_test_gp:
         - docker exec ${CONTAINER_NAME} cat "uart1.log"
         - docker stop ${CONTAINER_NAME}
 
+keystone_vc707_default:
+    <<: *test_definition
+    # This is tentative, but actually it works!
+    image: ${DOCKER_IMAGE}:keystone_qemu
+    variables:
+        ENVS: env/keystone.sh
+        TEST_DIR: test_mini
+    stage: test_mini
+    script:
+        - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR}
+
 sgx_sim_default:
     <<: *test_definition
     image: ${DOCKER_IMAGE}:sgx

@@ -12,7 +12,7 @@ Improvement of https://192.168.100.100/rinkai/tee-ta-reference. Please feel free
 |keystone(qemu: SIM)|trasioteam/ta_ref_devel:keystone_qemu_old|[here(unstable)](http://docs.keystone-enclave.org/en/latest/Getting-Started/Running-Keystone-with-QEMU.html#start-with-docker)|
 |keystone(TRVSIM)|trasioteam/ta_ref_devel:keystone_trvsim|v0.3|
 |keystone(HIFIVE)|trasioteam/ta_ref_devel:keystone_hifive|v0.3|
-|keystone(VC707)|trasioteam/ta_ref_devel:keystone_vc707|v0.3|
+|keystone(VC707)|trasioteam/ta_ref_devel:keystone_qemu|v0.3|
 |intel_sgx(SIM/NUC)|trasioteam/ta_ref_devel:sgx|2.8|
 |optee(qemu v8: SIM)|trasioteam/ta_ref_devel:optee_qemu_v8|3.9.0|
 |optee(RPI3)|trasioteam/ta_ref_devel:optee_rpi3|3.9.0|
@@ -117,13 +117,14 @@ make build test run MACHINE=HIFIVE TEST_DIR=test_gp
 ### vc707
 
 ```sh
-docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_vc707
+docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_qemu
 cd ta-ref
 source env/keystone.sh
 ```
 
 ```sh
-make build test run MACHINE=HIFIVE TEST_DIR=test_gp
+# Currently, VC707's CPU clock is very low, so we can't execute only simple enclave program.
+make build test run MACHINE=VC707 TEST_DIR=test_mini
 ```
 
 ## intel-sgx
