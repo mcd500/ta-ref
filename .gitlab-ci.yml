@@ -5,6 +5,7 @@ variables:
 stages:
     - test_mini
     - test_gp
+    - experimental
 
 .test_template: &test_definition
     variables:
@@ -102,7 +103,7 @@ keystone_vc707_default:
     variables:
         ENVS: env/keystone.sh
         TEST_DIR: test_mini
-    stage: todo
+    stage: experimental
     script:
         - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR}
 
