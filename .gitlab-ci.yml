@@ -103,7 +103,7 @@ keystone_vc707_default:
     variables:
         ENVS: env/keystone.sh
         TEST_DIR: test_mini
-    stage: experimental
+    stage: todo
     script:
         - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR}
 
