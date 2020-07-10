@@ -37,7 +37,7 @@
 #define TEEP_AGENT_TA_INSTALL   2
 #define TEEP_AGENT_TA_DELETE    3
 
-#ifdef TEE==keystone
+#if TEE==keystone
 void runInvokeCommand(invoke_command_t ret_cmd)
 {
     uint32_t type;
