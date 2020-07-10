@@ -3,7 +3,7 @@ SRCS=$(wildcard *.c)
 OBJS=$(SRCS:.c=.o)
 LIB=libgp.a
 
-CFLAGS=$(addprefix -I,$(INCLUDE_DIRS) $(CURDIR)/include)
+CFLAGS += $(addprefix -I,$(INCLUDE_DIRS) $(CURDIR)/include)
 
 LIB_DIRS = $(TOPDIR)/build/lib $(CURDIR)/lib
 ifeq ($(DEBUG_TYPE), DEBUG)
@@ -19,6 +19,10 @@ PERF_OPTION := -finstrument-functions
 else
 PERF_OBJS =
 PERF_OPTION =
+endif
+
+ifeq ($(ENABLE_TEEP), ON)
+CFLAGS += -DENABLE_TEEP
 endif
 
 CFLAGS += $(DEBUG_FLAGS)

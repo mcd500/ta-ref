@@ -45,7 +45,7 @@ api: depends
 	make -f api.mk CRYPT_TYPE=$(CRYPT_TYPE)
 
 gp: api
-	make -f gp.mk
+	make -f gp.mk ENABLE_TEEP=ON
 
 benchmark:
 	make -f benchmark.mk
