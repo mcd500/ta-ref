@@ -265,5 +265,5 @@ optee_qemu_teep_device:
         - ls -la /
         - pwd
         - ls -la
-        - cd ~; pwd; ls -la; cd /builds/rinkai/teep-device
+        - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
         - make clean-optee && make build-optee
