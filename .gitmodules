@@ -16,4 +16,4 @@
     branch = v4.3.0-stable
 [submodule "teep-device"]
 	path = teep-device
-	url = https://192.168.100.100/rinkai/aist-tb-otrp
+	url = ../../rinkai/aist-tb-otrp
