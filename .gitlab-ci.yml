@@ -1,4 +1,6 @@
 variables:
+#    GIT_STRATEGY: none
+    GIT_SUBMODULE_STRATEGY: none
     DOCKER_IMAGE: trasioteam/ta_ref_devel
     DOCKER_IMAGE_OPTEE: trasioteam/optee
 
@@ -27,6 +29,7 @@ stages:
     tags:
         - ref-ta
     before_script:
+        - git submodule sync --recursive
         - git submodule update --init --recursive
         - source ${ENVS}
     after_script:
