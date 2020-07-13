@@ -248,3 +248,22 @@ optee_qemu_teep:
         - ls -la
         - cd ~; pwd; ls -la; cd /builds/rinkai/ta-ref
         - make build test run TEST_DIR=${TEST_DIR}
+
+optee_qemu_teep_device:
+    <<: *test_definition
+    only:
+        - teep-device
+    image: ${DOCKER_IMAGE_OPTEE}:qemu_optee_teep
+    variables:
+        ENVS: env/optee_qemu_teep.sh
+        TEST_DIR: test_gp
+    stage: test_gp
+    script:
+        - echo "Hi"
+        - apt-get -y install nodejs; apt-get -y install npm cmake
+        - echo ${OPTEE_DIR}
+        - ls -la /
+        - pwd
+        - ls -la
+        - cd ~; pwd; ls -la; cd /builds/rinkai/teep-device
+        - make clean-optee && make build-optee
