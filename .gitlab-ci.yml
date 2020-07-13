@@ -37,6 +37,8 @@ stages:
 
 keystone_qemu_default:
     <<: *test_definition
+    only:
+        - master
     image: ${DOCKER_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
@@ -46,6 +48,8 @@ keystone_qemu_default:
         - make build test run TEST_DIR=${TEST_DIR}
 keystone_qemu_test_gp:
     <<: *test_definition
+    only:
+        - master
     image: ${DOCKER_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
@@ -56,6 +60,8 @@ keystone_qemu_test_gp:
 
 keystone_hifive_default:
     <<: *test_definition
+    only:
+        - master
     image: ${DOCKER_IMAGE}:keystone_hifive
     variables:
         ENVS: env/keystone.sh
@@ -65,6 +71,8 @@ keystone_hifive_default:
         - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
 keystone_hifive_test_gp:
     <<: *test_definition
+    only:
+        - master
     image: ${DOCKER_IMAGE}:keystone_hifive
     variables:
         ENVS: env/keystone.sh
@@ -74,6 +82,8 @@ keystone_hifive_test_gp:
         - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
 
 keystone_trvsim_test_gp:
+    only:
+        - master
     variables:
         # OVPSIM_LICENCE and MAC_ADDR are defined in CI/CD settings -> Variables.
         ENVS: env/dummy.sh
@@ -112,6 +122,8 @@ keystone_trvsim_test_gp:
 
 keystone_vc707_default:
     <<: *test_definition
+    only:
+        - master
     # This is tentative, but actually it works!
     image: ${DOCKER_IMAGE}:keystone_qemu
     variables:
@@ -124,8 +136,9 @@ keystone_vc707_default:
         - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR}
 
 sgx_sim_default:
-    # EPYC server seems to get fault. see https://192.168.100.100/rinkai/ta-ref/-/jobs/12748
-    <<: *test_definition101
+    <<: *test_definition
+    only:
+        - master
     image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh
@@ -135,7 +148,9 @@ sgx_sim_default:
         - make build test run TEST_DIR=${TEST_DIR}
 
 sgx_sim_test_gp:
-    <<: *test_definition101
+    <<: *test_definition
+    only:
+        - master
     image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh
@@ -146,6 +161,8 @@ sgx_sim_test_gp:
 
 sgx_nuc_default:
     <<: *test_definition
+    only:
+        - master
     image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh
@@ -155,6 +172,8 @@ sgx_nuc_default:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR}
 sgx_nuc_test_gp:
     <<: *test_definition
+    only:
+        - master
     image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh
@@ -165,6 +184,8 @@ sgx_nuc_test_gp:
 
 optee_qemu_default:
     <<: *test_definition
+    only:
+        - master
     image: ${DOCKER_IMAGE}:optee_qemu_v8
     variables:
         ENVS: env/optee_qemu.sh
@@ -174,6 +195,8 @@ optee_qemu_default:
         - make build test run TEST_DIR=${TEST_DIR}
 optee_qemu_test_gp:
     <<: *test_definition
+    only:
+        - master
     image: ${DOCKER_IMAGE}:optee_qemu_v8
     variables:
         ENVS: env/optee_qemu.sh
@@ -184,6 +207,8 @@ optee_qemu_test_gp:
 
 optee_rpi3_default:
     <<: *test_definition
+    only:
+        - master
     image: ${DOCKER_IMAGE}:optee_rpi3
     variables:
         ENVS: env/optee_rpi3.sh
@@ -193,6 +218,8 @@ optee_rpi3_default:
         - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR}
 optee_rpi3_test_gp:
     <<: *test_definition
+    only:
+        - master
     image: ${DOCKER_IMAGE}:optee_rpi3
     variables:
         ENVS: env/optee_rpi3.sh
@@ -203,6 +230,8 @@ optee_rpi3_test_gp:
 
 optee_qemu_teep:
     <<: *test_definition
+    only:
+        - teep-device
     image: ${DOCKER_IMAGE_OPTEE}:qemu_optee_teep
     variables:
         ENVS: env/optee_qemu_teep.sh
