@@ -4,6 +4,9 @@ variables:
     DOCKER_IMAGE: trasioteam/ta_ref_devel
     DOCKER_IMAGE_OPTEE: trasioteam/optee
 
+before_script:
+    - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWD}
+
 stages:
     - test_mini
     - test_gp
