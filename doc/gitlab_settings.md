@@ -8,7 +8,7 @@ First, exec `gitlab-runner register` on the gitlab machine to use docker image:
 # This token is checked at Settings > CI/CD > Specific Runners
 export TOKEN=AaAaAaAaAaAaAaAaAaAa
 # --docker-image[required]: Default docker image
-sudo gitlab-runner register --non-interactive --docker-pull-policy "if-not-present" --url "http://192.168.100.100/" --registration-token ${TOKEN} --name ref-ta --tag-list ref-ta --executor docker --docker-image ubuntu:20.04
+sudo gitlab-runner register --non-interactive --docker-pull-policy "if-not-present" --url "https://192.168.100.100/" --registration-token ${TOKEN} --name ref-ta --tag-list ref-ta --executor docker --docker-image ubuntu:20.04
 Runtime platform                                    arch=amd64 os=linux pid=19618 revision=21cb397c version=13.0.1
 Running in system-mode.
 

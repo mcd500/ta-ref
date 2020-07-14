@@ -11,7 +11,7 @@ stages:
     variables:
         ENVS: env/dummy.sh
     tags:
-        - ref-ta
+        - ta-ref
     before_script:
         - git submodule update --init --recursive
         - source ${ENVS}
