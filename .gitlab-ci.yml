@@ -33,7 +33,7 @@ stages:
     after_script:
         - source ${ENVS}
         # cleanup
-        - make mrproper
+#        - make mrproper
 
 # `sudo gitlab-runner register --non-interactive --docker-pull-policy "if-not-present" --url "https://192.168.100.100/" --registration-token ${THIS_TOKEN} --name ref-ta --tag-list ref-ta --executor docker --docker-image ubuntu:20.04` in advance.
 .test_template101: &test_definition101
