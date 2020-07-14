@@ -20,6 +20,19 @@ stages:
         # cleanup
         - make mrproper
 
+.test_template101: &test_definition101
+    variables:
+        ENVS: env/dummy.sh
+    tags:
+        - ref-ta
+    before_script:
+        - git submodule update --init --recursive
+        - source ${ENVS}
+    after_script:
+        - source ${ENVS}
+        # cleanup
+        - make mrproper
+
 
 keystone_qemu_default:
     <<: *test_definition
@@ -110,7 +123,8 @@ keystone_vc707_default:
         - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR}
 
 sgx_sim_default:
-    <<: *test_definition
+    # EPYC server seems to get fault. see https://192.168.100.100/rinkai/ta-ref/-/jobs/12748
+    <<: *test_definition101
     image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh
@@ -119,7 +133,7 @@ sgx_sim_default:
     script:
         - make build test run TEST_DIR=${TEST_DIR}
 sgx_sim_test_gp:
-    <<: *test_definition
+    <<: *test_definition101
     image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh

@@ -37,6 +37,8 @@ make build test run MACHINE=${MACHINE} TEST_DIR=${TEST_DIR}
 
 + `TEST_DIR`(default: test_mini) : This repository supports multiple test suites. For example, `TEST_DIR=test_gp` builds and runs under `test_gp` directory, GP API test suite.
 
+Note) This repository supports SSL transportation, so we should set `GIT_SSL_NO_VERIFY=true` and `git config --local http.sslVerify false`.
+
 ## keystone
 
 ### qemu
