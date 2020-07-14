@@ -11,8 +11,8 @@ stages:
 
 .test_template: &test_definition
     image: docker:stable
-#    services:
-#        - docker:dind
+    services:
+        - docker:dind
 
     variables:
         ENVS: env/dummy.sh
