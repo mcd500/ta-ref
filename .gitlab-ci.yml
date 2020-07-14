@@ -15,7 +15,7 @@ stages:
     tags:
         - ta-ref
     before_script:
-#        - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWD} docker.io
+        - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWD} docker.io
         - sed -i '/^https:\/\/gitlab-ci-token/d' ~/.git-credentials
         - git config http.sslVerify false
         - git config --global credential.helper 'store --file ~/.git-credentials'
