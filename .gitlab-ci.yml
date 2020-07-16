@@ -49,7 +49,7 @@ stages:
         - git submodule sync --recursive
         - git submodule update --init --recursive
         - source ${ENVS}
-        - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWD}
+#        - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWD}
     after_script:
         - source ${ENVS}
         # cleanup
