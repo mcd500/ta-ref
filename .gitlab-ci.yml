@@ -341,3 +341,16 @@ optee_qemu_teep_device:
         - apt-get -y install nodejs; apt-get -y install npm cmake
         - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
         - make clean-optee && make build-optee
+
+keystone_qemu_test_teep:
+    <<: *test_definition
+    only:
+        - teep-device
+    image: ${DOCKER_IMAGE}:keystone_qemu
+    variables:
+        ENVS: env/keystone.sh
+        TEST_DIR: test_gp
+    stage: experimental
+    script:
+        - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
+        - make clean-keystone && make build-keystone
