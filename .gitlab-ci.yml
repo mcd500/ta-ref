@@ -269,7 +269,7 @@ optee_qemu_teep_device:
     variables:
         ENVS: env/optee_qemu_teep.sh
         TEST_DIR: test_gp
-    stage: test_gp
+    stage: experimental
     script:
         - apt-get -y install nodejs; apt-get -y install npm cmake
         - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
