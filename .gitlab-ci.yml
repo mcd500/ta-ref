@@ -353,6 +353,7 @@ keystone_qemu_test_teep:
     stage: experimental
     script:
         - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
+        - make -C .. mrproper build
         - make clean-keystone && make build-keystone
 
 keystone_qemu_test_teep_hello_ta:
@@ -366,6 +367,7 @@ keystone_qemu_test_teep_hello_ta:
     stage: experimental
     script:
         - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
+        - make -C .. mrproper build
         - make clean-keystone && make -C platform/keystone hello-ta
 
 keystone_qemu_test_teep_hello_app:
@@ -379,6 +381,7 @@ keystone_qemu_test_teep_hello_app:
     stage: experimental
     script:
         - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
+        - make -C .. mrproper build
         - make clean-keystone && make -C platform/keystone hello-app
 
 keystone_qemu_test_teep_teep_agent_ta:
@@ -392,6 +395,7 @@ keystone_qemu_test_teep_teep_agent_ta:
     stage: experimental
     script:
         - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
+        - make -C .. mrproper build
         - make clean-keystone && make -C platform/keystone teep-agent-ta
 
 keystone_qemu_test_teep_teep_broker_app:
@@ -405,6 +409,7 @@ keystone_qemu_test_teep_teep_broker_app:
     stage: experimental
     script:
         - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
+        - make -C .. mrproper build
         - make clean-keystone && make -C platform/keystone teep-broker-app
 
 
