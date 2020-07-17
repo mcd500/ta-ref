@@ -34,6 +34,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <tee_api_defines.h>
+#include "tee_api_tee_types.h"
+
 
 /*
  * Common Definitions
@@ -227,6 +229,9 @@ typedef void *TEE_Session;
 
 #define TEE_SE_READER_NAME_MAX	20
 
+#ifndef PLAT_KEYSTONE
+// TODO: ???
+
 typedef unsigned long int nfds_t;
 
 struct pollfd
@@ -249,6 +254,6 @@ struct addrinfo {
 	struct addrinfo *ai_next;
 };
 
-
+#endif
 
 #endif /* TEE_API_TYPES_H */
