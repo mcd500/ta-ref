@@ -352,6 +352,7 @@ keystone_qemu_test_teep:
         TEST_DIR: test_gp
     stage: experimental
     script:
+        - apt-get -y install nodejs; apt-get -y install npm cmake
         - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
         - make -C .. build
         - make generate-jwk-headers
@@ -367,6 +368,7 @@ keystone_qemu_test_teep_hello_ta:
         TEST_DIR: test_gp
     stage: experimental
     script:
+        - apt-get -y install nodejs; apt-get -y install npm cmake
         - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
         - make -C .. build
         - make clean-keystone && make -C platform/keystone hello-ta
@@ -381,6 +383,7 @@ keystone_qemu_test_teep_hello_app:
         TEST_DIR: test_gp
     stage: experimental
     script:
+        - apt-get -y install nodejs; apt-get -y install npm cmake
         - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
         - make -C .. build
         - make clean-keystone && make -C platform/keystone hello-app
@@ -395,6 +398,7 @@ keystone_qemu_test_teep_teep_agent_ta:
         TEST_DIR: test_gp
     stage: experimental
     script:
+        - apt-get -y install nodejs; apt-get -y install npm cmake
         - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
         - make -C .. build
         - make generate-jwk-headers
@@ -410,6 +414,7 @@ keystone_qemu_test_teep_teep_broker_app:
         TEST_DIR: test_gp
     stage: experimental
     script:
+        - apt-get -y install nodejs; apt-get -y install npm cmake
         - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
         - make -C .. build
         - make clean-keystone && make -C platform/keystone teep-broker-app
