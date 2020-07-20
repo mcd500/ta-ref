@@ -71,8 +71,9 @@ sudo make
 ## Note) You can use docker image or launch manually. see  see also https://github.com/trasio-org/private-docs/blob/master/keystone-with-debian-userland.md#%E5%AE%9F%E8%A1%8C%E7%94%A8%E3%81%AE%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%82%92%E4%BD%9C%E6%88%90.
 export PATH_TO_LICENCE_PATH=$(pwd)/OVPsim.lic
 export MAC_ADDR=...
+export HOST=trvsim
 ## The `-d` option is allowed to launch TRV simulator in background mode.
-docker run --rm -v $(pwd):/tmp/image -v ${PATH_TO_LICENCE_PATH}:/home/trv/Imperas.20191106/OVPsim.lic --name trvsim -p 10022:10022 --hostname trv --mac-address ${MAC_ADDR} trasioteam/riscv_toolchain:trvsim
+docker run --rm -v $(pwd):/tmp/image -v ${PATH_TO_LICENCE_PATH}:/home/trv/Imperas.20200628/OVPsim.lic --name trvsim -p 10022:10022 --hostname ${HOST} --mac-address ${MAC_ADDR} trasioteam/riscv_toolchain:trvsim
 ```
 
 Dockerfile for TRV simulator is [here](https://192.168.100.100/rinkai/dockerfiles/-/tree/master/riscv/trvsim)(expired 2020.6.29). You can access the docker machine by `ssh -p 10022 -o "StrictHostKeyChecking no" root@${IP_ADDR}`.
