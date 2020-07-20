@@ -14,6 +14,8 @@ Running in system-mode.
 
 Registering runner... succeeded                     runner=Rgo2sZ2Z
 Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded!
+# when configuring trvsim environment
+sudo gitlab-runner register --non-interactive --url "https://192.168.100.100/" --registration-token Rgo2sZ2Z8KnoBopX9JPw --name trvsim --tag-list trvsim --executor shell
 ```
 
 This settings is reflected on `/etc/gitlab-runner/config.toml`
