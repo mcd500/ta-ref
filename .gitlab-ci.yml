@@ -120,7 +120,7 @@ keystone_trvsim_test_gp:
         ENV: env/keystone.sh
         TEST_DIR: test_gp
     tags:
-        - shell
+        - trvsim
     stage: test_gp
     before_script:
         # launch TRV simulator at background
