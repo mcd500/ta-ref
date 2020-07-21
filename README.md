@@ -64,9 +64,9 @@ Install TRV simulator, create binaries and launch it:
 
 ```sh
 # 1. create bbl, vmlinux, fsbl.bin and sdimage.bin
-git clone https://192.168.100.100/rinkai/hifive_imager
-cd hifive_imager
-sudo make
+wget http://192.168.100.100:2000/keystone_trvsim_hifive_sdimage.tar.xz -o /dev/null
+tar xf keystone_trvsim_hifive_sdimage.tar.xz
+
 # 2. launch the licence server and the TRV simulator.
 ## Note) You can use docker image or launch manually. see  see also https://github.com/trasio-org/private-docs/blob/master/keystone-with-debian-userland.md#%E5%AE%9F%E8%A1%8C%E7%94%A8%E3%81%AE%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%82%92%E4%BD%9C%E6%88%90.
 export PATH_TO_LICENCE_PATH=$(pwd)/OVPsim.lic
