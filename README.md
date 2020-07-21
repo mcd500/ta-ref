@@ -154,7 +154,7 @@ make build test run TEST_DIR=test_gp
 ### Intel NUC
 
 ```sh
-make build test run MACHINE=NUC TEST_DIR=NUC
+make build test run MACHINE=NUC TEST_DIR=test_gp
 ```
 
 ## optee
