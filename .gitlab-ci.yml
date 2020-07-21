@@ -84,8 +84,8 @@ keystone_qemu_test_perf:
     variables:
         ENVS: env/keystone.sh
         TEST_DIR: test_gp
-        PROFILER: ON
-        DEBUG_TYPE: RELEASE
+        PROFILER: "ON"
+        DEBUG_TYPE: "RELEASE"
     stage: test_perf
     script:
         - make build test run TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
@@ -118,8 +118,8 @@ keystone_hifive_test_perf:
     variables:
         ENVS: env/keystone.sh
         TEST_DIR: test_gp
-        PROFILER: ON
-        DEBUG_TYPE: RELEASE
+        PROFILER: "ON"
+        DEBUG_TYPE: "RELEASE"
     stage: test_perf
     script:
         - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
@@ -206,8 +206,8 @@ sgx_sim_test_perf:
     variables:
         ENVS: env/sgx_x64.sh
         TEST_DIR: test_gp
-        PROFILER: ON
-        DEBUG_TYPE: RELEASE
+        PROFILER: "ON"
+        DEBUG_TYPE: "RELEASE"
     stage: test_perf
     script:
         - make build test run TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
@@ -240,8 +240,8 @@ sgx_nuc_test_perf:
     variables:
         ENVS: env/sgx_x64.sh
         TEST_DIR: test_gp
-        PROFILER: ON
-        DEBUG_TYPE: RELEASE
+        PROFILER: "ON"
+        DEBUG_TYPE: "RELEASE"
     stage: test_perf
     script:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
@@ -274,8 +274,8 @@ optee_qemu_test_perf:
     variables:
         ENVS: env/keystone.sh
         TEST_DIR: test_gp
-        PROFILER: ON
-        DEBUG_TYPE: RELEASE
+        PROFILER: "ON"
+        DEBUG_TYPE: "RELEASE"
     stage: test_perf
     script:
         - make build test run TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
@@ -308,8 +308,8 @@ optee_rpi3_test_perf:
     variables:
         ENVS: env/keystone.sh
         TEST_DIR: test_gp
-        PROFILER: ON
-        DEBUG_TYPE: RELEASE
+        PROFILER: "ON"
+        DEBUG_TYPE: "RELEASE"
     stage: test_perf
     script:
         - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
