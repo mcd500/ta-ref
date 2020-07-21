@@ -39,6 +39,7 @@
 #define TEE_COMMON_H
 
 #include <stdint.h>
+#include <stdio.h>
 
 #ifdef __cplusplus
 extern "C" {
