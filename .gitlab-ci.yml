@@ -201,7 +201,7 @@ sgx_sim_test_gp:
     script:
         - make build test run TEST_DIR=${TEST_DIR}
 sgx_sim_test_perf:
-    <<: *test_definition
+    <<: *test_definition101
     image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh
