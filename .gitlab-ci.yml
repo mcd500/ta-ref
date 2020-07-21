@@ -272,7 +272,7 @@ optee_qemu_test_perf:
     <<: *test_definition
     image: ${DOCKER_IMAGE}:optee_qemu_v8
     variables:
-        ENVS: env/keystone.sh
+        ENVS: env/optee_qemu.sh
         TEST_DIR: test_gp
         PROFILER: "ON"
         DEBUG_TYPE: "RELEASE"
@@ -306,7 +306,7 @@ optee_rpi3_test_perf:
     <<: *test_definition
     image: ${DOCKER_IMAGE}:optee_rpi3
     variables:
-        ENVS: env/keystone.sh
+        ENVS: env/optee_rpi3.sh
         TEST_DIR: test_gp
         PROFILER: "ON"
         DEBUG_TYPE: "RELEASE"
