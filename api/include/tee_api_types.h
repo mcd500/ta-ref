@@ -240,7 +240,7 @@ struct pollfd
 	short int revents;          /* Types of events that actually occurred.  */
 };
 
-typedef unsigned int socklen_t;
+typedef uint32_t socklen_t;
 
 struct addrinfo {
 	int              ai_flags;
@@ -253,6 +253,6 @@ struct addrinfo {
 	struct addrinfo *ai_next;
 };
 
-#endif
+#endif /* !PLAT_KEYSTONE */
 
 #endif /* TEE_API_TYPES_H */
