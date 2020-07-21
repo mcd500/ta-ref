@@ -7,10 +7,10 @@ variables:
 stages:
     - test_mini
     - test_gp
+    - test_perf
     - experimental
 
 .test_template: &test_definition
-
     variables:
         ENVS: env/dummy.sh
     tags:
@@ -78,6 +78,17 @@ keystone_qemu_test_gp:
     stage: test_gp
     script:
         - make build test run TEST_DIR=${TEST_DIR}
+keystone_qemu_test_perf:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:keystone_qemu
+    variables:
+        ENVS: env/keystone.sh
+        TEST_DIR: test_gp
+        PROFILER: ON
+        DEBUG_TYPE: RELEASE
+    stage: test_perf
+    script:
+        - make build test run TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
 keystone_hifive_default:
     <<: *test_definition
@@ -101,6 +112,17 @@ keystone_hifive_test_gp:
     stage: test_gp
     script:
         - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
+keystone_hifive_test_perf:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:keystone_hifive
+    variables:
+        ENVS: env/keystone.sh
+        TEST_DIR: test_gp
+        PROFILER: ON
+        DEBUG_TYPE: RELEASE
+    stage: test_perf
+    script:
+        - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
 keystone_trvsim_test_gp:
     only:
@@ -167,7 +189,6 @@ sgx_sim_default:
     stage: test_mini
     script:
         - make build test run TEST_DIR=${TEST_DIR}
-
 sgx_sim_test_gp:
     <<: *test_definition
     only:
@@ -179,6 +200,17 @@ sgx_sim_test_gp:
     stage: test_gp
     script:
         - make build test run TEST_DIR=${TEST_DIR}
+sgx_sim_test_perf:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:sgx
+    variables:
+        ENVS: env/sgx_x64.sh
+        TEST_DIR: test_gp
+        PROFILER: ON
+        DEBUG_TYPE: RELEASE
+    stage: test_perf
+    script:
+        - make build test run TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
 sgx_nuc_default:
     <<: *test_definition
@@ -202,6 +234,17 @@ sgx_nuc_test_gp:
     stage: test_gp
     script:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR}
+sgx_nuc_test_perf:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:sgx
+    variables:
+        ENVS: env/sgx_x64.sh
+        TEST_DIR: test_gp
+        PROFILER: ON
+        DEBUG_TYPE: RELEASE
+    stage: test_perf
+    script:
+        - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
 optee_qemu_default:
     <<: *test_definition
@@ -225,6 +268,17 @@ optee_qemu_test_gp:
     stage: test_gp
     script:
         - make build test run TEST_DIR=${TEST_DIR}
+optee_qemu_test_perf:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:optee_qemu_v8
+    variables:
+        ENVS: env/keystone.sh
+        TEST_DIR: test_gp
+        PROFILER: ON
+        DEBUG_TYPE: RELEASE
+    stage: test_perf
+    script:
+        - make build test run TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
 optee_rpi3_default:
     <<: *test_definition
@@ -248,6 +302,17 @@ optee_rpi3_test_gp:
     stage: test_gp
     script:
         - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR}
+optee_rpi3_test_perf:
+    <<: *test_definition
+    image: ${DOCKER_IMAGE}:optee_rpi3
+    variables:
+        ENVS: env/keystone.sh
+        TEST_DIR: test_gp
+        PROFILER: ON
+        DEBUG_TYPE: RELEASE
+    stage: test_perf
+    script:
+        - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
 optee_qemu_teep:
     <<: *test_definition

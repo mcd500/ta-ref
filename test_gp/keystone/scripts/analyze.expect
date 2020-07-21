@@ -6,7 +6,7 @@ set USER $::env(USER)
 set IP_ADDR $::env(IP_ADDR)
 set PASSWD $::env(PASSWD)
 spawn ssh $USER@$IP_ADDR -p $PORT
-expect "*(yes/no)? " { 
+expect "?" {
     send "yes\r"
     expect "*?assword" {
         send "$PASSWD\r"
@@ -44,9 +44,6 @@ expect "# " {
 
 expect "# " {
     send "test -f app_shared_mem && ./analyzer app_shared_mem App.nm\r"
-    expect "baseaddr: 0x" {} timeout {
-        exit 1
-    }
 }
 
 expect "# " {
