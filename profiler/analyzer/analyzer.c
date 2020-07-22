@@ -11,9 +11,9 @@
 #include "nm_parse.h"
 
 #define BUF_MAX 65536
-#define CAPTION "+ perf result"
-#define COLS "idx,start_core_id,end_core_id,depth,addr,funcname,start[clocks],end,duration"
-#define FORMAT "%ld,%d,%d,%ld,0x%08lx,%s,%ld,%ld,%ld\n"
+// #define CAPTION "+ perf result"
+#define COLS "id,idx,start_core_id,end_core_id,depth,addr,funcname,start[clocks],end,duration"
+#define FORMAT "%03d,%03ld,%d,%d,%ld,0x%08lx,%s,%ld,%ld,%ld\n"
 
 int main(int argc, char *argv[]) {
     static char buf[BUF_MAX];
@@ -44,13 +44,13 @@ int main(int argc, char *argv[]) {
     count = header->idx;
 
     unsigned long baseaddr;
-    printf(CAPTION "\n");
+    // printf(CAPTION "\n");
     for(i = 0; i < count; i++, data++) {
         struct result res;
         __profiler_nsec_t nsec = data->nsec;
         if(i == 0) {
             baseaddr = (unsigned long)data->callee;
-            printf("baseaddr: 0x%016lx\n", baseaddr);
+            // printf("baseaddr: 0x%016lx\n", baseaddr);
             printf(COLS "\n");
             res.start = nsec;
             res.end = 0;
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
                 res.end_hartid = data->hartid;
                 __profiler_nsec_t duration = res.end - res.start;
                 unsigned long addr = (unsigned long)res.callee - (unsigned long)baseaddr;
-                printf(FORMAT, res.idx, res.start_hartid, res.end_hartid, res.depth, addr, get_func_name(table, addr), res.start, res.end, duration);
+                printf(FORMAT, i, res.idx, res.start_hartid, res.end_hartid, res.depth, addr, get_func_name(table, addr), res.start, res.end, duration);
                 break;
             default:
                 fprintf(stderr, "direction is something wrong!: %d, data->direction\n");

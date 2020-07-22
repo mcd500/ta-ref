@@ -1,49 +1,16 @@
 TOPDIR=$(CURDIR)/..
 
-ifeq ($(MACHINE), SIM)
-PLATFORM=vexpress-qemu_armv8a
-else ifeq ($(MACHINE), RPI3)
-PLATFORM=rpi3
-endif
-
-COMPILE_S_KERNEL := 64
-COMPILE_S_USER := $(COMPILE_S_KERNEL)
-include ${OPTEE_DIR}/build/common.mk
-OPTEE_OS_FLAGS = CFG_TEE_CORE_LOG_LEVEL=3 PLATFORM=$(PLATFORM)
-OPTEE_OS_FLAGS += CFG_TEE_BENCHMARK=n CFG_ARM64_core=y
-OPTEE_OS_FLAGS += DEBUG=0
-
 LIBUTEE=lib/libutee.a
 
-# enable register to set CFG_FTRACE_SUPPORT=y. See https://github.com/OP-TEE/optee_os/blob/72ec5fde57b8f4ea9e90f46a3d93de5c8c5ec383/core/arch/arm/kernel/thread.c#L1016-L1023
 ifeq ($(PROFILER), ON)
-OPTEE_OS_FLAGS += CFG_FTRACE_SUPPORT=y
-# tee_** function should be profiled, so we build optee_os partially by ourselves.
 TARGETS += $(LIBUTEE)
 endif
 
-TARGETS += build bind
+TARGETS += bind
 
-
-# TODO: nodebug
-# CFG_TEE_CORE_LOG_LEVEL=0
-# CFG_TEE_CORE_DEBUG=n
-# CFG_TEE_TA_LOG_LEVEL=0
-# CFG_CC_OPTIMIZE_FOR_SIZE=y
-# CFG_DEBUG_INFO=n
 
 .PHONY: all
 all: $(TARGETS)
-
-build:
-	$(RM) ${OPTEE_OUTBR_DIR}/build/optee_*/.stamp_*
-	make -C ${OPTEE_DIR}/optee_os \
-		$(OPTEE_OS_COMMON_EXTRA_FLAGS) \
-		CROSS_COMPILE="$(TOOLPREFIX)" \
-		CROSS_COMPILE_core="$(TOOLPREFIX)" \
-		CROSS_COMPILE_ta_arm64="$(TOOLPREFIX)" \
-		CROSS_COMPILE_ta_arm32="$(TOOLPREFIX32)" \
-		$(OPTEE_OS_FLAGS)
 
 # In The following settings, we customize some flags to build optee_os libraries.
 include $(TOPDIR)/api/$(TEE)/build.mk
