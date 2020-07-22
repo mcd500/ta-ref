@@ -76,7 +76,7 @@ export HOST=trvsim
 docker run --rm -v $(pwd):/tmp/image -v ${PATH_TO_LICENCE_PATH}:/home/trv/Imperas.20200628/OVPsim.lic --name trvsim -p 10022:10022 --hostname ${HOST} --mac-address ${MAC_ADDR} trasioteam/riscv_toolchain:trvsim
 ```
 
-Dockerfile for TRV simulator is [here](https://192.168.100.100/rinkai/dockerfiles/-/tree/master/riscv/trvsim)(expired 2020.6.29). You can access the docker machine by `ssh -p 10022 -o "StrictHostKeyChecking no" root@${IP_ADDR}`.
+Dockerfile for TRV simulator is [here](https://192.168.100.100/rinkai/dockerfiles/-/tree/master/riscv/trvsim). You can access the docker machine by `ssh -p 10022 -o "StrictHostKeyChecking no" root@${IP_ADDR}`.
 
 #### build and run ta-ref
 
