@@ -35,9 +35,6 @@ expect "$ " {
 
 expect "$ " {
     send "test -f shared_mem && ./analyzer shared_mem Enclave.nm\r"
-    expect "baseaddr: 0x" {} timeout {
-        exit 1
-    }
 }
 
 expect "$ " {
