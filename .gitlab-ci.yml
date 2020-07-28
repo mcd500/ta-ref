@@ -354,6 +354,7 @@ keystone_qemu_test_teep:
     script:
         - apt-get -y install nodejs; apt-get -y install npm cmake
         - cd ~; pwd; ls -la; cd /builds/rinkai/; ls -la; cd ta-ref/; ls -la; cd teep-device
+        - make -C .. mrproper || true
         - make -C .. build
         - make generate-jwk-headers
         - make clean-keystone && make build-keystone
