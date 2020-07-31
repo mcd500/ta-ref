@@ -237,7 +237,7 @@ struct pollfd
 	short int revents;          /* Types of events that actually occurred.  */
 };
 
-#define socklen_t unsigned int
+typedef unsigned int socklen_t;
 
 struct addrinfo {
 	int              ai_flags;
