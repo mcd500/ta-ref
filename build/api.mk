@@ -3,7 +3,7 @@
 include ./general.mk
 LIB=libtee_api.a
 
-API_INCLUDE_DIR=include/api
+API_INCLUDE_DIR=include
 
 all: build bind
 
@@ -12,7 +12,7 @@ build:
 
 bind:
 	$(SLN) $(TOPDIR)/api/$(LIB) lib/$(LIB)
-	mkdir -p $(API_INCLUDE_DIR)
+#	mkdir -p $(API_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/api/include/*.h $(API_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/api/$(TEE)/*.h $(API_INCLUDE_DIR)
 
