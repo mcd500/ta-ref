@@ -9,7 +9,6 @@ unsigned int ocall_print_string(keyedge_str const char* str);
 int ocall_open_file(keyedge_str const char* str, int flags, int perm);
 int ocall_close_file(int desc);
 int ocall_write_file(int desc, keyedge_vla const char *buf, keyedge_size unsigned int len);
-int ocall_invoke_command_callback_write(keyedge_str const char* str, keyedge_vla const char *buf, keyedge_size unsigned int len);
 
 // keyedge has no [out] type buf i.e. all data from host to eapp should be
 // returned as the return value which might be a fixed size structure.
@@ -45,6 +44,12 @@ typedef struct invoke_command_t {
 //  char params2[256];
 //  char params3[256];
 } invoke_command_t;
-invoke_command_t ocall_invoke_command_polling(int dummy);
 
+invoke_command_t ocall_pull_invoke_command();
+void ocall_put_invoke_command_result(int result);
+
+
+invoke_command_t ocall_invoke_command_polling(void);
 int ocall_invoke_command_callback(invoke_command_t cb_cmd);
+int ocall_invoke_command_callback_write(keyedge_str const char* str, keyedge_vla const char *buf, keyedge_size unsigned int len);
+
