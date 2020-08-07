@@ -201,6 +201,33 @@ make build test run MACHINE=RPI3 TEST_DIR=test_gp
 
 Make sure that `ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib/optee_armtz/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta` for the first time, or the error occurs, `optee_ref_ta: TEEC_Opensession failed with code 0xffff0008 origin 0x3`.
 
+### teep-device & tamproto
+
+start tamproto server
+```sh
+git clone https://192.168.100.100/rinkai/tamproto.git
+cd tamproto
+git checkout teep-device-interop
+docker-compose build
+docker-compose up
+```
+
+build ta-ref
+
+```sh
+cd ta-ref
+docker run --network tamproto_default -it --rm -v $(pwd):/home/main/ta-ref trasioteam/optee:optee_qemu_teep
+apt install -y cmake
+cd ta-ref
+source env/optee_qemu_teep.sh
+make
+cd teep-device
+make generate-jwk-headers
+cd platform/op-tee
+make install_qemu
+make test
+```
+
 # Options
 
 + `PROFILER=[ON/OFF] .. enable/disable profiler(default: OFF)
