@@ -41,7 +41,7 @@ crypto:
 eyrie:
 	make -f eyrie_os.mk
 
-api: depends
+api:
 	make -f api.mk CRYPT_TYPE=$(CRYPT_TYPE)
 
 gp: api
