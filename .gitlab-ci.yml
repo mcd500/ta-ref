@@ -360,7 +360,7 @@ keystone_qemu_test_teep:
     script:
         - cd teep-device
         - make -C .. build
-        - make generate-jwk-headers
+        - make jwk-headers
         - make clean-keystone && make build-keystone
 
 keystone_qemu_test_teep_hello_ta:
@@ -406,7 +406,7 @@ keystone_qemu_test_teep_teep_agent_ta:
     script:
         - cd teep-device
         - make -C .. build
-        - make generate-jwk-headers
+        - make jwk-headers
         - make clean-keystone && make -C platform/keystone teep-agent-ta
 
 keystone_qemu_test_teep_teep_broker_app:
