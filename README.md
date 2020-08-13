@@ -44,7 +44,7 @@ Note) This repository supports SSL transportation, so we should set `GIT_SSL_NO_
 ### qemu
 
 ```sh
-git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
+GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_qemu
 cd ta-ref
@@ -83,7 +83,7 @@ Dockerfile for TRV simulator is [here](https://192.168.100.100/rinkai/dockerfile
 Check `test/keystone/machine.mk` to set IP address(localhost or remote) and port(usually 10022) and build & run as following:
 
 ```sh
-git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
+GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_trvsim
 cd ta-ref
@@ -103,7 +103,7 @@ docker stop trvsim
 ### Unleashed Hifive board
 
 ```sh
-git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
+GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_hifive
 cd ta-ref
@@ -133,7 +133,7 @@ make build test run MACHINE=VC707 TEST_DIR=test_mini
 ## intel-sgx
 
 ```sh
-git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
+GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:sgx
 ```
@@ -162,7 +162,7 @@ make build test run MACHINE=NUC TEST_DIR=test_gp
 To configure images in raspberry pi3, see [tutorial](https://192.168.100.100/rinkai/ta-ref/-/blob/master/doc/rpi3.md).
 
 ```sh
-git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
+GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 ```
 
