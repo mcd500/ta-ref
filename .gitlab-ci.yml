@@ -10,7 +10,7 @@ stages:
     - test_perf
     - experimental
 
-.test_template: &test_definition
+.test_teep_template: &test_teep_definition
     variables:
         ENVS: env/dummy.sh
     tags:
@@ -29,6 +29,22 @@ stages:
         - source ${ENVS}
         # cleanup
 #        - make mrproper
+
+.test_template: &test_definition
+    variables:
+        ENVS: env/dummy.sh
+    tags:
+        - ta-ref
+    before_script:
+#        - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWD} docker.io
+        - git submodule sync --recursive
+        - git submodule update --init --recursive
+        - source ${ENVS}
+    after_script:
+        - source ${ENVS}
+        # cleanup
+        - make mrproper
+
 
 # `sudo gitlab-runner register --non-interactive --docker-pull-policy "if-not-present" --url "https://192.168.100.100/" --registration-token ${THIS_TOKEN} --name ref-ta --tag-list ref-ta --executor docker --docker-image ubuntu:20.04` in advance.
 .test_template101: &test_definition101
@@ -287,7 +303,7 @@ optee_rpi3_test_perf:
         - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
 optee_qemu_teep:
-    <<: *test_definition
+    <<: *test_teep_definition
     image: ${DOCKER_IMAGE_OPTEE}:optee_qemu_teep
     variables:
         ENVS: env/optee_qemu_teep.sh
@@ -297,7 +313,7 @@ optee_qemu_teep:
         - make build test run TEST_DIR=${TEST_DIR}
 
 optee_qemu_teep_device:
-    <<: *test_definition
+    <<: *test_teep_definition
     image: ${DOCKER_IMAGE_OPTEE}:optee_qemu_teep
     variables:
         ENVS: env/optee_qemu_teep.sh
