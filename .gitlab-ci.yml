@@ -14,7 +14,7 @@ stages:
     variables:
         ENVS: env/dummy.sh
     tags:
-        - ta-ref
+        - docker117-ubuntu
     before_script:
 #        - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWD} docker.io
         - sed -i '/^https:\/\/gitlab-ci-token/d' ~/.git-credentials || true
@@ -30,11 +30,11 @@ stages:
         # cleanup
 #        - make mrproper
 
-.test_template: &test_definition
+.test_template117: &test_definition117
     variables:
         ENVS: env/dummy.sh
     tags:
-        - ta-ref
+        - docker117-ubuntu
     before_script:
 #        - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWD} docker.io
         - git submodule sync --recursive
@@ -46,18 +46,12 @@ stages:
         - make mrproper
 
 
-# `sudo gitlab-runner register --non-interactive --docker-pull-policy "if-not-present" --url "https://192.168.100.100/" --registration-token ${THIS_TOKEN} --name ref-ta --tag-list ref-ta --executor docker --docker-image ubuntu:20.04` in advance.
 .test_template101: &test_definition101
     variables:
         ENVS: env/dummy.sh
     tags:
-        - ref-ta
+        - docker101-ubuntu
     before_script:
-        - sed -i '/^https:\/\/gitlab-ci-token/d' ~/.git-credentials || true
-        - git config --global http.sslVerify false
-        - git config --global credential.helper 'store --file ~/.git-credentials'
-        - echo https://gitlab-ci-token:${CI_JOB_TOKEN}@192.168.100.100 >> ~/.git-credentials
-        - echo https://gitlab-ci-token:${CI_JOB_TOKEN}@192.168.100.100:443 >> ~/.git-credentials
         - git submodule sync --recursive
         - git submodule update --init --recursive
         - source ${ENVS}
@@ -67,9 +61,8 @@ stages:
         # cleanup
         - make mrproper
 
-
 keystone_qemu_default:
-    <<: *test_definition
+    <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
@@ -78,7 +71,7 @@ keystone_qemu_default:
     script:
         - make build test run TEST_DIR=${TEST_DIR}
 keystone_qemu_test_gp:
-    <<: *test_definition
+    <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
@@ -87,7 +80,7 @@ keystone_qemu_test_gp:
     script:
         - make build test run TEST_DIR=${TEST_DIR}
 keystone_qemu_test_perf:
-    <<: *test_definition
+    <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
@@ -99,7 +92,7 @@ keystone_qemu_test_perf:
         - make build test run TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
 keystone_hifive_default:
-    <<: *test_definition
+    <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_hifive
     variables:
         ENVS: env/keystone.sh
@@ -108,7 +101,7 @@ keystone_hifive_default:
     script:
         - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
 keystone_hifive_test_gp:
-    <<: *test_definition
+    <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_hifive
     variables:
         ENVS: env/keystone.sh
@@ -166,7 +159,7 @@ keystone_trvsim_test_gp:
         - docker stop ${CONTAINER_NAME}
 
 keystone_vc707_default:
-    <<: *test_definition
+    <<: *test_definition117
     # This is tentative, but actually it works!
     image: ${DOCKER_IMAGE}:keystone_qemu
     variables:
@@ -210,7 +203,7 @@ sgx_sim_test_perf:
         - make build test run TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
 sgx_nuc_default:
-    <<: *test_definition
+    <<: *test_definition101
     image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh
@@ -219,7 +212,7 @@ sgx_nuc_default:
     script:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR}
 sgx_nuc_test_gp:
-    <<: *test_definition
+    <<: *test_definition101
     image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh
@@ -228,7 +221,7 @@ sgx_nuc_test_gp:
     script:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR}
 sgx_nuc_test_perf:
-    <<: *test_definition
+    <<: *test_definition101
     image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh
@@ -240,7 +233,7 @@ sgx_nuc_test_perf:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
 optee_qemu_default:
-    <<: *test_definition
+    <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_qemu_v8
     variables:
         ENVS: env/optee_qemu.sh
@@ -249,7 +242,7 @@ optee_qemu_default:
     script:
         - make build test run TEST_DIR=${TEST_DIR}
 optee_qemu_test_gp:
-    <<: *test_definition
+    <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_qemu_v8
     variables:
         ENVS: env/optee_qemu.sh
@@ -258,7 +251,7 @@ optee_qemu_test_gp:
     script:
         - make build test run TEST_DIR=${TEST_DIR}
 optee_qemu_test_perf:
-    <<: *test_definition
+    <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_qemu_v8
     variables:
         ENVS: env/optee_qemu.sh
@@ -270,7 +263,7 @@ optee_qemu_test_perf:
         - make build test run TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
 optee_rpi3_default:
-    <<: *test_definition
+    <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_rpi3
     variables:
         ENVS: env/optee_rpi3.sh
@@ -279,7 +272,7 @@ optee_rpi3_default:
     script:
         - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR}
 optee_rpi3_test_gp:
-    <<: *test_definition
+    <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_rpi3
     variables:
         ENVS: env/optee_rpi3.sh
@@ -288,7 +281,7 @@ optee_rpi3_test_gp:
     script:
         - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR}
 optee_rpi3_test_perf:
-    <<: *test_definition
+    <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_rpi3
     only:
         # need to rebuild and burn new image
