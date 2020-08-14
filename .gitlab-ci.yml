@@ -3,6 +3,7 @@ variables:
     GIT_SUBMODULE_STRATEGY: none
     DOCKER_IMAGE: docker.io/trasioteam/ta_ref_devel
     DOCKER_TEEP_IMAGE: docker.io/trasioteam/ta_ref_teep_devel
+    DOCKER_TAMPROTO_IMAGE: docker.io/trasioteam/tamproto
 
 stages:
     - test_hello
@@ -71,6 +72,12 @@ stages:
         - make mrproper
 
 ###### keystone
+.tamproto_service: &tamproto_service
+    services:
+        - name: ${DOCKER_TAMPROTO_IMAGE}:teep-device-interop
+          alias: tamproto
+
+
 keystone_qemu_default:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_qemu
@@ -323,8 +330,7 @@ optee_rpi3_test_perf:
 optee_qemu_teep:
     <<: *test_definition
     only:
-        - teep-device
-        - teep-device_fix_gitlabci
+        - /^teep-device.*$/
     image: ${DOCKER_TEEP_IMAGE}:optee_qemu
     variables:
         ENVS: env/optee_qemu_teep.sh
@@ -335,9 +341,9 @@ optee_qemu_teep:
 
 optee_qemu_teep_device:
     <<: *test_definition
+    <<: *tamproto_service
     only:
-        - teep-device
-        - teep-device_fix_gitlabci
+        - /^teep-device.*$/
     image: ${DOCKER_TEEP_IMAGE}:optee_qemu
     variables:
         ENVS: env/optee_qemu_teep.sh
@@ -346,12 +352,17 @@ optee_qemu_teep_device:
     script:
         - cd teep-device
         - make clean-optee && make build-optee
+        - TAMIP=`python3 -c 'import socket;print(socket.gethostbyname("tamproto"))'`
+        - curl "http://$TAMIP:8888/api/tam"
+        - make -C platform/op-tee install_qemu
+        - make -C platform/op-tee test TAM_URL="http://$TAMIP:8888" | tr -d "\r"
+#        - cat /home/main/build-optee/out/bin/serial0.log
+#        - cat /home/main/build-optee/out/bin/serial1.log
 
 keystone_qemu_test_teep:
     <<: *test_definition
     only:
-        - teep-device
-        - teep-device_fix_gitlabci
+        - /^teep-device.*$/
     image: ${DOCKER_TEEP_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
@@ -366,8 +377,7 @@ keystone_qemu_test_teep:
 keystone_qemu_test_teep_hello_ta:
     <<: *test_definition
     only:
-        - teep-device
-        - teep-device_fix_gitlabci
+        - /^teep-device.*$/
     image: ${DOCKER_TEEP_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
@@ -381,8 +391,7 @@ keystone_qemu_test_teep_hello_ta:
 keystone_qemu_test_teep_hello_app:
     <<: *test_definition
     only:
-        - teep-device
-        - teep-device_fix_gitlabci
+        - /^teep-device.*$/
     image: ${DOCKER_TEEP_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
@@ -396,8 +405,7 @@ keystone_qemu_test_teep_hello_app:
 keystone_qemu_test_teep_teep_agent_ta:
     <<: *test_definition
     only:
-        - teep-device
-        - teep-device_fix_gitlabci
+        - /^teep-device.*$/
     image: ${DOCKER_TEEP_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
@@ -412,8 +420,7 @@ keystone_qemu_test_teep_teep_agent_ta:
 keystone_qemu_test_teep_teep_broker_app:
     <<: *test_definition
     only:
-        - teep-device
-        - teep-device_fix_gitlabci
+        - /^teep-device.*$/
     image: ${DOCKER_TEEP_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
