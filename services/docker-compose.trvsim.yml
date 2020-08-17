@@ -1,0 +1,14 @@
+#Use root/example as user/password credentials
+version: '3.1'
+
+services:
+    trvsim:
+        image: trasioteam/riscv_toolchain:trvsim_20200731
+        environment:
+            PORT: ${PORT}
+        ports:
+            - ${PORT}:${PORT}
+        volumes:
+            - ${PROJECT_DIR}:/tmp/image
+            - ${OVPSIM_LICENCE}:/home/trv/Imperas.20200710/OVPsim.lic
+        mac_address: ${MAC_ADDR}
