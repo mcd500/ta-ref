@@ -9,6 +9,21 @@ services:
         ports:
             - ${PORT}:${PORT}
         volumes:
-            - ${PROJECT_DIR}:/tmp/image
+            - ../:/tmp/image
             - ${OVPSIM_LICENCE}:/home/trv/Imperas.20200710/OVPsim.lic
         mac_address: ${MAC_ADDR}
+    test:
+        depends_on:
+            - trvsim
+        image: trasioteam/ta_ref_devel:keystone_trvsim
+        volumes:
+            - ../:/home/main/ta-ref
+        working_dir: /home/main/ta-ref
+        entrypoint: >
+            /bin/bash -c "
+            sleep 60 &&
+            sshpass -p 'sifive' ssh -p ${PORT} -o 'StrictHostKeyChecking no' root@localhost 'uname -a' &&
+            source env/keystone.sh &&
+            make build test run MACHINE=TRVSIM TEST_DIR=${TEST_DIR} &&
+            make mrproper
+            "
