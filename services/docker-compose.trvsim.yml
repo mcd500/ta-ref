@@ -6,8 +6,8 @@ services:
         image: trasioteam/riscv_toolchain:trvsim_20200731
         environment:
             PORT: ${PORT}
-        ports:
-            - ${PORT}:${PORT}
+        expose:
+            - ${PORT}
         volumes:
             - ../:/tmp/image
             - ${OVPSIM_LICENCE}:/home/trv/Imperas.20200710/OVPsim.lic
@@ -22,7 +22,7 @@ services:
         entrypoint: >
             /bin/bash -c "
             sleep 60 &&
-            sshpass -p 'sifive' ssh -p ${PORT} -o 'StrictHostKeyChecking no' root@localhost 'uname -a' &&
+            sshpass -p 'sifive' ssh -p ${PORT} -o 'StrictHostKeyChecking no' root@trvsim 'uname -a' &&
             source env/keystone.sh &&
             make build test run MACHINE=TRVSIM TEST_DIR=${TEST_DIR} &&
             make mrproper
