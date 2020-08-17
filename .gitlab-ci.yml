@@ -37,6 +37,11 @@ stages:
         - docker117-ubuntu
     before_script:
 #        - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWD} docker.io
+        - sed -i '/^https:\/\/gitlab-ci-token/d' ~/.git-credentials || true
+        - git config --global http.sslVerify false
+        - git config --global credential.helper 'store --file ~/.git-credentials'
+        - echo https://gitlab-ci-token:${CI_JOB_TOKEN}@192.168.100.100 >> ~/.git-credentials
+        - echo https://gitlab-ci-token:${CI_JOB_TOKEN}@192.168.100.100:443 >> ~/.git-credentials
         - git submodule sync --recursive
         - git submodule update --init --recursive
         - source ${ENVS}
