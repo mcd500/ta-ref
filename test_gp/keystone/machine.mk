@@ -15,7 +15,7 @@ else ifeq ($(MACHINE), TRVSIM)
 USER=root
 PASSWD=sifive
 PORT=10025
-IP_ADDR=localhost
+IP_ADDR=trvsim
 else ifeq ($(MACHINE), HIFIVE)
 USER=root
 PASSWD=sifive
