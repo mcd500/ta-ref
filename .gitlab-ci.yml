@@ -139,10 +139,8 @@ keystone_trvsim_test_gp:
     before_script:
         - wget ${SDIMAGE_URL} -o /dev/null
         - tar xf keystone_trvsim_hifive_sdimage.tar.xz
-        - rm -f ~/.ssh/known_hosts
-    script:
-        # update this repo
         - git submodule update --init --recursive
+    script:
         - docker-compose -f services/docker-compose.trvsim.yml up --abort-on-container-exit
     after_script:
         # cleanup
