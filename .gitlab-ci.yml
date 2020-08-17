@@ -110,7 +110,7 @@ keystone_hifive_test_gp:
     script:
         - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
 keystone_hifive_test_perf:
-    <<: *test_definition
+    <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_hifive
     variables:
         ENVS: env/keystone.sh
