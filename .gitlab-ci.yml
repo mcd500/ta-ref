@@ -148,6 +148,8 @@ keystone_trvsim_test_gp:
         - docker-compose -f services/docker-compose.trvsim.yml up -d
         - rm -f ~/.ssh/known_hosts
         - sleep ${WAIT_TIME}
+        # check for ssh
+        - sshpass -p "sifive" ssh -p ${PORT} -o "StrictHostKeyChecking no" root@localhost "uname -a"
     script:
         # update this repo
         - git submodule update --init --recursive
