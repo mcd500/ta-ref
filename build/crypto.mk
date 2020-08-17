@@ -32,6 +32,7 @@ bind:
 	$(SLN) $(CRYPTO_DIR)/wolfssl/wolfssl/wolfcrypt/*.h include/$(WOLFSSL_INCLUDE_DIR)/
 	$(SLN) $(CRYPTO_DIR)/*.a lib/
 	$(SLN) $(addprefix $(CRYPTO_DIR)/, $(COMMON_INCLUDES)) include/
+	ls -lsa {include,lib}
 
 tiny_sha3:
 	make -C $(CRYPTO_DIR) tiny_sha3 BUILD_OPTIONS=""
