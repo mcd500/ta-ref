@@ -14,7 +14,7 @@ stages:
     variables:
         ENVS: env/dummy.sh
     tags:
-        - docker117-ubuntu
+        - ta-ref
     before_script:
 #        - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWD} docker.io
         - sed -i '/^https:\/\/gitlab-ci-token/d' ~/.git-credentials || true
@@ -34,7 +34,7 @@ stages:
     variables:
         ENVS: env/dummy.sh
     tags:
-        - docker117-ubuntu
+        - ta-ref
     before_script:
 #        - docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWD} docker.io
         - sed -i '/^https:\/\/gitlab-ci-token/d' ~/.git-credentials || true
@@ -55,7 +55,7 @@ stages:
     variables:
         ENVS: env/dummy.sh
     tags:
-        - docker101-ubuntu
+        - ref-ta
     before_script:
         - git submodule sync --recursive
         - git submodule update --init --recursive
