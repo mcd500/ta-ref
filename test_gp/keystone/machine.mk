@@ -14,8 +14,8 @@ RUN_SCRIPT := $(SIM_RUN_SCRIPT)
 else ifeq ($(MACHINE), TRVSIM)
 USER=root
 PASSWD=sifive
-PORT=10022
-IP_ADDR=192.168.100.117
+PORT=10025
+IP_ADDR=localhost
 else ifeq ($(MACHINE), HIFIVE)
 USER=root
 PASSWD=sifive
