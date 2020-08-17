@@ -124,39 +124,33 @@ keystone_hifive_test_perf:
 keystone_trvsim_test_gp:
     variables:
         # OVPSIM_LICENCE and MAC_ADDR are defined in CI/CD settings -> Variables.
-        ENVS: env/dummy.sh
         SDIMAGE_URL: http://192.168.100.100:2000/keystone_trvsim_hifive_sdimage.tar.xz
-        IMAGE_DIR: ${CI_PROJECT_DIR}/image
-        CONTAINER_IMAGE_DIR: /tmp/image
-        CONTAINER_OVPSIM_PATH: /home/trv/Imperas.20200628/OVPsim.lic
-        PORT: 10022
-        CONTAINER_NAME: trvsim_${CI_COMMIT_SHORT_SHA}
+        # PORT, IMAGE_DIR, OVPSIM_LICENCE, MAC_ADDR
+        PROJECT_DIR: ${CI_PROJECT_DIR}
+        PORT: 10025
         WAIT_TIME: 60
-        TA_REF_WORKDIR: /home/main/ref-ta
         TA_REF_CONTAINER_IMAGE: ${DOCKER_IMAGE}:keystone_trvsim
-        ENV: env/keystone.sh
+        TA_REF_WORKDIR: /home/main/ta-ref
+        ENVS: env/keystone.sh
         TEST_DIR: test_gp
     tags:
-        - trvsim
+        - shell117
     stage: test_gp
     before_script:
         # launch TRV simulator at background
-        - mkdir -p ${IMAGE_DIR}
         - wget ${SDIMAGE_URL} -o /dev/null
-        - tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IMAGE_DIR}
-        - docker run --rm -d -v ${IMAGE_DIR}:${CONTAINER_IMAGE_DIR} -v ${OVPSIM_LICENCE}:${CONTAINER_OVPSIM_PATH} --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --hostname trvsim --mac-address ${MAC_ADDR} trasioteam/riscv_toolchain:trvsim
+        - tar xf keystone_trvsim_hifive_sdimage.tar.xz
+        - docker-compose -f services/docker-compose.trvsim.yml up -d
         - rm -f ~/.ssh/known_hosts
         - sleep ${WAIT_TIME}
     script:
         # update this repo
         - git submodule update --init --recursive
-        - docker run --rm -v ${CI_PROJECT_DIR}:${TA_REF_WORKDIR} -w ${TA_REF_WORKDIR} ${TA_REF_CONTAINER_IMAGE} /bin/bash -c "source ${ENV} && make build test run MACHINE=TRVSIM TEST_DIR=${TEST_DIR}"
+        - docker run --rm -v ${PROJECT_DIR}:${TA_REF_WORKDIR} -w ${TA_REF_WORKDIR} ${TA_REF_CONTAINER_IMAGE} /bin/bash -c "source ${ENVS} && make build test run MACHINE=TRVSIM TEST_DIR=${TEST_DIR}"
     after_script:
-        - docker run --rm -v ${CI_PROJECT_DIR}:${TA_REF_WORKDIR} -w ${TA_REF_WORKDIR} ${TA_REF_CONTAINER_IMAGE} /bin/bash -c "source ${ENV} && make mrproper"
+        - docker run --rm -v ${PROJECT_DIR}:${TA_REF_WORKDIR} -w ${TA_REF_WORKDIR} ${TA_REF_CONTAINER_IMAGE} /bin/bash -c "source ${ENVS} && make mrproper"
         # cleanup
-        - docker exec ${CONTAINER_NAME} cat "uart0.log"
-        - docker exec ${CONTAINER_NAME} cat "uart1.log"
-        - docker stop ${CONTAINER_NAME}
+        - docker-compose -f services/docker-compose.trvsim.yml down -v
 
 keystone_vc707_default:
     <<: *test_definition117
