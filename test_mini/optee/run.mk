@@ -14,7 +14,8 @@ all: $(TARGETS)
 qemu: SIM_qemu
 
 $(MACHINE)_demo: socat $(DEPENDS)
-	SMP=${SMP} PORT=$(PORT) USER=$(USER) IP_ADDR=$(IP_ADDR) PASSWD=$(PASSWD) $(RUN_SCRIPT)
+	# In gitlab CI, logs are not appeared because of `\n\r\r`. see https://trasio.slack.com/archives/C012F967Y1Y/p1597632425066800?thread_ts=1597306897.065300&cid=C012F967Y1Y
+	SMP=${SMP} PORT=$(PORT) USER=$(USER) IP_ADDR=$(IP_ADDR) PASSWD=$(PASSWD) $(RUN_SCRIPT) | tr -d "\r"
 
 ssh:
 	sshpass -p ${PASSWD} ssh ${USER}@${IP_ADDR}
