@@ -5,8 +5,8 @@ variables:
     DOCKER_IMAGE_OPTEE: docker.io/trasioteam/optee
 
 stages:
-    - test_gp
     - test_mini
+    - test_gp
     - test_perf
     - experimental
 
@@ -66,6 +66,7 @@ stages:
         # cleanup
         - make mrproper
 
+###### keystone
 keystone_qemu_default:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_qemu
@@ -95,7 +96,7 @@ keystone_qemu_test_perf:
     stage: test_perf
     script:
         - make build test run TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
-keystone_qemu_test_gp_keedger8r:
+keystone_qemu_keedger8r_test_gp:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_qemu
     variables:
@@ -135,7 +136,7 @@ keystone_hifive_test_perf:
     stage: test_perf
     script:
         - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
-keystone_hifive_test_gp_keedger8r:
+keystone_hifive_keedger8r_test_gp:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_hifive
     variables:
@@ -181,6 +182,7 @@ keystone_vc707_default:
     script:
         - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR}
 
+###### sgx
 sgx_sim_default:
     # EPYC server seems to get fault. see https://192.168.100.100/rinkai/ta-ref/-/jobs/12748
     <<: *test_definition101
@@ -242,6 +244,7 @@ sgx_nuc_test_perf:
     script:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
+###### optee
 optee_qemu_default:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_qemu_v8
