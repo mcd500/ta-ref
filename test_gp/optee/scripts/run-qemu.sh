@@ -3,7 +3,6 @@
 expect -c "
 set timeout 50
 
-send_user \"$env(PORT)\n\"
 send_user \"$env(LOG_FILE)\n\"
 spawn ./scripts/launch-qemu.sh
 

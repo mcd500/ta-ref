@@ -1,10 +1,9 @@
 #!/bin/bash -x
 
-echo "**** Running QEMU SSH on port ${PORT} ****\n"
-
 cd ${OPTEE_DIR}/out/bin && ${OPTEE_DIR}/qemu/aarch64-softmmu/qemu-system-aarch64 \
 	-nographic \
-	-serial mon:stdio -serial tcp:localhost:${PORT} \
+	-monitor none \
+	-serial mon:stdio -serial file:serial.log \
 	-smp ${SMP} \
 	-machine virt,secure=on -cpu cortex-a57 \
 	-d unimp -semihosting-config enable,target=native \
