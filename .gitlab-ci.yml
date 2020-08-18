@@ -143,10 +143,10 @@ keystone_trvsim_test_gp:
         - tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IMAGE_DIR}
         - git submodule update --init --recursive
     script:
-        - docker-compose -f services/docker-compose.trvsim.yml up --abort-on-container-exit
+        - docker-compose -f services/docker-compose.trvsim_ci.yml up --abort-on-container-exit
     after_script:
         # cleanup
-        - docker-compose -f services/docker-compose.trvsim.yml down -v
+        - docker-compose -f services/docker-compose.trvsim_ci.yml down -v
 
 keystone_vc707_default:
     <<: *test_definition117

@@ -64,16 +64,16 @@ Install TRV simulator, create binaries and launch it:
 
 ```sh
 # 1. create bbl, vmlinux, fsbl.bin and sdimage.bin
+export IMAGE_DIR=$(pwd)/image
+mkdir -p $IMAGE_DIR
 wget http://192.168.100.100:2000/keystone_trvsim_hifive_sdimage.tar.xz -o /dev/null
-tar xf keystone_trvsim_hifive_sdimage.tar.xz
+tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IAMGE_DIR}
 
-# 2. launch the licence server and the TRV simulator.
+# 2. prepare the environment variable used in docker-compose
 ## Note) You can use docker image or launch manually. see  see also https://github.com/trasio-org/private-docs/blob/master/keystone-with-debian-userland.md#%E5%AE%9F%E8%A1%8C%E7%94%A8%E3%81%AE%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%82%92%E4%BD%9C%E6%88%90.
 export PATH_TO_LICENCE_PATH=$(pwd)/OVPsim.lic
 export MAC_ADDR=...
-export HOST=trvsim
-## The `-d` option is allowed to launch TRV simulator in background mode.
-docker run --rm -v $(pwd):/tmp/image -v ${PATH_TO_LICENCE_PATH}:/home/trv/Imperas.20200628/OVPsim.lic --name trvsim -p 10022:10022 --hostname ${HOST} --mac-address ${MAC_ADDR} trasioteam/riscv_toolchain:trvsim
+export PORT=10022
 ```
 
 Dockerfile for TRV simulator is [here](https://192.168.100.100/rinkai/dockerfiles/-/tree/master/riscv/trvsim). You can access the docker machine by `ssh -p 10022 -o "StrictHostKeyChecking no" root@${IP_ADDR}`.
@@ -83,21 +83,24 @@ Dockerfile for TRV simulator is [here](https://192.168.100.100/rinkai/dockerfile
 Check `test/keystone/machine.mk` to set IP address(localhost or remote) and port(usually 10022) and build & run as following:
 
 ```sh
+# only once!
 GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
-docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_trvsim
-cd ta-ref
+# you can run in background with `-d` option
+docker-compose -f ./services/docker-compose.trvsim.yml up
+docker exec -it services_test_1 /bin/bash
 source env/keystone.sh
 ```
 
 ```sh
+# in the services_test_1 container
 make build test run MACHINE=TRVSIM TEST_DIR=test_gp
 ```
 
 Lastly, stop TRV docker container:
 
 ```sh
-docker stop trvsim
+docker-compose -f ./services/docker-compose.trvsim.yml down -v
 ```
 
 ### Unleashed Hifive board
