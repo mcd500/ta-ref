@@ -237,8 +237,6 @@ optee_qemu_default:
         ENVS: env/optee_qemu.sh
         TEST_DIR: test_mini
     stage: test_mini
-    only:
-        - optee_monitor
     script:
         - make build test run TEST_DIR=${TEST_DIR}
 optee_qemu_test_gp:
