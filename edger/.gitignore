@@ -4,4 +4,4 @@ ocalls_*
 *.a
 *.c
 *.h
-*.edl
+.libs/

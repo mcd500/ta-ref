@@ -11,6 +11,7 @@
 #include <cstring>
 
 #include "edger/Enclave_u.h"
+#include "keystone.h"
 #ifdef APP_PERF_ENABLE
 #include "profiler/profiler.h"
 #endif

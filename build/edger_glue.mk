@@ -1,58 +1,48 @@
 include ./general.mk
 
-# KEYEDGE or KEEDGER8R
-ifeq ($(EDGER_TYPE), KEYEDGE)
+# KEYEDGE or KEEDGER8R(keystone) or EDGER8R(sgx) or NONE(optee)
+ifeq ($(EDGER_TYPE), KEEDGER)
 EDGER_BIN=$(EDGER_DIR)/bin/keyedge
+TARGET=keedger
 else ifeq ($(EDGER_TYPE), KEEDGER8R)
-EDGER_BIN=$(EDGER_DIR)/keedger8r
+EDGER_BIN=$(EDGER_BIN)
+TARGET=edger8r
 else ifeq ($(EDGER_TYPE), EDGER8R)
 EDGER_BIN=$(EDGER_BIN)
+TARGET=edger8r
 else ifeq ($(EDGER_TYPE), NONE)
+TARGET=optee
 # do noting
-else
-$(error EDGER_TYPE is invalid value. set KEYEDGE, KEEDGER8R or EDGER8R.)
 endif
 
 EDGER_INCLUDE_DIR=include/edger
 
 .PHONY: all clean mrproper
-all: build
+all: $(TARGET)_build
 
-build:
-	make -C $(TOPDIR)/edger build EDGER_TYPE=$(EDGER_TYPE)
+keedger_build:
+	make -C $(TOPDIR)/edger -f keedger.mk
 	mkdir -p $(EDGER_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/edger/*.h $(EDGER_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/edger/libEnclave*.a lib
 
-clean:
-	$(RM) -r lib/libEnclave* $(EDGER_INCLUDE_DIR)
-	make -C $(TOPDIR)/edger clean EDGER_TYPE=$(EDGER_TYPE)
-
-mrproper: clean
-	make -C $(TOPDIR)/edger mrproper EDGER_TYPE=$(EDGER_TYPE)
-
-sgx_build:
-	# TODO: we use Makefile instead of sgx.mk
-	make test -C $(TOPDIR)/edger -f sgx.mk EDGER_TYPE=$(EDGER_TYPE) DEBUG_TYPE=$(DEBUG_TYPE)
+edger8r_build:
+	make -C $(TOPDIR)/edger -f edger8r.mk EDGER_TYPE=$(EDGER_TYPE) DEBUG_TYPE=$(DEBUG_TYPE)
 	mkdir -p $(EDGER_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/edger/*.h $(EDGER_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/edger/libEnclave*.a lib
 	$(SLN) $(TOPDIR)/edger/edger8r/user_types.h $(EDGER_INCLUDE_DIR)
 
-sgx_clean:
-	$(RM) -r $(EDGER_INCLUDE_DIR) lib/libEnclave*
-
-optee_clean:
-	$(RM) -r $(EDGER_INCLUDE_DIR)
-
-optee_mrproper: optee_clean
-	make clean -C $(TOPDIR)/edger -f optee.mk
-
-
-sgx_mrproper: sgx_clean
-	make clean -C $(TOPDIR)/edger -f sgx.mk
-
 optee_build:
 	make build -C $(TOPDIR)/edger -f optee.mk
 	mkdir -p $(EDGER_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/edger/*.h $(EDGER_INCLUDE_DIR)
+
+clean:
+	$(RM) -r lib/libEnclave* $(EDGER_INCLUDE_DIR)
+	make clean -C $(TOPDIR)/edger -f keedger.mk
+	make clean -C $(TOPDIR)/edger -f optee.mk
+	make clean -C $(TOPDIR)/edger -f edger8r.mk
+
+mrproper: clean
+	make mrproper -C $(TOPDIR)/edger -f keedger.mk

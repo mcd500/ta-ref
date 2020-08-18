@@ -82,8 +82,7 @@ int ocall_ree_time(struct ree_time_t *timep)
 {
   struct timeval tv;
   struct timezone tz;
-  //int rtn = gettimeofday(&tv, &tz);
-  gettimeofday(&tv, &tz);
+  int rtn = gettimeofday(&tv, &tz);
 #ifdef APP_VERBOSE
   printf("@[SE] gettimeofday %d sec %d usec -> %d\n",tv.tv_sec,tv.tv_usec,rtn);
 #endif
@@ -150,7 +149,7 @@ ob196_t ocall_getrandom196(unsigned int flags)
   return ret;
 }
 
-invoke_command_t ocall_invoke_command_polling(void)
+invoke_command_t ocall_invoke_command_polling(int dummy)
 {
   invoke_command_t ret;
   ret.param1_fd = -1;

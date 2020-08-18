@@ -32,7 +32,7 @@ ob256_t ocall_read_file256(int fdesc) {}
 ree_time_t ocall_ree_time(void) {}
 ob16_t ocall_getrandom16(unsigned int flags) {}
 ob196_t ocall_getrandom196(unsigned int flags) {}
-invoke_command_t ocall_invoke_command_polling(void) {}
+invoke_command_t ocall_invoke_command_polling(int dummy) {}
 int ocall_invoke_command_callback(invoke_command_t cb_cmd) {}
 #endif
 

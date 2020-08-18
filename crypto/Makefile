@@ -24,6 +24,10 @@ TINY_SHA3_OBJS=$(call exclude_from_list,tiny_sha3)
 ED25519_OBJS=$(call exclude_from_list,ed25519/src)
 TINY_AES_C_OBJS=$(call exclude_from_list,tiny_AES_c)
 MBEDTLS_OBJS=$(call exclude_from_list,mbedtls/library)
+ifeq ($(EDGER_TYPE), KEEDGER8R)
+MBEDTLS_OBJS += _strcmp.o
+endif
+
 CFLAGS += -Imbedtls/include
 
 WOLFSSL_OBJS=$(call exclude_from_list,wolfssl/wolfcrypt/src)

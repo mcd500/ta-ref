@@ -12,7 +12,7 @@ CFLAGS += $(addprefix -I,$(INCLUDE_PATHS))
 # NOTE: tee_api library is dependent on crypto libraries.
 LIBS = gp etools
 LIBS += bench
-LIBS += Enclave_t flatccrt
+LIBS += Enclave_t
 LIBS += keystone-eapp
 LIBS += tee_api mbedtls tiny_AES_c tiny_sha3 ed25519 wolfssl
 

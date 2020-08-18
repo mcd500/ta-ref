@@ -1,6 +1,5 @@
 .PHONY: all clean
 
-#CFLAGS = -Wall -fno-builtin-printf -DEDGE_IGNORE_EGDE_RESULT
 CFLAGS += -Wall
 
 SRCS = $(wildcard *.c)

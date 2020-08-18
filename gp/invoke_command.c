@@ -38,7 +38,7 @@
 #define TEEP_AGENT_TA_DELETE    3
 
 #ifdef ENABLE_TEEP
-void runInvokeCommand(invoke_command_t ret_cmd)
+void runInvokeCommand(struct invoke_command_t ret_cmd)
 {
     uint32_t type;
     TEE_Param params[TEE_NUM_PARAMS];
@@ -82,10 +82,11 @@ void gp_invokecommand_test(void)
 
   // emulate host->enclave calls via polling 
   // ocall invokecommand polling
-  invoke_command_t ret_cmd;
+  struct invoke_command_t ret_cmd;
 
   while (true) {
-    ret_cmd = ocall_invoke_command_polling();
+    int dummy = 0;
+    ret_cmd = ocall_invoke_command_polling(dummy);
     tee_printf("CommandID=%d\n", ret_cmd.commandID);
     // temporary set exit code as 999
     if (ret_cmd.commandID == TEEP_AGENT_TA_EXIT) {

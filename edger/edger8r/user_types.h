@@ -34,7 +34,7 @@
 
 
 #define LOOPS_PER_THREAD 500
+#include <sys/types.h>
 
 typedef void *buffer_t;
 typedef int array_t[10];
-

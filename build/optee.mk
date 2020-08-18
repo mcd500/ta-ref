@@ -2,8 +2,6 @@ ifeq ($(OPTEE_DIR),)
 $(error "Make sure that OPTEE framework is prebuilt!")
 endif
 
-include ./general.mk
-
 #DEPENDS=crypto
 DEPENDS=edger api_import
 # MBEDCRYPT or WOLFCRYPT
@@ -13,6 +11,7 @@ ifeq ($(PROFILER),ON)
 DEPENDS += profiler api
 endif
 
+include ./general.mk
 .PHONY: all clean mrproper
 
 OUT_DIR=out
@@ -43,14 +42,14 @@ benchmark:
 clean:
 	$(RM) *.client *.eapp_riscv
 	make -f profiler.mk clean
-	make -f edger_glue.mk optee_clean EDGER_TYPE=NONE
+	make -f edger_glue.mk clean EDGER_TYPE=NONE
 	make -f optee_os.mk clean
 	make -f gp.mk clean
 	make -f benchmark.mk clean
 
 # clean build files including dependencies
 mrproper: clean
-	make -f edger_glue.mk optee_mrproper EDGER_TYPE=NONE
+	make -f edger_glue.mk mrproper EDGER_TYPE=NONE
 	make -f profiler.mk mrproper EDGER_TYPE=NONE
 	make -f optee_os.mk mrproper
 	make -f gp.mk mrproper

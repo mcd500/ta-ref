@@ -38,10 +38,10 @@ image:
 select:
 	ln -sf $(TEE).mk $(BUILD_DIR)/Makefile
 
-build_clean:
+build_clean: select
 	make -C $(BUILD_DIR) clean
 
-test_clean:
+test_clean: select
 	make -C $(TEST_DIR) clean
 
 all_test_clean:

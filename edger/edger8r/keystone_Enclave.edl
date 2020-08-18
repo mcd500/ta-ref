@@ -38,6 +38,15 @@ enclave {
         unsigned int millis;
     };
 
+    struct invoke_command_t {
+        unsigned int commandID;
+        char params0_buffer[256];
+        unsigned int params0_size;
+        int param1_fd;
+        char params1_buffer[256];
+        unsigned int params1_size;
+    };
+
     /* 
      * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
      *  [in, ]: copy the string buffer to App outside.
@@ -96,12 +105,11 @@ enclave {
      *  [out]: copy pointer to App inside.
      *  [size=len]: specifies 'ptr' is a buffer with 'len' size.
      */
-    /*
-     * untrusted {
-     *     ssize_t ocall_getrandom([out, size=len] char *buf, size_t len,
-	 *     		        unsigned int flags);
-     * };
-     */
+
+    untrusted {
+        ssize_t ocall_getrandom([out, size=len] char *buf, size_t len, unsigned int flags);
+    };
+
 
     trusted {
         /* virtual ecall */

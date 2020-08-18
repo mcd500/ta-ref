@@ -45,6 +45,6 @@ typedef struct invoke_command_t {
 //  char params2[256];
 //  char params3[256];
 } invoke_command_t;
-invoke_command_t ocall_invoke_command_polling(void);
+invoke_command_t ocall_invoke_command_polling(int dummy);
 
 int ocall_invoke_command_callback(invoke_command_t cb_cmd);

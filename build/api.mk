@@ -17,7 +17,7 @@ bind:
 	$(SLN) $(TOPDIR)/api/$(TEE)/*.h $(API_INCLUDE_DIR)
 
 clean:
-	$(RM) -r lib/$(LIB) $(API_INCLUDE_DIR)
+	$(RM) -r lib/$(LIB) include/*.h
 	make -C $(TOPDIR)/api clean
 
 mrproper: clean
