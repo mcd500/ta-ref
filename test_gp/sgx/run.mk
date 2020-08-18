@@ -16,8 +16,8 @@ SIM_run:
 	./sgx_app
 
 SIM_analyze:
-	./analyzer shared_mem enclave.nm
-	./analyzer app_shared_mem App.nm
+	./analyzer shared_mem Enclave.nm
+	test -f app_shared_mem && ./analyzer app_shared_mem App.nm
 
 ssh:
 	sshpass -p ${PASSWD} ssh ${USER}@${IP_ADDR}
