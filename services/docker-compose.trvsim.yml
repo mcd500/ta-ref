@@ -9,7 +9,7 @@ services:
         expose:
             - ${PORT}
         volumes:
-            - ../:/tmp/image
+            - ${IMAGE_DIR}:/tmp/image
             - ${OVPSIM_LICENCE}:/home/trv/Imperas.20200710/OVPsim.lic
         mac_address: ${MAC_ADDR}
     test:
