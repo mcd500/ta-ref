@@ -85,6 +85,8 @@ keystone_qemu_test_gp:
     stage: test_gp
     script:
         - make build test run TEST_DIR=${TEST_DIR}
+        - make mrproper
+        - make build test run TEST_DIR=${TEST_DIR} EDGER_TYPE=KEEDGER8R
 keystone_qemu_test_perf:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_qemu
@@ -96,16 +98,6 @@ keystone_qemu_test_perf:
     stage: test_perf
     script:
         - make build test run TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
-keystone_qemu_keedger8r_test_gp:
-    <<: *test_definition117
-    image: ${DOCKER_IMAGE}:keystone_qemu
-    variables:
-        ENVS: env/keystone.sh
-        TEST_DIR: test_gp
-        EDGER_TYPE: KEEDGER8R
-    stage: test_gp
-    script:
-        - make build test run TEST_DIR=${TEST_DIR} EDGER_TYPE=${EDGER_TYPE}
 
 keystone_hifive_default:
     <<: *test_definition117
@@ -125,6 +117,9 @@ keystone_hifive_test_gp:
     stage: test_gp
     script:
         - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
+        - make mrproper
+        - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR} EDGER_TYPE=KEEDGER8R
+
 keystone_hifive_test_perf:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_hifive
@@ -136,16 +131,6 @@ keystone_hifive_test_perf:
     stage: test_perf
     script:
         - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
-keystone_hifive_keedger8r_test_gp:
-    <<: *test_definition117
-    image: ${DOCKER_IMAGE}:keystone_hifive
-    variables:
-        ENVS: env/keystone.sh
-        TEST_DIR: test_gp
-        EDGER_TYPE: KEEDGER8R
-    stage: test_gp
-    script:
-        - make build test run TEST_DIR=${TEST_DIR} EDGER_TYPE=${EDGER_TYPE}
 
 keystone_trvsim_test_gp:
     variables:
