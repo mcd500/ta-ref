@@ -63,7 +63,7 @@ make build test run TEST_DIR=test_gp
 Install TRV simulator, create binaries and launch it:
 
 ```sh
-# 1. create bbl, vmlinux, fsbl.bin and sdimage.bin
+# 1. create bbl, vmlinux, fsbl.bin and sdimage.bin(Only once)
 export IMAGE_DIR=$(pwd)/image
 mkdir -p $IMAGE_DIR
 wget http://192.168.100.100:2000/keystone_trvsim_hifive_sdimage.tar.xz -o /dev/null
@@ -71,6 +71,7 @@ tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IAMGE_DIR}
 
 # 2. prepare the environment variable used in docker-compose
 ## Note) You can use docker image or launch manually. see  see also https://github.com/trasio-org/private-docs/blob/master/keystone-with-debian-userland.md#%E5%AE%9F%E8%A1%8C%E7%94%A8%E3%81%AE%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%82%92%E4%BD%9C%E6%88%90.
+export IMAGE_DIR=$(pwd)/image
 export PATH_TO_LICENCE_PATH=$(pwd)/OVPsim.lic
 export MAC_ADDR=...
 export PORT=10022
@@ -89,13 +90,15 @@ cd ta-ref
 # you can run in background with `-d` option
 docker-compose -f ./services/docker-compose.trvsim.yml up
 docker exec -it services_test_1 /bin/bash
-source env/keystone.sh
 ```
 
 ```sh
 # in the services_test_1 container
+source env/keystone.sh
 make build test run MACHINE=TRVSIM TEST_DIR=test_gp
 ```
+
+In the `services_test_1` container, You can ssh to the `services_trvsim_1` container by `ssh root@trvsim -p${PORT}`.
 
 Lastly, stop TRV docker container:
 
@@ -206,11 +209,11 @@ Make sure that `ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /
 + `DEBUG_TYPE=[DEBUG/PRERELEASE/RELEASE]` .. debug type including optimization(default: DEBUG)
 + `CRYPT_TYPE`=[MBEDCRYPT/WOLFCRYPT/NONE]`
 + `BENCHMARK=[ON/OFF]` .. enable/disable benchmark mode. In this mode, automatically set `PROFILER=OFF` and `CRYPT_TYPE=NONE`(default: OFF)
++ `EDGER_TYPE`=[(None: optee)/KEEDGER(keystone)/KEEDGER8R(keystone)/EDGER8R(sgx)] edger type. see validation.mk
 
 # cleanup
 
 If you want to clean build directory only, try `make clean`. Otherwise, `make mrproper` will clean objects for all directories completely.
-
 
 # Implementation
 
@@ -242,6 +245,7 @@ If you want to clean build directory only, try `make clean`. Otherwise, `make mr
 │   └── sgx_x86.sh
 ├── profiler .. profiler add-in (enable by `PROFILER=ON` in make)
 ├── benchmark .. profiler add-in (enable by `BENCHMARK=ON` in make)
+├── services .. docker-compose settings
 ├── test_mini .. minimum test
 └── test_gp .. test for GP API
 ```
