@@ -37,6 +37,7 @@
 #define TEEP_AGENT_TA_INSTALL   2
 #define TEEP_AGENT_TA_DELETE    3
 
+#if 0
 #ifdef ENABLE_TEEP
 void runInvokeCommand(struct invoke_command_t ret_cmd)
 {
@@ -252,4 +253,5 @@ int teep_message_delete_ta(char *ta_uuid)
 #endif
   return 0;
 }
+#endif
 #endif

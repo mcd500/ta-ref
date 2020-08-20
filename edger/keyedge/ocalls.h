@@ -6,10 +6,6 @@
 
 unsigned int ocall_print_string(keyedge_str const char* str);
 
-int ocall_open_file(keyedge_str const char* str, int flags, int perm);
-int ocall_close_file(int desc);
-int ocall_write_file(int desc, keyedge_vla const char *buf, keyedge_size unsigned int len);
-
 // keyedge has no [out] type buf i.e. all data from host to eapp should be
 // returned as the return value which might be a fixed size structure.
 #define EDGE_OUT_WITH_STRUCTURE
@@ -33,23 +29,37 @@ typedef struct ob196_t { int ret; unsigned char b[196]; } ob196_t;
 
 ob196_t ocall_getrandom196(unsigned int flags);
 
+//typedef int invoke_command_param_t;
+typedef struct invoke_command_param_t {
+  unsigned int a;
+  unsigned int b;
+  unsigned int size;
+} invoke_command_param_t;
+
+typedef struct param_buffer_t {
+  unsigned int size;
+  char buf[256];
+} param_buffer_t;
+
 // for TEE InvokeCommand
 typedef struct invoke_command_t {
   unsigned int commandID;
-  char params0_buffer[256];
-  unsigned int params0_size;
-  int param1_fd;
-  char params1_buffer[256];
-  unsigned int params1_size;
-//  char params2[256];
-//  char params3[256];
+  unsigned int paramTypes;
+  invoke_command_param_t params[4];
 } invoke_command_t;
 
 invoke_command_t ocall_pull_invoke_command();
-void ocall_put_invoke_command_result(int result);
-
+void ocall_write_invoke_param(int index, unsigned int offset, keyedge_size unsigned int size, keyedge_vla const char *buf);
+param_buffer_t ocall_read_invoke_param(int index, unsigned int offset);
+void ocall_put_invoke_command_result(invoke_command_t cmd, unsigned int result);
+/*
+param_buffer_t ocall_read_invoke_param(int index, unsigned int offset);
 
 invoke_command_t ocall_invoke_command_polling(void);
 int ocall_invoke_command_callback(invoke_command_t cb_cmd);
 int ocall_invoke_command_callback_write(keyedge_str const char* str, keyedge_vla const char *buf, keyedge_size unsigned int len);
+*/
 
+int ocall_open_file(keyedge_str const char* str, int flags, int perm);
+int ocall_close_file(int desc);
+int ocall_write_file(int desc, keyedge_vla const char *buf, keyedge_size unsigned int len);

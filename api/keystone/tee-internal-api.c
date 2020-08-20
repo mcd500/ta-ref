@@ -40,6 +40,19 @@
 #include <string.h>
 #include <stdlib.h>
 
+void *TEE_Malloc(uint32_t size, uint32_t hint)
+{
+    return malloc(size);
+}
+void *TEE_Realloc(void *buffer, uint32_t newSize)
+{
+    return realloc(buffer, newSize);
+}
+void TEE_Free(void *buffer)
+{
+    free(buffer);
+}
+
 void TEE_GetREETime(TEE_Time *time)
 {
     ree_time_t ree_time;

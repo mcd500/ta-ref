@@ -361,6 +361,7 @@ optee_qemu_teep_device:
 
 keystone_qemu_test_teep:
     <<: *test_definition
+    <<: *tamproto_service
     only:
         - /^teep-device.*$/
     image: ${DOCKER_TEEP_IMAGE}:keystone_qemu
@@ -373,6 +374,10 @@ keystone_qemu_test_teep:
         - make -C .. build
         - make jwk-headers
         - make clean-keystone && make build-keystone
+        - TAMIP=`python3 -c 'import socket;print(socket.gethostbyname("tamproto"))'`
+        - curl "http://$TAMIP:8888/api/tam"
+        - make -C platform/keystone image
+        - make -C platform/keystone test TAM_URL="http://$TAMIP:8888" | tr -d "\r"
 
 keystone_qemu_test_teep_hello_ta:
     <<: *test_definition
