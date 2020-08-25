@@ -310,16 +310,22 @@ TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
     AES_CBC_encrypt_buffer(&(object->persist_ctx), data, size);
 #endif
 
-    int retval = ocall_write_file(object->desc, (const char *)data, size);
-    free(data);
-
-    if (retval == size)
-      return TEE_SUCCESS;
-    else if (retval < 0) {
-      // TODO Interpret linux error as TEE error
-      return TEE_ERROR_GENERIC;
+    int retval = 0;
+    while (retval < size) {
+      int len = size - retval;
+      if (len > 256) {
+        len = 256;
+      }
+      printf("ocall_write_file %d %d %d\n", object->desc, retval, len);
+      int n  = ocall_write_file(object->desc, (const char *)data + retval, len);
+      if (n < 0) {
+        free(data);
+        // TODO Interpret linux error as TEE error
+        return TEE_ERROR_GENERIC;
+      }
+      retval += n;
     }
-    return 0;
+    return TEE_SUCCESS;
 }
 
 
