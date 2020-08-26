@@ -2,11 +2,11 @@ include ./general.mk
 # edger and flatcc binary requires default toolchains.
 unexport CC CXX LD
 
-# KEEDGER or KEEDGER8R
-ifeq ($(EDGER_TYPE), KEEDGER)
+# KEYEDGE or KEEDGER8R
+ifeq ($(EDGER_TYPE), KEYEDGE)
 EDGER_DIR=$(KEYEDGE_DIR)
 EDGER_BIN=$(EDGER_DIR)/bin/keyedge
-TARGET=keedger
+TARGET=keyedge
 else ifeq ($(EDGER_TYPE), KEEDGER8R)
 EDGER_DIR=$(KEEDGER8R_DIR)
 EDGER_BIN=$(EDGER_DIR)/keedger8r
@@ -25,7 +25,7 @@ keedger8r:
 	mkdir -p $(EDGER_INCLUDE_DIR)
 	$(SLN) $(EDGER_DIR)/*.h include
 
-keedger: $(FLATCC_LIB) $(FLATCC_INCLUDE_DIR) keedger_imports
+keyedge: $(FLATCC_LIB) $(FLATCC_INCLUDE_DIR) keyedge_imports
 
 EDGER_INCLUDE_DIR=include/edger
 
@@ -35,7 +35,7 @@ $(FLATCC_LIB):
 $(FLATCC_INCLUDE_DIR):
 	$(SLN) $(FLATCC_DIR)/$(FLATCC_INCLUDE_DIR) include
 
-keedger_imports: $(EDGER_BIN)
+keyedge_imports: $(EDGER_BIN)
 	mkdir -p $(EDGER_INCLUDE_DIR)
 	$(SLN) ${EDGER_DIR}/target/include/*.h $(EDGER_INCLUDE_DIR)
 

@@ -1,9 +1,9 @@
 include ./general.mk
 
 # KEYEDGE or KEEDGER8R(keystone) or EDGER8R(sgx) or NONE(optee)
-ifeq ($(EDGER_TYPE), KEEDGER)
+ifeq ($(EDGER_TYPE), KEYEDGE)
 EDGER_BIN=$(EDGER_DIR)/bin/keyedge
-TARGET=keedger
+TARGET=keyedge
 else ifeq ($(EDGER_TYPE), KEEDGER8R)
 EDGER_BIN=$(EDGER_BIN)
 TARGET=edger8r
@@ -20,8 +20,8 @@ EDGER_INCLUDE_DIR=include/edger
 .PHONY: all clean mrproper
 all: $(TARGET)_build
 
-keedger_build:
-	make -C $(TOPDIR)/edger -f keedger.mk
+keyedge_build:
+	make -C $(TOPDIR)/edger -f keyedge.mk
 	mkdir -p $(EDGER_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/edger/*.h $(EDGER_INCLUDE_DIR)
 	$(SLN) $(TOPDIR)/edger/libEnclave*.a lib
@@ -40,9 +40,9 @@ optee_build:
 
 clean:
 	$(RM) -r lib/libEnclave* $(EDGER_INCLUDE_DIR)
-	make clean -C $(TOPDIR)/edger -f keedger.mk
+	make clean -C $(TOPDIR)/edger -f keyedge.mk
 	make clean -C $(TOPDIR)/edger -f optee.mk
 	make clean -C $(TOPDIR)/edger -f edger8r.mk
 
 mrproper: clean
-	make mrproper -C $(TOPDIR)/edger -f keedger.mk
+	make mrproper -C $(TOPDIR)/edger -f keyedge.mk

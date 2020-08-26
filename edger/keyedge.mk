@@ -1,7 +1,7 @@
 # KEYEDGE
 
-EDGER_BIN=$(KEEDGER_BIN)
-EDGER_DIR=$(KEEDGER_DIR)
+EDGER_BIN=$(KEYEDGE_BIN)
+EDGER_DIR=$(KEYEDGE_DIR)
 EDGER_HEADER=ocalls.h
 EDGER_SUFFIXES=common eapp host
 EDGER_GEN_FILES=$(patsubst %,ocalls_%.h,$(EDGER_SUFFIXES)) ocalls.fbs
@@ -90,5 +90,5 @@ clean:
 	$(RM) ocalls* flatbuffers* Enclave* $(TRUSTED_LIBS) $(UNTRUSTED_LIBS) *.a *.o
 
 mrproper: clean
-	#make -C $(KEEDGER_DIR) clean
+	#make -C $(KEYEDGE_DIR) clean
 	$(RM) include/*.h

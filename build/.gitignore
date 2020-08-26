@@ -6,3 +6,5 @@ Makefile
 *.client
 lib/*
 include/*
+!lib/.gitkeep
+!include/.gitkeep

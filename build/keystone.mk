@@ -4,8 +4,8 @@ endif
 
 # TODO: customize eyrie
 DEPENDS=eyrie edger crypto
-# KEEDGER or KEEDGER8R
-export EDGER_TYPE=KEEDGER
+# KEYEDGE or KEEDGER8R
+export EDGER_TYPE=KEYEDGE
 # MBEDCRYPT or WOLFCRYPT
 ifeq ($(BENCHMARK), ON)
 CRYPT_TYPE=NONE
@@ -13,7 +13,7 @@ else
 CRYPT_TYPE=MBEDCRYPT
 endif
 
-ifeq ($(BENCHMARK), KEEDGER)
+ifeq ($(BENCHMARK), KEYEDGE)
 ENABLE_TEEP=ON
 else
 # teep(invoke_command) is not supported in KEEDGER8R because this feature is confilcted with EDGE_OUT_WITH_STRUCTURE option.
@@ -59,9 +59,9 @@ benchmark:
 
 clean:
 	make -f profiler.mk clean
-	make -f edger_dep.mk clean EDGER_TYPE=KEEDGER
+	make -f edger_dep.mk clean EDGER_TYPE=KEYEDGE
 	make -f edger_dep.mk clean EDGER_TYPE=KEEDGER8R
-	make -f edger_glue.mk clean EDGER_TYPE=KEEDGER
+	make -f edger_glue.mk clean EDGER_TYPE=KEYEDGE
 	make -f edger_glue.mk clean EDGER_TYPE=KEEDGER8R
 	make -f crypto.mk clean
 	make -f api.mk clean
@@ -71,9 +71,9 @@ clean:
 # clean build files including dependencies
 mrproper: clean
 	make -f profiler.mk mrproper
-	make -f edger_dep.mk mrproper EDGER_TYPE=KEEDGER
+	make -f edger_dep.mk mrproper EDGER_TYPE=KEYEDGE
 	make -f edger_dep.mk mrproper EDGER_TYPE=KEEDGER8R
-	make -f edger_glue.mk mrproper EDGER_TYPE=KEEDGER
+	make -f edger_glue.mk mrproper EDGER_TYPE=KEYEDGE
 	make -f edger_glue.mk mrproper EDGER_TYPE=KEEDGER8R
 	make -f crypto.mk mrproper
 	make -f api.mk mrproper

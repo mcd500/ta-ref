@@ -13,8 +13,6 @@ export KEYEDGE_INCLUDE_DIR=${KEYEDGE_DIR}/target/include
 export FLATCC_INCLUDE_DIR=${FLATCC_DIR}/include/flatcc
 export FLATCC_BIN=${FLATCC_DIR}/bin/flatcc
 export EDGER8R_BIN=${KEEDGER8R_DIR}/keedger8r
-export KEEDGER_DIR=${KEYEDGE_DIR}
-export KEEDGER_BIN=${KEYEDGE_DIR}/bin/keyedge
 
 export KEYSTONE_SDK_DIR=${KEYSTONE_DIR}/sdk
 export KEYSTONE_SDK_LIB_DIR=${KEYSTONE_SDK_DIR}/lib

@@ -24,7 +24,7 @@ join-with = $(subst $(_space),$1,$(strip $2))
 # EDGER_TYPE validation
 ifeq ($(TEE)_$(EDGER_TYPE), optee_)
 else ifeq ($(TEE)_$(EDGER_TYPE), optee_NONE)
-else ifeq ($(TEE)_$(EDGER_TYPE), keystone_KEEDGER)
+else ifeq ($(TEE)_$(EDGER_TYPE), keystone_KEYEDGE)
 else ifeq ($(TEE)_$(EDGER_TYPE), keystone_KEEDGER8R)
 else ifeq ($(TEE)_$(EDGER_TYPE), sgx_EDGER8R)
 else

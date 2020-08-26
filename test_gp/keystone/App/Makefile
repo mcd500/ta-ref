@@ -30,7 +30,7 @@ endif
 CXXFLAGS += $(DEBUG_FLAGS)
 
 
-# TODO: In keedger, flatccrt library is used only for Enclave_u library, so we want merge flatccrt with Enclave_u
+# TODO: In keyedge, flatccrt library is used only for Enclave_u library, so we want merge flatccrt with Enclave_u
 LDFLAGS += $(addprefix -L,$(LIB_DIRS))
 LIBS = keystone-host keystone-edge Enclave_u
 LDFLAGS += -Wl,--start-group $(addprefix -l,$(LIBS)) -Wl,--end-group

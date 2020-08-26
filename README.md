@@ -209,7 +209,7 @@ Make sure that `ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /
 + `DEBUG_TYPE=[DEBUG/PRERELEASE/RELEASE]` .. debug type including optimization(default: DEBUG)
 + `CRYPT_TYPE`=[MBEDCRYPT/WOLFCRYPT/NONE]`
 + `BENCHMARK=[ON/OFF]` .. enable/disable benchmark mode. In this mode, automatically set `PROFILER=OFF` and `CRYPT_TYPE=NONE`(default: OFF)
-+ `EDGER_TYPE`=[(None: optee)/KEEDGER(keystone)/KEEDGER8R(keystone)/EDGER8R(sgx)] edger type. see validation.mk
++ `EDGER_TYPE`=[(None: optee)/KEYEDGE(keystone)/KEEDGER8R(keystone)/EDGER8R(sgx)] edger type. see validation.mk
 
 # cleanup
 
