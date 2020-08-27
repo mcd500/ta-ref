@@ -63,3 +63,5 @@ int ocall_invoke_command_callback_write(keyedge_str const char* str, keyedge_vla
 int ocall_open_file(keyedge_str const char* str, int flags, int perm);
 int ocall_close_file(int desc);
 int ocall_write_file(int desc, keyedge_vla const char *buf, keyedge_size unsigned int len);
+int ocall_unlink(keyedge_str const char *path);
+int ocall_fstat_size(int fd);
