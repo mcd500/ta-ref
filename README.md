@@ -212,19 +212,38 @@ docker-compose build
 docker-compose up
 ```
 
+#### optee
+
 build ta-ref
 
 ```sh
 cd ta-ref
-docker run --network tamproto_default -it --rm -v $(pwd):/home/main/ta-ref trasioteam/optee:optee_qemu_teep
-apt install -y cmake
+docker run --network tamproto_default -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_teep_devel:optee_qemu
 cd ta-ref
 source env/optee_qemu_teep.sh
 make
 cd teep-device
-make generate-jwk-headers
+make jwk-headers
 cd platform/op-tee
 make install_qemu
+make test
+```
+
+#### keystone
+
+
+build ta-ref
+
+```sh
+cd ta-ref
+docker run --network tamproto_default -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_teep_devel:keystone_qemu
+cd ta-ref
+source env/keystone.sh
+make
+cd teep-device
+make jwk-headers
+cd platform/keystone
+make image
 make test
 ```
 
