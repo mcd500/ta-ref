@@ -1,3 +1,7 @@
+ifeq ($(TEE),)
+$(error "Error: variable TEE must be set")
+endif
+
 export TOPDIR=$(CURDIR)
 BUILD_DIR=build
 TEST_DIR=test_hello
