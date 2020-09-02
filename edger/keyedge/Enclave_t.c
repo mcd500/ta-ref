@@ -40,7 +40,7 @@ int ocall_read_file_full(int fd, void *buf, size_t count)
 
 int ocall_write_file_full(int fd, const void *buf, size_t count)
 {
-    char *p = buf;
+    const char *p = buf;
     int offset = 0;
     while (count > 0) {
         int n = ocall_write_file(fd, p + offset, count - offset);
