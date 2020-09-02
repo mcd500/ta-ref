@@ -33,7 +33,7 @@ $(FLATCC_LIB):
 	$(SLN) $(EDGER_DIR)/lib/flatccrt.a $@
 
 $(FLATCC_INCLUDE_DIR):
-	$(SLN) $(FLATCC_DIR)/$(FLATCC_INCLUDE_DIR) include
+	$(SLN) $(FLATCC_DIR)/$(FLATCC_INCLUDE_DIR) include/
 
 keyedge_imports: $(EDGER_BIN)
 	mkdir -p $(EDGER_INCLUDE_DIR)

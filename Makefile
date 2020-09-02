@@ -13,6 +13,7 @@ include ./validation.mk
 .PHONY: build test run clean mrproper
 
 build: select
+	mkdir -p $(BUILD_DIR)/include $(BUILD_DIR)/lib
 	make -C $(BUILD_DIR)
 
 # build test -> ship execs -> make image
@@ -41,6 +42,7 @@ select:
 
 build_clean: select
 	make -C $(BUILD_DIR) clean
+	$(RM) -rf $(BUILD_DIR)/include $(BUILD_DIR)/lib
 
 test_clean: select
 	make -C $(TEST_DIR) clean
@@ -53,6 +55,6 @@ clean: select build_clean all_test_clean
 	$(RM) $(BUILD_DIR)/Makefile
 
 # delete including dependencies
-mrproper: build_clean all_test_clean
+mrproper: select build_clean all_test_clean
 	make -C $(BUILD_DIR) mrproper
 	$(RM) $(BUILD_DIR)/Makefile
