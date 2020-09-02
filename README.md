@@ -203,11 +203,17 @@ Make sure that `ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /
 
 ### teep-device & tamproto
 
-start tamproto server
+Clone tamproto server
+
 ```sh
 git clone https://192.168.100.100/rinkai/tamproto.git
 cd tamproto
 git checkout teep-device-interop
+```
+
+Once, it is cloned, it is able to start tamproto server directly from next time.
+
+```sh
 docker-compose build
 docker-compose up
 ```
