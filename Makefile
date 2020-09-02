@@ -36,6 +36,7 @@ image:
 	make -C $(TEST_DIR) image TEE=$(TEE)
 
 select:
+	rm -f $(BUILD_DIR)/Makefile
 	ln -sf $(TEE).mk $(BUILD_DIR)/Makefile
 
 build_clean: select
@@ -48,7 +49,7 @@ all_test_clean:
 	make -C test_mini clean
 	make -C test_gp clean
 
-clean: build_clean all_test_clean
+clean: select build_clean all_test_clean
 	$(RM) $(BUILD_DIR)/Makefile
 
 # delete including dependencies
