@@ -29,7 +29,7 @@
  */
 
 #include "edger/Enclave_t.h"
-#define MESSAGE "this is empty\n"
+#define MESSAGE "hello world!\n"
 void ecall_ta_main(void) {
   int retval;
   ocall_print_string(&retval, MESSAGE);

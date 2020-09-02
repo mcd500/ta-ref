@@ -5,7 +5,7 @@ variables:
     DOCKER_IMAGE_OPTEE: docker.io/trasioteam/optee
 
 stages:
-    - test_mini
+    - test_hello
     - test_gp
     - test_perf
     - experimental
@@ -72,8 +72,8 @@ keystone_qemu_default:
     image: ${DOCKER_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
-        TEST_DIR: test_mini
-    stage: test_mini
+        TEST_DIR: test_hello
+    stage: test_hello
     script:
         - make build test run TEST_DIR=${TEST_DIR}
 keystone_qemu_test_gp:
@@ -104,8 +104,8 @@ keystone_hifive_default:
     image: ${DOCKER_IMAGE}:keystone_hifive
     variables:
         ENVS: env/keystone.sh
-        TEST_DIR: test_mini
-    stage: test_mini
+        TEST_DIR: test_hello
+    stage: test_hello
     script:
         - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
 keystone_hifive_test_gp:
@@ -160,8 +160,8 @@ keystone_vc707_default:
     image: ${DOCKER_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
-        TEST_DIR: test_mini
-    stage: test_mini
+        TEST_DIR: test_hello
+    stage: test_hello
     only:
         - todo
     script:
@@ -174,8 +174,8 @@ sgx_sim_default:
     image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh
-        TEST_DIR: test_mini
-    stage: test_mini
+        TEST_DIR: test_hello
+    stage: test_hello
     script:
         - make build test run TEST_DIR=${TEST_DIR}
 sgx_sim_test_gp:
@@ -204,8 +204,8 @@ sgx_nuc_default:
     image: ${DOCKER_IMAGE}:sgx
     variables:
         ENVS: env/sgx_x64.sh
-        TEST_DIR: test_mini
-    stage: test_mini
+        TEST_DIR: test_hello
+    stage: test_hello
     only:
         - temporary
     script:
@@ -241,8 +241,8 @@ optee_qemu_default:
     image: ${DOCKER_IMAGE}:optee_qemu_v8
     variables:
         ENVS: env/optee_qemu.sh
-        TEST_DIR: test_mini
-    stage: test_mini
+        TEST_DIR: test_hello
+    stage: test_hello
     script:
         - make build test run TEST_DIR=${TEST_DIR}
 optee_qemu_test_gp:
@@ -271,8 +271,8 @@ optee_rpi3_default:
     image: ${DOCKER_IMAGE}:optee_rpi3
     variables:
         ENVS: env/optee_rpi3.sh
-        TEST_DIR: test_mini
-    stage: test_mini
+        TEST_DIR: test_hello
+    stage: test_hello
     script:
         - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR}
 optee_rpi3_test_gp:

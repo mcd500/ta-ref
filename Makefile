@@ -1,6 +1,6 @@
 export TOPDIR=$(CURDIR)
 BUILD_DIR=build
-TEST_DIR=test_mini
+TEST_DIR=test_hello
 
 # used only on sgx/App
 ## sgx option(DEBUG, RELEASE, PRERELEASE)
@@ -48,7 +48,7 @@ test_clean: select
 	make -C $(TEST_DIR) clean
 
 all_test_clean:
-	make -C test_mini clean
+	make -C test_hello clean
 	make -C test_gp clean
 
 clean: select build_clean all_test_clean

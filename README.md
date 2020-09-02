@@ -35,7 +35,7 @@ make build test run MACHINE=${MACHINE} TEST_DIR=${TEST_DIR}
 
 + `MACHINE`(default: SIM):HIFIVE, TRVSIM, VC707, NUC, RPI3 can be specified.
 
-+ `TEST_DIR`(default: test_mini) : This repository supports multiple test suites. For example, `TEST_DIR=test_gp` builds and runs under `test_gp` directory, GP API test suite.
++ `TEST_DIR`(default: test_hello) : This repository supports multiple test suites. For example, `TEST_DIR=test_gp` builds and runs under `test_gp` directory, GP API test suite.
 
 Note) This repository supports SSL transportation, so we should set `GIT_SSL_NO_VERIFY=true` and `git config --local http.sslVerify false`.
 
@@ -133,7 +133,7 @@ source env/keystone.sh
 
 ```sh
 # Currently, VC707's CPU clock is very low, so we can't execute only simple enclave program.
-make build test run MACHINE=VC707 TEST_DIR=test_mini
+make build test run MACHINE=VC707 TEST_DIR=test_hello
 ```
 
 ## intel-sgx
@@ -246,7 +246,7 @@ If you want to clean build directory only, try `make clean`. Otherwise, `make mr
 ├── profiler .. profiler add-in (enable by `PROFILER=ON` in make)
 ├── benchmark .. profiler add-in (enable by `BENCHMARK=ON` in make)
 ├── services .. docker-compose settings
-├── test_mini .. minimum test
+├── test_hello .. "hello world" test
 └── test_gp .. test for GP API
 ```
 

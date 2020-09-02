@@ -113,7 +113,7 @@ TEE_Result run_all_test(uint32_t param_types,
     /* Unused parameters */
     (void)&sess_ctx;
     tee_printf("ecall_ta_main() start\n");
-#define MESSAGE "this is empty\n"
+#define MESSAGE "hello world!\n"
     tee_printf(MESSAGE);
     tee_printf("ecall_ta_main() end\n");
     memmove(params[1].memref.buffer, print_buf, params[1].memref.size);

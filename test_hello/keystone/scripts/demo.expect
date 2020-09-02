@@ -17,7 +17,7 @@ expect "# " {
 
 expect "# " {
     send "./App.client  Enclave.eapp_riscv eyrie-rt\r"
-    expect "this is empty\r" {} timeout {
+    expect "hello world!\r" {} timeout {
         exit 1
     }
 }

@@ -29,7 +29,7 @@
  */
 
 //#include "tools.h" // for printf-debug
-#define MESSAGE "this is empty\n"
+#define MESSAGE "hello world!\n"
 
 #include "edger/Enclave_t.h"
 
