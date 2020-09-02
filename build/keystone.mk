@@ -1,6 +1,8 @@
+ifeq ($(TEE),keystone)
 ifeq ($(KEYSTONE_DIR),)
 $(error "Make sure that keystone framework is prebuilt!")
-endif
+endif # TEE
+endif # KEYSTONE_DIR
 
 # TODO: customize eyrie
 DEPENDS=eyrie edger crypto

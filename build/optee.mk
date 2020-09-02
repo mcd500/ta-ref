@@ -1,6 +1,8 @@
+ifeq ($(TEE),optee)
 ifeq ($(OPTEE_DIR),)
 $(error "Make sure that OPTEE framework is prebuilt!")
-endif
+endif # TEE
+endif # OPTEE_DIR
 
 #DEPENDS=crypto
 DEPENDS=edger api_import
