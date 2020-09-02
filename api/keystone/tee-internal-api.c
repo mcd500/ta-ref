@@ -310,48 +310,12 @@ TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
     AES_CBC_encrypt_buffer(&(object->persist_ctx), data, size);
 #endif
 
-    int retval = 0;
-    while (retval < size) {
-      int len = size - retval;
-      if (len > 256) {
-        len = 256;
-      }
-      printf("ocall_write_file %d %d %d\n", object->desc, retval, len);
-      int n  = ocall_write_file(object->desc, (const char *)data + retval, len);
-      if (n < 0) {
-        free(data);
-        // TODO Interpret linux error as TEE error
-        return TEE_ERROR_GENERIC;
-      }
-      retval += n;
+    int n = ocall_write_file_full(object->desc, data, size);
+    if (n < 0) {
+      return TEE_ERROR_GENERIC;
     }
     return TEE_SUCCESS;
 }
-
-
-#if defined(EDGE_OUT_WITH_STRUCTURE)
-// ocall read with ocall_read_file256
-static int ocall_read_file(int desc, char *buf, size_t len)
-{
-  int retval = 0;
-  ob256_t rret;
-  while (len > 0) {
-    rret = ocall_read_file256(desc);
-    if (rret.ret > 0) {
-      memcpy(buf, rret.b, rret.ret);
-      retval += rret.ret;
-      buf += rret.ret;
-      len -= (rret.ret <= len ? rret.ret : len);
-    } else if (rret.ret < 0) {
-      retval = rret.ret;
-      break;
-    } else {
-      break;
-    }
-  }
-  return retval;
-}
-#endif
 
 TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
                               uint32_t size, uint32_t *count)
@@ -370,12 +334,17 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
-    int retval = ocall_read_file(object->desc, (char *)buffer, size);
+    int retval = ocall_read_file_full(object->desc, buffer, size);
     if (retval < 0) {
       // TODO Interpret linux error as TEE error
       return TEE_ERROR_GENERIC;
     }
     *count = size = retval;
+
+    if (size & (16 - 1)) {
+      // TODO
+      return TEE_ERROR_GENERIC;
+    }
 
     if (size == 0) {
       return TEE_SUCCESS;
