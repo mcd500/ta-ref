@@ -351,13 +351,11 @@ optee_qemu_teep_device:
     stage: experimental
     script:
         - cd teep-device
-        - make clean-optee && make build-optee
+        - make jwk-headers
+        - make
         - TAMIP=`python3 -c 'import socket;print(socket.gethostbyname("tamproto"))'`
         - curl "http://$TAMIP:8888/api/tam"
-        - make -C platform/op-tee install_qemu
-        - make -C platform/op-tee test TAM_URL="http://$TAMIP:8888" | tr -d "\r"
-#        - cat /home/main/build-optee/out/bin/serial0.log
-#        - cat /home/main/build-optee/out/bin/serial1.log
+        - make test TAM_URL="http://$TAMIP:8888" | tr -d "\r"
 
 keystone_qemu_test_teep:
     <<: *test_definition
@@ -371,13 +369,11 @@ keystone_qemu_test_teep:
     stage: experimental
     script:
         - cd teep-device
-        - make -C .. build
         - make jwk-headers
-        - make clean-keystone && make build-keystone
+        - make
         - TAMIP=`python3 -c 'import socket;print(socket.gethostbyname("tamproto"))'`
         - curl "http://$TAMIP:8888/api/tam"
-        - make -C platform/keystone image
-        - make -C platform/keystone test TAM_URL="http://$TAMIP:8888" | tr -d "\r"
+        - make test TAM_URL="http://$TAMIP:8888" | tr -d "\r"
 
 pctest_teep_device:
     <<: *test_definition
