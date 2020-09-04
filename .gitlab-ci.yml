@@ -391,6 +391,7 @@ pctest_teep_device:
     stage: experimental
     script:
         - cd teep-device
+        - make jwk-headers
         - TAMIP=`python3 -c 'import socket;print(socket.gethostbyname("tamproto"))'`
         - curl "http://$TAMIP:8888/api/tam"
         - make -C platform/pc
