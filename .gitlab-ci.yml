@@ -379,59 +379,18 @@ keystone_qemu_test_teep:
         - make -C platform/keystone image
         - make -C platform/keystone test TAM_URL="http://$TAMIP:8888" | tr -d "\r"
 
-keystone_qemu_test_teep_hello_ta:
+pctest_teep_device:
     <<: *test_definition
+    <<: *tamproto_service
     only:
         - /^teep-device.*$/
-    image: ${DOCKER_TEEP_IMAGE}:keystone_qemu
+    image: ${DOCKER_TEEP_IMAGE}:optee_qemu
     variables:
-        ENVS: env/keystone.sh
+        ENVS: env/optee_qemu_teep.sh
         TEST_DIR: test_gp
     stage: experimental
     script:
         - cd teep-device
-        - make -C .. build
-        - make clean-keystone && make -C platform/keystone hello-ta
-
-keystone_qemu_test_teep_hello_app:
-    <<: *test_definition
-    only:
-        - /^teep-device.*$/
-    image: ${DOCKER_TEEP_IMAGE}:keystone_qemu
-    variables:
-        ENVS: env/keystone.sh
-        TEST_DIR: test_gp
-    stage: experimental
-    script:
-        - cd teep-device
-        - make -C .. build
-        - make clean-keystone && make -C platform/keystone hello-app
-
-keystone_qemu_test_teep_teep_agent_ta:
-    <<: *test_definition
-    only:
-        - /^teep-device.*$/
-    image: ${DOCKER_TEEP_IMAGE}:keystone_qemu
-    variables:
-        ENVS: env/keystone.sh
-        TEST_DIR: test_gp
-    stage: experimental
-    script:
-        - cd teep-device
-        - make -C .. build
-        - make jwk-headers
-        - make clean-keystone && make -C platform/keystone teep-agent-ta
-
-keystone_qemu_test_teep_teep_broker_app:
-    <<: *test_definition
-    only:
-        - /^teep-device.*$/
-    image: ${DOCKER_TEEP_IMAGE}:keystone_qemu
-    variables:
-        ENVS: env/keystone.sh
-        TEST_DIR: test_gp
-    stage: experimental
-    script:
-        - cd teep-device
-        - make -C .. build
-        - make clean-keystone && make -C platform/keystone teep-broker-app
+        - TAMIP=`python3 -c 'import socket;print(socket.gethostbyname("tamproto"))'`
+        - curl "http://$TAMIP:8888/api/tam"
+        - make -C platform/pc
