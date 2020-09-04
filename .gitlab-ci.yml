@@ -350,8 +350,8 @@ optee_qemu_teep_device:
         TEST_DIR: test_gp
     stage: experimental
     script:
+        - make
         - cd teep-device
-        - make jwk-headers
         - make
         - TAMIP=`python3 -c 'import socket;print(socket.gethostbyname("tamproto"))'`
         - curl "http://$TAMIP:8888/api/tam"
@@ -368,8 +368,8 @@ keystone_qemu_test_teep:
         TEST_DIR: test_gp
     stage: experimental
     script:
+        - make
         - cd teep-device
-        - make jwk-headers
         - make
         - TAMIP=`python3 -c 'import socket;print(socket.gethostbyname("tamproto"))'`
         - curl "http://$TAMIP:8888/api/tam"
@@ -387,7 +387,7 @@ pctest_teep_device:
     stage: experimental
     script:
         - cd teep-device
-        - make jwk-headers
+        - make -C platform/pc
         - TAMIP=`python3 -c 'import socket;print(socket.gethostbyname("tamproto"))'`
         - curl "http://$TAMIP:8888/api/tam"
-        - make -C platform/pc
+#   TODO: run pctest
