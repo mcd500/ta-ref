@@ -229,10 +229,9 @@ cd ta-ref
 source env/optee_qemu_teep.sh
 make
 cd teep-device
-make jwk-headers
-cd platform/op-tee
-make install_qemu
+make
 make test
+make qemu
 ```
 
 #### keystone
@@ -247,10 +246,9 @@ cd ta-ref
 source env/keystone.sh
 make
 cd teep-device
-make jwk-headers
-cd platform/keystone
-make image
+make
 make test
+make qemu
 ```
 
 # Options
