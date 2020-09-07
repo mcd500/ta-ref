@@ -206,8 +206,6 @@ sgx_nuc_default:
         ENVS: env/sgx_x64.sh
         TEST_DIR: test_hello
     stage: test_hello
-    only:
-        - temporary
     script:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR}
 sgx_nuc_test_gp:
@@ -217,8 +215,6 @@ sgx_nuc_test_gp:
         ENVS: env/sgx_x64.sh
         TEST_DIR: test_gp
     stage: test_gp
-    only:
-        - temporary
     script:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR}
 sgx_nuc_test_perf:
@@ -230,8 +226,6 @@ sgx_nuc_test_perf:
         PROFILER: "ON"
         DEBUG_TYPE: "RELEASE"
     stage: test_perf
-    only:
-        - temporary
     script:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
