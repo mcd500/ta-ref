@@ -251,6 +251,21 @@ make test
 make qemu
 ```
 
+on qemu console
+
+```sh
+. ./env.sh
+cd teep-device
+../ita.sh
+ls -l
+../dta.sh
+ls -l
+../ista.sh
+ls -l
+../dsta.sh
+ls -l
+```
+
 # Options
 
 + `PROFILER=[ON/OFF] .. enable/disable profiler(default: OFF)
