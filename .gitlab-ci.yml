@@ -220,6 +220,8 @@ sgx_nuc_test_gp:
 sgx_nuc_test_perf:
     <<: *test_definition101
     image: ${DOCKER_IMAGE}:sgx
+    only:
+        - temporary
     variables:
         ENVS: env/sgx_x64.sh
         TEST_DIR: test_gp
