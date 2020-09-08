@@ -1,4 +1,5 @@
 #pragma once
+#include <stddef.h>
 // ocall_** functions
 #include "ocalls.h"
 #include "eapp_utils.h"
