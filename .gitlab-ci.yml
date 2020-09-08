@@ -328,7 +328,7 @@ optee_rpi3_test_perf:
         - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
 optee_qemu_teep:
-    <<: *test_definition
+    <<: *test_definition117
     only:
         - /^teep-device.*$/
     image: ${DOCKER_TEEP_IMAGE}:optee_qemu
@@ -340,7 +340,7 @@ optee_qemu_teep:
         - make build test run TEST_DIR=${TEST_DIR}
 
 optee_qemu_teep_device:
-    <<: *test_definition
+    <<: *test_definition117
     <<: *tamproto_service
     only:
         - /^teep-device.*$/
@@ -358,7 +358,7 @@ optee_qemu_teep_device:
         - make test TAM_URL="http://$TAMIP:8888" | tr -d "\r"
 
 keystone_qemu_test_teep:
-    <<: *test_definition
+    <<: *test_definition117
     <<: *tamproto_service
     only:
         - /^teep-device.*$/
@@ -376,7 +376,7 @@ keystone_qemu_test_teep:
         - make test TAM_URL="http://$TAMIP:8888" | tr -d "\r"
 
 pctest_teep_device:
-    <<: *test_definition
+    <<: *test_definition117
     <<: *tamproto_service
     only:
         - /^teep-device.*$/
