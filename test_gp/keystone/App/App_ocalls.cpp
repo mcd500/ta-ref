@@ -19,10 +19,6 @@
 #define NO_PERF __attribute__((no_instrument_function))
 #endif
 
-bool load_invoke_command(invoke_command_t* ret);
-int store_invoke_callback_file(const char *name, const char *out, size_t out_len);
-
-
 EDGE_EXTERNC_BEGIN
 
 
