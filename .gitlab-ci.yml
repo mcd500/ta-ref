@@ -379,7 +379,7 @@ keystone_qemu_test_teep:
     tags:
         - shell117
     variables:
-        DOCKER_COMPOSE_PATH: services/teep-device/qemu/docker-compose.yml
+        DOCKER_COMPOSE_PATH: services/teep-device/keystone_qemu/docker-compose.yml
     only:
         - /^teep-device.*$/
     tags:
