@@ -401,6 +401,7 @@ keystone_trvsim_test_teep:
         DOCKER_COMPOSE_PATH: services/teep-device/trvsim/docker-compose.yml
     tags:
         - shell117
+    stage: experimental
     before_script:
         - wget ${SDIMAGE_URL} -o /dev/null
         - mkdir -p ${IMAGE_DIR}
