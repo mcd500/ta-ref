@@ -24,7 +24,7 @@ services:
         depends_on:
             - trvsim
         volumes:
-            - ./:/home/main/ta-ref
+            - ../:/home/main/ta-ref
         working_dir: /home/main/ta-ref
         entrypoint: >
             /bin/bash -c "

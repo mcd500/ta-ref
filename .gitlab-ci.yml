@@ -379,16 +379,17 @@ keystone_qemu_test_teep:
     tags:
         - shell117
     variables:
-        DOCKER_COMPOSE_PATH: services/teep-device/keystone_qemu/docker-compose.yml
+        DOCKER_COMPOSE_PATH: services/docker-compose.teep_keystone_qemu.yml
+        PROJECT: teep_keystone_qemu
     only:
         - /^teep-device.*$/
     tags:
         - shell117
     stage: experimental
     script:
-        - docker-compose -f ${DOCKER_COMPOSE_PATH} up --abort-on-container-exit
+        - docker-compose -p ${PROJECT} -f ${DOCKER_COMPOSE_PATH} up --abort-on-container-exit
     after_script:
-        - docker-compose -f ${DOCKER_COMPOSE_PATH} down -v
+        - docker-compose -p ${PROJECT} -f ${DOCKER_COMPOSE_PATH} down -v
 
 keystone_trvsim_test_teep:
     tags:
@@ -401,7 +402,8 @@ keystone_trvsim_test_teep:
         # PORT, OVPSIM_LICENCE, MAC_ADDR and IMAGE_DIR are required in .gitlab-ci.yml
         IMAGE_DIR: ${CI_PROJECT_DIR}/image
         SSH_PORT: 10125
-        DOCKER_COMPOSE_PATH: services/teep-device/trvsim/docker-compose.yml
+        DOCKER_COMPOSE_PATH: services/docker-compose.teep_keystone_trvsim.yml
+        PROJECT: teep_keystone_trvsim
     tags:
         - shell117
     stage: experimental
@@ -411,9 +413,9 @@ keystone_trvsim_test_teep:
         - tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IMAGE_DIR}
         - git submodule update --init --recursive
     script:
-        - docker-compose -f ${DOCKER_COMPOSE_PATH} up --abort-on-container-exit
+        - docker-compose -p ${PROJECT} -f ${DOCKER_COMPOSE_PATH} up --abort-on-container-exit
     after_script:
-        - docker-compose -f ${DOCKER_COMPOSE_PATH} down -v
+        - docker-compose -p ${PROJECT} -f ${DOCKER_COMPOSE_PATH} down -v
 
 pctest_teep_device:
     <<: *test_definition117
