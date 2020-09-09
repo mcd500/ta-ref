@@ -377,7 +377,7 @@ keystone_qemu_test_teep:
 
 keystone_qemu_test_teep:
     <<: *test_definition
-    variable:
+    variables:
         DOCKER_COMPOSE_PATH: services/teep-device/trvsim/docker-compose.yml
     only:
         - /^teep-device.*$/
