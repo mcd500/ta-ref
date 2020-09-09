@@ -17,10 +17,10 @@ services:
             - ${SSH_PORT}:${SSH_PORT}
         volumes:
             - ${IMAGE_DIR}:/tmp/image
-            - ${OVPSIM_LICENCE_PATH}:/home/trv/Imperas.20200710/OVPsim.lic
+            - ${OVPSIM_LICENCE}:/home/trv/Imperas.20200710/OVPsim.lic
         mac_address: ${MAC_ADDR}
     builder:
-        image: trasioteam/ta_ref_teep_devel:keystone_qemu
+        image: trasioteam/ta_ref_teep_devel:keystone_trvsim
         depends_on:
             - trvsim
         volumes:
