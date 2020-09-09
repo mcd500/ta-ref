@@ -361,7 +361,7 @@ keystone_qemu_test_teep:
     <<: *test_definition117
     <<: *tamproto_service
     only:
-        - /^teep-device.*$/
+        - temporary
     image: ${DOCKER_TEEP_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
@@ -374,6 +374,42 @@ keystone_qemu_test_teep:
         - TAMIP=`python3 -c 'import socket;print(socket.gethostbyname("tamproto"))'`
         - curl "http://$TAMIP:8888/api/tam"
         - make test TAM_URL="http://$TAMIP:8888" | tr -d "\r"
+
+keystone_qemu_test_teep:
+    <<: *test_definition
+    variable:
+        DOCKER_COMPOSE_PATH: services/teep-device/trvsim/docker-compose.yml
+    only:
+        - /^teep-device.*$/
+    tags:
+        - shell117
+    stage: experimental
+    script:
+        - docker-compose -f ${DOCKER_COMPOSE_PATH} up --abort-on-container-exit
+    after_script:
+        - docker-compose -f ${DOCKER_COMPOSE_PATH} down -v
+
+keystone_trvsim_test_teep:
+    only:
+        - /^teep-device.*$/
+    variables:
+        # OVPSIM_LICENCE and MAC_ADDR are defined in CI/CD settings -> Variables.
+        SDIMAGE_URL: http://192.168.100.100:2000/keystone_trvsim_hifive_sdimage.tar.xz
+        # PORT, OVPSIM_LICENCE, MAC_ADDR and IMAGE_DIR are required in .gitlab-ci.yml
+        IMAGE_DIR: ${CI_PROJECT_DIR}/image
+        PORT: 10125
+        DOCKER_COMPOSE_PATH: services/teep-device/trvsim/docker-compose.yml
+    tags:
+        - shell117
+    before_script:
+        - wget ${SDIMAGE_URL} -o /dev/null
+        - mkdir -p ${IMAGE_DIR}
+        - tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IMAGE_DIR}
+        - git submodule update --init --recursive
+    script:
+        - docker-compose -f ${DOCKER_COMPOSE_PATH} up --abort-on-container-exit
+    after_script:
+        - docker-compose -f ${DOCKER_COMPOSE_PATH} down -v
 
 pctest_teep_device:
     <<: *test_definition117

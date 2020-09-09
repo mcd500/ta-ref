@@ -1,0 +1,38 @@
+version: '3.5'
+
+services:
+    tamproto:
+        image: trasioteam/tamproto:teep-device-interop
+        environment:
+            PORT: 8888
+        expose:
+            - 8888
+    trvsim:
+        depends_on:
+            - tamproto
+        image: trasioteam/riscv_toolchain:trvsim_20200731
+        environment:
+            PORT: ${SSH_PORT}
+        ports:
+            - ${SSH_PORT}:${SSH_PORT}
+        volumes:
+            - ${IMAGE_DIR}:/tmp/image
+            - ${OVPSIM_LICENCE_PATH}:/home/trv/Imperas.20200710/OVPsim.lic
+        mac_address: ${MAC_ADDR}
+    builder:
+        image: trasioteam/ta_ref_teep_devel:keystone_qemu
+        depends_on:
+            - trvsim
+        volumes:
+            - ./:/home/main/ta-ref
+        working_dir: /home/main/ta-ref
+        entrypoint: >
+            /bin/bash -c "
+              sleep 60 &&
+              curl http://tamproto:8888/api/tam &&
+              source env/keystone.sh &&
+              make &&
+              cd teep-device &&
+              make && make &&
+              sshpass -p 'sifive' ssh -p ${SSH_PORT} -o 'StrictHostKeyChecking no' root@trvsim 'uname -a'
+            "
