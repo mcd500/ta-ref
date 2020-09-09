@@ -33,6 +33,6 @@ services:
               source env/keystone.sh &&
               make &&
               cd teep-device &&
-              make && make &&
-              sshpass -p 'sifive' ssh -p ${SSH_PORT} -o 'StrictHostKeyChecking no' root@trvsim 'uname -a'
+              make build-keystone-trvsim &&
+              make test-keystone-trvsim TAM_URL=http://tamproto:8888
             "
