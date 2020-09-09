@@ -6,10 +6,10 @@ variables:
     DOCKER_TAMPROTO_IMAGE: docker.io/trasioteam/tamproto
 
 stages:
+    - experimental
     - test_hello
     - test_gp
     - test_perf
-    - experimental
 
 .disable_template: &disable_definition
     only:
