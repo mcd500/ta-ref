@@ -386,8 +386,9 @@ pctest_teep_device:
         TEST_DIR: test_gp
     stage: experimental
     script:
+        - export TEE=pc
         - cd teep-device
-        - make -C platform/pc
+        - make
         - TAMIP=`python3 -c 'import socket;print(socket.gethostbyname("tamproto"))'`
         - curl "http://$TAMIP:8888/api/tam"
-#   TODO: run pctest
+        - make test TAM_URL="http://$TAMIP:8888" | tr -d "\r"
