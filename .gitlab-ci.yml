@@ -386,6 +386,8 @@ keystone_qemu_test_teep:
     tags:
         - shell117
     stage: experimental
+    before_script:
+        - git submodule update --init --recursive
     script:
         - docker-compose -p ${PROJECT} -f ${DOCKER_COMPOSE_PATH} up --abort-on-container-exit
     after_script:
