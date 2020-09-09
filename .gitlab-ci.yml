@@ -376,7 +376,8 @@ keystone_qemu_test_teep:
         - make test TAM_URL="http://$TAMIP:8888" | tr -d "\r"
 
 keystone_qemu_test_teep:
-    <<: *test_definition
+    tags:
+        - shell117
     variables:
         DOCKER_COMPOSE_PATH: services/teep-device/qemu/docker-compose.yml
     only:
@@ -390,6 +391,8 @@ keystone_qemu_test_teep:
         - docker-compose -f ${DOCKER_COMPOSE_PATH} down -v
 
 keystone_trvsim_test_teep:
+    tags:
+        - shell117
     only:
         - /^teep-device.*$/
     variables:
