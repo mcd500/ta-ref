@@ -330,7 +330,7 @@ optee_rpi3_test_perf:
 optee_qemu_teep:
     <<: *test_definition117
     only:
-        - /^teep-device.*$/
+        - temporary
     image: ${DOCKER_TEEP_IMAGE}:optee_qemu
     variables:
         ENVS: env/optee_qemu_teep.sh
