@@ -2,11 +2,11 @@ version: '3.5'
 
 services:
     tamproto:
-        image: trasioteam/tamproto:teep-device-interop_docker_compose
+        image: trasioteam/tamproto:teep-device-interop
         environment:
-            PORT: 8890
+            PORT: 8888
         expose:
-            - 8890
+            - 8888
     trvsim:
         depends_on:
             - tamproto
@@ -28,11 +28,12 @@ services:
         working_dir: /home/main/ta-ref
         entrypoint: >
             /bin/bash -c "
-              sleep 60 &&
-              curl http://tamproto:8890/api/tam &&
+              sleep 5 &&
+              curl http://tamproto:8888/api/tam &&
+              sleep 55 &&
               source env/keystone.sh &&
               make &&
               cd teep-device &&
               make build-keystone-trvsim TRVSIM_PORT=${SSH_PORT} &&
-              make test-keystone-trvsim TAM_URL=http://tamproto:8890 TRVSIM_PORT=${SSH_PORT} | tr -d '\r'
+              make test-keystone-trvsim TAM_URL=http://tamproto:8888 TRVSIM_PORT=${SSH_PORT} | tr -d '\r'
             "

@@ -2,11 +2,11 @@ version: '3.5'
 
 services:
     tamproto:
-        image: trasioteam/tamproto:teep-device-interop_docker_compose
+        image: trasioteam/tamproto:teep-device-interop
         environment:
-            PORT: 8889
+            PORT: 8888
         expose:
-            - 8889
+            - 8888
     builder:
         image: trasioteam/ta_ref_teep_devel:keystone_qemu
         depends_on:
@@ -17,10 +17,10 @@ services:
         entrypoint: >
             /bin/bash -c "
               sleep 5 &&
-              curl http://tamproto:8889/api/tam &&
+              curl http://tamproto:8888/api/tam &&
               source env/keystone.sh &&
               make &&
               cd teep-device &&
               make && make &&
-              make test TAM_URL=http://tamproto:8889 | tr -d '\r'
+              make test TAM_URL=http://tamproto:8888 | tr -d '\r'
             "
