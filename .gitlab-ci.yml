@@ -361,7 +361,7 @@ keystone_qemu_test_teep:
     <<: *test_definition117
     <<: *tamproto_service
     only:
-        - temporary
+        - /^teep-device.*$/
     image: ${DOCKER_TEEP_IMAGE}:keystone_qemu
     variables:
         ENVS: env/keystone.sh
