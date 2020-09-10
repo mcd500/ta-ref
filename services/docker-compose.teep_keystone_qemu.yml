@@ -22,5 +22,5 @@ services:
               make &&
               cd teep-device &&
               make && make &&
-              make test TAM_URL=http://tamproto:8889
+              make test TAM_URL=http://tamproto:8889 | tr -d '\r'
             "

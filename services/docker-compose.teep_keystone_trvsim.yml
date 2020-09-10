@@ -34,5 +34,5 @@ services:
               make &&
               cd teep-device &&
               make build-keystone-trvsim TRVSIM_PORT=${SSH_PORT} &&
-              make test-keystone-trvsim TAM_URL=http://tamproto:8890 TRVSIM_PORT=${SSH_PORT}
+              make test-keystone-trvsim TAM_URL=http://tamproto:8890 TRVSIM_PORT=${SSH_PORT} | tr -d '\r'
             "
