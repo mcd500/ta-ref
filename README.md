@@ -230,7 +230,15 @@ source env/optee_qemu_teep.sh
 make
 cd teep-device
 make
+```
+
+Automatically execute install/execute/delete TA:
+```sh
 make test
+```
+
+Run qemu and stop at login prompt:
+```sh
 make qemu
 ```
 
@@ -247,7 +255,15 @@ source env/keystone.sh
 make
 cd teep-device
 make
+```
+
+Automatically execute install/execute/delete TA:
+```sh
 make test
+```
+
+Run qemu and stop at login prompt:
+```sh
 make qemu
 ```
 
