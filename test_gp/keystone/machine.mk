@@ -25,5 +25,5 @@ else ifeq ($(MACHINE), VC707)
 USER=root
 PASSWD=sifive
 PORT=22
-IP_ADDR=192.168.100.120
+IP_ADDR=192.168.100.112
 endif

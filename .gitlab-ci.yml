@@ -154,18 +154,39 @@ keystone_trvsim_test_gp:
         # cleanup
         - docker-compose -f services/docker-compose.trvsim_ci.yml down -v
 
+## vc707
 keystone_vc707_default:
     <<: *test_definition117
     # This is tentative, but actually it works!
-    image: ${DOCKER_IMAGE}:keystone_qemu
+    image: ${DOCKER_IMAGE}:keystone_vc707
     variables:
         ENVS: env/keystone.sh
         TEST_DIR: test_hello
     stage: test_hello
-    only:
-        - todo
     script:
         - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR}
+keystone_vc707_test_gp:
+    <<: *test_definition117
+    image: ${DOCKER_IMAGE}:keystone_vc707
+    variables:
+        ENVS: env/keystone.sh
+        TEST_DIR: test_gp
+    stage: test_gp
+    script:
+        - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR}
+        - make mrproper
+        - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR} EDGER_TYPE=KEEDGER8R
+keystone_vc707_test_perf:
+    <<: *test_definition117
+    image: ${DOCKER_IMAGE}:keystone_vc707
+    variables:
+        ENVS: env/keystone.sh
+        TEST_DIR: test_gp
+        PROFILER: "ON"
+        DEBUG_TYPE: "RELEASE"
+    stage: test_perf
+    script:
+        - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
 ###### sgx
 sgx_sim_default:
