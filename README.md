@@ -282,6 +282,56 @@ ls -l
 ls -l
 ```
 
+#### trvsim
+
+Clone repo fist:
+```sh
+GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
+cd ta-ref
+git checkout teep-device-master
+```
+
+Get rootfs:
+```sh
+export IMAGE_DIR=$(pwd)/image
+mkdir -p $IMAGE_DIR
+wget http://192.168.100.100:2000/keystone_trvsim_hifive_sdimage.tar.xz -o /dev/null
+tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IMAGE_DIR}
+```
+
+Prepare env variables:
+```sh
+export IMAGE_DIR=$(pwd)/image
+export SSH_PORT=10022
+export MAC_ADDR=xx:xx:xx:xx:xx:xx
+```
+
+Copy license file to current directory:
+```sh
+cp original_location ${PWD}/OVPsim.lic
+export ${PWD}/OVPsim.lic
+```
+
+Match the hostname for both OVPsim.lic and docker, in this example it is going to use `good_host`:
+```sh
+vi OVPsim.lic
+# Change the line
+SERVER hostname 04d9f582083f 2700
+to
+SERVER good_host 04d9f582083f 2700
+```
+
+```sh
+vi services/docker-compose.teep_keystone_trvsim.yml
+# Add next line inside `trvsim:`
+        hostname: good_host
+```
+
+Start docker with trvsim:
+```sh
+docker-compose -f ./services/docker-compose.teep_keystone_trvsim.yml up
+```
+
 # Options
 
 + `PROFILER=[ON/OFF] .. enable/disable profiler(default: OFF)
