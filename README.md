@@ -309,7 +309,7 @@ export MAC_ADDR=xx:xx:xx:xx:xx:xx
 Copy license file to current directory:
 ```sh
 cp original_location ${PWD}/OVPsim.lic
-export ${PWD}/OVPsim.lic
+export OVPSIM_LICENCE=${PWD}/OVPsim.lic
 ```
 
 Match the hostname for both OVPsim.lic and docker, in this example it is going to use `good_host`:
