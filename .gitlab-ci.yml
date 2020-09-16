@@ -10,6 +10,10 @@ stages:
     - test_perf
     - experimental
 
+.disable_template: &disable_difinition
+    only:
+        - temporary
+
 .test_teep_template: &test_teep_definition
     variables:
         ENVS: env/dummy.sh
@@ -157,6 +161,7 @@ keystone_trvsim_test_gp:
 ## vc707
 keystone_vc707_default:
     <<: *test_definition117
+    <<: *disable_definition
     # This is tentative, but actually it works!
     image: ${DOCKER_IMAGE}:keystone_vc707
     variables:
@@ -167,6 +172,7 @@ keystone_vc707_default:
         - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR}
 keystone_vc707_test_gp:
     <<: *test_definition117
+    <<: *disable_definition
     image: ${DOCKER_IMAGE}:keystone_vc707
     variables:
         ENVS: env/keystone.sh
@@ -178,6 +184,7 @@ keystone_vc707_test_gp:
         - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR} EDGER_TYPE=KEEDGER8R
 keystone_vc707_test_perf:
     <<: *test_definition117
+    <<: *disable_definition
     image: ${DOCKER_IMAGE}:keystone_vc707
     variables:
         ENVS: env/keystone.sh
