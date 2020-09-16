@@ -286,8 +286,6 @@ optee_qemu_test_perf:
 optee_rpi3_default:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_rpi3
-    only:
-        - temporary
     variables:
         ENVS: env/optee_rpi3.sh
         TEST_DIR: test_hello
@@ -297,8 +295,6 @@ optee_rpi3_default:
 optee_rpi3_test_gp:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_rpi3
-    only:
-        - temporary
     variables:
         ENVS: env/optee_rpi3.sh
         TEST_DIR: test_gp
@@ -308,11 +304,6 @@ optee_rpi3_test_gp:
 optee_rpi3_test_perf:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_rpi3
-    only:
-        - temporary
-    only:
-        # need to rebuild and burn new image
-        - todo
     variables:
         ENVS: env/optee_rpi3.sh
         TEST_DIR: test_gp
