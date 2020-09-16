@@ -10,7 +10,7 @@ stages:
     - test_perf
     - experimental
 
-.disable_template: &disable_difinition
+.disable_template: &disable_definition
     only:
         - temporary
 
