@@ -332,6 +332,37 @@ Start docker with trvsim:
 docker-compose -f ./services/docker-compose.teep_keystone_trvsim.yml up
 ```
 
+#### pctest
+
+Clone repo fist:
+```sh
+GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
+cd ta-ref
+git checkout teep-device-master
+```
+
+build
+```sh
+export TEE=pc
+cd teep-device
+make
+```
+
+test
+```sh
+make test
+```
+
+run particular install/delete commands
+```sh
+cd platform/pc/build/scripts
+./ita.sh
+./ista.sh
+./dta.sh
+./dsta.sh
+```
+
+
 # Options
 
 + `PROFILER=[ON/OFF] .. enable/disable profiler(default: OFF)
