@@ -301,17 +301,16 @@ wget http://192.168.100.100:2000/keystone_trvsim_hifive_sdimage.tar.xz -o /dev/n
 tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IMAGE_DIR}
 ```
 
-Prepare env variables:
-```sh
-export IMAGE_DIR=$(pwd)/image
-export SSH_PORT=10022
-export MAC_ADDR=xx:xx:xx:xx:xx:xx
-```
-
 Copy license file to current directory:
 ```sh
 cp original_location ${PWD}/OVPsim.lic
 export OVPSIM_LICENCE=${PWD}/OVPsim.lic
+```
+
+Prepare env variables, the `MAC_ADDR` must match in license file:
+```sh
+export SSH_PORT=10022
+export MAC_ADDR=xx:xx:xx:xx:xx:xx
 ```
 
 Match the hostname for both OVPsim.lic and docker, in this example it is going to use `good_host`.
