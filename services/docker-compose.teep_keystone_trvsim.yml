@@ -19,6 +19,7 @@ services:
             - ${IMAGE_DIR}:/tmp/image
             - ${OVPSIM_LICENCE}:/home/trv/Imperas.20200710/OVPsim.lic
         mac_address: ${MAC_ADDR}
+        hostname: ${TRV_HOSTNAME}
     builder:
         image: trasioteam/ta_ref_teep_devel:keystone_trvsim
         depends_on:

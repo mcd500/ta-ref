@@ -324,13 +324,9 @@ to
 SERVER good_host 04d9f582083f 2700
 ```
 
-In docker compose file:
+Set hostname:
 ```sh
-vi services/docker-compose.teep_keystone_trvsim.yml
-```
-Add next line inside `trvsim:` section.
-```
-        hostname: good_host
+export TRV_HOSTNAME=good_host
 ```
 
 Start docker with trvsim:
