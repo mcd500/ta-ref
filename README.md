@@ -314,7 +314,9 @@ cp original_location ${PWD}/OVPsim.lic
 export OVPSIM_LICENCE=${PWD}/OVPsim.lic
 ```
 
-Match the hostname for both OVPsim.lic and docker, in this example it is going to use `good_host`:
+Match the hostname for both OVPsim.lic and docker, in this example it is going to use `good_host`.
+
+In license file:
 ```sh
 vi OVPsim.lic
 # Change the line
@@ -323,9 +325,12 @@ to
 SERVER good_host 04d9f582083f 2700
 ```
 
+In docker compose file:
 ```sh
 vi services/docker-compose.teep_keystone_trvsim.yml
-# Add next line inside `trvsim:`
+```
+Add next line inside `trvsim:` section.
+```
         hostname: good_host
 ```
 
