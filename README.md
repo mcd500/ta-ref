@@ -334,6 +334,16 @@ Start docker with trvsim:
 docker-compose -f ./services/docker-compose.teep_keystone_trvsim.yml up
 ```
 
+Delete old containers when have errors:
+```sh
+docker-compose -f ./services/docker-compose.teep_keystone_trvsim.yml rm
+```
+
+When having errors, check the envariables in docker compose file:
+```sh
+cat ./services/docker-compose.teep_keystone_trvsim.yml
+```
+
 #### pctest
 
 Clone repo fist:
