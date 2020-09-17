@@ -201,7 +201,9 @@ make build test run MACHINE=RPI3 TEST_DIR=test_gp
 
 Make sure that `ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib/optee_armtz/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta` for the first time, or the error occurs, `optee_ref_ta: TEEC_Opensession failed with code 0xffff0008 origin 0x3`.
 
-### teep-device & tamproto
+## teep-device & tamproto
+
+### boot tamproto
 
 Clone tamproto server
 
