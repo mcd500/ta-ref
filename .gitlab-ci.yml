@@ -74,7 +74,7 @@ stages:
 ###### keystone
 .tamproto_service: &tamproto_service
     services:
-        - name: ${DOCKER_TAMPROTO_IMAGE}:teep-device-interop
+        - name: ${DOCKER_TAMPROTO_IMAGE}:teep-device-interop_2020-07-06
           alias: tamproto
 
 

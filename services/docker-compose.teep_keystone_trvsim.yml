@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
     tamproto:
-        image: trasioteam/tamproto:teep-device-interop
+        image: trasioteam/tamproto:teep-device-interop_2020-07-06
         environment:
             PORT: 8888
         expose:
