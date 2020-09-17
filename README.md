@@ -295,16 +295,16 @@ git checkout teep-device-master
 
 Get rootfs:
 ```sh
-export IMAGE_DIR=$(pwd)/image
+export IMAGE_DIR=$(pwd)/../trvbootimage
 mkdir -p $IMAGE_DIR
 wget http://192.168.100.100:2000/keystone_trvsim_hifive_sdimage.tar.xz -o /dev/null
 tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IMAGE_DIR}
 ```
 
-Copy license file to current directory:
+Copy your license file to a directory:
 ```sh
-cp original_location ${PWD}/OVPsim.lic
-export OVPSIM_LICENCE=${PWD}/OVPsim.lic
+cp original_location ${IMAGE_DIR}/OVPsim.lic
+export OVPSIM_LICENCE=${IMAGE_DIR}/OVPsim.lic
 ```
 
 Prepare env variables, the `MAC_ADDR` must match in license file:
