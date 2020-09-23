@@ -264,7 +264,8 @@ Automatically execute install/execute/delete TA:
 make test
 ```
 
-Run qemu and stop at login prompt:
+Run qemu and stop at login prompt:  
+`login:root Password:sifive`
 ```sh
 make qemu
 ```
