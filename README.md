@@ -203,7 +203,7 @@ Make sure that `ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /
 
 ## teep-device & tamproto
 
-### boot tamproto
+### booting tamproto
 
 Clone tamproto server
 
@@ -222,7 +222,7 @@ docker-compose up
 
 #### optee
 
-build ta-ref
+build teep-device on ta-ref
 
 ```sh
 cd ta-ref
@@ -246,8 +246,7 @@ make qemu
 
 #### keystone
 
-
-build ta-ref
+build teep-device on ta-ref
 
 ```sh
 cd ta-ref
