@@ -203,6 +203,8 @@ Make sure that `ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /
 
 ## teep-device & tamproto
 
+Running tamproto required before running teep-device on op-tee and keystone.
+
 ### booting tamproto
 
 Clone tamproto server
@@ -285,6 +287,9 @@ ls -l
 ```
 
 #### trvsim
+
+It does not require running tamproto as above in op-tee and keystone.
+The tamproto is booting inside docker-compose command.
 
 Clone repo fist:
 ```sh
