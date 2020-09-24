@@ -360,7 +360,7 @@ git checkout teep-device-master
 
 build
 ```sh
-export TEE=pc
+source env/pc.sh
 cd teep-device
 make
 ```
