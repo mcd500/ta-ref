@@ -138,11 +138,11 @@ keystone_hifive_test_perf:
 
 keystone_trvsim_test_gp:
     variables:
-        # OVPSIM_LICENCE and MAC_ADDR are defined in CI/CD settings -> Variables.
+        # OVPSIM_LICENCE_PATH and MAC_ADDR are defined in CI/CD settings -> Variables.
         SDIMAGE_URL: http://192.168.100.100:2000/keystone_trvsim_hifive_sdimage.tar.xz
-        # PORT, OVPSIM_LICENCE, MAC_ADDR and IMAGE_DIR are required in .gitlab-ci.yml
+        # SSH_PORT, OVPSIM_LICENCE_PATH, MAC_ADDR and IMAGE_DIR are required in .gitlab-ci.yml
         IMAGE_DIR: ${CI_PROJECT_DIR}/image
-        PORT: 10025
+        SSH_PORT: 10025
         TEST_DIR: test_gp
     tags:
         - shell117
