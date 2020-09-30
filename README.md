@@ -67,17 +67,15 @@ Install TRV simulator, create binaries and launch it:
 export IMAGE_DIR=$(pwd)/image
 mkdir -p $IMAGE_DIR
 wget http://192.168.100.100:2000/keystone_trvsim_hifive_sdimage.tar.xz -o /dev/null
-tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IAMGE_DIR}
+tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IMAGE_DIR}
 
 # 2. prepare the environment variable used in docker-compose
-## Note) You can use docker image or launch manually. see  see also https://github.com/trasio-org/private-docs/blob/master/keystone-with-debian-userland.md#%E5%AE%9F%E8%A1%8C%E7%94%A8%E3%81%AE%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%82%92%E4%BD%9C%E6%88%90.
-export IMAGE_DIR=$(pwd)/image
-export PATH_TO_LICENCE_PATH=$(pwd)/OVPsim.lic
+export OVPSIM_LICENCE_PATH=$(pwd)/OVPsim.lic
 export MAC_ADDR=...
-export PORT=10022
+export SSH_PORT=10022
 ```
 
-Dockerfile for TRV simulator is [here](https://192.168.100.100/rinkai/dockerfiles/-/tree/master/riscv/trvsim). You can access the docker machine by `ssh -p 10022 -o "StrictHostKeyChecking no" root@${IP_ADDR}`.
+Dockerfile for TRV simulator is [here](https://192.168.100.100/rinkai/dockerfiles/-/tree/master/riscv/trvsim). You can access the docker machine by `ssh -p ${SSH_PORT} -o "StrictHostKeyChecking no" root@${IP_ADDR}`.
 
 #### build and run ta-ref
 
@@ -98,7 +96,7 @@ source env/keystone.sh
 make build test run MACHINE=TRVSIM TEST_DIR=test_gp
 ```
 
-In the `services_test_1` container, You can ssh to the `services_trvsim_1` container by `ssh root@trvsim -p${PORT}`.
+In the `services_test_1` container, You can ssh to the `services_trvsim_1` container by `ssh root@trvsim -p${SSH_PORT}`.
 
 Lastly, stop TRV docker container:
 
