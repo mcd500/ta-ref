@@ -309,7 +309,7 @@ tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IMAGE_DIR}
 Copy your license file to a directory:
 ```sh
 cp original_location ${IMAGE_DIR}/OVPsim.lic
-export OVPSIM_LICENCE=${IMAGE_DIR}/OVPsim.lic
+export OVPSIM_LICENCE_PATH=${IMAGE_DIR}/OVPsim.lic
 ```
 
 Prepare env variables, the `MAC_ADDR` must match in license file:
