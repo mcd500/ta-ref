@@ -30,8 +30,6 @@ services:
         entrypoint: >
             /bin/bash -c "
               sleep 5 &&
-              curl http://tamproto:8888/api/tam &&
-              sleep 55 &&
               source env/keystone.sh &&
               make &&
               cd teep-device &&
