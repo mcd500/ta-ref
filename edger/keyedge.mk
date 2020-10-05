@@ -72,7 +72,6 @@ $(TRUSTED_LIBS): $(TRUSTED_LIBS0)
 	EOF
 	$(RANLIB) $@
 
-# TODO: we want to merge $(UNTRUSTED_LIBS) and flatccrt library
 $(UNTRUSTED_LIBS0): lib%0.a: %.o
 	$(AR) $@ $^
 
