@@ -117,6 +117,8 @@ keystone_hifive_default:
         ENVS: env/keystone.sh
         TEST_DIR: test_hello
     stage: test_hello
+    only:
+        - temporary
     script:
         - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
 keystone_hifive_test_gp:
@@ -126,6 +128,8 @@ keystone_hifive_test_gp:
         ENVS: env/keystone.sh
         TEST_DIR: test_gp
     stage: test_gp
+    only:
+        - temporary
     script:
         - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
 #        - make mrproper
@@ -140,6 +144,8 @@ keystone_hifive_test_perf:
         PROFILER: "ON"
         DEBUG_TYPE: "RELEASE"
     stage: test_perf
+    only:
+        - temporary
     script:
         - make build test run MACHINE=HIFIVE TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
