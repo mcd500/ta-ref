@@ -323,6 +323,8 @@ optee_rpi3_test_perf:
         TEST_DIR: test_gp
         PROFILER: "ON"
         DEBUG_TYPE: "RELEASE"
+    only:
+        - todo
     stage: test_perf
     script:
         - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
