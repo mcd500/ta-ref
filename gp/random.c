@@ -33,6 +33,12 @@
 #include "config_ref_ta.h"
 //#include "tee_wrapper.h"
 
+/**
+ * gp_random_test() - Generates the random data.
+ *   
+ * Generates the random data and finally print the generated random 
+ * data.
+ */
 void gp_random_test(void)
 {
     unsigned char rbuf[16];

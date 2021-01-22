@@ -30,7 +30,20 @@
 
 #include "gp/gp_test.h"
 
-int main(void) {
+/**
+* gp_random_test() function generates the random data,
+* gp_ree_time_test() function Retrieves the current REE system time,
+* gp_trusted_time_test() function Retrieves the current system time,
+* gp_secure_storage_test() function Create read and write the object data,
+* gp_message_digest_test() function Accumulates message data for hashing,
+* gp_symmetric_key_enc_verify_test() function Encrypts or decrypts input data,
+* gp_symmetric_key_gcm_verify_test() function Encrypt and Decrypt in AE,
+* gp_asymmetric_key_sign_test() function Cryptographic Operations API -
+* Message Digest Functions.
+* 
+* @return return 0 for success.
+*/
+int main(void) {	
     gp_random_test();
 
     gp_ree_time_test();

@@ -21,6 +21,22 @@ using namespace Keystone;
 const char* enc_path = "Enclave.eapp_riscv";
 const char* runtime_path = "eyrie-rt";
 
+/**
+ * main() - The main function used for register the functions and
+ * calling the shared buffer.
+ *
+ * This function firstly initialize the free memory size and this memory to 
+ * assign untrusted memory after the start the send incoming enclave message 
+ * and dispatch. and finally the find the shared buffer and shared buffer size.
+ *
+ * @param  argc    Argument Count is int and stores number of command-line
+ *                 arguments passed by the user including the name of the 
+ *                 program.
+ * @param  argv    Argument Vector is array of character pointers listing all
+ *                 the arguments.
+ *
+ * @return 0       If success, else error occurred.
+ */
 int main(int argc, char** argv)
 {
   Enclave enclave;

@@ -35,6 +35,35 @@
 
 #define CIPHER_LENGTH 256
 
+/**
+ * gp_symmetric_key_gcm_verify_test() - Encrypt and Decrypt in AE.
+ *   
+ * Allocates an uninitialized transient object,transient objects are used to 
+ * hold a cryptographic object(key or key-pair) and possible key size 256 bits
+ * and generates a random key or a key-pair and populates a transient key object
+ * with the generated key material.if it is fails to allocating an uninitialized
+ * transient object and generates a random key then it will corresponding error 
+ * message like TEE_AllocateTransientObject fails with return value and 
+ * TEE_GenerateKey fails.Allocates a handle for a new cryptographic operation and
+ * sets the mode(TEE_MODE_ENCRYPT) and algorithm type(TEE_ALG_AES_GCM) and set the
+ * operation with key.and then if it fails to allocating handle for a new cryptographic
+ * operation and set operation with key,it will give corresponding error message 
+ * like TEE_AllocateOperation fails and TEE_SetOperationKey fails if it is success
+ * then, generates random data and initializes an Authentication Encryption 
+ * operation and processes data that has not been processed by previous calls to 
+ * TEE_AE Update as well as data supplied in data.It completes the AE operation 
+ * and computes the tag.The operation handle can be reused or newly initialized.
+ * and deallocates all resources associated with an operation handle and print the
+ * Dump encrypted data and tag Allocates a handle for a new cryptographic operation
+ * and sets the mode(TEE_MODE_DECRYPT) and algorithm type(TEE_ALG_AES_GCM) and set
+ * the operation with key.Initializes an Authentication Encryption operation and 
+ * processes data that has not been processed by previous calls to TEE_AEUpdate as
+ * well as data supplied in out,then deallocates all resources associated with an 
+ * operation handle and deallocates a transient object previously allocated with
+ * TEE_AllocateTransientObject.and print the Dump data and tag and finally varify
+ * the decrypted data against original one if it success it will print the verify ok,
+ * otherwise varify fails.
+ */
 void gp_symmetric_key_gcm_verify_test(void)
 {
     TEE_OperationHandle handle;

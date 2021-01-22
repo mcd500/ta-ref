@@ -8,6 +8,16 @@
 #include <time.h>
 #include "App_ocalls.h"
 
+/**
+ * ocall_print_string() - Print the string.
+ * 
+ * The ocall_print_string function used for invokes OCALL to display string 
+ * buffer inside the enclave.
+ * 
+ * @param  str       Pointer of the string. 
+ *
+ * @return length    If success, else error occured.            
+ */
 unsigned int ocall_print_string(const char *str)
 {
     /* Proxy/Bridge will check the length and null-terminate 

@@ -46,7 +46,14 @@
 #include "edger/Enclave_u.h"
 #include "types.h"
 
-/* Check error conditions for loading enclave */
+/**
+ * print_error_message() - The function used for print the error message.
+ * 
+ * The print_error_message function print the error message on sqx_error list 
+ * and check error conditions for loading enclave.
+ * 
+ * @param ret    A list containing all possible values of this data type.
+ */
 void print_error_message(sgx_status_t ret)
 {
     size_t idx = 0;
@@ -65,8 +72,14 @@ void print_error_message(sgx_status_t ret)
     	printf("Error code is 0x%X. Please refer to the \"Intel SGX SDK Developer Reference\" for more details.\n", ret);
 }
 
-/* Initialize the enclave:
- *   Call sgx_create_enclave to initialize an enclave instance
+/**
+ * initialize_enclave() - Initializes an enclave that call sgx_create_enclave
+ * to initialize an enclave instance.
+ * 
+ * initialize_enclave function used for creating and loaded the data and print 
+ * the error message.
+ * 
+ * @return  0    If success, else error occured.
  */
 int initialize_enclave(void)
 {
@@ -83,7 +96,20 @@ int initialize_enclave(void)
     return 0;
 }
 
-/* Application entry */
+/**
+ * main() - Perform the encalve operation creating and destroy enclave.
+ * 
+ * The main function used for initialize the enclave and call to encalve and 
+ * destroy the encalve if encalve successfully retured.
+ * 
+ * @param   argc    Argument Count is int and stores number of command-line 
+ *                  arguments passed by the user including the name of the 
+ *                  program.
+ * @param   argv    Argument Vector is array of character pointers listing all
+ *                  the arguments.
+ *
+ * @return  0       If success, else error occured.
+ */
 int SGX_CDECL main(int argc, char *argv[])
 {
     (void)(argc);

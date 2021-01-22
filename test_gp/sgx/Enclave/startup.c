@@ -2,7 +2,11 @@
 #include "crt.h"
 #include "tools.h"
 
-// this is tee-dependent glue code..
+/**
+ * ecall_ta_main() - Function used to start the certificate and after 
+ * the certificate begin then main process start, and after some  time end 
+ * the main process.
+ */
 void ecall_ta_main(void) {
   crt_begin();
 #ifdef ENCLAVE_VERBOSE

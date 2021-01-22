@@ -49,7 +49,14 @@
 #include "profiler/profiler.h"
 #endif
 
-/* Check error conditions for loading enclave */
+/**
+ * print_error_message() - Used for print the error message.
+ * 
+ * In that function print the error message and Check error conditions for
+ * loading enclave.
+ * 
+ * @param ret  list containing all possible values of this data type.
+ */
 void print_error_message(sgx_status_t ret)
 {
     size_t idx = 0;
@@ -68,8 +75,14 @@ void print_error_message(sgx_status_t ret)
     	printf("Error code is 0x%X. Please refer to the \"Intel SGX SDK Developer Reference\" for more details.\n", ret);
 }
 
-/* Initialize the enclave:
- *   Call sgx_create_enclave to initialize an enclave instance
+/**
+ * initialize_enclave() - Function initializes an enclave that created and 
+ * loaded with data.
+ * 
+ * This function used to Call sgx_create_enclave to initialize an enclave 
+ * instance.
+ * 
+ * @return 0    If success else error occured.
  */
 int initialize_enclave(void)
 {
@@ -86,7 +99,18 @@ int initialize_enclave(void)
     return 0;
 }
 
-/* Application entry */
+/**
+ * main() - Used for initialize the enclave and call to 
+ * encalve and destroy the encalve.
+ * 
+ * @param  argc    Argument Count is int and stores number of command-line 
+ *                 arguments passed by the user including the name of the 
+ *                 program.
+ * @param  argv    Argument Vector is array of character pointers listing
+ *                 all the arguments.
+ *
+ * @return 0       If success, else error occured
+ */
 int SGX_CDECL main(int argc, char *argv[])
 {
 #ifdef APP_PERF_ENABLE

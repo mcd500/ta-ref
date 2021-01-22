@@ -40,19 +40,76 @@
 #include <string.h>
 #include <stdlib.h>
 
+/**
+ * TEE_Malloc() - Allocates space for an object whose size in
+ * bytes is specified in the parameter size.
+ *
+ * This function describes The pointer returned is guaranteed to be aligned such 
+ * that it may be assigned as a pointer to any basic C type.The valid hint values
+ * are a bitmask and can be independently set. This parameter allows Trusted
+ * Applications to refer to various pools of memory or to request  special 
+ * characteristics for the allocated memory by using an implementation-defined hint 
+ * Future versions of this specification may introduce additional standard hints.
+ *
+ * @param size    The size of the buffer to be allocated.
+ * @param hint    A hint to the allocator.
+ * 
+ * @return        Upon successful completion, with size not equal to zero, 
+ *                the function returns a pointer to the allocated space.
+ */
 void *TEE_Malloc(uint32_t size, uint32_t hint)
 {
     return malloc(size);
 }
+
+/**
+ * TEE_Realloc() - Changes the size of the memory object pointed to by buffer to
+ * the size specified by newSize.
+ *
+ * This function describes The content of the object remains unchanged up to the lesser
+ * of the new and old sizes. Space in excess of the old size  contains unspecified 
+ * content.If the new size of the memory object requires movement of the object, the 
+ * space for the previous instantiation of the object is deallocated. If the space 
+ * cannot be allocated, the original object remains allocated, and this function 
+ * returns a NULL pointer.
+ *
+ * @param buffer    The pointer to the object to be reallocated.
+ * @param newSize   The new size required for the object
+ * 
+ * @return          Upon successful completion, TEE_Realloc returns a pointer
+ *                  to the (possibly moved) allocated space.If there is not
+ *                  enough available memory, TEE_Realloc returns a NULL pointer
+ *                  and the original buffer is  still allocated and unchanged.              
+ */
 void *TEE_Realloc(void *buffer, uint32_t newSize)
 {
     return realloc(buffer, newSize);
 }
+
+/**
+ * TEE_Free() - causes the space pointed to by buffer tobe deallocated; that is, 
+ * made available for further  allocation.
+ * 
+ * This function describes If buffer is a NULL pointer, TEE_Free does nothing.
+ * Otherwise, it is a Programmer Error if the argument does not match a pointer 
+ * previously returned by the TEE_Malloc or TEE_Realloc if the space has been 
+ * deallocated by a call to TEE_Free or TEE_Realloc .
+ *
+ * @param buffer    The pointer to the memory block to be freed.
+ */
 void TEE_Free(void *buffer)
 {
     free(buffer);
 }
 
+/**
+ * TEE_GetREETime() - Retrieves the current REE system time.
+ * 
+ * This function retrieves the current time as seen from the point  of view of the 
+ * REE.
+ * 
+ * @param time    Filled with the number of seconds and milliseconds
+ */
 void TEE_GetREETime(TEE_Time *time)
 {
     ree_time_t ree_time;
@@ -71,7 +128,15 @@ void TEE_GetREETime(TEE_Time *time)
     return;
 }
 
-
+/**
+ * TEE_GetSystemTime() - Retrieves the current system time.
+ *
+ * This function describes The system time has an arbitrary implementation defined 
+ * origin that can vary across TA instances. The minimum guarantee is that the system 
+ * time shall be monotonic for a given TA instance.
+ *
+ * @param time    Filled with the number of seconds and milliseconds
+ */
 void TEE_GetSystemTime(TEE_Time *time)
 {
     pr_deb("TEE_GetSystemTime(): start\n");
@@ -86,7 +151,15 @@ void TEE_GetSystemTime(TEE_Time *time)
     return;
 }
 
-
+/**
+ * GetRelTimeStart() - Used for gets the real time of the start timing.
+ *
+ * This function is Printing the starting timing.
+ *
+ * @param  start    start timing 
+ *
+ * @return 0        If success, else error occured.
+ */
 TEE_Result GetRelTimeStart(uint64_t start)
 {
     pr_deb("GetRelTimeStart(): start\n");
@@ -94,7 +167,15 @@ TEE_Result GetRelTimeStart(uint64_t start)
     return 0;
 }
 
-
+/**
+ * GetRelTimeEnd() - used for find the real time of the end timing.
+ *
+ * This function Prints the Ending timing.
+ *
+ * @param  end    End timing 
+ *
+ * @return 0      if success, else error occured.
+ */
 TEE_Result GetRelTimeEnd(uint64_t end)
 {
     pr_deb("GetRelTimeEnd(): start\n");
@@ -102,6 +183,16 @@ TEE_Result GetRelTimeEnd(uint64_t end)
     return 0;
 }
 
+/**
+ * flags2flags() - Used for Check status for reading or writing 
+ * the file operational.
+ *
+ * This function used for Check status for reading or writing the file operational.
+ *
+ * @param  flags    Flags of the referencing node.
+ * 
+ * @return 0       if success else error occured.
+ */
 static inline int flags2flags(int flags)
 {
 #define O_RDONLY   0
@@ -125,6 +216,20 @@ static inline int flags2flags(int flags)
 // Always use permission -rw------ to emulate secure storage
 #define FPERMS 0600
 
+/**
+ * set_object_key() - Initialize report and then attest enclave with file.
+ *
+ * This function describes the intialization of report and then attest enclave with 
+ * file id and its length and assigned to ret.Based on mbedtls key encription and 
+ * description position of the object will becopied and finally ret value will be 
+ * returned on success else signatuere too short error will appear.
+ *
+ * @param id        id of the object.
+ * @param idlen     length of the id.
+ * @param object    TEE_ObjectHandle type handle.
+ * 
+ * @return 0         if success else error occured.
+ */
 static int set_object_key(void *id, unsigned int idlen,
 			  TEE_ObjectHandle object)
 {
@@ -173,6 +278,27 @@ static int set_object_key(void *id, unsigned int idlen,
   return ret;
 }
 
+/**
+ * OpenPersistentObject() - Opens a handle on an existing persistent object.
+ * 
+ * The flags parameter is a set of flags that controls the access rights and sharing
+ * permissions with which the object handle is opened. The value of the flags 
+ * parameteris constructed by a bitwise-inclusive OR of flags TEE_DATA_FLAG_ACCESS_READ,
+ * the object is opened with the read access right. This allows the Trusted Application 
+ * to call the function TEE_ReadObjectData.TEE_DATA_FLAG_ACCESS_WRITE, the object is 
+ * opened with the write access right.TEE_DATA_FLAG_ACCESS_WRITE_META, the object is 
+ * opened with the write-meta access right.
+ * 
+ * @param storageID      The storage to use.
+ * @param objectID       The object identifier
+ * @param objectIDLen    The object identifier
+ * @param flags          The flags which determine the settings under which the 
+ *                       object is opened.
+ * @param object         A pointer to the handle, which contains the opened handle 
+ *                       upon successful completion.
+ * 
+ * @return 0,            if success else error occured. 
+ */
 static
 TEE_Result OpenPersistentObject(uint32_t storageID, const void *objectID,
 				uint32_t objectIDLen, uint32_t flags,
@@ -241,6 +367,27 @@ TEE_Result OpenPersistentObject(uint32_t storageID, const void *objectID,
     return 0;
 }
 
+/**
+ * TEE_CreatePersistentObject() - Creates a persistent object with
+ * initial attributes.
+ * 
+ * In this function an initial data stream content, and optionally returns either
+ * a handle on the created object, or TEE_HANDLE_NULL upon failure.
+ * 
+ * @param storageID      The storage to use.
+ * @param objectID       The object identifier
+ * @param objectIDLen    The object identifier
+ * @param flags          The flags which determine the settings under which the 
+ *                       object is opened.
+ * @param attributes     A handle on a persistent object or an initialized transient
+ *                       object from which to take the persistent object attributes
+ * @param initialData    The initial data content of the persistent object
+ * @param initialDataLen The initial data content of the persistent object
+ * @param object         A pointer to the handle, which contains the opened handle 
+ *                       upon successful completion
+ * 
+ * @return 0             if success else error occured. 
+ */
 TEE_Result TEE_CreatePersistentObject(uint32_t storageID, const void *objectID,
                                       uint32_t objectIDLen, uint32_t flags,
                                       TEE_ObjectHandle attributes,
@@ -256,7 +403,23 @@ TEE_Result TEE_CreatePersistentObject(uint32_t storageID, const void *objectID,
 				 flags, object, 1);
 }
 
-
+/**
+ * TEE_OpenPersistentObject() - Opens a handle on an existing 
+ * persistent object.
+ * 
+ * This function returns a handle that can be used to access the object’s attributes
+ * and data stream.
+ * 
+ * @param  storageID      The storage to use.
+ * @param  objectID       The object identifier
+ * @param  objectIDLen    The object identifier
+ * @param  flags          The flags which determine the settings under which 
+ *                        the object is opened.
+ * @param  object         A pointer to the handle, which contains the opened 
+ *                        handle upon successful completion
+ *
+ * @return 0              if success else error occured. 
+ */
 TEE_Result TEE_OpenPersistentObject(uint32_t storageID, const void *objectID,
                                     uint32_t objectIDLen, uint32_t flags,
                                     TEE_ObjectHandle *object)
@@ -267,7 +430,17 @@ TEE_Result TEE_OpenPersistentObject(uint32_t storageID, const void *objectID,
 				flags, object, 0);
 }
 
-
+/**
+ * TEE_GetObjectInfo1() - Returns the characteristics of an object.
+ * 
+ * This function returns a handle that can be used to access the object’s attributes 
+ * and data stream.
+ * 
+ * @param  objectInfo     Pointer to a structure filled with the object information
+ * @param  object         Handle of the object
+ * 
+ * @return 0              if success else error occured. 
+ */
 TEE_Result TEE_GetObjectInfo1(TEE_ObjectHandle object, TEE_ObjectInfo *objectInfo)
 {
     pr_deb("TEE_GetObjectInfo1(): start\n");
@@ -275,7 +448,22 @@ TEE_Result TEE_GetObjectInfo1(TEE_ObjectHandle object, TEE_ObjectInfo *objectInf
     return 0;
 }
 
-
+/**
+ * TEE_WriteObjectData() - Writes size bytes from the buffer pointed 
+ * to by buffer to the data stream associated with the open object handle object.
+ *
+ * If the current data position points before the end-of-stream, then size bytes 
+ * are written to the data stream, overwriting bytes starting at the current data 
+ * position. If the current data position points beyond the stream’s end, then the
+ * data stream is first extended with zero bytes until the length indicated by the 
+ * data position indicator is reached, and then size bytes are written to the stream. 
+ *
+ * @param  object        Handle of the object 
+ * @param  buffer        The buffer containing the data to be written
+ * @param  size          The number of bytes to write
+ * 
+ * @return TEE_SUCCESS   if success else error occured. 
+ */
 TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
                                uint32_t size)
 {
@@ -310,13 +498,64 @@ TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
     AES_CBC_encrypt_buffer(&(object->persist_ctx), data, size);
 #endif
 
-    int n = ocall_write_file_full(object->desc, data, size);
-    if (n < 0) {
+    int retval = ocall_write_file(object->desc, (const char *)data, size);
+    free(data);
+
+    if (retval == size)
+      return TEE_SUCCESS;
+    else if (retval < 0) {
+      // TODO Interpret linux error as TEE error
       return TEE_ERROR_GENERIC;
     }
-    return TEE_SUCCESS;
+    return 0;
 }
 
+
+#if defined(EDGE_OUT_WITH_STRUCTURE)
+// ocall read with ocall_read_file256
+static int ocall_read_file(int desc, char *buf, size_t len)
+{
+  int retval = 0;
+  ob256_t rret;
+  while (len > 0) {
+    rret = ocall_read_file256(desc);
+    if (rret.ret > 0) {
+      memcpy(buf, rret.b, rret.ret);
+      retval += rret.ret;
+      buf += rret.ret;
+      len -= (rret.ret <= len ? rret.ret : len);
+    } else if (rret.ret < 0) {
+      retval = rret.ret;
+      break;
+    } else {
+      break;
+    }
+  }
+  return retval;
+}
+#endif
+
+/**
+ * TEE_ReadObjectData() - Attempts to read size bytes from the data
+ * stream associated with the object object into the buffer pointed to by buffer.
+ * 
+ * The bytes are read starting at the position in the data stream currently stored 
+ * in the object handle. The handle’s position is incremented by the number of bytes
+ * actually read. On completion TEE_ReadObjectData sets the number of bytes actually
+ * read in the uint32_t pointed to by count. The value written to *count
+ * may be less than size if the number of bytes until the end-of3067 stream is 
+ * less than size. It is set to 0 if the position at the start of the read 
+ * operation is at or beyond the end-of-stream. These are the only cases where *count 
+ * may be less than size.
+ * 
+ * @param  object        Handle of the object
+ * @param  buffer        The buffer containing the data to be written
+ * @param  size          The number of bytes to write
+ * @param  count         A pointer to the variable which upon successful completion 
+ *                       contains the number of bytes read
+ * 
+ * @return TEE_SUCCESS   if success else error occured. 
+ */
 TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
                               uint32_t size, uint32_t *count)
 {
@@ -334,17 +573,12 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
       return TEE_ERROR_BAD_PARAMETERS;
     }
 
-    int retval = ocall_read_file_full(object->desc, buffer, size);
+    int retval = ocall_read_file(object->desc, (char *)buffer, size);
     if (retval < 0) {
       // TODO Interpret linux error as TEE error
       return TEE_ERROR_GENERIC;
     }
     *count = size = retval;
-
-    if (size & (16 - 1)) {
-      // TODO
-      return TEE_ERROR_GENERIC;
-    }
 
     if (size == 0) {
       return TEE_SUCCESS;
@@ -376,7 +610,16 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
     return 0;
 }
 
-
+/**
+ * TEE_CloseObject() - Closes an opened object handle.
+ * 
+ * The object can be persistent or transient.For transient objects, 
+ * TEE_CloseObject is equivalent to TEE_FreeTransientObject.
+ * 
+ * @param  object         Handle of the object.
+ * 
+ * @return TEE_SUCCESS    if success else error occured. 
+ */
 void TEE_CloseObject(TEE_ObjectHandle object)
 {
     pr_deb("TEE_CloseObject(): start\n");
@@ -405,6 +648,17 @@ void TEE_CloseObject(TEE_ObjectHandle object)
     return;
 }
 
+/**
+ * ocall_getrandom() - Is for getting random data.
+ * 
+ * This function describes that the retval will be returned based on size of buffer
+ * The value of ret will be returned based 196 and 16 ocall_getrandom call.
+ * 
+ * @param  buf       character type buffer
+ * @param  len       size of the buffer
+ * @param  flags     unassigned integer flag
+ * @return retval    value will be returned based on length of buffer.
+ */
 #if defined(EDGE_OUT_WITH_STRUCTURE)
 static int ocall_getrandom(char *buf, size_t len, unsigned int flags)
 {
@@ -443,6 +697,13 @@ static int ocall_getrandom(char *buf, size_t len, unsigned int flags)
 static int wc_rng_init = 0;
 static WC_RNG rngstr;
 
+/**
+ * get_wc_rng() - It means random number generation.
+ * 
+ * This function creates the random number or unique number.
+ * 
+ * @return random    number if success else error occured.
+ */
 WC_RNG *get_wc_rng(void)
 {
     if (wc_rng_init == 0) {
@@ -452,6 +713,20 @@ WC_RNG *get_wc_rng(void)
     return &rngstr;
 }
 
+/**
+ * wc_ocall_genseed() is to generate random data. 
+ * 
+ * ThiS function describes that the genrerate random value will be stored in to 
+ * ret by calling ocall_getrandom() after then ret is compared to length of buffer
+ * if ret is equal to length then success will appear else panic reason will 
+ * happen.
+ * 
+ * @param  nonce    pointer of buffer
+ * @param  len      length of the buffer.
+ * 
+ * @return 0        on success else error will occur based on panic raised inside 
+ *                  trusted application.
+ */
 int wc_ocall_genseed(void *nonce, uint32_t len)
 {
     int ret = ocall_getrandom(nonce, (size_t)len, 0);
@@ -462,6 +737,19 @@ int wc_ocall_genseed(void *nonce, uint32_t len)
     return 0;
 }
 
+/**
+ * TEE_GenerateRandom() - Function generates random data.
+ * 
+ * ThiS function describes that the genrerate random value will be stored in to 
+ * ret by calling wc_RNG_GenerateBlock() after then ret is compared to 0
+ * if ret is equal to 0 then TEE_Panic will appear else success will 
+ * happen.
+ * 
+ * @param  randomBuffer       Reference to generated random data
+ * @param  randomBufferLen    Byte length of requested random data
+ * 
+ * @return random data        random data will be returned.
+ */
 void TEE_GenerateRandom(void *randomBuffer, uint32_t randomBufferLen)
 {
     pr_deb("TEE_GenerateRandom(): start\n");
@@ -476,8 +764,21 @@ void TEE_GenerateRandom(void *randomBuffer, uint32_t randomBufferLen)
     return;
 }
 #else
-/* Always ocall version*/
 
+
+/**
+ * TEE_GenerateRandom() - Function generates random data.
+ * 
+ * This function describes that the genrerate random value will be stored in to 
+ * ret by calling ocall_getrandom() after then ret is compared to randomBufferLen
+ * if ret is equal to randomBufferLen then success will appear else panic will 
+ * happen.
+ * 
+ * @param randomBuffer        Reference to generated random data
+ * @param randomBufferLen     Byte length of requested random data
+ * 
+ * @return                    ocall version random data
+ */  
 void TEE_GenerateRandom(void *randomBuffer, uint32_t randomBufferLen)
 {
     pr_deb("TEE_GenerateRandom(0x%lp, %u): start\n", randomBuffer, randomBufferLen);

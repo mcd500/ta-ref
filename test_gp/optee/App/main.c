@@ -53,9 +53,27 @@ static char print_buf[PRINT_BUF_SIZE];
 #define TEEC_PARAM_TYPE1 TEEC_NONE
 #endif
 
-
 // Similar to samples in optee_examples
 
+/**
+* main() - Initializes a new TEE Contex and opens a new Session.
+*  
+* Initializes a new TEE Contex and opens a new Session between 
+* the Client Application and the specified Trusted Application if it success 
+* copies first op(TEEC_Operation) characters of the string pointed to, by the 
+* argument &op and then defined if is PERF_ENABLE then assign the buffer and 
+* buffer size to params[0] and open the file and write.defined if is 
+* ENCLAVE_VERBOSE then assign the buffer and buffer size to params[1].defined
+* if is APP_VERBOSE then start the invoke command if it is success then it will
+* print the res = TEEC_SUCCESS; TEEC_InvokeCommand succeeded!.if it is fails 
+* then print the TEEC_InvokeCommand failed  with code message result and error 
+* origin.defined if is ENCLAVE_VERBOSE then print the enclave log start and 
+* enclave log end.defined if is ENCLAVE_VERBOSE then print the enclave log start 
+* and enclave log end.finally close the session and destroys an initialized 
+* TEE Context. 
+*
+* @return 0  If success.
+*/
 int main(void)
 {
     TEEC_Result res;

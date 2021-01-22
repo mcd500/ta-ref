@@ -15,7 +15,16 @@
 #define NO_PERF __attribute__((no_instrument_function))
 #endif
 
-/* OCall functions */
+/**
+ * ocall_print_string() - Function used for invokes OCALL to display string 
+ * buffer inside the enclave. 
+ * 
+ * This function used for print the string.
+ * 
+ * @param  str       Pointer of the string.
+ * 
+ * @return length    If success, else error occured.
+ */
 unsigned int NO_PERF ocall_print_string(const char *str)
 {
     /* Proxy/Bridge will check the length and null-terminate 
@@ -25,6 +34,17 @@ unsigned int NO_PERF ocall_print_string(const char *str)
     return n;
 }
 
+/**
+ * ocall_open_file() - Used for open a file.
+ * 
+ * @param  fname              File name
+ * @param  flags              Values for oflag are constructed by a 
+ *                            bitwise-inclusive OR of flags from the following 
+ *                            list.
+ * @param  perm               permision or mode
+ *
+ * @return file descriptor    If success, else error occured
+ */
 int ocall_open_file(const char *fname, int flags, int perm)
 {
   int desc = open(fname, flags, perm);
@@ -34,6 +54,15 @@ int ocall_open_file(const char *fname, int flags, int perm)
   return desc;
 }
 
+/**
+ * ocall_read_file() - Used to read from a file.
+ * 
+ * @param  desc               file descriptor
+ * @param  buf                pointer to a buffer
+ * @param  len                Size of elements
+ *
+ * @return file descriptor    If success, else error occured
+ */
 int ocall_read_file(int desc, char *buf, size_t len)
 {
 #ifdef APP_VERBOSE
@@ -42,6 +71,16 @@ int ocall_read_file(int desc, char *buf, size_t len)
   return (int)read(desc, buf, len);
 }
 
+/**
+ * ocall_write_file() - Used to write a file.
+ * 
+ * @param  desc               file descriptor.
+ * @param  buf                pointer to a buffer.
+ * @param  len                Size of elements.
+ *
+ * @return file descriptor    If success, else error occured.
+ *              
+ */
 int ocall_write_file(int desc, const char *buf, size_t len)
 {
 #ifdef APP_VERBOSE
@@ -50,6 +89,13 @@ int ocall_write_file(int desc, const char *buf, size_t len)
   return (int)write(desc, buf, len);
 }
 
+/**
+ * ocall_close_file() - Used for closing a file
+ * 
+ * @param  desc               File descriptor.
+ *
+ * @return file descriptor    If success, else error occured.
+ */
 int ocall_close_file(int desc)
 {
 #ifdef APP_VERBOSE
@@ -58,6 +104,13 @@ int ocall_close_file(int desc)
   return close(desc);
 }
 
+/**
+ * ocall_ree_time() - Is to fetch the current time.
+ * 
+ * @param  time            Pointer to a current time.
+ * 
+ * @return current time    If success, else error occurred
+ */
 int ocall_ree_time(struct ree_time_t *time)
 {
   struct timespec tv;

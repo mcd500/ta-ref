@@ -7,7 +7,12 @@ extern struct __profiler_header * __profiler_head;
 // default or Enclave
 int profiler_write(void *ptr, uint64_t sz);
 
-
+/**
+ * __profiler_unmap_info() - Unmap the profile.
+ * 
+ * This function used for find the size of file and writing the
+ * updated file.
+ */
 void NO_PERF __profiler_unmap_info(void)
 {
 	if (__profiler_head != NULL) {

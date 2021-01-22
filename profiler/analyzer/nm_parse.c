@@ -7,7 +7,16 @@
 #define MAX_ADDR 0xFFFFFFFF
 static struct nm_info nm_pool[POOL_SIZE];
 static int idx = 0;
-
+    
+/**     
+ * create_htable() - Create Hash table is a data structure is stored data in an 
+ * dictionaries. 
+ * 
+ * This function used for data is stored in an array format.
+ * 
+ * @return list    Updated structure list value returns if success, else error 
+ *                 occured.
+ */
 static struct list* create_htable(void) {
     struct list* table = (struct list*)malloc(sizeof(struct list)*HASH_SIZE);
     int i;
@@ -17,10 +26,31 @@ static struct list* create_htable(void) {
     }
     return table;
 }
+
+/**
+ * get_key() - Get a single key, and try to pick apart function key codes.
+ * 
+ * get_key function used the hash size and address of the pointer.
+ * 
+ * @param  addr                       Address of to find the key value.
+ *
+ * @return Address of the hash key    If success, else error occured.
+ */
 static size_t get_key(unsigned long addr) {
     return addr % HASH_SIZE;
 }
 
+/**
+ * get_func_name() - Get function name.
+ * 
+ * This function find the function name using assign the value of
+ * elements.
+ * 
+ * @param  table             Its a object of struct list. 
+ * @param  addr              Address of to find the key value.
+ *
+ * @return String length     If success, else error occured.                            
+ */
 const char* get_func_name(struct list *table, unsigned long addr) {
     size_t idx = get_key(addr);
     struct list *head = &table[idx];
@@ -33,6 +63,16 @@ const char* get_func_name(struct list *table, unsigned long addr) {
     return NULL;
 }
 
+/**
+ * insert_nm() - Insert function name.
+ * 
+ * This function used for insert the value into list, and all the new value
+ * assign in structure of list.
+ * 
+ * @param table    Its a object of struct list. 
+ * @param addr     Address of to find the key value.
+ * @param nm       Name of the information of struct nm_info
+ */
 static void insert_nm(struct list *table, unsigned long addr, struct nm_info* nm) {
     size_t idx = get_key(addr);
     struct list *head = &table[idx];
@@ -43,7 +83,16 @@ static void insert_nm(struct list *table, unsigned long addr, struct nm_info* nm
     head->next = elem;
 }
 
-
+/**
+ * parse_nm() - Parse the name of the function.
+ * 
+ * This function firslty open the file and check the file empty or not, if file
+ * not empty then file content print and insert the name of the function.
+ * 
+ * @param  fname                     File name.
+ *
+ * @return Updated structure list    If success, else error occured.                
+ */
 struct list* parse_nm(const char *fname) {
     struct list *table = create_htable();
     char line[BUF_SIZE];

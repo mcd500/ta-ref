@@ -34,6 +34,28 @@
 
 #define CIPHER_LENGTH 256
 
+/**
+ * gp_symmetric_key_enc_verify_test - Encrypts or decrypts input data.
+ *     
+ * Allocates an uninitialized transient object for generates a random key or a 
+ * key-pair and populates a transient key object with the generated key material
+ * if it is fails to allocating uninitialized transient object and generate the
+ * key it will give corresponding error message like TEE_AllocateTransientObject
+ * fails and TEE_GenerateKey fails.if it is success then Allocates a handle for 
+ * a new cryptographic operation and sets the mode(TEE_ALG_AES_CBC_NOPAD) and 
+ * algorithm type(TEE_ALG_AES_CBC_NOPAD),copied from the key object handle into 
+ * the operation if it fails it will give message like TEE_SetOperationKey fails
+ * and generates random data and starts the symmetric cipher operation and encrypts
+ * or decryptsinput data,deallocates all resources associated with an operation 
+ * handle,print the Dump encrypted data.Allocates a handle for a new cryptographic
+ * operation and sets the mode(TEE_MODE_DECRYPT) and algorithm type
+ * (TEE_ALG_AES_CBC_NOPAD) for Decrypt it and set operation with key and starts the
+ * symmetric cipher operation for decrypts input data and once it is completed it 
+ * will deallocates all resources associated with an operation handle and deallocates a 
+ * transient object previously allocated with TEE_AllocateTransientObject and 
+ * print the decrypted dumb data and finally Verify decrypted data against 
+ * original one if it success it will print verify ok otherwise varify fails.
+ */
 void gp_symmetric_key_enc_verify_test(void)
 {
     TEE_OperationHandle handle;

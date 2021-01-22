@@ -7,6 +7,13 @@
 char print_buf[BUF_SIZE];
 size_t print_pos;
 
+/**
+ * strlen() function is to calculate length of characters in str.
+ *  
+ * @param  str       str is argument of type pointer.  
+ *  
+ * @return string    length is successfully executed,else error occured.
+ */
 static inline unsigned int _strlen(const char* str)
 {
   const char* s;
@@ -14,7 +21,16 @@ static inline unsigned int _strlen(const char* str)
   return (unsigned int)(s - str);
 }
 
-// for trace GP API
+/**
+ * tee_printf() - For trace GP API.
+ *
+ * Formats data under control of the format control string and stores the 
+ * result in buf and finally print the buffer.
+ *  
+ * @param  fmt    fmt is constant character argument of type pointer.     
+ * 
+ * @return res    is successfully executed,else error occured.
+ */
 int tee_printf(const char* fmt, ...)
 {
   char *buf = &print_buf[print_pos];

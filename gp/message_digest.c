@@ -36,6 +36,19 @@
 #define SHA_LENGTH (256/8)
 #define SIG_LENGTH 64
 
+/**
+ * gp_message_digest_test() - Accumulates message data for hashing.
+ * 
+ * Allocates a handle for a new cryptographic operation and sets the mode
+ * (TEE_MODE_DIGEST) and algorithm type(TEE_ALG_SHA256),If this function 
+ * does not return with TEE_SUCCESS then there is no valid handle value 
+ * and then accumulates message data for hashing,finalizes the message digest 
+ * operation and produces the message hash and finally deallocates all 
+ * resources associated with an operation handle and  then print the Dump 
+ * hashed data.if it fails to allocates a handle for a new cryptographic 
+ * operation,accumulates message data for hashing and finalizes the message 
+ * digest operation then it will give correspoding error message.
+ */
 void gp_message_digest_test(void)
 {
     static unsigned char data[256] = {

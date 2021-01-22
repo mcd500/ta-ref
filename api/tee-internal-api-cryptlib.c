@@ -55,6 +55,32 @@ void *wolfSSL_Malloc(size_t n)
 // Common implementation of crypt-related APIs based on ctypt libraries.
 // This will be included by sgx and keystone platforms.
 
+/**
+ * TEE_AllocateOperation() - Allocates a handle for a new cryptographic 
+ * operation and sets the mode and algorithm type.
+ * 
+ * If TEE_AllocateOperation() function does not return with TEE_SUCCESS then there
+ * is no valid handle value.Once a cryptographic operation has been created, the 
+ * implementation SHALL guarantee that all resources necessary for the operation 
+ * are allocated and that any operation with a key of at most maxKeySize bits can
+ * be performed. For algorithms that take multiple keys, for example the AES XTS 
+ * algorithm, the maxKeySize parameter specifies the size of the largest key. It 
+ * is up to the implementation to properly allocate space for multiple keys if 
+ * the algorithm so requires.
+ * 
+ * @param operation                  reference to generated operation handle.
+ * @param algorithm                  One of the cipher algorithms.
+ * @param mode                       The operation mode.
+ * @param maxKeySize                 Maximum key size in bits for the operation.
+ * 
+ * @return 0                         in case of success  
+ * @return TEE_ERROR_OUT_OF_MEMORY   If there are not enough resources to allocate
+ *                                   the operation.
+ * @return TEE_ERROR_NOT_SUPPORTED   If the mode is not compatible with the algorithm
+ *                                   or key size or if the algorithm is not one of the
+ *                                   listed algorithms or if maxKeySize is not 
+ *                                   appropriate for the algorithm.
+ */
 TEE_Result TEE_AllocateOperation(TEE_OperationHandle *operation,
                                  uint32_t algorithm, uint32_t mode,
                                  uint32_t maxKeySize)
@@ -116,7 +142,19 @@ TEE_Result TEE_AllocateOperation(TEE_OperationHandle *operation,
     return 0;
 }
 
-
+/**
+ * TEE_FreeOperation() - Deallocates all resources associated with an operation
+ * handle.
+ * 
+ * The TEE_FreeOperation function deallocates all resources associated with an 
+ * operation handle. After this function is called, the operation handle is no 
+ * longer valid. All cryptographic material in the operation is destroyed.
+ * The function does nothing if operation is TEE_HANDLE_NULL.
+ * 
+ * @param operation   Reference to operation handle.
+ * 
+ * @return nothing    after the operation free.
+ */
 void TEE_FreeOperation(TEE_OperationHandle operation)
 {
     pr_deb("TEE_FreeOperation(): start\n");
@@ -146,7 +184,17 @@ void TEE_FreeOperation(TEE_OperationHandle operation)
     return;
 }
 
-
+/**
+ * TEE_DigestUpdate()- Accumulates message data for hashing.
+ * 
+ * This function describes the message does not have to be block aligned. 
+ * Subsequent calls to this function are possible.The operation may be 
+ * in either initial or active state and becomes active.
+ * 
+ * @param operation    Handle of a running Message Digest operation.
+ * @param chunk        Chunk of data to be hashed
+ * @param chunkSize    size of the chunk.
+ */
 void TEE_DigestUpdate(TEE_OperationHandle operation,
                       const void *chunk, uint32_t chunkSize)
 {
@@ -167,6 +215,23 @@ void TEE_DigestUpdate(TEE_OperationHandle operation,
     return;
 }
 
+/**
+ * TEE_DigestDoFinal() - Finalizes the message digest operation and produces
+ * the message hash.
+ * 
+ * This function finalizes the message digest operation and produces the message hash.
+ * Afterwards the Message Digest operation is reset to initial state and can be reused.
+ * 
+ * @param  operation                 Handle of a running Message Digest operation.
+ * @param  chunk                     Chunk of data to be hashed.
+ * @param  chunkLen                  size of the chunk.
+ * @param  hash                      Output buffer filled with the message hash.
+ * @param  hashLen                   lenth of the mesaage hash.
+ * 
+ * @return 0                         on success  
+ * @return TEE_ERROR_SHORT_BUFFER    If the output buffer is too small. In this case, the
+ *                                   operation is not finalized.
+ */
 TEE_Result TEE_DigestDoFinal(TEE_OperationHandle operation, const void *chunk,
                              uint32_t chunkLen, void *hash, uint32_t *hashLen)
 {
@@ -212,6 +277,26 @@ TEE_Result TEE_DigestDoFinal(TEE_OperationHandle operation, const void *chunk,
 // TEE_OperationHandle and is used to avoid to set key twice with
 // TEE_GenerateKey.  This won't be a good idea.
 
+/**
+ * TEE_SetOperationKey() - Pograms the key of an operation; that is, it 
+ * associates an operation with a key.
+ * 
+ * The key material is copied from the key object handle into the operation.
+ * After the key has been set, there isno longer any link between the operation
+ * and the key object. The object handle can be closed or reset and this will
+ * not affect the operation. This copied material exists until the operation is
+ * freed using TEE_FreeOperation or another key is set into the operation. 
+ *
+ * @param  operation                          Operation handle.
+ * @param  key                                A handle on a key object.
+ * 
+ * @return 0                                  on success reurn 
+ * @return TEE_ERROR_CORRUPT_OBJECT           If the object is corrupt. The object
+ *                                            handle is closed.
+ * @return TEE_ERROR_STORAGE_NOT_AVAILABLE    If the persistent object is stored 
+ *                                            in a storage area which is currently 
+ *                                            inaccessible.
+ */
 TEE_Result TEE_SetOperationKey(TEE_OperationHandle operation,
 			       TEE_ObjectHandle key)
 {
@@ -246,6 +331,21 @@ TEE_Result TEE_SetOperationKey(TEE_OperationHandle operation,
 #define GCM_ST_ACTIVE	3	// active
 #define GCM_ST_FINAL	4	// final
 
+/**
+ * TEE_AEInit() - Initializes an Authentication Encryption operation.
+ * 
+ * The operation must be initial state and remains in the initial state afterwards.
+ * 
+ * @param operation                   A handle on the operation.
+ * @param nonce                       The operation nonce or IV
+ * @param nonceLen                    length of nonce
+ * @param tagLen                      Size in bits of the tag
+ * @param AADLen                      Length in bytes of the AAD
+ * @param payloadLen                  Length in bytes of the payload.
+ * 
+ * @return 0                          on success 
+ * @return TEE_ERROR_NOT_SUPPORTED    If the tag length is not supported by the algorithm.
+ */
 TEE_Result TEE_AEInit(TEE_OperationHandle operation, const void *nonce,
                       uint32_t nonceLen, uint32_t tagLen, uint32_t AADLen,
                       uint32_t payloadLen)
@@ -301,7 +401,22 @@ TEE_Result TEE_AEInit(TEE_OperationHandle operation, const void *nonce,
     return 0;
 }
 
-
+/**
+ * TEE_AEUpdateAAD() - Feeds a new chunk of Additional 
+ * Authentication Data (AAD) to the AE operation. Subsequent calls to 
+ * this function are possible.
+ * 
+ * The TEE_AEUpdateAAD function feeds a new chunk of Additional 
+ * Authentication Data (AAD) to the AE operation. Subsequent calls 
+ * to this function are possible.The buffers srcData and destData 
+ * shall be either completely disjoint or equal in their starting 
+ * positions.The operation SHALL be in initial state and remains 
+ * in initial state afterwards.
+ * 
+ * @param operation  Handle on the AE operation
+ * @param AADdata    Input buffer containing the chunk of AAD
+ * @param AADdataLen length of the chunk of AAD.
+ */
 void TEE_AEUpdateAAD(TEE_OperationHandle operation, const void *AADdata,
 		     uint32_t AADdataLen)
 {
@@ -336,7 +451,25 @@ void TEE_AEUpdateAAD(TEE_OperationHandle operation, const void *AADdata,
     operation->aegcm_state = GCM_ST_AAD;
 }
 
-
+/**
+ * TEE_AEUpdate() - Accumulates data for an Authentication Encryption operation.
+ * 
+ * This function describes Input data does not have to be a multiple of block 
+ * size. Subsequent  calls to this function are possible. Unless one or more 
+ * calls of this function have supplied sufficient input data,no output is 
+ * generated.when using this routine to decrypt the returned data may be corrupt
+ * since the integrity check is not performed until all the data has been 
+ * processed. If this is a concern then only use the TEE_AEDecryptFinal routine.
+ *
+ * @param operation                Handle of a running AE operation.
+ * @param srcData                  Input data buffer to be encrypted or decrypted
+ * @param srcLen                   length of the input buffer.
+ * @param destData                 Output buffer
+ * @param destLen                  length of the out put buffer.
+ * 
+ * @return 0                       on success.
+ * @return TEE_ERROR_SHORT_BUFFER  if the output buffer is not large enough to contain the output.
+ */
 TEE_Result TEE_AEUpdate(TEE_OperationHandle operation, const void *srcData,
                         uint32_t srcLen, void *destData, uint32_t *destLen)
 {
@@ -381,7 +514,30 @@ TEE_Result TEE_AEUpdate(TEE_OperationHandle operation, const void *srcData,
     return 0;
 }
 
-
+/**
+ * TEE_AEEncryptFinal() - processes data that has not been processed by 
+ * previous calls to TEE_AEUpdate as well as data supplied in srcData . 
+ * 
+ * TEE_AEEncryptFinal completes the AE operation and computes the tag.
+ * The operation handle can be reused or newly initialized.
+ * The buffers srcData and destData SHALL be either completely disjoint or 
+ * equal in their starting positions.The operation may be in either initial 
+ * or active state and enters initial state afterwards.
+ * 
+ * @param operation                Handle of a running AE operation
+ * @param srcData                  Reference to final chunk of input data to be 
+ *                                 encrypted
+ * @param srcLen                   length of the input data
+ * @param  destData                Output buffer. Can be omitted if the output is 
+ *                                 to be discarded.
+ * @param  destLen                 length of the buffer.
+ * @param   tag                    Output buffer filled with the computed tag
+ * @param  tagLen                  length of the tag.
+ * 
+ * @return  0                      on success.
+ * @return TEE_ERROR_SHORT_BUFFER  If the output or tag buffer is not large enough
+ *                                 to contain the output.
+ */
 TEE_Result TEE_AEEncryptFinal(TEE_OperationHandle operation,
                               const void *srcData, uint32_t srcLen,
                               void *destData, uint32_t *destLen, void *tag,
@@ -439,7 +595,31 @@ TEE_Result TEE_AEEncryptFinal(TEE_OperationHandle operation,
     return 0;
 }
 
-
+/**
+ * TEE_AEDecryptFinal() - Processes data that has not been processed by previous 
+ * calls to TEE_AEUpdate as well as data supplied in srcData.
+ * 
+ * This function completes the AE operation and compares thecomputed tag with 
+ * the tag supplied in the parameter tag .The operation handle can be reused or
+ * newly initialized.The buffers srcData and destData SHALL be either completely 
+ * disjoint or equal in their starting positions.The operation may be in either 
+ * initial or active state and enters initial state afterwards.
+ * 
+ * @param operation                 Handle of a running AE operation
+ * @param srcData                   Reference to final chunk of input data to be encrypted
+ * @param srcLen                    length of the input data
+ * @param  destData                 Output buffer. Can be omitted if the output is to be 
+ *                                  discarded.
+ * @param  destLen                  length of the buffer.
+ * @param   tag                     Output buffer filled with the computed tag
+ * @param  tagLen                   length of the tag.
+ * 
+ * @return 0                        on success.
+ * @return TEE_ERROR_SHORT_BUFFER   If the output buffer is not large enough 
+ *                                  to contain the output
+ * @return TEE_ERROR_MAC_INVALID    If the computed tag does not match the 
+ *                                  supplied tag
+ */
 TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
                               const void *srcData, uint32_t srcLen,
                               void *destData, uint32_t *destLen, void *tag,
@@ -501,7 +681,17 @@ TEE_Result TEE_AEDecryptFinal(TEE_OperationHandle operation,
     return 0;
 }
 
-
+/**
+ * TEE_CipherInit() - starts the symmetric cipher operation.
+ * 
+ * The operation SHALL have been associated with a key.
+ * If the operation is in active state, it is reset and then initialized.
+ * If the operation is in initial state, it is moved to active state.
+ * 
+ * @param operation  A handle on an opened cipher operation setup with a key
+ * @param nonce      Buffer containing the operation Initialization Vector as appropriate
+ * @param nonceLen   length of the buffer
+ */
 void TEE_CipherInit(TEE_OperationHandle operation, const void *nonce,
 		    uint32_t nonceLen)
 {
@@ -549,7 +739,27 @@ void TEE_CipherInit(TEE_OperationHandle operation, const void *nonce,
     return;
 }
 
-
+/**
+ * TEE_CipherUpdate() - encrypts or decrypts input data.
+ * 
+ * Input data does not have to be a multiple of block size. Subsequent calls 
+ * to this function are possible. Unless one or more calls of this function 
+ * have supplied sufficient input data, no output is generated. The cipher
+ * operation is finalized with a call to TEE_CipherDoFinal .The buffers 
+ * srcData and destData SHALL be either completely disjoint or equal in 
+ * their starting positions.The operation SHALL be in active state.
+ * 
+ * @param operation                  Handle of a running Cipher operation
+ * @param srcData                    Input data buffer to be encrypted or decrypted
+ * @param srcLen                     length of input buffer
+ * @param destData                   output buffer
+ * @param destLen                    ouput buffer length.
+ * 
+ * @return     0                     on success else 
+ * @return TEE_ERROR_SHORT_BUFFER    If the output buffer is not large enough to
+ *                                   contain the output. In this case, the input 
+ *                                   is not fed into the algorithm. 
+ */
 TEE_Result TEE_CipherUpdate(TEE_OperationHandle operation, const void *srcData,
                         uint32_t srcLen, void *destData, uint32_t *destLen)
 {
@@ -597,7 +807,26 @@ TEE_Result TEE_CipherUpdate(TEE_OperationHandle operation, const void *srcData,
     return 0;
 }
 
-
+/**
+ * TEE_CipherDoFinal() - Finalizes the cipher operation, processing data that 
+ * has not been processed by previous calls to TEE_CipherUpdate as well as data 
+ * supplied in srcData .
+ * 
+ * This function describes The operation handle can be reused or re-initialized.
+ * The buffers srcData and destData SHALL be either completely disjoint or equal 
+ * in their starting positions.The operation SHALL be in active state and is set
+ * to initial state afterwards.
+ * 
+ * @param operation                 Handle of a running Cipher operation
+ * @param srcData                   Input data buffer to be encrypted or decrypted
+ * @param srcLen                    length of input buffer
+ * @param  destData                 output buffer
+ * @param  destLen                  ouput buffer length.
+ * 
+ * @return 0                        on success 
+ * @return TEE_ERROR_SHORT_BUFFER   If the output buffer is not large enough to 
+ *                                  contain the output
+ */
 TEE_Result TEE_CipherDoFinal(TEE_OperationHandle operation, const void *srcData,
                         uint32_t srcLen, void *destData, uint32_t *destLen)
 {
@@ -605,7 +834,32 @@ TEE_Result TEE_CipherDoFinal(TEE_OperationHandle operation, const void *srcData,
     return TEE_CipherUpdate(operation, srcData, srcLen, destData, destLen);
 }
 
-
+/**
+ * TEE_GenerateKey () - Generates a random key or a key-pair and 
+ * populates a transient key object with the generated key material.
+ * 
+ * 
+ * The size of the desired key is passed in the keySize parameter 
+ * and SHALL be less than or equal to the maximum key size specified 
+ * when the transient object was created.
+ * 
+ * @param object                      Handle on an uninitialized transient 
+ *                                    key to populate  with the generated key.
+ * @param keySize                     Requested key size. SHALL be less than or 
+ *                                    equal to the maximum key size specified when
+ *                                    the object container was created
+ * @param params                      Parameters for the key generation.
+ * @param paramCount                  The values of all parameters are copied
+ *                                    nto the object so that the params array and
+ *                                    all the memory buffers
+ *                                    it points to may be freed after this routine
+ *                                     returns without  affecting the object.
+ * 
+ * @return 0                          on succes 
+ * @return TEE_ERROR_BAD_PARAMETERS   If an incorrect or inconsistent attribute is 
+ *                                    detected. The checks that are performed depend on
+ *                                    the implementation.
+ */
 TEE_Result TEE_GenerateKey(TEE_ObjectHandle object, uint32_t keySize,
 			   const TEE_Attribute *params, uint32_t paramCount)
 {
@@ -637,7 +891,28 @@ TEE_Result TEE_GenerateKey(TEE_ObjectHandle object, uint32_t keySize,
     return 0;
 }
 
-
+/**
+ * TEE_AllocateTransientObject() -  Allocates an uninitialized transient object.
+ * Transient objects are used to hold a cryptographic object (key or key-pair).
+ * 
+ * The value TEE_KEYSIZE_NO_KEY SHOULD be used for maxObjectSize for object types 
+ * that do not require a key so that all the container resources can be pre-allocated.
+ * A Trusted OS SHALL treat object types which are not defined in Table 5-9 as though 
+ * they require TEE_KEYSIZE_NO_KEY for backward compatibility reasons.As allocated, 
+ * the container is uninitialized. It can be initialized by subsequently importing the 
+ * object material,generating an object, deriving an object, or loading an object from
+ * the Trusted Storage.
+ * 
+ * @param objectType                Type of uninitialized object container to be created
+ * @param maxKeySize                Key Size of the object.
+ * @param object                    Filled with a handle on the newly created key container.
+ * 
+ * @return 0                        on success 
+ * @return TEE_ERROR_OUT_OF_MEMORY  If not enough resources are available to 
+ *                                  allocate the object handle.
+ * @return TEE_ERROR_NOT_SUPPORTED  If the key size is not supported or the object type 
+ *                                  is not supported.
+ */
 TEE_Result TEE_AllocateTransientObject(TEE_ObjectType objectType,
                                        uint32_t maxKeySize,
                                        TEE_ObjectHandle *object)
@@ -663,7 +938,21 @@ TEE_Result TEE_AllocateTransientObject(TEE_ObjectType objectType,
     return 0;
 }
 
-
+/**
+ * TEE_InitRefAttribute() - The helper function can be used to populate
+ * a single attribute either with a reference to a buffer or with integer values.
+ * 
+ * In TEE_InitRefAttribute () only the buffer pointer is copied, not the content 
+ * of the buffer. This means that the attribute structure maintains a pointer back 
+ * to the supplied buffer. It is the responsibility of the TA author to ensure that
+ * the contents of the buffer maintain their value until the attributes
+ * array is no longer in use.
+ * 
+ * @param attr         attribute structure to initialize.
+ * @param attributeID  Identifier of the attribute to populate.
+ * @param buffer       input buffer that holds the content of the attribute.
+ * @param length       buffer length.
+ */
 void TEE_InitRefAttribute(TEE_Attribute *attr, uint32_t attributeID,
                           const void *buffer, uint32_t length)
 {
@@ -680,7 +969,17 @@ void TEE_InitRefAttribute(TEE_Attribute *attr, uint32_t attributeID,
     return;
 }
 
-
+/**
+ * TEE_InitValueAttribute() - The helper function can be used to populate
+ * a single attribute either with a reference to a buffer or with integer values.
+ * 
+ * @param attr         attribute structure to initialize.
+ * @param attributeID  Identifier of the attribute to populate.
+ * @param a            unsigned integer value to assign to the a member of 
+ *                     the attribute structure.
+ * @param b            unsigned integer value to assign to the b member of 
+ *                     the attribute structure
+ */
 void TEE_InitValueAttribute(TEE_Attribute *attr, uint32_t attributeID,
                            uint32_t a, uint32_t b)
 {
@@ -697,7 +996,16 @@ void TEE_InitValueAttribute(TEE_Attribute *attr, uint32_t attributeID,
     return;
 }
 
-
+/**
+ * TEE_FreeTransientObject() - Deallocates a transient object previously
+ * allocated with TEE_AllocateTransientObject .
+ * 
+ * this function describes the object handle is no longer valid and all 
+ * resources associated with the transient object shall have been reclaimed 
+ * after the TEE_AllocateTransientObject() call.
+ * 
+ * @param object Handle on the object to free.
+ */
 void TEE_FreeTransientObject(TEE_ObjectHandle object)
 {
     pr_deb("TEE_FreeTransientObject(): start\n");
@@ -720,6 +1028,22 @@ void TEE_FreeTransientObject(TEE_ObjectHandle object)
 
 #define SIG_LENGTH 64
 
+/**
+ * TEE_AsymmetricSignDigest() - Signs a message digest within an asymmetric operation.
+ * 
+ * @param operation               Handle on the operation, which SHALL have been suitably 
+ *                                set up with an operation key.
+ * @param params                  Optional operation parameters
+ * @param paramCount              size of param
+ * @param digest                  Input buffer containing the input message digest
+ * @param digestLen               length of input buffer.
+ * @param signature               Output buffer written with the signature of the digest
+ * @param signatureLen            length of output buffer.
+ * 
+ * @return 0                      on sccess 
+ * @return TEE_ERROR_SHORT_BUFFER If the signature buffer is not large enough to hold
+ *                                the result
+ */
 TEE_Result TEE_AsymmetricSignDigest(TEE_OperationHandle operation,
                                     const TEE_Attribute *params,
                                     uint32_t paramCount, const void *digest,
@@ -767,7 +1091,24 @@ TEE_Result TEE_AsymmetricSignDigest(TEE_OperationHandle operation,
     return 0;
 }
 
-
+/**
+ * TEE_AsymmetricVerifyDigest() - verifies a message digest signature within an asymmetric
+ * operation.
+ * 
+ * This function describes the message digest signature verify by calling ed25519_verify().
+ *
+ * @param operation                     Handle on the operation, which SHALL have been suitably set up
+ *                                      with an operation key.
+ * @param params                        Optional operation parameters
+ * @param paramCount                    size of param.
+ * @param digest                        Input buffer containing the input message digest
+ * @param digestLen                     length of input buffer.
+ * @param signature                     Output buffer written with the signature of the digest
+ * @param signatureLen                  length of output buffer.
+ * 
+ * @return TEE_SUCCESS                  on success
+ * @return TEE_ERROR_SIGNATURE_INVALID  if the signature is invalid.
+ */
 TEE_Result TEE_AsymmetricVerifyDigest(TEE_OperationHandle operation,
                                       const TEE_Attribute *params,
                                       uint32_t paramCount, const void *digest,

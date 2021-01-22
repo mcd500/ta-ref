@@ -39,6 +39,20 @@
 
 #if 0
 #ifdef ENABLE_TEEP
+
+/**
+ * runInvokeCommand()- Run the invoke command.
+ * 
+ * This function is to varify the ret_cmd and call the TA_InvokeCommandEntryPoint 
+ * and print the TA_InvokeCommandEntryPoint with return result. If return result 
+ * is equal to TEE_SUCCESS then update size of OUTPUT params and print the 
+ * before ocall_invoke_command_callback_write name with params0_buffer and 
+ * call the ocall_invoke_command_callback_write and print the 
+ * ocall_invoke_command_callback_write with retunrn
+ * result of ocall_invoke_command_callback_write.
+ * 
+ * @param  ret_cmd    ret_cmd is the structure type of invoke_command_t
+ */
 void runInvokeCommand(struct invoke_command_t ret_cmd)
 {
     uint32_t type;
@@ -75,6 +89,16 @@ void runInvokeCommand(struct invoke_command_t ret_cmd)
 #endif
 }
 
+/**
+ * gp_invokecommand_test() - Invoke the command polling.
+ *  
+ * This function is to first it will print the gp_invokecommand_test -in and 
+ * once while condition true then call the ocall_invoke_command_polling and 
+ * print the commandID and command id is equalTEEP_AGENT_TA_EXIT and then 
+ * print the detect exit code of ocall_invoke_command_polling otherwise 
+ * continue the process and call invoke command entry point and finally 
+ * print the gp_invokecommand_test -out.
+ */
 void gp_invokecommand_test(void)
 {
   tee_printf("gp_invokecommand_test -in.\n");
@@ -108,6 +132,25 @@ int teep_message_load_ta(char *ta_uuid, int taimg_fd);
 int teep_message_install_ta(char *ta_uuid, int taimg_fd);
 int teep_message_delete_ta(char *ta_uuid);
 
+/**
+ * TA_InvokeCommandEntryPoint() - Delete and install teep message in TA.
+ *
+ * Based on the command id it will load TA binary from SecureStorage,
+ * teep message install in TA,teep message delete in TA.
+ * 
+ * @param  sessionContext               The value of the void* opaque data 
+ *									                    pointer set by the Trusted Application 
+ *									                    in thefunction TA_OpenSessionEntryPoint.
+ *
+ * @param  commandID                    A Trusted Application-specific code 
+ *									                    that identifies the command to be invoked
+ *
+ * @param  paramTypes                   The types of the four parameters.  
+ *
+ * @param  params[TEE_NUM_PARAMS]       A pointer to an array of four parameters.
+ * 
+ * @return TEE_SUCCESS If the command is successfully executed,else error occured.
+ */
 TEE_Result TA_EXPORT TA_InvokeCommandEntryPoint(void *sessionContext,
 			uint32_t commandID,
 			uint32_t paramTypes,
@@ -140,6 +183,23 @@ TEE_Result TA_EXPORT TA_InvokeCommandEntryPoint(void *sessionContext,
   }
 }
 
+/**
+ * teep_message_load_ta() - Teep message load the TA.
+ *      
+ * This function is to first it will print the teep_message_load_ta message 
+ * with ta uuid,ta image fd. Opens a handle on an existing persistent object 
+ * if it is fails print the TEE_OpenPersistentObject fails message with return 
+ * value. TEE_ReadObjectData() function attempts to read out_len bytes from 
+ * the data stream associated with the object object into the buffer pointed 
+ * to by out. if it is fails it will give the error message like 
+ * TEE_ReadObjectData fails message with return value. write the file and 
+ * finally closes an opened object handle and close the ta image fd file.
+ * 
+ * @param  ta_uuid       ta_uuid is a character data type.        
+ * @param  taimg_fd      taimg_fd is a integer data type.
+ * 
+ * @return success return the 0,otherwise error occured.
+ */
 int teep_message_load_ta(char *ta_uuid, int taimg_fd)
 {
   static char out[TA_MAX_SIZE];
@@ -168,6 +228,23 @@ int teep_message_load_ta(char *ta_uuid, int taimg_fd)
   return 0;
 }
 
+/**
+ * teep_message_install_ta() - Teep message install TA.     
+ * 
+ * This function is to creates a persistent object with initial attributes and 
+ * an initial data stream content,and optionally returns either a handle on the 
+ * created object,or TEE_HANDLE_NULL upon failure and if while condition is 
+ * success and then call the ocall_read_file256() if it is fails then it will 
+ * print the error message like ocall_read_file256 fails. verify the buffer 
+ * length if it less than length and return result then copies res.ret 
+ * characters from memory area res.b to memory area taimg_buf + len and 
+ * finally write the object data if it is success then close the file and object.
+ *  
+ * @param  ta_uuid       ta_uuid is a character data type      
+ * @param  taimg_fd      taimg_fd is a integer data type
+ * 
+ * @return success return the 0,otherwise error occured.
+ */
 int teep_message_install_ta(char *ta_uuid, int taimg_fd)
 {
   static char taimg_buf[TA_MAX_SIZE]; // ta binary size
@@ -216,6 +293,16 @@ fail:
   return -1;
 }
 
+/**
+ * teep_message_delete_ta() - Teep message delete TA.      
+ *      
+ * Creates a persistent object if it success then close and delete
+ * persistent object,else it will create the persistent object.
+ *
+ * @param  ta_uuid    ta_uuid is a character data type. 
+ *
+ * @return success return the 0,otherwise error occured.
+ */
 int teep_message_delete_ta(char *ta_uuid)
 {
 #if 0

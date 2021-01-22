@@ -36,6 +36,25 @@
 // data and cipher length
 #define DATA_LENGTH 256
 
+/**
+ * gp_secure_storage_test() - Create persistent object for read and write the object 
+ * data.
+ *   
+ * Creates a persistent object with initial attributes and an initial data stream
+ * content,and optionally returns either a handle on the created object, or 
+ * TEE_HANDLE_NULL upon failure and TEE_STORAGE_PRIVATE parameter indicates which
+ * is the Trusted Storage Space to access.TEE_DATA_FLAG_ACCESS_WRITE object is 
+ * opened with the write access right.This allows the Trusted Application to call
+ * the functions TEE_WriteObjectData and TEE_TruncateObjectData.TEE_DATA_FLAG_OVERWRITE
+ * The flags which determine the settings under which the object is opened and 
+ * copies data length from data to buf.writes DATA_LENGTH bytes from the buffer 
+ * pointed to by data to the data stream associated with the open object handle 
+ * object,finallyclose the object and clear the buffer.Create the persistent object
+ * for reading the object data and once completed it will close the object.otherwise
+ * it will error message like TEE_ReadObjectData fails and finally it will Compare 
+ * read data with written data if it is success it will print the verify ok,
+ * otherwise varify fails.
+ */
 void gp_secure_storage_test(void)
 {
     static unsigned char data[] = {

@@ -30,6 +30,11 @@
 
 #include "edger/Enclave_t.h"
 #define MESSAGE "hello world!\n"
+
+/**
+ * ecall_ta_main() - Function used for printing the string and find
+ * the number of string.
+ */
 void ecall_ta_main(void) {
   int retval;
   ocall_print_string(&retval, MESSAGE);

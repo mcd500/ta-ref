@@ -33,6 +33,9 @@
 
 #include "edger/Enclave_t.h"
 
+/**
+ * eapp_entry() - This function used for the printing Message.
+ */
 void EAPP_ENTRY eapp_entry() {
   ocall_print_string(MESSAGE);
   EAPP_RETURN(0);

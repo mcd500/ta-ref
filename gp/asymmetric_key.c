@@ -36,6 +36,31 @@
 #define SHA_LENGTH (256/8)
 #define SIG_LENGTH 64
 
+/**
+ * gp_asymmetric_key_sign_test() - Cryptographic Operations API Message Digest Functions.
+ *   
+ * TEE_AllocateOperation() function allocates a handle for a new cryptographic 
+ * operation and sets the mode(TEE_MODE_DIGEST) and algorithm type
+ * (TEE_ALG_SHA256).If this function does not return with TEE_SUCCESS then 
+ * there is no valid handle value. TEE_DigestUpdate() function accumulates 
+ * message data for hashing.The message does not have to be block aligned.
+ * Subsequent calls to this function are possible.TEE_DigestDoFinal() finalizes 
+ * the message digest operation and produces the message hash. Afterwards the 
+ * Message Digest operation is reset to initial state and can be reused.
+ * TEE_FreeOperation() function deallocates all resources associated with an 
+ * operation handle.after that print the dump hashed data anf allocate handle 
+ * for a Sign hashed data with the generated keys and allocates allocates an 
+ * uninitialized transient object, i.e.a container for attributes. Transient 
+ * objects are used to hold a cryptographic object(key or keypair) and 
+ * generates a random key or a key-pair and populates a transient key object 
+ * with the generated key material and The key material is copied from the key 
+ * object handle into the operation and signs a message digest within an 
+ * asymmetric operation and deallocates all resources associated with an 
+ * operation handle, print the dump signature and verifies a message digest 
+ * signature within an asymmetric operation and Free Transient Object finally 
+ * check the TEE Result if it success it will print the verify ok otherwise 
+ * verify fails. 
+ */
 void gp_asymmetric_key_sign_test(void)
 {
     static unsigned char data[256] = {

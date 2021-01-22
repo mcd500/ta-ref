@@ -32,6 +32,12 @@
 #include "config_ref_ta.h"
 //#include "tee_wrapper.h"
 
+/**
+ * gp_ree_time_test - Retrieves the current REE system time.
+ *  
+ * Retrieves the current time as seen from the point of view of the  REE,  
+ * expressed in the number of seconds and print the GP REE second and millisecond.
+ */
 void gp_ree_time_test(void)
 {
     TEE_Time time;
@@ -41,6 +47,13 @@ void gp_ree_time_test(void)
     tee_printf ("@GP REE time %u sec %u millis\n", time.seconds, time.millis);
 }
 
+/**
+ * gp_trusted_time_test() - Retrieves the current system time.
+ *  
+ * Retrieves the current system time as seen from the point of view of the TA,  
+ * expressed in the number of seconds and print the GP System time second and
+ * millisecond.
+ */
 void gp_trusted_time_test(void)
 {
     TEE_Time time;

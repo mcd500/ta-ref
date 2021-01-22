@@ -11,7 +11,18 @@ static inline unsigned int _strlen(const char* str)
   return (unsigned int)(s - str);
 }
 
-// Compiler may replace simple printf to puts and putchar
+/**
+ * puts() - Function writes a string to stdout up to but not including 
+ * the null character.
+ * 
+ * A newline character is appended to the output by calling putchar().
+ * Compiler may replace simple printf to puts and putchar.
+ * 
+ * @param  s       This is the C string to be written
+ * 
+ * @return size    If success.
+ * @return 0       Error occured.
+ */
 int puts(const char *s)
 {
 #ifdef ENCLAVE_VERBOSE
@@ -23,6 +34,19 @@ int puts(const char *s)
 #endif
 }
 
+/**
+ * putchar() - Function writes a character (an unsigned char) specified by the
+ * argument char to stdout.
+ * 
+ * This function returns the character written as an unsigned char cast to an
+ * int or EOF on error.
+ * 
+ * @param  c       This is the character to be written. This is passed as its int 
+ *                 promotion.
+ * 
+ * @return size    If success.
+ * @return 0       Error occured.
+ */
 int putchar(int c)
 {
 #ifdef ENCLAVE_VERBOSE
@@ -35,6 +59,19 @@ int putchar(int c)
 #endif
 }
 
+/**
+ * printf() - Function sends formatted output to stdout.
+ * 
+ * format can optionally contain embedded format tags that are replaced by the
+ * values specified in subsequent additional arguments and formatted as 
+ * requested.
+ * 
+ * @param  fm               This is the string that contains the text to be 
+ *                          written to stdout.
+ * 
+ * @return string length    If success.
+ * @return 0                Error occured.
+ */
 int printf(const char* fmt, ...)
 {
 #ifdef ENCLAVE_VERBOSE
@@ -51,3 +88,5 @@ int printf(const char* fmt, ...)
   return 0;
 #endif
 }
+
+

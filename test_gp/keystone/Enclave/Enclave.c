@@ -31,6 +31,13 @@
 //#include "tools.h" // for printf-debug
 #include "gp/gp_test.h"
 
+/**
+ * main() - The main function having lot of function declarations.
+ * 
+ * The main contains lot of function declaration in it.
+ * 
+ * @return 0      If the function success else error occured.
+ */
 int main(void) {
   gp_random_test();
 

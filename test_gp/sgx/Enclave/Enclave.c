@@ -30,8 +30,8 @@
 #include "gp/gp_test.h"
 //#include "tools.h"
 
-/* ecall_print_aes:
- *   testing symmetric key verification
+/**
+ * main() - Function used for calling the all gp test function and testing symmetric key verification .
  */
 int main(void)
 {

@@ -41,6 +41,15 @@ size_t print_pos;
 #define TEE_PARAM_TYPE1 TEE_PARAM_TYPE_MEMREF_OUTPUT
 #include <string.h> // for memmove
 
+/**
+ * _strlen() - Find the length of string.
+ * 
+ * This function used for returns the length of the string str.
+ *
+ * @param  str              This is the string whose length is to be found.
+ *
+ * @return string length    If success, else error occurred.
+ */
 static inline unsigned int _strlen(const char* str)
 {
   const char* s;
@@ -48,6 +57,18 @@ static inline unsigned int _strlen(const char* str)
   return (unsigned int)(s - str);
 }
 
+/**
+ * tee_printf() - Printing the formatted output to a character array.
+ * 
+ * This function used va_start it means initializes ap variable to be used
+ * with the va_arg and va_end macros. The last_arg is the last known fixed 
+ * argument being passed to the function, and find the string length and 
+ * return that values.
+ * 
+ * @param  fmt       A string that specifies the format of the output. 
+ *
+ * @return result    If success, else error occured.
+ */
 int tee_printf(const char* fmt, ...)
 {
   char *buf = &print_buf[print_pos];
@@ -62,9 +83,14 @@ int tee_printf(const char* fmt, ...)
   return res;
 }
 
-/*
- * Called when the instance of the TA is created. This is the first call in
- * the TA.
+/**
+ * TA_CreateEntryPoint() - Trusted application creates the entry point.
+ * 
+ * TA_CreateEntryPoint function ia the Trusted Application’s constructor, which 
+ * the Framework calls when it creates a new instance of the Trusted 
+ * Application.
+ * 
+ * @return TEE_SUCCESS    if success, else error occurred.
  */
 TEE_Result TA_CreateEntryPoint(void)
 {
@@ -73,6 +99,20 @@ TEE_Result TA_CreateEntryPoint(void)
     return TEE_SUCCESS;
 }
 
+/**
+ * TA_OpenSessionEntryPoint() - Trusted application open the session entry point.
+ * 
+ * The Framework calls the function TA_OpenSessionEntryPoint when a client 
+ * requests to open a session with the Trusted Application.
+ * 
+ * @param  param_types    The types of the four parameters.
+ * @param  params         A pointer to an array of four parameters.
+ * @param  sess_ctx       A pointer to a variable that can be filled by the 
+ *                        Trusted Application instance with an opaque void* 
+ *                        data pointer.
+ *
+ * @return TEE_SUCCESS    if success, else error occurred.
+ */
 TEE_Result TA_OpenSessionEntryPoint(uint32_t __unused param_types,
                                     TEE_Param __unused params[4],
                                     void __unused **sess_ctx) {
@@ -80,20 +120,30 @@ TEE_Result TA_OpenSessionEntryPoint(uint32_t __unused param_types,
     return TEE_SUCCESS;
 }
 
-/*
- * Called when the instance of the TA is destroyed if the TA has not
- * crashed or panicked. This is the last call in the TA.
+/**
+ * TA_DestroyEntryPoint() - The function TA_DestroyEntryPoint is the Trusted 
+ * Application’s destructor, which the Framework calls when the instance is being 
+ * destroyed.
  */
 void TA_DestroyEntryPoint(void)
 {
     DMSG("has been called");
 }
 
-/*
- * Called when a new session is opened to the TA. *sess_ctx can be updated
- * with a value to be able to identify this session in subsequent calls to the
- * TA. In this function you will normally do the global initialization for the
- * TA.
+/**
+ * run_all_test() -  Function used for checked the test of simple example.
+ * 
+ * Called when a new session is opened to the TA. *sess_ctx can be updated with 
+ * a value to be able to identify this session in subsequent calls to the TA.
+ * In this function you will normally do the global initialization for the TA.
+ * 
+ * @param  param_types    The types of the four parameters.
+ * @param  params         A pointer to an array of four parameters.
+ * @param  sess_ctx       A pointer to a variable that can be filled by the 
+ *                        Trusted Application instance with an opaque void* 
+ *                        data pointer.
+ *
+ * @return TEE_SUCCESS    If success, else error occurred.
  */
 TEE_Result run_all_test(uint32_t param_types,
 				    TEE_Param __maybe_unused params[4],
@@ -120,9 +170,15 @@ TEE_Result run_all_test(uint32_t param_types,
     return TEE_SUCCESS;
 }
 
-/*
- * Called when a session is closed, sess_ctx hold the value that was
- * assigned by TA_OpenSessionEntryPoint().
+/**
+ * TA_CloseSessionEntryPoint() - The Framework calls to close a client session.
+ * 
+ * The Trusted Application function TA_CloseSessionEntryPoint implementation is
+ * responsible for freeing any resources consumed by the session being closed.
+ * 
+ * @param sess_ctx    The value of the void* opaque data pointer set by the 
+ *                    Trusted Application in the function TA_OpenSessionEntryPoint 
+ *                    for this session.
  */
 void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
 {
@@ -130,10 +186,19 @@ void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
     IMSG("Goodbye!\n");
 }
 
-/*
- * Called when a TA is invoked. sess_ctx hold that value that was
- * assigned by TA_OpenSessionEntryPoint(). The rest of the paramters
- * comes from normal world.
+/**
+ * TA_InvokeCommandEntryPoint() - The Framework calls the client invokes a  
+ * command within the given session.
+ * 
+ * The Trusted Application function TA_InvokeCommandEntryPoint can access the 
+ * parameters sent by the client through the paramTypes and params arguments.It  
+ * can also use these arguments to transfer response data back to the client. 
+ * 
+ * @param  sess_ctx       The value of the void* opaque data pointer set by the 
+ *                        Trusted Application in the function 
+ *                        TA_OpenSessionEntryPoint for this session.
+ *
+ * @return TEE_SUCCESS    If success, else error occurred.
  */
 TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t cmd_id,

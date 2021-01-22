@@ -41,6 +41,17 @@
 static char print_buf[PRINT_BUF_SIZE];
 #define TEEC_PARAM_TYPE1 TEEC_MEMREF_TEMP_OUTPUT
 
+/**
+ * main() - This function used for perfroms the TEEC operations.
+ * 
+ * The function initialize the context of the TEEC environment and after open
+ * session to open the teec environment, then memset set the all input paramter
+ * to assign the updated value, then invoke command occured, and start the
+ * printing log message, then finally all TEEC perfomance done then close the 
+ * the session of TEEC environment 
+ * 
+ * @return 0    if success, else error occured.
+ */
 int main(void)
 {
     TEEC_Result res;

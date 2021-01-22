@@ -15,6 +15,20 @@
 #define COLS "id,idx,start_core_id,end_core_id,depth,addr,funcname,start[clocks],end,duration"
 #define FORMAT "%03d,%03ld,%d,%d,%ld,0x%08lx,%s,%ld,%ld,%ld\n"
 
+/**
+ * main() - Open the log file, read and print operation perfoms.
+ * 
+ * This function used for reading the data of log file and print the all result 
+ * the file functionality.
+ * 
+ * @param  argc    Argument Count is int and stores number of command-line
+ *                 arguments passed by the user including the name of the
+ *                 program.
+ * @param  argv    Argument Vector is array of character pointers listing all
+ *                 the arguments.
+ *
+ * @return 0       If success, else error occured.
+ */
 int main(int argc, char *argv[]) {
     static char buf[BUF_MAX];
     struct __profiler_header* header;
