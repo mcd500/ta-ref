@@ -14,7 +14,7 @@ export PROFILER ?= $(BENCHMARK)
 export MACHINE ?= SIM
 include ./validation.mk
 
-.PHONY: build test run clean mrproper
+.PHONY: build test run docs clean mrproper
 
 build: select
 	mkdir -p $(BUILD_DIR)/include $(BUILD_DIR)/lib
@@ -26,6 +26,10 @@ test:
 
 run:
 	make -C $(TEST_DIR) run TEE=$(TEE)
+
+docs:
+	@echo "Generating doxygen files."
+	@doxygen doxygen/Doxyfile
 
 qemu:
 	make -C $(TEST_DIR) qemu TEE=$(TEE)
@@ -57,6 +61,12 @@ all_test_clean:
 
 clean: select build_clean all_test_clean
 	$(RM) $(BUILD_DIR)/Makefile
+	rm -f -r doxygen/html
+	rm -f -r doxygen/latex
+
+docs_clean:
+	rm -f -r doxygen/html
+	rm -f -r doxygen/latex
 
 # delete including dependencies
 mrproper: select build_clean all_test_clean
