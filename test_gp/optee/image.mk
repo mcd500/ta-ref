@@ -26,9 +26,11 @@ RPI3_image: RPI3_clean RPI3_ship
 
 # check `sudo ln -sf /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib/optee_armtz/` in advance.
 $(MACHINE)_ship:
+	echo $(MACHINE)_ship
 	FILES="$(OUT_FILES)" PORT=$(PORT) USER=$(USER) PASSWD=$(PASSWD) IP_ADDR=$(IP_ADDR) ${SHIP_SCRIPT}
 
 $(MACHINE)_clean:
+	echo $(MACHINE)_clean
 	USER=$(USER) PORT=$(PORT) IP_ADDR=$(IP_ADDR) PASSWD=$(PASSWD) ${CLEAN_SCRIPT}
 
 SIM_image: SIM_ship

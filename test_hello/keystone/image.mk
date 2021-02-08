@@ -16,9 +16,11 @@ include ./machine.mk
 all: $(TARGET)
 
 $(MACHINE)_ship: $(MACHINE)_clean
+	echo $(MACHINE)_clean
 	FILES="$(OUT_FILES)" PORT=$(PORT) USER=$(USER) PASSWD=$(PASSWD) IP_ADDR=$(IP_ADDR) $(SHIP_SCRIPT)
 
 $(MACHINE)_clean:
+	echo $(MACHINE)_clean
 	USER=$(USER) PORT=$(PORT) IP_ADDR=$(IP_ADDR) PASSWD=$(PASSWD) ${CLEAN_SCRIPT}
 
 $(MACHINE)_image: $(MACHINE)_ship

@@ -23,6 +23,7 @@ all: $(TARGET)
 NUC_image: NUC_clean NUC_ship
 
 NUC_ship: analyzer_nm
+	echo NUC_ship
 	FILES="$(OUT_FILES)" USER=$(USER) PORT=$(PORT) PASSWD=$(PASSWD) IP_ADDR=$(IP_ADDR) $(SHIP_SCRIPT)
 
 analyzer_nm: $(APP_NM) $(ENCLAVE_NM)
@@ -33,6 +34,7 @@ $(ENCLAVE_NM):
 	nm $(ENCLAVE_LIB) > $(ENCLAVE_NM)
 
 $(MACHINE)_clean:
+	echo $(MACHINE)_clean
 	USER=$(USER) PORT=$(PORT) PASSWD=$(PASSWD) IP_ADDR=$(IP_ADDR) ${NUC_CLEAN_SCRIPT}
 
 SIM_image: SIM_ship
