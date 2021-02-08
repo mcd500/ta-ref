@@ -50,10 +50,9 @@
 #endif
 
 /**
- * print_error_message() - Used for print the error message.
+ * print_error_message() - Used to print the sgx error list.
  * 
- * In that function print the error message and Check error conditions for
- * loading enclave.
+ * This function is used to print the sgx error list.
  * 
  * @param ret  list containing all possible values of this data type.
  */
@@ -76,11 +75,11 @@ void print_error_message(sgx_status_t ret)
 }
 
 /**
- * initialize_enclave() - Function initializes an enclave that created and 
- * loaded with data.
- * 
- * This function used to Call sgx_create_enclave to initialize an enclave 
- * instance.
+ * initialize_enclave() - Function initializes an enclave, 
+ *
+ * This function is used to create the enclave for sgx and if 
+ * invoke's return value is equal to SGX_SUCCESS, then it will return the value
+ * zero, else it will print the error message.
  * 
  * @return 0    If success else error occured.
  */
@@ -100,14 +99,17 @@ int initialize_enclave(void)
 }
 
 /**
- * main() - Used for initialize the enclave and call to 
- * encalve and destroy the encalve.
+ * main() - Mapping and unmapping profile information.
+ *
+ * If defined macro is APP_PERF_ENABLE then invoke the __profiler_map_info()
+ * and __profiler_unmap_info(). It then initializes the enclave and  Calls
+ * trusted application; if intialized enclave's return value is less than zero
+ * then it destroys the enclave. 
  * 
- * @param  argc    Argument Count is int and stores number of command-line 
+ * @param  argc    Argument Count is an int and it stores number of command-line 
  *                 arguments passed by the user including the name of the 
  *                 program.
- * @param  argv    Argument Vector is array of character pointers listing
- *                 all the arguments.
+ * @param  argv    Argument Vector is an array of character pointers arguments.
  *
  * @return 0       If success, else error occured
  */

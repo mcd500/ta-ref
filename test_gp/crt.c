@@ -10,10 +10,9 @@
  *  
  * This section holds an array of function pointers that contributes to a single 
  * initialization array for the executable or shared object containing the section 
- * if defined is PERF_ENABLE
- * then mapping the profiler information.
+ * if defined is PERF_ENABLE then mapping the profiler information.
  * 
- * @param init_array []
+ * @param init_array[]		constant array.
  */
 static void (*const init_array []) ()
   __attribute__ ((section (".init_array"), aligned (sizeof (void *))))
@@ -28,10 +27,9 @@ static void (*const init_array []) ()
  *  
  * This section holds an array of function pointers that contributes to 
  * a single termination array for the executable or shared object containing the
- * section and if defined is PERF_ENABLE
- * then unmapping the profiler information.
+ * section and if defined is PERF_ENABLE then unmapping the profiler information.
  * 
- * @param fini_array []
+ * @param fini_array[]		constant array.
  */
 static void (*const fini_array []) ()
   __attribute__ ((section (".fini_array"), aligned (sizeof (void *))))
@@ -47,10 +45,10 @@ extern void (*__fini_array_start []) (void) __attribute__((weak));
 extern void (*__fini_array_end []) (void) __attribute__((weak));
 
 /**
- * crt_begin() - Certificate begin.
+ * crt_begin() - Commences the certification.
  *  
- * Checking the both __init_array_start and __init_array_end if it success
- * then it will access the file and loop the each index.
+ * It compares  __init_array_start and __init_array_end; and then it the loops through 
+ * the file pointer.
  */
 void crt_begin(void) {
     if (__init_array_start && __init_array_end) {
@@ -61,10 +59,10 @@ void crt_begin(void) {
 }
 
 /**
- * crt_end() - Certificate end.
+ * crt_end() -  Ends the certification.
  *  
- * Checking the both __fini_array_start and __fini_array_end if it success
- * then it will access the file and loop the each index to the upto end.
+ * It compares  __fini_array_start and __fini_array_end; and then it the loops through 
+ * the file pointer.
  */
 void crt_end(void) {
     if (__fini_array_start && __fini_array_end) {

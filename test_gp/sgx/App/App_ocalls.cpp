@@ -16,10 +16,7 @@
 #endif
 
 /**
- * ocall_print_string() - Function used for invokes OCALL to display string 
- * buffer inside the enclave. 
- * 
- * This function used for print the string.
+ * ocall_print_string() - To print the argument string message.
  * 
  * @param  str       Pointer of the string.
  * 
@@ -35,13 +32,12 @@ unsigned int NO_PERF ocall_print_string(const char *str)
 }
 
 /**
- * ocall_open_file() - Used for open a file.
+ * ocall_open_file() - Used for opening a file.
  * 
- * @param  fname              File name
- * @param  flags              Values for oflag are constructed by a 
- *                            bitwise-inclusive OR of flags from the following 
- *                            list.
- * @param  perm               permision or mode
+ * @param  fname		File name
+ * @param  flags		Values for oflag are constructed by a 
+ *				bitwise-inclusive OR of flags from the following list.
+ * @param  perm			permision or mode
  *
  * @return file descriptor    If success, else error occured
  */
@@ -72,14 +68,13 @@ int ocall_read_file(int desc, char *buf, size_t len)
 }
 
 /**
- * ocall_write_file() - Used to write a file.
+ * ocall_write_file() - Used to write into a file.
  * 
  * @param  desc               file descriptor.
  * @param  buf                pointer to a buffer.
  * @param  len                Size of elements.
  *
- * @return file descriptor    If success, else error occured.
- *              
+ * @return file descriptor    If success, else error occured.        
  */
 int ocall_write_file(int desc, const char *buf, size_t len)
 {
@@ -92,9 +87,9 @@ int ocall_write_file(int desc, const char *buf, size_t len)
 /**
  * ocall_close_file() - Used for closing a file
  * 
- * @param  desc               File descriptor.
+ * @param  desc			File descriptor.
  *
- * @return file descriptor    If success, else error occured.
+ * @return file descripto	If success, else error occured.
  */
 int ocall_close_file(int desc)
 {
@@ -105,11 +100,11 @@ int ocall_close_file(int desc)
 }
 
 /**
- * ocall_ree_time() - Is to fetch the current time.
+ * ocall_ree_time() - Used to fetch the current time.
  * 
- * @param  time            Pointer to a current time.
+ * @param  time			Pointer to a current time.
  * 
- * @return current time    If success, else error occurred
+ * @return current time		If success, else error occurred
  */
 int ocall_ree_time(struct ree_time_t *time)
 {

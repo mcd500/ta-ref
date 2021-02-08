@@ -7,11 +7,9 @@ struct __profiler_header * __profiler_head = NULL;
 static inline void NO_PERF __cyg_profile_func(void * const this_fn, enum direction_t const dir);
 
 /**
- * __profiler_get_data_ptr() - Gets the data of profiled function.
+ * __profiler_get_data_ptr() - Gets the profiler data from an output file.
  * 
- * This function used for gets a data of pointer.
- * 
- * @return     Result of the profile data, else error occured
+ * @return Result	If success.
  */
 static inline struct __profiler_data * const NO_PERF
 __profiler_get_data_ptr(void) {
@@ -20,10 +18,10 @@ __profiler_get_data_ptr(void) {
 }
 
 /**
- * __profiler_map_info() - Mapping the profile infomation.
+ * __profiler_map_info() - Maps the profile information.
  * 
- * This function used for creating the new data value in header of
- * the profiler.
+ * This function creates the new data value in the header of
+ * profiler.
  */
 void NO_PERF __profiler_map_info(void) {
 	__profiler_head = (struct __profiler_header *)perf_buffer;
@@ -34,14 +32,11 @@ void NO_PERF __profiler_map_info(void) {
 }
 
 /**
- * __cyg_profile_func() - The 64bit address of the function being instrumented, 
- * which is, of course, unique.
+ * __cyg_profile_func() - Defines the function for the entry and exit function 
+ * operations.
  * 
- * __cyg_profile_func_enter is the 64bit address of the function being
- * instrumented, which is, of course, unique.
- * 
- * @param this_fn    A keyword that refers to the current instance of the class
- * @param dir        Direction 
+ * @param this_fn	A keyword that refers to the current instance of the class.
+ * @param dir		An enumeration constant. 
  */
 static inline void NO_PERF __cyg_profile_func(void * const this_fn, enum direction_t const dir) {
 	if (__profiler_head == NULL)
@@ -56,29 +51,26 @@ static inline void NO_PERF __cyg_profile_func(void * const this_fn, enum directi
 }
 
 /**
- * __cyg_profile_func_enter() - Enter function entered or exited operation performs.
+ * __cyg_profile_func_enter() - Performs  entry operation
  * 
- * This function enter functions are passed the address of the function
- * being entered, and the address from which it was called
+ * This function is called after entering the function __cyg_profile_func().
  * 
- * @param this_fn      A keyword that refers to the current instance of the
- *                         class.
- * @param call_site    It means which operation perfoms calling , start etc.
+ * @param this_fn	A keyword that refers to the current instance of the
+ *			class.
+ * @param call_site	It means which operation perfoms for calling, start etc.
  */
 void NO_PERF USED __cyg_profile_func_enter(void * this_fn, void * call_site) {
 	__cyg_profile_func(this_fn, CALL);
 }
 
 /**
- * __cyg_profile_func_exit() - Exit function entered or exited operation
- * performs.
+ * __cyg_profile_func_exit() - Performs  exit operation.
  * 
- * This functions are passed the address of the function being exited, 
- * and the address from which it was called. 
+ * This function is called after exiting from the function __cyg_profile_func().
  * 
- * @param this_fn      A keyword that refers to the current instance of the 
- *                         class.
- * @param call_site    It means which operation perfoms calling , start etc.
+ * @param this_fn	A keyword that refers to the current instance of the 
+ *			class.
+ * @param call_site	It means which operation performs calling, stop etc.
  */
 void NO_PERF USED __cyg_profile_func_exit(void * this_fn, void * call_site) {
 	__cyg_profile_func(this_fn, RET);

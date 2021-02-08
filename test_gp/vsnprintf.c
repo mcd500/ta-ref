@@ -85,14 +85,16 @@ typedef struct {
 } out_fct_wrap_type;
 
 /**
- * _out_buffer() - Function called as internal buffer output
+ * _out_buffer() -     Internal buffer output
  * 
- * This function checking the max length of buffer with idx.
+ * This function compares the idx and maxlen, If "idx" is less than
+ * "maxlen" then it will assign "character" value into the typecasting 
+ * char "buffer[idx]"
  *
- * @param character    character type string
- * @param buffer       Pointer to a character string to write the result.
- * @param idx          bytes of size_t
- * @param maxlen       Maximum number of characters to write.
+ * @param character	character type string
+ * @param buffer	Pointer to a character string to write the result.
+ * @param idx		bytes of size_t
+ * @param maxlen	Maximum number of characters to write.
  */
 static inline void _out_buffer(char character, void* buffer, size_t idx, size_t maxlen)
 {
@@ -102,15 +104,15 @@ static inline void _out_buffer(char character, void* buffer, size_t idx, size_t 
 }
 
 /**
- * _out_null() - Function called as internal null output.
+ * _out_null() - Internal null output.
  * 
- * The typecasting for variable with void is to avoid unused variable warnings in
+ * The typecasting of arguments with void is applied to avoid unused variable warnings in
  * some compilers.
  * 
- * @param character    character type string
- * @param buffer       Pointer to a character string to write the result.
- * @param idx          bytes of size_t
- * @param maxlen       Maximum number of characters to write.
+ * @param character	character type string
+ * @param buffer	Pointer to a character string to write the result.
+ * @param idx		bytes of size_t
+ * @param maxlen	Maximum number of characters to write.
  */
 static inline void _out_null(char character, void* buffer, size_t idx, size_t maxlen)
 {
@@ -118,16 +120,16 @@ static inline void _out_null(char character, void* buffer, size_t idx, size_t ma
 }
 
 /**
- * _out_char() - Function is a internal putchar wrapper
+ * _out_char() - Internal putchar wrapper
  * 
- * It is a internal putchar function wrapper The typecasting for variable with void 
- * is to avoid unused variable warnings in some compilers. firstly it checks with the
- * if condition the variable not equal to zero means that putchar function will call.
+ * The typecasting of arguments with void is to avoid unused variable warnings 
+ * in some compilers. Checks the character value once the if condtion is success
+ * then putchar() writes a character into stdout.
  * 
- * @param character    character type string
- * @param buffer       Pointer to a character string to write the result.
- * @param idx          bytes of size_t
- * @param maxlen       Maximum number of characters to write.
+ * @param character	character type string
+ * @param buffer	Pointer to a character string to write the result.
+ * @param idx		bytes of size_t
+ * @param maxlen	Maximum number of characters to write.
  */
 static inline void _out_char(char character, void* buffer, size_t idx, size_t maxlen)
 {
@@ -138,15 +140,15 @@ static inline void _out_char(char character, void* buffer, size_t idx, size_t ma
 }
 
 /**
- * _out_fct() - Function is about internal output function wrapper
+ * _out_fct() - Internal output function wrapper
  * 
- * The _out_fct function fistly typecasting some variable to avoid compiler error
- * is a output function wrapper and the buffer is the output fct pointer.
+ * This function typecasting idx and maxlen arguments is to avoid compiler error.
+ * And then output function wrapper and the buffer is the output fct pointer.
  * 
- * @param character    character type string
- * @param buffer       Pointer to a character string to write the result.
- * @param idx          bytes of size_t
- * @param maxlen       Maximum number of characters to write.
+ * @param character	character type string
+ * @param buffer	Pointer to a character string to write the result.
+ * @param idx		bytes of size_t
+ * @param maxlen	Maximum number of characters to write.
  */
 static inline void _out_fct(char character, void* buffer, size_t idx, size_t maxlen)
 {
@@ -156,17 +158,12 @@ static inline void _out_fct(char character, void* buffer, size_t idx, size_t max
 }
 
 /**
- * The strlen function() computes the length of the string str up to, 
- * but not including the terminating null character.
- * 
- * The strlen function fistly typecasting some variable to avoid compiler 
- * error declaring variable
- * 
- * @param str    character type string.
- * 
- * @return       The typecasting of the return variable into unsigned int and return
- *               The length of the string (excluding the terminating 0).
- */
+* _strlen() - calculates the length of the string.
+*
+* @param  str			str is an argument of type pointer.
+*
+* @return string length		if successfully executed,else error occured.
+*/
 static inline unsigned int _strlen(const char* str)
 {
   const char* s;
@@ -175,11 +172,11 @@ static inline unsigned int _strlen(const char* str)
 }
 
 /**
- * _is_digit() - Is for internal test if char is a digit(0-9)
+ * _is_digit() -  Is for the internal test if char is a digit from 0 to 9
  * 
- * @param  ch     This is the character to be checked.
+ * @param  ch		This is the character to be checked.
  * 
- * @return true   if char is a digit and internal test if char is a digit (0-9)
+ * @return true		if char is a digit and internal test if char is a digit from 0 to 9
  */
 static inline bool _is_digit(char ch)
 {
@@ -187,13 +184,13 @@ static inline bool _is_digit(char ch)
 }
 
 /**
- * _atoi() - Converting the internal ASCII string into unsigned integer.
+ * _atoi() - Converts the internal ASCII string into an unsigned integer.
  * 
  * This function is to convert the internal ASCII string into unsigned integer.
  * 
- * @param  str    string representation of an integral number.
+ * @param  str		string representation of an integral number.
  * 
- * @return i      unsigned integer value.
+ * @return i		unsigned integer value.
  */
 static unsigned int _atoi(const char** str)
 {
@@ -205,27 +202,24 @@ static unsigned int _atoi(const char** str)
 }
 
 /**
- * _ntoa_format() - Convert the string into the defined format structure.
+ * _ntoa_format() - Converts the string into the defined format structure.
  * 
- * This function converting the string type into this specified format it having
- * while condition for pad leading zeros in the given values, using the flags and 
- * if else condition handling the hash they checking the variable len with already
- * defined base if not the len variable decrements using the same process remaining
- * buf len are accumulated using the conditional statement pad spaces up to given 
- * width, And reversing the given string, append pad spaces up to given width are
- * manipulated.
+ * This function uses the while condition for padding the leading zeroes and 
+ * also applies  the if conditions to handle the hash. Using the if condtion
+ * pad spaces up to given width what specifies in that. It reverse the string
+ * and again append pad spaces up to given width.
  * 
- * @param  out         type of out_fct_type
- * @param  buffer      Pointer to a character string to write the result.
- * @param  idx         idx bytes of size_t
- * @param  maxlen      Maximum number of characters to write.
- * @param  negative    boolean type
- * @param  base        an unsigned long data type
- * @param  prec        an unsigned integral data type 
- * @param  width       an unsigned integral data type 
- * @param  flags       an unsigned integral data type
+ * @param  out		type of out_fct_type
+ * @param  buffer	Pointer to a character string to write the result.
+ * @param  idx		idx bytes of size_t
+ * @param  maxlen	Maximum number of characters to write.
+ * @param  negative	boolean type
+ * @param  base		an unsigned long data type
+ * @param  prec		an unsigned integer data type 
+ * @param  width	an unsigned integer data type 
+ * @param  flags	an unsigned integer data type
  * 
- * @return idx         non integer value if success else error occur.
+ * @return idx		non integer value if success else error occur.
  */
 static size_t _ntoa_format(out_fct_type out, char* buffer, size_t idx, size_t maxlen, char* buf, size_t len, bool negative, unsigned int base, unsigned int prec, unsigned int width, unsigned int flags)
 {
@@ -300,26 +294,23 @@ static size_t _ntoa_format(out_fct_type out, char* buffer, size_t idx, size_t ma
 }
 
 /**
- * _ntoa_long() - function is used for string into structure value.
+ * _ntoa_long() - Converts string into long value.
  * 
- * In the _ntoa_long function initialize the char buffer that value defined 
- * already and check the for no hash value for zero and also checks with the
- * same condtion for flags precision valid or not and too the digits specified
- * in the formart matches with the string, some uppercase case constraints are 
- * included to valid the string finally return the value with ntoa internal 
- * itoa for 'long' type.
+ * This function begins with   an if condition value then it assigns ~FLAGS_HASH
+ * into  flags & value. Later it  uses the if condition and do while write if 
+ * precision not equal to zero and value is not equals to zero.
  * 
- * @param  out         type of out_fct_type
- * @param  buffer      Pointer to a character string to write the result.
- * @param  idx         idx bytes of size_t
- * @param  maxlen      Maximum number of characters to write.
- * @param  negative    boolean type
- * @param  base        an unsigned long data type
- * @param  prec        an unsigned integral data type 
- * @param  width       an unsigned integral data type 
- * @param  flags       an unsigned integral data type
+ * @param  out		type of out_fct_type
+ * @param  buffer	Pointer to a character string to write the result.
+ * @param  id		idx bytes of size_t
+ * @param  maxlen	Maximum number of characters to write.
+ * @param  negative	boolean type
+ * @param  base		an unsigned long data type
+ * @param  prec		an unsigned integral data type 
+ * @param  width	an unsigned integral data type 
+ * @param  flags	an unsigned integral data type
  * 
- * @return idx         non integer value if success else error occur.
+ * @return idx		non integer value if success else error occur.
  */
 static size_t _ntoa_long(out_fct_type out, char* buffer, size_t idx, size_t maxlen, unsigned long value, bool negative, unsigned long base, unsigned int prec, unsigned int width, unsigned int flags)
 {
@@ -344,26 +335,24 @@ static size_t _ntoa_long(out_fct_type out, char* buffer, size_t idx, size_t maxl
 }
 
 /**
- * _ntoa_long_long() - Function to convert string to a struct.
+ * _ntoa_long_long() - Function to convert string to long value.
  * 
- * internal itoa for 'long long' type. This _ntoa_long_long function 
- * firstly initialize the variables and checks the if condition for 
- * no hash for zero values using the condition do while checking the 
- * buf lenghth, digits less than ten or not and flags uppercase is to
- * check the string type finally its return the computed values into ntoa form at.
+ * This function begins with an if condition then it assigns ~FLAGS_HASH
+ * into  flags & value. Later it  uses the if condition and do while write 
+ * if precision not equal to zero and value is not equals to zero.
  * 
- * @param  out         type of out_fct_type
- * @param  buffer      Pointer to a character string to write the result.
- * @param  idx         idx bytes of size_t
- * @param  maxlen      Maximum number of characters to write.
- * @param  negative    boolean type
- * @param  base        an unsigned long data type
- * @param  prec        an unsigned integral data type 
- * @param  width       an unsigned integral data type 
- * @param  flags       an unsigned integral data type
+ * @param  out		type of out_fct_type
+ * @param  buffer	Pointer to a character string to write the result.
+ * @param  idx		idx bytes of size_t
+ * @param  maxlen	Maximum number of characters to write.
+ * @param  negative	boolean type
+ * @param  base		an unsigned long data type
+ * @param  prec		an unsigned integral data type 
+ * @param  width	an unsigned integral data type 
+ * @param  flag		an unsigned integral data type
  *
- * @return idx         non integer value if success else error occur.
- */
+ * @return idx		non integer value if success else error occur.
+*/
 #if defined(PRINTF_SUPPORT_LONG_LONG)
 static size_t _ntoa_long_long(out_fct_type out, char* buffer, size_t idx, size_t maxlen, unsigned long long value, bool negative, unsigned long long base, unsigned int prec, unsigned int width, unsigned int flags)
 {
@@ -390,33 +379,29 @@ static size_t _ntoa_long_long(out_fct_type out, char* buffer, size_t idx, size_t
 
 /**
  * _ftoa() - Converts a given floating-point number or a double to 
- * a string. Use of standard library functions for direct conversion is not 
- * allowed.
+ * a string with the use of standard library functions. 
  * 
- * The ftoa function used for conversion float point into string firstly 
- * initialize the varibles and test case is added to check value are negative 
- * or not set up the default precision  to 6, if it not set explicitly its 
- * nothing but format specifier, And afterlimit precision to nine, cause a 
- * prec greater than or equal ten can lead to overflow errors.
- * Initialize some variable for precision roll-over, round up also added if 
- * it required to round up the value, For very large numbers switch back to 
- * native sprintf for exponentials.Some fractional part adding some extra 
- * zeros, adding decimal for these also some condition id defined, Using the
- * while loop condtion pad leading zeros concept also is there,
- * using for loop they reverse the string if requires and append pad spaces 
- * up to given width.
+ * This function checks whether the value is negative or not, then it checks 
+ * with if condtion default precision to 6, if it not set it will set explicitly. 
+ * Using the while loop it limits the precision to 9,because it causes a overflow 
+ * error when precision crosses above 10. Using the if condition rollover or round
+ * If the precsion value is greater than 0.5 up the precision value.it round up to 
+ * 2. Using the while_loop condition adding extra zeros and append decimal value 
+ * to the lenghth. Finally using the conditional statement executes pad leading 
+ * zeros, handling the hash value, padding spaces up to given width and reverses
+ * the string.
  * 
- * @param out         type of out_fct_type
- * @param buffer      Pointer to a character string to write the result.
- * @param idx         idx bytes of size_t
- * @param maxlen      Maximum number of characters to write.
- * @param negative    boolean type
- * @param base        an unsigned long data type
- * @param prec        an unsigned integral data type 
- * @param width       an unsigned integral data type 
- * @param flags       an unsigned integral data type
+ * @param out		type of out_fct_type
+ * @param buffer	Pointer to a character string to write the result.
+ * @param idx		idx bytes of size_t
+ * @param maxlen	Maximum number of characters to write.
+ * @param negative	boolean type
+ * @param base		an unsigned long data type
+ * @param prec		an unsigned integral data type 
+ * @param width		an unsigned integral data type 
+ * @param flags		an unsigned integral data type
  *
- * @return            non integer value if success else error occur
+ * @return		non integer value if success else error occur
  */
 #if defined(PRINTF_SUPPORT_FLOAT)
 static size_t _ftoa(out_fct_type out, char* buffer, size_t idx, size_t maxlen, double value, unsigned int prec, unsigned int width, unsigned int flags)
@@ -559,32 +544,24 @@ static size_t _ftoa(out_fct_type out, char* buffer, size_t idx, size_t maxlen, d
 #endif  // PRINTF_SUPPORT_FLOAT
 
 /**
- * _vsnprintf() - Function write formatted output to a character array, up
- * to a maximum number of characters (varargs) and evaluation of format 
- * specifiers are happening in this function.
+ * _vsnprintf() - Function writes formatted output to a character array, up
+ * to a maximum number of characters.
  * 
- * The _vsnprintf fucntion firstly initialize the varibles of format specifers
- * like flags, width, precsion in this they evalucating all the specifiers 
- * invidually.firlst checks the buffer equal to zero for null out function.
- * after that flags evaluation will start using the switch case, then width
- * field evalucation take process using if conditions,after using flag
- * precision filed  its checking the precision field finally using switch 
- * its evaluate length field, after that defined PRINTF_SUPPORT_PTRDIFF_T 
- * depends on the case it case statement will executes and end evaluate 
- * starts for specifer with switch case and setting the base with unsigned 
- * base, its convert the interger format of flags precision its having some 
- * if else condition to check post padding, pre paddings and string output 
- * finally return written characters without terminating.
+ * The _vsnprintf fucntion firstly initializes the varibles of format specifers
+ * like flags, width, precsion in this they evaluate all the specifiers 
+ * invidually.First it checks the buffer equal to zero or not for null output function.
+ * After that flags evaluation will start using the switch case, then width
+ * field evalucation take process using if condition.
  * 
- * @param out       type of out_fct_type.
- * @param buffer    pointer to the buffer where you want to function to
- *                  store the formatted string.
- * @param maxlen    maximum number of characters to store in the buffer.
- * @param format    string that specifies the format of the output.
- * @param va        variable-argument list of the additional argument.
+ * @param out		type of out_fct_type.
+ * @param buffer	pointer to the buffer where you want to function to
+ * 			store the formatted string.
+ * @param maxlen	maximum number of characters to store in the buffer.
+ * @param format	string that specifies the format of the output.
+ * @param va		variable-argument list of the additional argument.
  * 
- * @return          Its return the typecasted int of idx if success otherwise
- *                  error occured.
+ * @return		Its return the typecasted int of idx if success otherwise
+ * 			error occured.
  */
 static int _vsnprintf(out_fct_type out, char* buffer, const size_t maxlen, const char* format, va_list va)
 {
@@ -864,18 +841,15 @@ static int _vsnprintf(out_fct_type out, char* buffer, const size_t maxlen, const
 #if 0
 
 /**
- * printf() - Function is a system call function used inside if 
- * condition whether the value is zero means it will execute and 
- * also here used varibale arguments inside vsnprintf function the
- * function will do composes a string with the same text that would be 
- * printed if format was used on printf, but using the elements in the 
- * variable argument list identified by arg instead of additional 
- * function arguments and storing the resulting content as a C string in 
- * the buffer pointed by argument.
+ * printf() - To prints the contents of the function.
+ *
+ * This function initialize the va_list variable and invokes the va_start().
+ * Invokes _vsnprintf function and store the value into ret.
+ * It applies the functions  va_start and va_end on va and returns ret.
+ *
+ * @param format	string that specifies the format of the output.
  * 
- * @param format      string that specifies the format of the output.
- * 
- * @return ret value  upon success.
+ * @return ret value	upon success.
  */
 int printf(const char* format, ...)
 {
@@ -889,18 +863,17 @@ int printf(const char* format, ...)
 #endif
 
 /**
- * sprintf() - Function sends formatted output to a string pointed to by
+ * sprintf() - Sends formatted output to a string pointed to by
  * the argument buffer.  
  * 
- * The sprintf function using the va_start() and va_end() its ac libraty macros
- * before using the va_arg va_start function will call and in the int ret 
- * variable taking the value of the function called _vsnprintf function after 
- * the va_end macro its return the value.
+ * This function initialize the va_list variable and invokes the va_start().
+ * Invokes _vsnprintf function and store the value into ret.
+ * It applies the functions  va_start and va_end on va and returns ret.
+ *
+ * @param buffer	pointer to an array of char elements resulting string will store.
+ * @param format	string that contains the text to be written to buffer.
  * 
- * @param buffer    pointer to an array of char elements resulting string will store.
- * @param format    string that contains the text to be written to buffer.
- * 
- * @returns ret     Its returns the ret value as an integer type. 
+ * @returns ret		It returns the ret value as an integer type. 
  */
 int sprintf(char* buffer, const char* format, ...)
 {
@@ -915,16 +888,16 @@ int sprintf(char* buffer, const char* format, ...)
  * snprintf() - Places the generated output into the character array pointed
  * to by buf, instead of writing it to a file
  * 
- * The snprintf function using the va_start() and va_end() its ac libraty 
- * macros before using the va_arg va_start function will call and
- * in the int ret variable taking the value of the function called 
- * _vsnprintf function after the va_end macro its return the value.
+ * This function initializes the va_list variable and invokes the va_start().
+ * Invokes _vsnprintf function and stores the value into ret.
+ * It applies the functions  va_start and va_end on va and returns ret.
  * 
- * @param buffer    pointer to buffer where you want to function to store the formatted string. 
- * @param count     maximum number of characters to store in the buffer.
- * @param format    string that specifies the format of the output. 
+ * @param buffer	pointer to buffer where you want to function to store the 
+ * 			formatted string.  
+ * @param count		maximum number of characters to store in the buffer.
+ * @param format	string that specifies the format of the output. 
  * 
- * @returns ret     returns the ret value as an integer type. 
+ * @returns ret		returns the ret value as an integer type. 
  */
 int snprintf(char* buffer, size_t count, const char* format, ...)
 {
@@ -936,16 +909,16 @@ int snprintf(char* buffer, size_t count, const char* format, ...)
 }
 
 /**
- * vsnprintf() - Just returns with another function called _vsnprintf() 
+ * vsnprintf() - Invokes another function called _vsnprintf(). 
  * with some arguments.
  * 
- * @param buffer       Pointer to the buffer where you want to function 
- *                     to store the formatted string. 
- * @param count        maximum number of characters to store in the buffer.
- * @param format       string that specifies the format of the output.
+ * @param buffer	Pointer to the buffer where you want to function 
+ * 			to store the formatted string. 
+ * @param count		maximum number of characters to store in the buffer.
+ * @param format	string that specifies the format of the output.
  * 
- * @return             Its return the typecasted int of idx if success 
- *                     otherwise error occured.
+ * @return		Its return the typecasted int of idx if success 
+ * 			otherwise error occured.
  */
 int vsnprintf(char* buffer, size_t count, const char* format, va_list va)
 {
@@ -956,19 +929,18 @@ int vsnprintf(char* buffer, size_t count, const char* format, va_list va)
  * fctprintf() - Function is using the libary macros of variable aruguments
  * like vastart and vaend.
  * 
- * The fctprintf function using the va_start() and va_end() its ac library 
- * macros before using the va_arg va_start function will call and
- * in the int ret variable taking the value of the function called 
- * _vsnprintf function after the va_end macro its return the value.
+ * This function initializes the va_list variable and invokes the va_start().
+ * Invokes _vsnprintf function and stores the value into ret.
+ * It applies the functions  va_start and va_end on va and returns ret.
  * 
- * @param out        An output function which takes one character and an 
- *                   argument pointer.
- * @param arg        An argument pointer for user data passed to output 
- *                   function.
- * @param format     A string that specifies the format of the output. 
+ * @param out		An output function which takes one character and an 
+ * 			argument pointer.
+ * @param arg		An argument pointer for user data passed to output 
+ * 			function.
+ * @param format	A string that specifies the format of the output. 
  * 
- * @return           The number of characters that are sent to the output 
- *                   function, not counting the terminating null character.
+ * @return		The number of characters that are sent to the output 
+ * 			function, not counting the terminating null character.
  */
 int fctprintf(void (*out)(char character, void* arg), void* arg, const char* format, ...)
 {

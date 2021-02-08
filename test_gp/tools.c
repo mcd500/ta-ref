@@ -18,10 +18,10 @@ static inline unsigned int _strlen(const char* str)
  * A newline character is appended to the output by calling putchar().
  * Compiler may replace simple printf to puts and putchar.
  * 
- * @param  s       This is the C string to be written
+ * @param  s		This is the C string to be written
  * 
- * @return size    If success.
- * @return 0       Error occured.
+ * @return size		If success.
+ * @return 0		Error occured.
  */
 int puts(const char *s)
 {
@@ -41,11 +41,11 @@ int puts(const char *s)
  * This function returns the character written as an unsigned char cast to an
  * int or EOF on error.
  * 
- * @param  c       This is the character to be written. This is passed as its int 
- *                 promotion.
+ * @param  c		This is the character to be written. This is passed as its int 
+ * 			promotion.
  * 
- * @return size    If success.
- * @return 0       Error occured.
+ * @return size		If success.
+ * @return 0		Error occured.
  */
 int putchar(int c)
 {
@@ -66,11 +66,11 @@ int putchar(int c)
  * values specified in subsequent additional arguments and formatted as 
  * requested.
  * 
- * @param  fm               This is the string that contains the text to be 
- *                          written to stdout.
+ * @param  fm			This is the string that contains the text to be 
+ * 				written to stdout.
  * 
- * @return string length    If success.
- * @return 0                Error occured.
+ * @return string length	If success.
+ * @return 0			Error occured.
  */
 int printf(const char* fmt, ...)
 {

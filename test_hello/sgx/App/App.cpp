@@ -47,12 +47,12 @@
 #include "types.h"
 
 /**
- * print_error_message() - The function used for print the error message.
+ * print_error_message() - Used for printing the error message.
  * 
- * The print_error_message function print the error message on sqx_error list 
- * and check error conditions for loading enclave.
+ * This function prints the error message in sgx_errlist list 
+ * and checks error conditions for loading enclave.
  * 
- * @param ret    A list containing all possible values of this data type.
+ * @param ret		A list containing all possible values of sgx_status_t data type.
  */
 void print_error_message(sgx_status_t ret)
 {
@@ -73,13 +73,12 @@ void print_error_message(sgx_status_t ret)
 }
 
 /**
- * initialize_enclave() - Initializes an enclave that call sgx_create_enclave
- * to initialize an enclave instance.
+ * initialize_enclave() - Initializes an enclave by calling sgx_create_enclave().
  * 
- * initialize_enclave function used for creating and loaded the data and print 
- * the error message.
+ * This function returns 0 on the success initialization of enclave.If enclave 
+ * is not created properly then it will return -1 on error.
  * 
- * @return  0    If success, else error occured.
+ * @return 0		If success, else error occured.
  */
 int initialize_enclave(void)
 {
@@ -97,18 +96,18 @@ int initialize_enclave(void)
 }
 
 /**
- * main() - Perform the encalve operation creating and destroy enclave.
+ * main() - Performs the enclave operation by creating and destroying enclave.
  * 
- * The main function used for initialize the enclave and call to encalve and 
- * destroy the encalve if encalve successfully retured.
+ * This function is used for initializing the enclave and calling TA inside
+ * the enclave. The enclave will destroy based on the success of TA.
  * 
- * @param   argc    Argument Count is int and stores number of command-line 
- *                  arguments passed by the user including the name of the 
- *                  program.
- * @param   argv    Argument Vector is array of character pointers listing all
- *                  the arguments.
+ * @param argc		Argument Count is int and stores number of command-line 
+ *			arguments passed by the user including the name of the 
+ *			program.
+ * @param argv		Argument Vector is array of character pointers listing all
+ *			the arguments.
  *
- * @return  0       If success, else error occured.
+ * @return 0		If success, else error occured.
  */
 int SGX_CDECL main(int argc, char *argv[])
 {

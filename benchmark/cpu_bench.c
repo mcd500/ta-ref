@@ -2,13 +2,12 @@
 #include "config_bench.h"
 
 /**
- * cpu_int_benchmark() - It is to about cpu benchmark to check the processing 
- * of cpu interger performance it is to test the memory speed.
+ * cpu_int_benchmark() - TO check the processing of cpu integer benchmark
  * 
- * This function firstly initializes the required variable, Two for loops 
- * are added that two loops depends of offset + multisize in each increment 
- * the += adds the value of the right operand to a variable and assigns the 
- * result to the variable for each iteration it will end once condition fails
+ * This function invokes a for_loop based on the condition of OFFSET+MULT_SIZE 
+ * values. Another for_loop is invoked inside that loop with 
+ * same condition. Then the variable c gets incremented until the 
+ * loop condtion gets satisfied.
  */
 void NO_PERF cpu_int_benchmark(void) {
     uint64_t a;
@@ -22,13 +21,12 @@ void NO_PERF cpu_int_benchmark(void) {
 }
 
 /**
- * cpu_double_benchmark() - It is to about cpu benchmark to check the processing 
- * of cpu double performance it to test the memory speed.
+ * cpu_double_benchmark() - TO check the processing of cpu double benchmark
  * 
- * This function firstly initializes the required variable, Two for loops 
- * are added that two loops depends of offset + multisize in each increment 
- * the += adds the value of the right operand to a variable and assigns the 
- * result to the variable for each iteration it will end once condition fails
+ * This function invokes a for_loop based on the condition of OFFSET+MULT_SIZE 
+ * values. Another for_loop is invoked inside that loop with 
+ * same condition. Then the variable c gets incremented until the 
+ * loop condtion gets satisfied.
  */
 void NO_PERF cpu_double_benchmark(void) {
     double a;

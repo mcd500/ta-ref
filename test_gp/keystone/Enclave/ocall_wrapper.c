@@ -3,15 +3,13 @@
 
 
 /**
- * The ocall_print_string_wrapper() - It Returns with another function named 
- * ocall_print_string function.
+ * ocall_print_string_wrapper() - To print the argument string
  * 
- * This function just return with a function call of ocall_print_string
- * function it just print the string of str.
+ * This function invokes ocall_print_string() to print the string.
  * 
- * @param  str       The string value for print.
+ * @param  str		The string value for print.
  * 
- * @return string    Its prints the value of str by calling ocall_print_string().
+ * @return string	It prints the value of str by calling ocall_print_string().
  */
 unsigned int ocall_print_string_wrapper(const char* str) {
     return ocall_print_string(str);

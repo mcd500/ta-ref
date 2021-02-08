@@ -42,15 +42,16 @@ static char print_buf[PRINT_BUF_SIZE];
 #define TEEC_PARAM_TYPE1 TEEC_MEMREF_TEMP_OUTPUT
 
 /**
- * main() - This function used for perfroms the TEEC operations.
+ * main() -To perform the TEEC operations for building 
+ * TA inside TEE.
  * 
- * The function initialize the context of the TEEC environment and after open
- * session to open the teec environment, then memset set the all input paramter
- * to assign the updated value, then invoke command occured, and start the
- * printing log message, then finally all TEEC perfomance done then close the 
- * the session of TEEC environment 
+ * In this function the context is initialized for connecting to the TEE by calling
+ * TEEC_InitializeContext(). After initialization of context the session is opened 
+ * on TEEC_OpenSession() and then command is invoked in the TEE. Once the command 
+ * is invoked the session is closed and the context is finalized. If the 
+ * session is not opened properly, session_failed error appears.
  * 
- * @return 0    if success, else error occured.
+ * @return 0	If success, else displays error message.
  */
 int main(void)
 {

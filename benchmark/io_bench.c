@@ -5,25 +5,18 @@
 // from secure_stoage.c
 
 /**
- * io_write_benchmark() - It is about using the TEE objects like handling 
- * the object write memory benchmark and splits the size of the storage buffer 
- * and closing the created object.
- * 
- * This function firstly declared required variables using the TEE_objectHandle 
- * handle on an object. These handles are returned by the functions like
- * TEE_CreatePersistentObject function, It creates a persistent object with 
- * initial attributes of fname, data flags access write and an initial data 
- * stream content optionally returns either a handle on the created object or 
- * handle failure. Using the loop condtition based on the splits for each 
- * iteration some manipulation of buffer size with splits that result will store 
- * in the variable b, TEE_WriteObjectData function that function writes size 
- * bytes from the b pointed to by buffer to the data stream associated with the open 
- * object handle object. that values stored in rv variable. Finally closed the 
- * created object using closeobject function. 
- * 
- * @param buf      A pointer to a buffer which will be written to the file.
- * @param fname    The pointer type argument for filename
- * @param size     The length of the buffer.
+ * io_write_benchmark() - About input and output write benchmark.
+ *
+ * This function creates a persistent object with initial attributes and an initial
+ * data stream content, and optionally returns either a handle on the created object
+ * or TEE_HANDLE_NULL upon failure. Using the for_loop based on the SPLITS value
+ * it will write the object data. TEE_WriteObjectData function writes "size/SPLITS" 
+ * bytes from the "b" pointed to by buffer to the data stream associated with the 
+ * open object handle object. Finally it will close the object.  
+ *
+ * @param buf		A pointer to a buffer which will be written to the file.
+ * @param fname		The pointer type argument for filename
+ * @param size		The length of the buffer.
  */
 void NO_PERF io_write_benchmark(char *buf, char *fname, int size) {
     TEE_Result rv;
@@ -47,25 +40,18 @@ void NO_PERF io_write_benchmark(char *buf, char *fname, int size) {
 }
 
 /**
- * io_read_benchmark() - It is about using the TEE objects like handling 
- * the object read memory benchmark and splits the size of the storage buffer 
- * and closing the created object.
- * 
- * This function firstly declared required variables using the TEE_objectHandle 
- * handle on an object. These handles are returned by the functions like
- * TEE_CreatePersistentObject function, It creates a persistent object with 
- * initial attributes of fname, data flags access read and an initial data 
- * stream content optionally returns either a handle on the created object or 
- * handle failure. Using the loop condtition based on the splits for each 
- * iteration some manipulation of buffer size with splits that result will store 
- * in the variable b, TEE_WriteObjectData function that function writes size 
- * bytes from the b pointed to by buffer to the data stream associated with the open 
- * object handle object. that values stored in rv variable. Finally closed the 
- * created object using closeobject function. 
- * 
- * @param buf      A pointer to a buffer which will be written to the file.
- * @param fname    The pointer type argument for filename
- * @param size     The length of the buffer.
+ * io_read_benchmark() - About input and output read benchmark.
+ *
+ * This function creates a persistent object with initial attributes and an initial
+ * data stream content, and optionally returns either a handle on the created object
+ * or TEE_HANDLE_NULL upon failure. Using the for_loop based on the SPLITS value
+ * it will read the object data. TEE_ReadObjectData function reads "size/SPLITS" 
+ * bytes from the "b" pointed to by buffer to the data stream associated with the 
+ * open object handle object. Finally it will close the object.  
+ *
+ * @param buf		A pointer to a buffer which will be written to the file.
+ * @param fname		The pointer type argument for filename
+ * @param size		The length of the buffer.
  */
 void NO_PERF io_read_benchmark(char *buf, char *fname, int size) {
     TEE_Result rv;

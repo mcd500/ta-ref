@@ -9,13 +9,14 @@ static struct nm_info nm_pool[POOL_SIZE];
 static int idx = 0;
     
 /**     
- * create_htable() - Create Hash table is a data structure is stored data in an 
- * dictionaries. 
+ * create_htable() - Creates the hash table which stores data in an 
+ * associative manner.
  * 
- * This function used for data is stored in an array format.
+ * This function returns the hash table where the data is stored in 
+ * an array format.
  * 
- * @return list    Updated structure list value returns if success, else error 
- *                 occured.
+ * @return list		Updated structure list returns if success, else error 
+ *			occured.
  */
 static struct list* create_htable(void) {
     struct list* table = (struct list*)malloc(sizeof(struct list)*HASH_SIZE);
@@ -28,28 +29,29 @@ static struct list* create_htable(void) {
 }
 
 /**
- * get_key() - Get a single key, and try to pick apart function key codes.
+ * get_key() - Returns the address of the hash key.
  * 
- * get_key function used the hash size and address of the pointer.
+ * This function it returns the modulo operator of address and hash size of 
+ * the pointer.
  * 
- * @param  addr                       Address of to find the key value.
+ * @param addr				Address of the key value.
  *
- * @return Address of the hash key    If success, else error occured.
+ * @return Address of the hash key	If success, else error occured.
  */
 static size_t get_key(unsigned long addr) {
     return addr % HASH_SIZE;
 }
 
 /**
- * get_func_name() - Get function name.
+ * get_func_name() - Returns the function name by assigning elements to it.
  * 
- * This function find the function name using assign the value of
- * elements.
+ * This function returns  func_name if the element of address is equal 
+ * to address of the get_key else returns NULL.
  * 
- * @param  table             Its a object of struct list. 
- * @param  addr              Address of to find the key value.
+ * @param table			It's an object of struct list. 
+ * @param addr			Address to find the key value.
  *
- * @return String length     If success, else error occured.                            
+ * @return String length	If success, else error occured.                            
  */
 const char* get_func_name(struct list *table, unsigned long addr) {
     size_t idx = get_key(addr);
@@ -64,14 +66,13 @@ const char* get_func_name(struct list *table, unsigned long addr) {
 }
 
 /**
- * insert_nm() - Insert function name.
+ * insert_nm() - Inserts the element into the list.
  * 
- * This function used for insert the value into list, and all the new value
- * assign in structure of list.
- * 
- * @param table    Its a object of struct list. 
- * @param addr     Address of to find the key value.
- * @param nm       Name of the information of struct nm_info
+ * This function is to insert the element inside the list.
+ *
+ * @param table		It's an object of struct list. 
+ * @param addr		Address of the key value.
+ * @param nm		Name of the information of struct nm_info
  */
 static void insert_nm(struct list *table, unsigned long addr, struct nm_info* nm) {
     size_t idx = get_key(addr);
@@ -84,14 +85,16 @@ static void insert_nm(struct list *table, unsigned long addr, struct nm_info* nm
 }
 
 /**
- * parse_nm() - Parse the name of the function.
+ * parse_nm() - Returns the table of the list structure.
  * 
- * This function firslty open the file and check the file empty or not, if file
- * not empty then file content print and insert the name of the function.
+ * This function opens the file and checks if the file is empty or not. 
+ * If the file is not empty then it reads a line from the file pointer(fp) and
+ * stores it into the line. Function name copies to the network pool, and then  
+ * inserts the network monitor.
  * 
- * @param  fname                     File name.
+ * @param fname				File name.
  *
- * @return Updated structure list    If success, else error occured.                
+ * @return Updated structure list	If success, else error occured.                
  */
 struct list* parse_nm(const char *fname) {
     struct list *table = create_htable();

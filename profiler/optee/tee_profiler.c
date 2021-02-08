@@ -7,10 +7,12 @@ extern struct __profiler_header * __profiler_head;
 int profiler_write(char *buf, void *ptr, uint64_t sz);
 
 /**
- * __profiler_unmap_info() - Unmap the profile.
+ * __profiler_unmap_info() - Write out the profiled data to an output file.
  * 
- * This function used for find the size of file and writing the 
- * updated file.
+ * If the __profiler_head is not null then returns the output file.
+ *
+ * @param buf		It copies the read string into the buffer buf
+ * @param size		This is the size in bytes of each element to be written. 
  */
 void NO_PERF __profiler_unmap_info(char *buf, size_t *size)
 {

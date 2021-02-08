@@ -43,14 +43,14 @@
 #include <string.h>
 
 /**
- * TEE_Panic() - Function raises a Panic in the Trusted Application instance
+ * TEE_Panic() - Raises a Panic in the Trusted Application instance
  * 
  * When a Trusted Application calls the TEE_Panic function, the current 
- * instance SHALL be destroyed and all the resources opened by the instance 
- * SHALL be reclaimed.
+ * instance shall be destroyed and all the resources opened by the instance 
+ * shall be reclaimed.
  * 
- * @param ec     An informative panic code defined by the TA. May be 
- *               displayed in traces if traces are available.
+ * @param ec		An informative panic code defined by the TA. May be 
+ *			displayed in traces if traces are available.
  */
 void __attribute__((noreturn)) TEE_Panic(unsigned long ec)
 {
@@ -64,7 +64,7 @@ void __attribute__((noreturn)) TEE_Panic(unsigned long ec)
  * This function retrieves the current time as seen from the point 
  * of view of the REE.
  * 
- * @param time    Filled with the number of seconds and milliseconds.
+ * @param time		Filled with the number of seconds and milliseconds.
  */
 void TEE_GetREETime(TEE_Time *time)
 {
@@ -82,12 +82,12 @@ void TEE_GetREETime(TEE_Time *time)
 }
 
 /**
- * TEE_GetSystemTime() - Function retrieves the current system time.
+ * TEE_GetSystemTime() - Retrieves the current system time.
  * 
  * The system time has an arbitrary implementation-defined origin 
  * that can vary across TA instances
  * 
- * @param time    Filled with the number of seconds and milliseconds.
+ * @param time		Filled with the number of seconds and milliseconds.
  */
 void TEE_GetSystemTime(TEE_Time *time)
 {
@@ -101,14 +101,13 @@ void TEE_GetSystemTime(TEE_Time *time)
 }
 
 /**
- * GetRelTimeStart() - function used for gets the real time of the start 
- * timing.
+ * GetRelTimeStart() - Gets the real time of the start timing.
  * 
- * Printing the starting timing.
+ * Ths function prints the start timing.
  * 
- * @param start    start timing
+ * @param start		start timing
  * 
- * @return 0       if success else error occured.
+ * @return 0		if success else error occured.
  */
 TEE_Result GetRelTimeStart(uint64_t start)
 {
@@ -118,13 +117,13 @@ TEE_Result GetRelTimeStart(uint64_t start)
 }
 
 /**
- * GetRelTimeStart() - Function used for find the real time of the end timing.
+ * GetRelTimeStart() - find the real time of the end timing.
  * 
- * Printing the Ending timing.
+ * This function prints the End timing.
  * 
- * @param  end    End timing 
+ * @param  end		End timing 
  * 
- * @return 0      if success else error occured
+ * @return 0		if success else error occured
  */
 TEE_Result GetRelTimeEnd(uint64_t end)
 {
@@ -134,12 +133,15 @@ TEE_Result GetRelTimeEnd(uint64_t end)
 }
 
 /**
- * flags2flags - Function used for Check status for reading or writing the file
- * operational.
+ * flags2flags() - Checks the status for reading or writing of 
+ * the file operational.
+ *
+ * This function is to check the status for reading or writing of 
+ * the file operational.
+ *
+ * @param flags		Flags of the referencing node.
  * 
- * @param flags    Flags of the referencing node.
- * 
- * @return ret     if success else error occured.
+ * @return 0		if success else error occured.   
  */
 static inline int flags2flags(int flags)
 {
@@ -165,19 +167,19 @@ static inline int flags2flags(int flags)
 #define FPERMS 0600
 
 /**
- * set_object_key - Is for initalze report and then attest enclave with file.
+ * set_object_key - To initalize report and then attest enclave with file.
  * 
- * This function describes objectID as key_id so to make the key depending it.
+ * This function describes objectID as key_id to make the key dependent on it
  * sgx report key is 128-bit. Fill another 128-bit with seal key.
  * seal key doesn't change with enclave. Better than nothing, though.
  * random nonce can not use for AES here because of persistency.
  * the digest of attestation report and objectID as the last resort has been used.
  * 
- * @param  id        id of the object.
- * @param  idlen     length of the id.
- * @param  object    TEE_ObjectHandle type handle.
+ * @param  id		id of the object.
+ * @param  idlen	length of the id.
+ * @param  object	TEE_ObjectHandle type handle.
  * 
- * @return 0         if success else error occured.
+ * @return 0		if success else error occured.
  */
 static int set_object_key(const void *id, unsigned int idlen,
 			  TEE_ObjectHandle object)
@@ -268,25 +270,26 @@ static int set_object_key(const void *id, unsigned int idlen,
 }
 
 /**
- * OpenPersistentObject() - Opens a handle on an existing 
- * persistent object.
+ * OpenPersistentObject() - Opens a handle on an existing persistent object.
  * 
  * The flags parameter is a set of flags that controls the access rights 
- * and sharing permissions with which the object handle is opened. 
- * The value of the flags parameter is constructed by a bitwise-inclusive 
- * OR of flags TEE_DATA_FLAG_ACCESS_READ, the object is opened with the 
- * read access right. This allows the Trusted Application to call the 
- * function TEE_ReadObjectData. TEE_DATA_FLAG_ACCESS_WRITE, the object 
- * is opened with the write access right. TEE_DATA_FLAG_ACCESS_WRITE_META, 
- * the object is opened with the write-meta access right.
+ * and sharing permissions with which the object handle is opened. The value 
+ * of the flags parameter is constructed by a bitwise-inclusive OR of flags
+ * TEE_DATA_FLAG_ACCESS_READ, the object is opened with the read access right. 
+ * This allows the Trusted Application  to call the function TEE_ReadObjectData.
+ * TEE_DATA_FLAG_ACCESS_WRITE, the object is opened with the write access right.
+ * TEE_DATA_FLAG_ACCESS_WRITE_META, the object is  opened with the write-meta
+ *  access right.
+ *
+ * @param storageID	The storage to use.
+ * @param objectID	The object identifier
+ * @param objectIDLen	length of the identifier
+ * @param flags		The flags which determine the settings under which the 
+ * 			object is opened.
+ * @param object	A pointer to the handle, which contains the opened handle 
+ *			upon successful completion.
  * 
- * @param  storageID      The storage to use.
- * @param  objectID       The object identifier
- * @param  objectIDLen    The object identifier
- * @param  flags          The flags which determine the settings under which the object is opened.
- * @param  object         A pointer to the handle, which contains the opened handle upon successful completion
- * 
- * @return 0              if success else error occured. 
+ * @return 0		if success else error occured. 
  */
 static
 TEE_Result OpenPersistentObject(uint32_t storageID, const void *objectID,
@@ -356,26 +359,26 @@ TEE_Result OpenPersistentObject(uint32_t storageID, const void *objectID,
 }
 
 /**
- * TEE_CreatePersistentObject() - Function creates a persistent object with
+ * TEE_CreatePersistentObject() - Creates a persistent object with
  * initial attributes.
  * 
  * An initial data stream content, and optionally returns either a handle 
  * on the created object, or TEE_HANDLE_NULL upon failure.
  * 
- * @param  storageID         The storage to use.
- * @param  objectID          The object identifier
- * @param  objectIDLen       The object identifier
- * @param  flags             The flags which determine the settings under 
- *                           which the object is opened.
- * @param  attributes        A handle on a persistent object or an initialized
- *                           transient object from which to take the persistent 
- *                           object attributes
- * @param  initialData       The initial data content of the persistent object
- * @param  initialDataLen    The initial data content of the persistent object
- * @param  object            A pointer to the handle, which contains the opened 
- *                           handle upon successful completion
+ * @param storageID		The storage to use.
+ * @param objectID		The object identifier
+ * @param objectIDLen		The object identifier
+ * @param flags			The flags which determine the settings under 
+ *				which the object is opened.
+ * @param attributes		A handle on a persistent object or an initialized
+ * 				transient object from which to take the persistent 
+ * 				object attributes
+ * @param initialData		The initial data content of the persistent object
+ * @param initialDataLen	The initial data content of the persistent object
+ * @param object		A pointer to the handle, which contains the opened 
+ * 				handle upon successful completion
  * 
- * @return 0                 if success, else error occured. 
+ * @return 0			if success, else error occured. 
  */
 TEE_Result TEE_CreatePersistentObject(uint32_t storageID, const void *objectID,
                                       uint32_t objectIDLen, uint32_t flags,
@@ -393,21 +396,21 @@ TEE_Result TEE_CreatePersistentObject(uint32_t storageID, const void *objectID,
 }
 
 /**
- * TEE_OpenPersistentObject() - Function opens a handle on an existing 
+ * TEE_OpenPersistentObject() - Opens a handle on an existing 
  * persistent object.
  * 
  * This function returns a handle that can be used to access the object’s attributes 
  * and data stream.
  * 
- * @param  storageID      The storage to use.
- * @param  objectID       The object identifier
- * @param  objectIDLen    The object identifier
- * @param  flags          The flags which determine the settings under which 
- *                        the object is opened.
- * @param  object         A pointer to the handle, which contains the opened 
- *                        handle upon successful completion
+ * @param storageID	The storage to use.
+ * @param objectID	The object identifier
+ * @param objectIDLen	The object identifier
+ * @param flags		The flags which determine the settings under which 
+ * 			the object is opened.
+ * @param object	A pointer to the handle, which contains the opened 
+ *			handle upon successful completion
  * 
- * @return 0              if success, else error occured. 
+ * @return 0		if success, else error occured. 
  */
 TEE_Result TEE_OpenPersistentObject(uint32_t storageID, const void *objectID,
                                     uint32_t objectIDLen, uint32_t flags,
@@ -425,10 +428,10 @@ TEE_Result TEE_OpenPersistentObject(uint32_t storageID, const void *objectID,
  * It returns a handle that can be used to access the object’s attributes and 
  * data stream.
  * 
- * @param  objectInfo    Pointer to a structure filled with the object information
- * @param  object        Handle of the object
+ * @param objectInfo	Pointer to a structure filled with the object information
+ * @param object	Handle of the object
  * 
- * @return 0             if success else error occured. 
+ * @return 0		if success else error occured. 
  */
 TEE_Result TEE_GetObjectInfo1(TEE_ObjectHandle object, TEE_ObjectInfo *objectInfo)
 {
@@ -438,7 +441,7 @@ TEE_Result TEE_GetObjectInfo1(TEE_ObjectHandle object, TEE_ObjectInfo *objectInf
 }
 
 /**
- * TEE_WriteObjectData() - Function writes size bytes from the buffer
+ * TEE_WriteObjectData() - writes size bytes from the buffer
  * pointed to by buffer to the data stream associated with the open object 
  * handle object.
  * 
@@ -449,11 +452,11 @@ TEE_Result TEE_GetObjectInfo1(TEE_ObjectHandle object, TEE_ObjectInfo *objectInf
  * until the length indicated by the data position indicator is reached, 
  * and then size bytes are written to the stream.
  * 
- * @param  object         Handle of the object
- * @param  buffer         The buffer containing the data to be written
- * @param  size           The number of bytes to write
+ * @param object	Handle of the object
+ * @param buffer	The buffer containing the data to be written
+ * @param size		The number of bytes to write
  * 
- * @return TEE_SUCCESS    if success else error occured. 
+ * @return TEE_SUCCESS	if success else error occured. 
  */
 TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
                                uint32_t size)
@@ -503,7 +506,7 @@ TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
 }
 
 /**
- * TEE_ReadObjectData() - Function attempts to read size bytes from the data 
+ * TEE_ReadObjectData() - Attempts to read size bytes from the data 
  * stream associated with the object object into the buffer pointed to by 
  * buffer.
  * 
@@ -516,12 +519,12 @@ TEE_Result TEE_WriteObjectData(TEE_ObjectHandle object, const void *buffer,
  * the start of the read operation is at or beyond the end-of-stream. These are 
  * the only cases where *count may be less than size.
  * 
- * @param  object         Handle of the object
- * @param  buffer         The buffer containing the data to be written
- * @param  size           The number of bytes to write
- * @param  count          size of the buffer.
+ * @param object	Handle of the object
+ * @param buffer	The buffer containing the data to be written
+ * @param size		The number of bytes to write
+ * @param count		size of the buffer.
  *
- * @return TEE_SUCCESS    if success, else error occured. 
+ * @return TEE_SUCCESS	if success, else error occured. 
  */
 TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
                               uint32_t size, uint32_t *count)
@@ -583,9 +586,9 @@ TEE_Result TEE_ReadObjectData(TEE_ObjectHandle object, void *buffer,
  * The object can be persistent or transient.For transient objects, 
  * TEE_CloseObject is equivalent to TEE_FreeTransientObject.
  * 
- * @param  object         Handle of the object
+ * @param object	Handle of the object
  *
- * @return TEE_SUCCESS    if success else error occured. 
+ * @return TEE_SUCCESS	if success else error occured. 
  */
 void TEE_CloseObject(TEE_ObjectHandle object)
 {
@@ -616,13 +619,13 @@ void TEE_CloseObject(TEE_ObjectHandle object)
 }
 
 /**
- * TEE_GenerateRandom() - Function generates random data
+ * TEE_GenerateRandom() - Generates random data.
  * 
- * The object can be persistent or transient.For transient objects, 
- * TEE_CloseObject is equivalent to TEE_FreeTransientObject.
+ * This function  generates random data of random bufferlength and is stored in to 
+ * randomBuffer by calling sgx_read_rand().
  * 
- * @param randomBuffer       Reference to generated random data
- * @param randomBufferLen    Byte length of requested random data
+ * @param randomBuffer		Reference to generated random data
+ * @param randomBufferLen	Byte length of requested random data
  */
 void TEE_GenerateRandom(void *randomBuffer, uint32_t randomBufferLen)
 {
@@ -638,11 +641,11 @@ static int wc_rng_init = 0;
 static WC_RNG rngstr;
 
 /**
- * get_wc_rng() - It means random number generation.
+ * get_wc_rng() - Gets the seed (from OS) and key cipher for rng(random number genertor).
  * 
- * This function creates the random number or unique number.
+ * This function returns the random number or unique number of "rngstr".
  * 
- * @return random number    if success else error occured
+ * @return random number	if success else error occured.
  */
 static WC_RNG *get_wc_rng(void)
 {

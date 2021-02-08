@@ -34,8 +34,8 @@
 //#include "tee_wrapper.h"
 
 /**
- * gp_random_test() - Generates the random data.
- *   
+ * gp_random_test() - Generates the random data from the method.
+ * 
  * Generates the random data and finally print the generated random 
  * data.
  */

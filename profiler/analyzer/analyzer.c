@@ -16,18 +16,19 @@
 #define FORMAT "%03d,%03ld,%d,%d,%ld,0x%08lx,%s,%ld,%ld,%ld\n"
 
 /**
- * main() - Open the log file, read and print operation perfoms.
+ * main() - Opens the log file, reads and performs the print operation.
  * 
- * This function used for reading the data of log file and print the all result 
- * the file functionality.
+ * This function opens the log file and read the data inside the log file.
+ * for_loop starts to print the column one by one and hence it shows the 
+ * complete log details.
  * 
- * @param  argc    Argument Count is int and stores number of command-line
- *                 arguments passed by the user including the name of the
- *                 program.
- * @param  argv    Argument Vector is array of character pointers listing all
- *                 the arguments.
+ * @param argc		Argument Count is int and stores number of command-line
+ *			arguments passed by the user including the name of the
+ *			program.
+ * @param argv		Argument Vector is array of character pointers listing all
+ *			the arguments.
  *
- * @return 0       If success, else error occured.
+ * @return 0		If success, else error occured.
  */
 int main(int argc, char *argv[]) {
     static char buf[BUF_MAX];

@@ -38,16 +38,11 @@
 
 /**
  * gp_message_digest_test() - Accumulates message data for hashing.
- * 
- * Allocates a handle for a new cryptographic operation and sets the mode
- * (TEE_MODE_DIGEST) and algorithm type(TEE_ALG_SHA256),If this function 
- * does not return with TEE_SUCCESS then there is no valid handle value 
- * and then accumulates message data for hashing,finalizes the message digest 
- * operation and produces the message hash and finally deallocates all 
- * resources associated with an operation handle and  then print the Dump 
- * hashed data.if it fails to allocates a handle for a new cryptographic 
- * operation,accumulates message data for hashing and finalizes the message 
- * digest operation then it will give correspoding error message.
+ *  
+ * The function performs many operations to achieve message data hash techniques  
+ * to allocate a handle for a new cryptographic operation, to finalize the  
+ * message digest operation and to produce the message hash. The hashed message
+ * is printed to check the output. 
  */
 void gp_message_digest_test(void)
 {

@@ -3,11 +3,11 @@
 #include "ocall_wrapper.h"
 
 /**
- * _strlen() - function used for returns the length of the string str.
- * 
- * @param  str              This is the string whose length is to be found.
- * 
- * @return string length    If success, else error occurred.
+ * _strlen() - calculate the length of characters in a str.
+ *
+ * @param  str			str is an argument of type pointer.
+ *
+ * @return string length	on success.
  */
 static inline unsigned int _strlen(const char* str)
 {
@@ -17,17 +17,15 @@ static inline unsigned int _strlen(const char* str)
 }
 
 /**
- * tee_printf() - Printing the formatted output to a character array.
- *  
- * In that function used va_start it means initializes ap variable to be
- * used with the va_arg and va_end macros. The last_arg is the last known
- * fixed argument being passed to the function, and find the string length
- * and return that values.
- * 
- * @param  fmt              A string that specifies the format of the output.
- * @return string length    If success.
+ * tee_printf() - For tracing GP API.
  *
- * @return 0                Error occured.
+ * Initializes ap variable. Formats data under control of
+ * the format control string and stores the result in buf and
+ * ends the processing of ap. Finally print the buffer value.
+ *
+ * @param  fmt		fmt is a constant character argument of type pointer.    
+ *
+ * @return buffer 	If successfully executed, else error occured.
  */
 int tee_printf(const char* fmt, ...)
 {

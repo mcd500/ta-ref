@@ -32,11 +32,18 @@
 #include "gp/gp_test.h"
 
 /**
- * main() - The main function having lot of function declarations.
+ * This main() function invokes the functions
+ * gp_random_test() to generate random data 
+ * gp_ree_time_test() to retrieve the current REE system time
+ * gp_trusted_time_test() to retrieve the current system time
+ * gp_secure_storage_test() to create read and write the object data
+ * gp_message_digest_test() to accumulate message data for hashing
+ * gp_symmetric_key_enc_verify_test() to encrypt or decrypt input data
+ * gp_symmetric_key_gcm_verify_test() to encrypt and decrypt in AE 
+ * gp_asymmetric_key_sign_test() for cryptographic Operations API message Digest Functions
+ * and returns the status as success when all the functions generates the same data. 
  * 
- * The main contains lot of function declaration in it.
- * 
- * @return 0      If the function success else error occured.
+ * @return return 0 for success. 
  */
 int main(void) {
   gp_random_test();

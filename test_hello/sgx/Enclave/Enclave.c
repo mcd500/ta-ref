@@ -32,8 +32,7 @@
 #define MESSAGE "hello world!\n"
 
 /**
- * ecall_ta_main() - Function used for printing the string and find
- * the number of string.
+ * ecall_ta_main() - Prints the string and returns the number of string.
  */
 void ecall_ta_main(void) {
   int retval;

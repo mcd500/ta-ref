@@ -4,15 +4,16 @@
 
 
 /**
- * profiler_write() - Write out the profiled data to an output file.
+ * profiler_write() - Performs the file operations like open, write and close.
  * 
- * This function used for the open the file and writing the file 
- * and close the file operation perfomed.
+ * This function performs the three actions - open the log file, write into the
+ * file, and closes the file. It returns 0 when the file performance is done. 
+ * Upon the failure of file it returns -1.
  * 
- * @param  ptr    This is the pointer to the array of elements to be written.
- * @param  sz     This is the size in bytes of each element to be written.
+ * @param ptr		This is the pointer to the array of elements to be written.
+ * @param sz		This is the size in bytes of each element to be written.
  *
- * @return 0	  If success, else error occured.
+ * @return 0		If success, else error occured.
  */
 int profiler_write(void *ptr, uint64_t sz) {
     int fd = ocall_open_file(LOG_FILE, O_RDWR | O_CREAT, (mode_t)0600);

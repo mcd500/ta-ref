@@ -22,20 +22,22 @@ const char* enc_path = "Enclave.eapp_riscv";
 const char* runtime_path = "eyrie-rt";
 
 /**
- * main() - The main function used for register the functions and
- * calling the shared buffer.
+ * main() - To start the enclave and run the enclave.
  *
- * This function firstly initialize the free memory size and this memory to 
- * assign untrusted memory after the start the send incoming enclave message 
- * and dispatch. and finally the find the shared buffer and shared buffer size.
+ * This function is to check the enclave initialization, if the enclave is
+ * not initialized then it prints the error message "unable to start enclave" 
+ * and exit. If initialization is successful, it will go for the edge call 
+ * intialization by calling edge_call_init_internals() before that the
+ * enclave must register the edge call handler and then the enclave    
+ * will run and return 0.
  *
- * @param  argc    Argument Count is int and stores number of command-line
- *                 arguments passed by the user including the name of the 
- *                 program.
- * @param  argv    Argument Vector is array of character pointers listing all
- *                 the arguments.
+ * @param argc		Argument count is int and stores number of command-line
+ *			arguments passed by the user including the name of the 
+ *			program.
+ * @param argv		Argument Vector is array of character pointers listing all
+ *			the arguments.
  *
- * @return 0       If success, else error occurred.
+ * @return 0		If success, else error occurred.
  */
 int main(int argc, char** argv)
 {

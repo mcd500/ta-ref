@@ -2,17 +2,17 @@
 #include "tee-ta-internal.h"
 
 /**
- * TEE_Panic() - Raises a Panic in the Trusted Application instance.
+ * TEE_Panic() - Raises a panic in the Trusted Application instance.
  * 
- * TEE_Panic When a Trusted Application calls the TEE_Panic function, The current 
- * instance SHALL be destroyed and all the resources openedby the instance SHALL 
+ * When a Trusted Application calls the TEE_Panic function, the current 
+ * instance shall be destroyed and all the resources opened by the instance shall 
  * be reclaimed. All sessions opened from the panicking instance on another TA 
  * shall be gracefully closed and all cryptographic objects and operations shall 
  * be closed properly.
  * 
- * @param code        An informative panic code defined by the TA.
+ * @param code		An informative panic code defined by the TA.
  * 
- * @return            panic code will be returned.
+ * @return		panic code will be returned.
  */
 void __attribute__((noreturn)) TEE_Panic(unsigned long code)
 {

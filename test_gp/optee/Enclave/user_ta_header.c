@@ -23,7 +23,7 @@ const char trace_ext_prefix[]  = "TA";
 #define TA_DESCRIPTION "Undefined description"
 #endif
 
-/* exprted to user_ta_header.c, built within TA */
+/* exported to user_ta_header.c, built within TA */
 struct utee_params;
 
 #ifdef ARM32
@@ -35,16 +35,17 @@ struct utee_params;
 /**
  * __utee_entry() - From libutee. 
  * 
- * Receive the session and command id and if defined if is CFG_FTRACE_SUPPORT 
- * then first TA API called from TEE core if it is not defined then it will
- * return TEE_RESULT value. 
+ * Receiving the session and command id and if defined macro is CFG_FTRACE_SUPPORT 
+ * the function invokes the ftrace_return() in TA API just before the utee_return  
+ * syscall to get proper ftrace call graph. The return of this function is TEE_SUCCESS
+ * when all the above functions are performed. 
  *
- * @param  func          func is the unsigned long data type.
- * @param  session_id    session_id is the unsigned long data type.
- * @param  *up           up is the structure type of the utee_params.
- * @param  cmd_id        cmd_id is the unsigned long data type.
+ * @param func		func is the unsigned long data type.
+ * @param session_id	session_id is the unsigned long data type.
+ * @param up		up is the structure type of the utee_params.
+ * @param cmd_id	cmd_id is the unsigned long data type.
  * 
- * @return TEE_SUCCESS   If the command is successfully executed,else error occured.
+ * @return TEE_SUCCESS	If the command is successfully executed. 
  */
 TEE_Result __utee_entry(unsigned long func, unsigned long session_id,
 			struct utee_params *up, unsigned long cmd_id);
@@ -156,9 +157,9 @@ struct __ftrace_info __ftrace_info = {
 
 /**
  * tahead_get_trace_level() - Store trace level in TA head structure,
- * as ta_head.prop_tracelevel. 
+ * as ta_head.prop_tracelevel.   
  *
- * @return trace level for success,else error occured.  
+ * @return 	trace level for success, else error occured.  
  */
 int tahead_get_trace_level(void)
 {

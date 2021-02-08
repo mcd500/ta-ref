@@ -37,7 +37,7 @@
 #define SIG_LENGTH 64
 
 /**
- * gp_asymmetric_key_sign_test() - Cryptographic Operations API Message Digest Functions.
+ * gp_asymmetric_key_sign_test() - Cryptographic Operations for API Message Digest Functions.
  *   
  * TEE_AllocateOperation() function allocates a handle for a new cryptographic 
  * operation and sets the mode(TEE_MODE_DIGEST) and algorithm type

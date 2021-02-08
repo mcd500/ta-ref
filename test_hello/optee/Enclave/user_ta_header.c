@@ -41,6 +41,18 @@ void __noreturn _C_FUNCTION(__ta_entry)(unsigned long func,
 					struct utee_params *up,
 					unsigned long cmd_id);
 
+/**
+ * __ta_entry() - The trusted application entry with no return value.
+ * 
+ * __ta_entry is the first TA API called from TEE core. As it being 
+ *  __noreturn API, we need to call ftrace_return in this API just before 
+ * utee_return syscall to get proper ftrace call graph.
+ * 
+ * @param func		Function 
+ * @param session_id	Session id 
+ * @param up		object of struct utee_params
+ * @param cmd_id	command input id
+ */
 void __noreturn _C_FUNCTION(__ta_entry)(unsigned long func,
 					unsigned long session_id,
 					struct utee_params *up,
@@ -141,6 +153,12 @@ struct __ftrace_info __ftrace_info = {
 };
 #endif
 
+/**
+ * tahead_get_trace_level() - Store trace level in TA head structure,
+ * as ta_head. prop_tracelevel
+ * 
+ * @return 	Non-negative integer value if success, else error.
+ */
 int tahead_get_trace_level(void)
 {
 	/*

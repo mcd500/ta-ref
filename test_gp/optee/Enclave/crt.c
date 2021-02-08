@@ -43,13 +43,14 @@ int tee_printf(const char* fmt, ...);
 #endif
 
 /**
- * TA_CreateEntryPoint() - Create the entry point of TA.
+ * TA_CreateEntryPoint() - The function creates the entry point of TA(Trusted Application).
  *  
- * Called when the instance of the TA is created.This is the first call in the TA 
- * and display the message has been called.
+ * This function is to be called when the instance of the TA is created.
+ * This is the first call in the TA and the displayed message should be  
+ * "has been called".  
  * 
- * @return TEE_SUCCESS    If the command is successfully executed,else error
- *                        occured.
+ * @return TEE_SUCCESS		If the command is successfully executed,else error
+ * 				occured.
  */
 TEE_Result TA_CreateEntryPoint(void)
 {
@@ -59,18 +60,20 @@ TEE_Result TA_CreateEntryPoint(void)
 }
 
 /**
- * TA_OpenSessionEntryPoint() - Open session with TA.
- *   
- * when a client requests to open a session with the Trusted Application.
+ * TA_OpenSessionEntryPoint() - The Framework calls this function 
+ * when a client requests to open a session with the Trusted Application. 
+ * This function takes parameters param_types and params 
+ * used by the TA instance to transfer response data back to the client.
+ * If the reponse is tranferred successfully to the client TEE_SUCCESS is returned. 
+ *
+ * @param param_types		This denotes the  types of the four parameters.     
+ * @param params[4]		A pointer to an array of four parameters.     
+ * @param sess_ctx		A pointer to a variable that can be filled by 
+ *				the Trusted Application instance with an opaque void*
+ *				data pointer
  * 
- * @param  param_types    The types of the four parameters.     
- * @param  params[4]      A pointer to an array of four parameters.     
- * @param  sess_ctx       A pointer to a variable that can be filled by 
- *                        the Trusted Application instance with an opaque void*
- *                        data pointer
- * 
- * @return TEE_SUCCESS    If the command is successfully executed,else error 
- *                        occured.
+ * @return TEE_SUCCESS		If the command is successfully executed,
+ * 				else error is occured in the function.
  */
 TEE_Result TA_OpenSessionEntryPoint(uint32_t __unused param_types,
                                     TEE_Param __unused params[4],
@@ -80,10 +83,11 @@ TEE_Result TA_OpenSessionEntryPoint(uint32_t __unused param_types,
 }
 
 /**
- * TA_DestroyEntryPoint() - Destroy Entry Point with TA.
+ * TA_DestroyEntryPoint() - Destroy entry point with TA.
  * 
- * Called when the instance of the TA is destroyed if 
- * the TA has not crashed or panicked. This is the last call in the TA.
+ * This function is to be called, when the instance of the TA is destroyed. 
+ * This is the last call in the TA and the displayed message should be
+ * "has been called". 
  */
 void TA_DestroyEntryPoint(void)
 {
@@ -115,21 +119,21 @@ extern size_t print_pos;
 #endif
 
 /**
- * run_all_test() - Run the all test.
+ * run_all_test() - Run all the tests in TA.
  *  
- * Varify the param types and if defined if is PERF_ENABLE then it will print
- * the enclave ELF address and if defined if is ENCLAVE_VERBOSE it will print 
- * the ecall_ta_main() start and then call main() function. if it success the
- *  print the ecall_ta_main() end.
- *
- * @param  param_types    The types of the four parameters.     
- * @param  params[4]      A pointer to an array of four parameters.     
- * @param  sess_ctx       A pointer to a variable that can be filled by the 
- *                        Trusted Application instance with an opaque void* 
- *                        data pointer 
+ * Verify the param types and if the  defined macro is PERF_ENABLE then 
+ * print the "enclave ELF address". If the defined macro is ENCLAVE_VERBOSE,
+ * print the message "ecall_ta_main() start" and invoke the main() function.
+ * If invoking the main function is a success, print the message "ecall_ta_main() end".
+ *  
+ * @param param_types		The types of the four parameters.     
+ * @param params[4]		A pointer to an array of four parameters.     
+ * @param sess_ctx		A pointer to a variable that can be filled by the 
+ *				Trusted Application instance with an opaque void* 
+ *				data pointer 
  *                           
- * @return TEE_SUCCESS    If the command is successfully executed,else error 
- *                        occured.
+ * @return TEE_SUCCESS		If the command is successfully executed,
+ * 				else error is occured in the function.
  */
 TEE_Result run_all_test(uint32_t param_types,
 				    TEE_Param __maybe_unused params[4],
@@ -173,14 +177,14 @@ TEE_Result run_all_test(uint32_t param_types,
 }
 
 /**
- * TA_CloseSessionEntryPoint() - Close a client session.     
+ * TA_CloseSessionEntryPoint() - Closes the client session.     
  *  
- * Called when a session is closed, sess_ctx hold the value that was assigned 
- * by TA_OpenSessionEntryPoint() 
- * and finally it will give message Goodbye!.
+ * This function is to be called when a session is to be closed, The parameter  
+ * to be passed is sess_ctx which holds the value  assigned by TA_OpenSessionEntryPoint().
+ * If the function succeeds in closing the session a message is printed as Goodbye!.
  * 
- * @param sess_ctx    A pointer to a variable that can be filled by the Trusted 
- *                    Application instance with an opaque void* data pointer.  
+ * @param sess_ctx		A pointer to a variable that can be filled by the Trusted 
+ *				Application instance with an opaque void* data pointer.  
  */
 void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
 {
@@ -189,22 +193,23 @@ void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
 }
 
 /**
- * TA_InvokeCommandEntryPoint() - Client invokes a command within the given
- * session.      
+ * TA_InvokeCommandEntryPoint() - The Framework calls this function 
+ * when the client invokes a command within the given session.
  *
- * When the client invokes a command within the given session and if case is 
- * TA_REF_RUN_ALL then call run_all_test() function.Called when a TA is invoked. 
- * sess_ctx hold that value that was assigned by TA_OpenSessionEntryPoint().The  
- * rest of the paramters comes from normal world.
+ * This function is to be called when a TA is invoked. When the client invokes
+ * the command within the given session and ,if switch case is TA_REF_RUN_ALL
+ * then invoke the run_all_test() and sess_ctx holds the value assigned by
+ * TA_OpenSessionEntryPoint(). If the above operations are performed successfully
+ * by the function TEE_SUCCESS is returned. 
  * 
- * @param  param_types    The types of the four parameters.     
- * @param  params[4]      A pointer to an array of four parameters.     
- * @param  sess_ctx       A pointer to a variable that can be filled by the 
- *                        Trusted  Application instance with an opaque void*  
- *                        data pointer.
+ * @param param_types		The types of the four parameters.     
+ * @param params[4]		A pointer to an array of four parameters.     
+ * @param sess_ctx		A pointer to a variable that can be filled by the 
+ *				Trusted  Application instance with an opaque void*  
+ *				data pointer.
  *
- * @return TEE_SUCCESS    If the command is successfully executed,else error 
- *                        occured.
+ * @return TEE_SUCCESS		If the command is successfully executed,else error 
+ *				occured.
  */
 TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t cmd_id,
