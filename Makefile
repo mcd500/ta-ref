@@ -20,15 +20,18 @@ build: select
 	mkdir -p $(BUILD_DIR)/include $(BUILD_DIR)/lib
 	make -C $(BUILD_DIR)
 
+test: test-bin image
+	@echo "Building test-bin and image"
+
 # build test -> ship execs -> make image
-test:
-	make -C $(TEST_DIR) build image TEE=$(TEE)
+test-bin:
+	make -C $(TEST_DIR) build TEE=$(TEE)
 
 run:
 	make -C $(TEST_DIR) run TEE=$(TEE)
 
 docs:
-	@echo "Generating doxygen files."
+	@echo "Generating doxygen files"
 	@doxygen doxygen/Doxyfile
 
 qemu:
