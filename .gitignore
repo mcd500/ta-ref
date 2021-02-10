@@ -1,5 +1,6 @@
 *.tmp
 */*/screenlog*
 keystone-driver.ko
-doxygen/html
-doxygen/latex
+docs/html
+docs/latex
+docs/ta-ref.pdf

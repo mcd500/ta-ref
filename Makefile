@@ -32,7 +32,7 @@ run:
 
 docs:
 	@echo "Generating doxygen files"
-	@doxygen doxygen/Doxyfile
+	@doxygen docs/doxygen/Doxyfile
 
 qemu:
 	make -C $(TEST_DIR) qemu TEE=$(TEE)
