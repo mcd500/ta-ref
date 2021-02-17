@@ -14,7 +14,7 @@ export PROFILER ?= $(BENCHMARK)
 export MACHINE ?= SIM
 include ./validation.mk
 
-.PHONY: build test run docs clean mrproper
+.PHONY: build test run docs clean mrproper docs_clean
 
 build: select
 	mkdir -p $(BUILD_DIR)/include $(BUILD_DIR)/lib
