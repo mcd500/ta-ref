@@ -33,6 +33,8 @@ run:
 docs:
 	@echo "Generating doxygen files"
 	@doxygen docs/doxygen/Doxyfile
+	make -C docs/doxygen/latex
+	cp docs/doxygen/latex/refman.pdf docs/ta-ref.pdf
 
 qemu:
 	make -C $(TEST_DIR) qemu TEE=$(TEE)
