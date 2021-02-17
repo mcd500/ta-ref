@@ -66,12 +66,12 @@ all_test_clean:
 
 clean: select build_clean all_test_clean
 	$(RM) $(BUILD_DIR)/Makefile
-	rm -f -r doxygen/html
-	rm -f -r doxygen/latex
+	rm -f -r docs/doxygen/html
+	rm -f -r docs/doxygen/latex
 
 docs_clean:
-	rm -f -r doxygen/html
-	rm -f -r doxygen/latex
+	rm -f -r docs/doxygen/html
+	rm -f -r docs/doxygen/latex
 
 # delete including dependencies
 mrproper: select build_clean all_test_clean
