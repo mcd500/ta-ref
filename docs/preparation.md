@@ -1,7 +1,7 @@
 # Preparation
 
 # Keystone(RISC-V Unleased)
-Keystone is an open-source TEE framework for RISC-V processors. For more details check here: 
+Keystone is an open-source TEE framework for RISC-V processors. For more details check, 
 - http://docs.keystone-enclave.org/en/latest
 
 ## Required Packages
@@ -28,8 +28,7 @@ source source.sh
 make image
 ```
 RISC-V Toolchain:
-- When you execute `./fast-setup.sh`, the toolchain for RISC-V has been installed at `$KEYSTONE_DIR/riscv/bin`
-- Add to your PATH i.e, `export PATH=$PATH:$KEYSTONE_DIR/riscv/bin`
+- When you execute `./fast-setup.sh`, the toolchain for RISC-V has been installed at `$KEYSTONE_DIR/riscv/bin` and it adds to your PATH.
 
 ## Run Keystone examples
 
@@ -67,7 +66,7 @@ $ poweroff
 ```
 
 # OPTEE (ARM64 RPI3)
-OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a non-secure Linux kernel running on Arm. Lets build OPTEE for QEMU and Raspberry Pi3 Model B development board. For more details see here: 
+OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a non-secure Linux kernel running on Arm. Lets build OPTEE for QEMU and Raspberry Pi3 Model B development board. For more details check, 
 - https://optee.readthedocs.io/en/latest/
 
 ## Required Packages
@@ -116,7 +115,7 @@ wget http://192.168.100.100:2000/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.ta
 export PATH=${TOOLCHAIN_DIR}/aarch64/bin:${TOOLCHAIN_DIR}/aarch32/bin:${PATH}
 ```
 
-### Clone and Build optee 3.9.0 for QEMU
+### Clone and Build OPTEE v3.9.0 for QEMU
 <br />
 Clone optee version 3.9.0 for QEMU
 <br />
@@ -134,7 +133,7 @@ If build is successfull, the rootfs can be found as follows
 ls -l ../out-br/images/rootfs.cpio.gz
 ```
 
-### Clone and Build optee_3.9.0 for RPI3
+### Clone and Build OPTEE v3.9.0 for RPI3
 <br />
 Copy the following lines into "optee-rpi3.sh" script 
 
@@ -164,7 +163,7 @@ If build is successfull, the rootfs can be found as follows
 ls -l ../out-br/images/rootfs.cpio.gz
 ```
 
-## Run Optee examples
+## Run OPTEE Examples
 
 ### Launching QEMU Console
 <br /> 
@@ -224,7 +223,7 @@ $ poweroff
 
 # SGX (Intel NUC)
 Intel(R) Software Guard Extensions (Intel(R) SGX) is an Intel technology for application developers 
-who is seeking to protect selected code and data from disclosure or modification. See here: 
+who is seeking to protect selected code and data from disclosure or modification. For more details check, 
 - https://github.com/intel/linux-sgx/blob/master/README.md
 
 ## List of machines which are confirmed to work

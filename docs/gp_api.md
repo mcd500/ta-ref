@@ -1,4 +1,4 @@
-# API compare with full-set GP API
+# API Compare With Full-Set of GP API
 
 ## GP API
 

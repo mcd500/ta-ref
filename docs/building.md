@@ -1,5 +1,31 @@
 # Building
 
+## Install Doxygen-1.9.2
+
+This PDF was generated using Doxygen version 1.9.2. To install `doxygen-1.9.2` following procedure is necessary.
+
+## Install Required Packages
+
+Install following packages on Ubuntu 18.04
+
+```
+sudo apt install doxygen-latex graphviz texlive-full texlive-latex-base latex-cjk-all
+```
+
+Above packages required to generate PDF using doxygen.
+
+## Build and Install 
+
+```
+git clone https://github.com/doxygen/doxygen.git 
+cd doxygen
+mkdir build 
+cd build 
+cmake -G "Unix Makefiles" .. 
+make
+sudo make install 
+```
+
 # ta-ref with Keystone
 
 Make sure Keystone and other dependant sources have been built
@@ -15,7 +41,7 @@ sudo apt-get install -y clang-tools-6.0 libclang-6.0-dev cmake ocaml expect scre
 
 Setup Env
 ```
-export KEYSTONE_DIR=<path to your keysonte directory>
+export KEYSTONE_DIR=<path to your keystone directory>
 export PATH=$PATH:$KEYSTONE_DIR/riscv/bin
 ```
 
@@ -54,7 +80,7 @@ git submodule update --init --recursive
 
 Build
 ```
-export KEYSTONE_DIR=<keystone directory path>
+export KEYSTONE_DIR=<path to keystone directory>
 export KEYSTONE_SDK_DIR=$KEYSTONE_DIR/sdk
 export KEYEDGE_DIR=<path to keyedge directory>
 export KEEDGER8R_DIR=<path to keedger8r directory>
@@ -64,11 +90,11 @@ make build test-bin MACHINE=HIFIVE TEST_DIR=test_hello
 make build test-bin MACHINE=HIFIVE TEST_DIR=test_gp
 ```
 
-## Check ta-ref by running test_gp, test_hello, on qemu
+## Check ta-ref by running test_gp, test_hello, on QEMU
 
 Copy the test_hello and test_gp programs to QEMU.
 
-### Launch QEMU console
+### Launch QEMU Console
 <br >
 ```
 cd $KEYSTONE_DIR
@@ -219,7 +245,7 @@ make build test-bin MACHINE=RPI3 TEST_DIR=test_hello
 make build test-bin MACHINE=RPI3 TEST_DIR=test_gp
 ```
 
-## check ta-ref by running test_gp, test_hello, on qemu
+## Check ta-ref by running test_gp, test_hello, on QEMU
 <br />
 Copy the test_hello and test_gp programs to QEMU buildroot directory
 ``` 

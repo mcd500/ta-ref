@@ -1,4 +1,4 @@
-# How to program on ta-ref
+# How to Program on ta-ref
 
 ## Time Functions
 
@@ -107,7 +107,7 @@ void gp_message_digest_test(void)
 --- end digest ---
 ```
 
-## Symmetric crypto Functions
+## Symmetric Crypto Functions
 
 Crypto, Authenticated Encryption with Symmetric Key Verification Functions.
 This function  allocates an uninitialized transient object, i.e. a container
@@ -203,7 +203,7 @@ decrypted data by checking the data and its length.
 --- AE decrypt and verify end ---
 ```
 
-## Asymmetric crypto Functions
+## Asymmetric Crypto Functions
 
 Crypto, Sign and Verify with Asymmetric Key Verification Functions.
 Cryptographic Operations for API Message Digest Functions.
@@ -321,7 +321,7 @@ void gp_asymmetric_key_sign_test(void)
 --- Asymmetric Key verify end ---
 
 ```
-## Asymmetric crypto gcm Functions
+## Asymmetric Crypto Gcm Functions
 
 This function encrypt and decrypt the test data.
 The function allocates an uninitialized transient object, i.e. a container for attributes. 
@@ -444,7 +444,7 @@ void gp_symmetric_key_gcm_verify_test(void)
 
 ```
 
-## open, read, write, close on secure storage
+## Open, Read, Write, Close On Secure Storage
 
 Core Functions, Secure Storage Functions.
 Pseudo code of how to use Secure Storage.
