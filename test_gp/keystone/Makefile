@@ -1,4 +1,4 @@
-KEYSTONE_LIB_DIRS = $(LIB_DIRS) $(KEYSTONE_SDK_LIB_DIR)
+KEYSTONE_LIB_DIRS = $(LIB_DIRS) ${KEYSTONE_SDK_DIR}/lib
 
 # for getrandom in MACHINE=SIM, we use srandom.
 ifeq ($(MACHINE), SIM)

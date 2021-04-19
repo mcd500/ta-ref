@@ -32,9 +32,9 @@ LIBS = $(TOOL_LIB)
 COMMON_INCLUDE_DIRS=$(TOPDIR)/build/include $(TOPDIR)/api/include $(TOPDIR)/api/$(TEE) $(CURDIR)/include
 INCLUDE_DIRS = $(COMMON_INCLUDE_DIRS)
 
-ifneq ($(KEYSTONE_SDK_LIB_DIR),)
+ifneq ($(KEYSTONE_SDK_DIR),)
 # Global Platform uses eapp library in keystone-sdk.
-INCLUDE_DIRS += $(KEYSTONE_SDK_LIB_DIR)/app/include
+INCLUDE_DIRS += $(KEYSTONE_SDK_DIR)/include/app
 endif
 
 CFLAGS=$(addprefix -I,$(INCLUDE_DIRS))

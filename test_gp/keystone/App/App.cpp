@@ -20,18 +20,20 @@
 const char* enc_path = "Enclave.eapp_riscv";
 const char* runtime_path = "eyrie-rt";
 
+using namespace Keystone;
+
 int main(int argc, char** argv)
 {
 #ifdef APP_PERF_ENABLE
   __profiler_map_info();
 #endif
-  Keystone enclave;
+  Enclave enclave;
   Params params;
 
   params.setFreeMemSize(1024*1024);
   params.setUntrustedMem(DEFAULT_UNTRUSTED_PTR, 1024*1024);
 
-  if(enclave.init(enc_path, runtime_path, params) != KEYSTONE_SUCCESS){
+  if(enclave.init(enc_path, runtime_path, params) != Error::Success){
     printf("%s: Unable to start enclave\n", argv[0]);
     exit(-1);
   }

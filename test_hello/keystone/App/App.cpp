@@ -15,17 +15,19 @@
 #include "profiler/profiler.h"
 #endif
 
+using namespace Keystone;
+
 /* We hardcode these for demo purposes. */
 const char* enc_path = "Enclave.eapp_riscv";
 const char* runtime_path = "eyrie-rt";
 
 int main(int argc, char** argv)
 {
-  Keystone enclave;
+  Enclave enclave;
   Params params;
   params.setFreeMemSize(1024*1024);
   params.setUntrustedMem(DEFAULT_UNTRUSTED_PTR, 1024*1024);
-  if(enclave.init(enc_path, runtime_path, params) != KEYSTONE_SUCCESS){
+  if(enclave.init(enc_path, runtime_path, params) != Error::Success){
     printf("%s: Unable to start enclave\n", argv[0]);
     exit(-1);
   }

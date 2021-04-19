@@ -29,7 +29,7 @@ CXXFLAGS += $(SGX_CXXFLAGS) -Iedger8r $(DEBUG_FLAGS)
 
 ifeq ($(TEE), keystone)
 # for trusted(requires eapp library)
-CFLAGS += $(addprefix -I,${KEYSTONE_SDK_LIB_DIR}/app/include)
+CFLAGS += $(addprefix -I,${KEYSTONE_SDK_DIR}/include/app)
 COBJS=$(UNTRUSTED_OBJS) $(TRUSTED_OBJS)
 else
 COBJS=$(TRUSTED_OBJS)

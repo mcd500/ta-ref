@@ -17,8 +17,8 @@ INCLUDE_DIRS = $(TEE)
 # for Enclave_t.h
 INCLUDE_DIRS += $(BUILD_DIR)/include $(CURDIR)
 
-ifneq ($(KEYSTONE_SDK_LIB_DIR),)
-INCLUDE_DIRS += ${KEYSTONE_SDK_LIB_DIR}/app/include
+ifneq ($(KEYSTONE_SDK_DIR),)
+INCLUDE_DIRS += ${KEYSTONE_SDK_DIR}/include/app
 endif
 
 

@@ -24,8 +24,8 @@ PERF_OPTION =
 endif
 
 INCLUDE_DIRS=$(INCLUDE_DIR) $(TEE) include
-ifneq ($(KEYSTONE_SDK_LIB_DIR),)
-INCLUDE_DIRS += $(KEYSTONE_SDK_LIB_DIR)/app/include
+ifneq ($(KEYSTONE_SDK_DIR),)
+INCLUDE_DIRS += $(KEYSTONE_SDK_DIR)/include/app
 endif
 
 ifeq ($(DEBUG_TYPE), DEBUG)

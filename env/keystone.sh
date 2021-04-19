@@ -14,12 +14,9 @@ export FLATCC_INCLUDE_DIR=${FLATCC_DIR}/include/flatcc
 export FLATCC_BIN=${FLATCC_DIR}/bin/flatcc
 export EDGER8R_BIN=${KEEDGER8R_DIR}/keedger8r
 
-export KEYSTONE_SDK_DIR=${KEYSTONE_DIR}/sdk
-export KEYSTONE_SDK_LIB_DIR=${KEYSTONE_SDK_DIR}/lib
+export KEYSTONE_SDK_DIR=${KEYSTONE_DIR}/sdk/build64
 
-# ${KEYSTONE_SDK_DIR}/lib are used in almost all packages including keyedge, so that we take it for granted that the libraries are implicitly loaded in compile phase.
-export CPATH=${KEYSTONE_SDK_LIB_DIR}/edge/include:${KEYSTONE_SDK_LIB_DIR}/host/include:${CPATH}
-export ENCLAVE_CPATH=${KEYSTONE_SDK_LIB_DIR}/app/include:${CPATH}
+export CPATH=${KEYSTONE_SDK_DIR}/include/edge:${KEYSTONE_SDK_DIR}/include/host:${KEYSTONE_SDK_DIR}/include:${CPATH}
 
-export BUILDROOT_OVERLAY_DIR=${KEYSTONE_DIR}/buildroot_overlay
-export KEYSTONE_DRIVER_MODULE=${KEYSTONE_DIR}/hifive-work/linux-keystone-driver/keystone-driver.ko
+export BUILDROOT_OVERLAY_DIR=${KEYSTONE_DIR}/build/overlay
+export KEYSTONE_DRIVER_MODULE=${BUILDROOT_OVERLAY_DIR}/root/keystone-driver.ko

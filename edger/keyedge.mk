@@ -24,7 +24,7 @@ UNTRUSTED_LIBS0 = $(patsubst %.c,lib%0.a,$(CPP_SRCS))
 INCLUDE_PATHS=$(EDGER_DIR)/target/include $(FLATCC_DIR)/include
 
 # for trusted(requires eapp library)
-CFLAGS += $(addprefix -I,$(INCLUDE_PATHS) ${KEYSTONE_SDK_LIB_DIR}/app/include)
+CFLAGS += $(addprefix -I,$(INCLUDE_PATHS) ${KEYSTONE_SDK_DIR}/include/app)
 
 # for untrusted(don't use eapp)
 CXXFLAGS += $(addprefix -I,$(INCLUDE_PATHS))

@@ -3,7 +3,7 @@
 ENCLAVE_BIN = Enclave.eapp_riscv
 SRCS = $(wildcard *.c)
 OBJS= $(SRCS:.c=.o)
-INCLUDE_PATHS=$(INCLUDE_DIRS) $(KEYSTONE_SDK_LIB_DIR)/app/include
+INCLUDE_PATHS=$(INCLUDE_DIRS) $(KEYSTONE_SDK_DIR)/include/app
 
 CFLAGS += $(addprefix -I,$(INCLUDE_PATHS))
 

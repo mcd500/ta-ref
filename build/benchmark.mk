@@ -5,9 +5,9 @@ LIB=libbench.a
 
 INCLUDE_DIRS = $(CURDIR)/include/api $(CURDIR)/include
 
-ifneq ($(KEYSTONE_SDK_LIB_DIR),)
+ifneq ($(KEYSTONE_SDK_DIR),)
 # Global Platform uses eapp library in keystone-sdk.
-INCLUDE_DIRS += $(KEYSTONE_SDK_LIB_DIR)/app/include
+INCLUDE_DIRS += $(KEYSTONE_SDK_DIR)/include/app
 endif
 
 BENCH_INCLUDE_DIR = include/benchmark

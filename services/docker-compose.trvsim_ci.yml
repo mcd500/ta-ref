@@ -3,7 +3,7 @@ version: '3.1'
 
 services:
     trvsim:
-        image: trasioteam/riscv_toolchain:trvsim_20200916
+        image: trasioteam/riscv_toolchain:trvsim_20210304
         environment:
             SSH_PORT: ${SSH_PORT}
         expose:
