@@ -73,14 +73,14 @@ tar xf keystone_trvsim_hifive_v1.0.0_sdimage.tar.xz -C ${IMAGE_DIR}
 # 2. prepare the environment variables and files used in docker-compose
 export OVPSIM_LICENCE_PATH=$(pwd)/OVPsim.lic
 export MAC_ADDR=...
-export SSH_PORT=10022
+export SSH_PORT=10025
 ```
 
 Dockerfile for TRV simulator is [here](https://192.168.100.100/rinkai/dockerfiles/-/tree/master/riscv_toolchain/trvsim_20210304). You can access the docker machine by `ssh -p ${SSH_PORT} -o "StrictHostKeyChecking no" root@${IP_ADDR}`.
 
 #### build and run ta-ref
 
-Check `test/keystone/machine.mk` to set IP address(localhost or remote) and port(usually 10022) and build & run as following:
+Check `test/keystone/machine.mk` to set IP address(localhost or remote) and port(usually 10025) and build & run as following:
 
 ```sh
 # only once!
