@@ -87,7 +87,7 @@ Check `test/keystone/machine.mk` to set IP address(localhost or remote) and port
 GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 # you can run in background with `-d` option
-docker-compose pull
+docker-compose -f ./services/docker-compose.trvsim.yml pull
 docker-compose -f ./services/docker-compose.trvsim.yml up
 docker exec -it services_test_1 /bin/bash
 ```
