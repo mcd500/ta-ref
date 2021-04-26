@@ -44,6 +44,7 @@ Note) This repository supports SSL transportation, so we should set `GIT_SSL_NO_
 ### qemu
 
 ```sh
+docker pull trasioteam/ta_ref_devel:keystone_qemu
 GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_qemu
@@ -66,16 +67,16 @@ Install TRV simulator, create binaries and launch it:
 # 1. create bbl, vmlinux, fsbl.bin and sdimage.bin(Only once)
 export IMAGE_DIR=$(pwd)/image
 mkdir -p $IMAGE_DIR
-wget http://192.168.100.100:2000/keystone_trvsim_hifive_sdimage.tar.xz -o /dev/null
-tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IMAGE_DIR}
+wget http://192.168.100.100:2000/keystone_trvsim_hifive_v1.0.0_sdimage.tar.xz -o /dev/null
+tar xf keystone_trvsim_hifive_v1.0.0_sdimage.tar.xz -C ${IMAGE_DIR}
 
-# 2. prepare the environment variable used in docker-compose
+# 2. prepare the environment variables and files used in docker-compose
 export OVPSIM_LICENCE_PATH=$(pwd)/OVPsim.lic
 export MAC_ADDR=...
 export SSH_PORT=10022
 ```
 
-Dockerfile for TRV simulator is [here](https://192.168.100.100/rinkai/dockerfiles/-/tree/master/riscv/trvsim). You can access the docker machine by `ssh -p ${SSH_PORT} -o "StrictHostKeyChecking no" root@${IP_ADDR}`.
+Dockerfile for TRV simulator is [here](https://192.168.100.100/rinkai/dockerfiles/-/tree/master/riscv_toolchain/trvsim_20210304). You can access the docker machine by `ssh -p ${SSH_PORT} -o "StrictHostKeyChecking no" root@${IP_ADDR}`.
 
 #### build and run ta-ref
 
@@ -86,6 +87,7 @@ Check `test/keystone/machine.mk` to set IP address(localhost or remote) and port
 GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
 cd ta-ref
 # you can run in background with `-d` option
+docker-compose pull
 docker-compose -f ./services/docker-compose.trvsim.yml up
 docker exec -it services_test_1 /bin/bash
 ```
@@ -106,20 +108,7 @@ docker-compose -f ./services/docker-compose.trvsim.yml down -v
 
 ### Unleashed Hifive board
 
-```sh
-GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/ta-ref.git
-cd ta-ref
-docker run -it --rm -v $(pwd):/home/main/ta-ref trasioteam/ta_ref_devel:keystone_hifive
-cd ta-ref
-source env/keystone.sh
-```
-
-Check `test/keystone/machine.mk` to set Hifive IP address and port and build & run as following:
-
-```sh
-make build test run MACHINE=HIFIVE TEST_DIR=test_gp
-```
-
+In keystone v1.0.0, Unleashed Hifive board has the network problem.
 
 ### vc707
 
