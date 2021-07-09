@@ -2,13 +2,13 @@ version: '3.5'
 
 services:
     tamproto:
-        image: trasioteam/tamproto:teep-device-interop_2020-07-06
+        image: trasioteam/tamproto:after_ietf109
         environment:
             PORT: 8888
         expose:
             - 8888
     builder:
-        image: trasioteam/ta_ref_teep_devel:keystone_qemu
+        image: trasioteam/ta_ref_teep_devel:keystone_v1.0.0_qemu
         depends_on:
             - tamproto
         volumes:
