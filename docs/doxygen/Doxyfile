@@ -856,7 +856,7 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT		       = ./docs/preparation.md ./docs/building.md ./docs/running_on_dev_boards.md ./docs/overview_of_ta-ref.md ./docs/how_to_program_on_ta-ref.md ./docs/gp_api.md ./api ./edger ./gp ./profiler ./test_hello ./benchmark ./test_gp
+INPUT		       = ./docs/overview_of_ta-ref.md ./docs/how_to_program_on_ta-ref.md ./docs/preparation.md ./docs/building.md ./docs/running_on_dev_boards.md  ./docs/gp_api.md ./api
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -1053,7 +1053,7 @@ FILTER_SOURCE_PATTERNS =
 # (index.html). This can be useful if you have a project on for instance GitHub
 # and want to reuse the introduction page also for the doxygen output.
 
-USE_MDFILE_AS_MAINPAGE = ./docs/preparation.md
+USE_MDFILE_AS_MAINPAGE = ./docs/overview_of_ta-ref.md
 
 #---------------------------------------------------------------------------
 # Configuration options related to source browsing

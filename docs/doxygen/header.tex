@@ -94,7 +94,7 @@
   \tolerance=750
   \hfuzz=15pt
   \hbadness=750
-  \setlength{\emergencystretch}{15pt}
+  \setlength{\emergencystretch}{\hsize}
   \setlength{\parindent}{0cm}
   \newcommand{\doxynormalparskip}{\setlength{\parskip}{3ex plus 2ex minus 2ex}}
   \newcommand{\doxytocparskip}{\setlength{\parskip}{1ex plus 0ex minus 0ex}}
@@ -127,12 +127,12 @@
     \fancyhead[LE, RO]{\bfseries\thepage}
     \fancyhead[LO]{\bfseries\rightmark}
     \fancyhead[RE]{\bfseries\leftmark}
-    \fancyfoot[LO, RE]{\bfseries\scriptsize Copyright © National Institute of Advanced Industrial Science and Technology (AIST）}
+    \fancyfoot[LO, RE]{\bfseries\scriptsize Copyright © The National Institute of Advanced Industrial Science and Technology (AIST）}
   }
 
   \fancypagestyle{plain}{
     \fancyhf{}
-    \fancyfoot[LO, RE]{\bfseries\scriptsize Copyright © National Institute of Advanced Industrial Science and Technology (AIST) }
+    \fancyfoot[LO, RE]{\bfseries\scriptsize Copyright © The National Institute of Advanced Industrial Science and Technology (AIST) }
     \renewcommand{\headrulewidth}{0pt}
   }
 
@@ -234,9 +234,11 @@
   \begin{center}%
   {\Huge Trusted Application Programming Reference on Portable TEE}\\
   \vspace*{2cm}
-  {\large National Institute of Advanced Industrial Science and Technology}\\
+  {\large The National Institute of Advanced Industrial Science and Technology}\\
   \vspace*{1cm}
-  {\large 2021-02-19}\\
+  \def\todaydate{\leavevmode\hbox{\the\year-\twodigits\month-\twodigits\day}}
+  \def\twodigits#1{\ifnum#1<10 0\fi\the#1}
+  {\large \todaydate}\\
 %%BEGIN LATEX_TIMESTAMP
     \vspace*{0.5cm}
     {\small $datetime}
