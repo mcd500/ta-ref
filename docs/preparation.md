@@ -265,6 +265,7 @@ There are 3 components which need to be build for SGX
 ### SGX SDK
 <br /> 
 Clone and build
+
 ```
 git clone https://github.com/intel/linux-sgx.git -b sgx_2.10
 cd linux-sgx
@@ -346,7 +347,8 @@ If it is success, reboot your machine and verify `sudo lsmod | grep isgx` if it 
 ## Run sgx-ra-sample
 
 ### Build sgx-ra-sample
-<br />Clone and build OpenSSL 1.1.c <br />
+Clone and build OpenSSL 1.1.c
+
 ```
 wget https://www.openssl.org/source/openssl-1.1.1c.tar.gz
 tar xf openssl-1.1.1c.tar.gz 
@@ -421,6 +423,7 @@ make
 <br />
 Run "run-server"
 <br />
+
 ```
 ./run-server
 Listening for connections on port 7777
@@ -498,6 +501,7 @@ Enclave TRUSTED
 Server may invoke wget command to get some files from intel servers.
 If the server side fails with following error
 <br />
+
 ```
 Connecting to api.trustedservices.intel.com (api.trustedservices.intel.com)|40.87.90.88|:443... connected.
 ERROR: cannot verify api.trustedservices.intel.com's certificate, issued by 'CN=COMODO RSA Organization Validation Secure Server CA,O=COMODO CA Limited,L=Salford,ST=Greater Manchester,C=GB':
@@ -519,7 +523,7 @@ Update BIOS from:
 - https://downloadcenter.intel.com/download/29987/BIOS-Update-JYGLKCPX-
 - https://downloadcenter.intel.com/download/30069/BIOS-Update-QNCFLX70-
 
-### Run LocalAttestation 
+### Run LocalAttestation
 <br />
 Running SDK code samples in simulation mode
 <br />
@@ -548,3 +552,109 @@ succeed to establish secure channel.
 Succeed to exchange secure message...
 Succeed to close Session...
 ```
+
+# Investigation of MbedTLS Configuration file
+
+Mbed TLS should build out-of-the box on a large variety of platforms. 
+However, we may need to adjust a few platform-specific settings or we can customize the set of features that will be built.
+All this operation can be perfomed in a single configuration file.
+
+## mbedtls configuration file (config.h)
+
+The mbedtls configuation file `config.h` has the following sections
+<ul>
+<li> System Support - Select options depending on platform
+<li> Mbed TLS feature support - Select which features you want to enable for corresponding modules
+<li> Mbed TLS modules -   Select modules to build in
+<li> Module configuration options - Set specific options for each module
+</ul>
+
+### Optee mbetls config file
+<br />
+
+Location of the config file in optee environment<br />
+<code>optee/mbedtls/include/mbedtls/config.h</code>
+<br />
+
+Have a look at the source which uses config.h file for reference.<br />
+Example source:<br />
+<code>optee/mbedtls/include/mbedtls/library/ssl_ciphersuites.c</code>
+<br />
+
+Some sample configurations can be found in `configs/` directory.
+In Optee, the contents of configs directory is listed below.
+<pre>
+$ ls -l optee/mbedtls/configs
+total 24
+-rw-r--r-- 1 akirat akirat 2852 Feb 17  2021 config-ccm-psk-tls1_2.h
+-rw-r--r-- 1 akirat akirat 2102 Feb 17  2021 config-mini-tls1_1.h
+-rw-r--r-- 1 akirat akirat 2628 Feb 17  2021 config-no-entropy.h
+-rw-r--r-- 1 akirat akirat 3573 Feb 17  2021 config-suite-b.h
+-rw-r--r-- 1 akirat akirat 2680 Feb 17  2021 config-thread.h
+-rw-r--r-- 1 akirat akirat 1050 Feb 17  2021 README.txt
+</pre>
+
+
+### ta-ref mbetls config file
+<br />
+
+Location of the config file in ta-ref environment<br />
+<code>ta-ref/teep-device/libteep/mbedtls/include/mbedtls/config.h</code>
+<br />
+
+Have a look at the source which uses config.h file for reference.<br />
+Example source:<br />
+<code>ta-ref/teep-device/libteep/mbedtls/include/mbedtls/library/ssl_ciphersuites.c</code>
+<br />
+
+Some sample configurations can be found in `configs/` directory.
+In ta-ref, the contents of configs directory is listed below.
+<pre>
+$ ls -l ta-ref/teep-device/libteep/mbedtls/configs
+total 24
+-rw-r--r-- 1 akirat akirat 2852 Feb 18  2021 config-ccm-psk-tls1_2.h
+-rw-r--r-- 1 akirat akirat 2102 Feb 18  2021 config-mini-tls1_1.h
+-rw-r--r-- 1 akirat akirat 2628 Feb 18  2021 config-no-entropy.h
+-rw-r--r-- 1 akirat akirat 3573 Feb 18  2021 config-suite-b.h
+-rw-r--r-- 1 akirat akirat 2680 Feb 18  2021 config-thread.h
+-rw-r--r-- 1 akirat akirat 1050 Feb 18  2021 README.txt
+</pre>
+
+
+### teep-device mbetls config file
+<br />
+
+Location of the config file in teep-device environment<br />
+<code>teep-device/libteep/mbedtls/include/mbedtls/config.h</code>
+<br />
+
+Have a look at the source which uses config.h file for reference.<br />
+Example source:<br />
+<code>teep-device/libteep/mbedtls/include/mbedtls/library/ssl_ciphersuites.c</code>
+<br />
+
+Some sample configurations can be found in `configs/` directory.
+In teep-device, the contents of configs directory is listed below.
+<pre>
+$ ls -l teep-device/libteep/mbedtls/configs
+total 24
+-rw-r--r-- 1 akirat akirat 2852 Feb 18  2021 config-ccm-psk-tls1_2.h
+-rw-r--r-- 1 akirat akirat 2102 Feb 18  2021 config-mini-tls1_1.h
+-rw-r--r-- 1 akirat akirat 2628 Feb 18  2021 config-no-entropy.h
+-rw-r--r-- 1 akirat akirat 3573 Feb 18  2021 config-suite-b.h
+-rw-r--r-- 1 akirat akirat 2680 Feb 18  2021 config-thread.h
+-rw-r--r-- 1 akirat akirat 1050 Feb 18  2021 README.txt
+</pre>
+
+
+## Supplement Investigation information
+
+It is necessary to edit the following file to select the cryptographic algorithm 
+when using mbedtls in optee.
+<code>optee/optee_os/lib/libmbedtls/include/mbedtls_config_kernel.h</code>
+
+
+In Optee, selection of algorithms can be made in the below file. GCM doesn't seem to be included by default.
+<code>optee/optee_os/lib/libmbedtls/include/mbedtls_config_uta.h</code>
+
+In ta-ref, selection of algorithms can be made in the below file. GCM is included by default.
