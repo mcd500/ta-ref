@@ -45,6 +45,7 @@
  *
  */
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define TRACE_MIN       1
 #define TRACE_ERROR     TRACE_MIN
 #define TRACE_INFO      2
@@ -55,4 +56,6 @@
 /* Trace level of the casual printf */
 #define TRACE_PRINTF_LEVEL TRACE_ERROR
 
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 #endif /*TRACE_LEVELS_H*/
+

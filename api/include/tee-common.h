@@ -45,11 +45,13 @@
 extern "C" {
 #endif
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #ifdef DEBUG
 #define pr_deb(...)       do { printf(__VA_ARGS__); } while (0)
 #else
 #define pr_deb(...)       do { } while (0)
 #endif /* DEBUG */
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 
 //#include <tee_api.h>
 #include <tee_api_defines.h>

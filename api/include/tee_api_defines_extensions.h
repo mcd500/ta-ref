@@ -27,6 +27,7 @@
 
 #ifndef TEE_API_DEFINES_EXTENSIONS_H
 #define TEE_API_DEFINES_EXTENSIONS_H
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 /*
  * HMAC-based Extract-and-Expand Key Derivation Function (HKDF)
@@ -105,4 +106,5 @@
 #define TEE_MEMORY_ACCESS_NONSECURE          0x10000000
 #define TEE_MEMORY_ACCESS_SECURE             0x20000000
 
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 #endif /* TEE_API_DEFINES_EXTENSIONS_H */

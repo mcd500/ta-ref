@@ -145,12 +145,15 @@ TEE_Result GetRelTimeEnd(uint64_t end)
  */
 static inline int flags2flags(int flags)
 {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define O_RDONLY   0
 #define O_WRONLY   00001
 #define O_RDWR     00002
 #define O_CREAT	   00100
 #define O_EXCL	   00200
 #define O_TRUNC	   01000
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
+
   int ret = 0;
   if (flags & TEE_DATA_FLAG_ACCESS_WRITE)
     ret = O_WRONLY;
@@ -164,7 +167,9 @@ static inline int flags2flags(int flags)
 }
 
 // Always use permission -rw------ to emulate secure storage
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define FPERMS 0600
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 
 /**
  * set_object_key - To initalize report and then attest enclave with file.

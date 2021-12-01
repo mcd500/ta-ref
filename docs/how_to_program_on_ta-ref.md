@@ -6,7 +6,7 @@ This function retrieves the current time as seen from the point of view of the R
 which expressed in the number of seconds and prints the "GP REE second and millisecond".
 
 ```
---- Ree time ---
+--- start Ree time ---
 void gp_ree_time_test(void)
 {
     TEE_Time time;
@@ -15,7 +15,7 @@ void gp_ree_time_test(void)
     TEE_GetREETime(&time);
     tee_printf ("@GP REE time %u sec %u millis\n", time.seconds, time.millis);
 }
---- -- ---
+--- end Ree Time ---
 ```
 
 This function retrieves the current system time as seen from the point of view of the TA,
@@ -23,7 +23,7 @@ which expressed in the number of seconds and print the "GP System time second an
 millisecond".
 
 ```
---- start digest ---
+--- start System time ---
 void gp_trusted_time_test(void)
 {
     TEE_Time time;
@@ -33,7 +33,7 @@ void gp_trusted_time_test(void)
     tee_printf ("@GP System time %u sec %u millis\n", time.seconds, time.millis);
 }
 
---- end digest ---
+--- end System time ---
 ```
 
 ## Random Functions
@@ -43,7 +43,7 @@ and it prints the generated random data.\n
 
 
 ```
---- random test ---
+--- start Random ---
  void gp_random_test(void)
 {
     unsigned char rbuf[16];
@@ -56,7 +56,7 @@ and it prints the generated random data.\n
     tee_printf("\n");
 }
 
---- -------------- ---
+--- end Random ---
 ```
 
 ## Hash Functions
@@ -69,7 +69,7 @@ for a new cryptographic operation. And then finalize the message digest operatio
 to produce the message hash. It prints the hash message.
 
 ```
---- start digest ---
+--- start Message Digest ---
 void gp_message_digest_test(void)
 {
     static unsigned char data[256] = {
@@ -104,7 +104,7 @@ void gp_message_digest_test(void)
     }
     tee_printf("\n");
 }
---- end digest ---
+--- end Message Digest ---
 ```
 
 ## Symmetric Crypto Functions
@@ -117,7 +117,7 @@ data is initiated with a symmetric cipher operation. The original data is compar
 decrypted data by checking the data and its length.
 
 ```
---- AE encryption start ---
+--- start Symmetric Key Encryption ---
  void gp_symmetric_key_enc_verify_test(void)
 {
     TEE_OperationHandle handle;
@@ -200,7 +200,7 @@ decrypted data by checking the data and its length.
         tee_printf("verify fails\n");
     }
 }
---- AE decrypt and verify end ---
+--- end Symmetric Key Encryption ---
 ```
 
 ## Asymmetric Crypto Functions
@@ -214,7 +214,7 @@ The Hashed data is signed with signature key within an asymmetric operation.
 The original Hashed Data and Signed hashed data is compared for ok status.
 
 ```
---- Asymmetric Key sign start ---
+--- start Asymmetric Key Signed ---
 void gp_asymmetric_key_sign_test(void)
 {
     static unsigned char data[256] = {
@@ -318,10 +318,10 @@ void gp_asymmetric_key_sign_test(void)
 
 /* Check verify_ok for success of verification */
 
---- Asymmetric Key verify end ---
+--- end Asymmetric Key Signed ---
 
 ```
-## Asymmetric Crypto Gcm Functions
+## Symmetric Crypto Gcm Functions
 
 This function encrypt and decrypt the test data.
 The function allocates an uninitialized transient object, i.e. a container for attributes. 
@@ -331,7 +331,7 @@ cipher operation. The data is also checked whether it is completely encrypted or
 The original data is compared with decrypted data by checking the data and cipher length. 
 
 ```
---- symmetric key gcm verification start ---
+--- start Symmetric Key GCM  ---
 
 void gp_symmetric_key_gcm_verify_test(void)
 {
@@ -440,7 +440,7 @@ void gp_symmetric_key_gcm_verify_test(void)
       tee_printf("verify fails\n");
     }
 }
---- symmetric key gcm verification end ---
+--- end Symmetric Key GCM ---
 
 ```
 
@@ -456,7 +456,7 @@ If the length of both the objects are same,  the function prints "verify ok"
 and prints "verify fails" if it is not the same. 
 
 ```
---- write file start ---
+--- start Secure storage ---
 void gp_secure_storage_test(void)
 {
     static unsigned char data[] = {
@@ -519,7 +519,7 @@ void gp_secure_storage_test(void)
     }
 
 }
---- read file end ---
+--- end Secure storage ---
 ```
 
 

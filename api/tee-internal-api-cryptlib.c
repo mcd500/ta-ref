@@ -335,11 +335,12 @@ TEE_Result TEE_SetOperationKey(TEE_OperationHandle operation,
     return 0;
 }
 
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define GCM_ST_INIT	1	// key and iv are set
 #define GCM_ST_AAD	2	// aad set
 #define GCM_ST_ACTIVE	3	// active
 #define GCM_ST_FINAL	4	// final
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 
 /**
  * TEE_AEInit() - Initializes an Authentication Encryption operation.
@@ -1038,7 +1039,9 @@ void TEE_FreeTransientObject(TEE_ObjectHandle object)
     return;
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define SIG_LENGTH 64
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 
 /**
  * TEE_AsymmetricSignDigest() - Signs a message digest within an asymmetric operation.

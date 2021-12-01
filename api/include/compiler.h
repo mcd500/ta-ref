@@ -28,6 +28,7 @@
 #ifndef COMPILER_H
 #define COMPILER_H
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 /*
  * Macros that should be used instead of using __attribute__ directly to
  * ease portability and make the code easier to read.
@@ -193,4 +194,5 @@
 #define __compiler_atomic_store(p, val) \
 	__atomic_store_n((p), (val), __ATOMIC_RELAXED)
 
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 #endif /*COMPILER_H*/

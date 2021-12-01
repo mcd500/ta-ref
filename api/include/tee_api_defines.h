@@ -30,10 +30,9 @@
 #ifndef TEE_API_DEFINES_H
 #define TEE_API_DEFINES_H
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define TEE_INT_CORE_API_SPEC_VERSION     0x0000000A
-
 #define TEE_HANDLE_NULL                   0
-
 #define TEE_TIMEOUT_INFINITE              0xFFFFFFFF
 
 /* API Error Codes */
@@ -471,4 +470,5 @@
 
 #define TEE_BigIntSizeInU32(n) ((((n)+31)/32)+2)
 
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 #endif /* TEE_API_DEFINES_H */

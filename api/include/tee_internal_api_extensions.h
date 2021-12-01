@@ -15,7 +15,10 @@
 void tee_user_mem_mark_heap(void);
 size_t tee_user_mem_check_heap(void);
 /* Hint implementation defines */
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define TEE_USER_MEM_HINT_NO_FILL_ZERO       0x80000000
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 
 /*
  * Cache maintenance support (TA requires the CACHE_MAINTENANCE property)

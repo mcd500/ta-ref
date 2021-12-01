@@ -138,8 +138,10 @@ typedef struct {
 	} content;
 } TEE_Attribute;
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define DMREQ_FINISH 0
 #define DMREQ_WRITE 1
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 
 /* Cryptographic Operations API */
 
@@ -218,6 +220,7 @@ typedef struct {
 typedef uint32_t TEE_ErrorOrigin;
 typedef void *TEE_Session;
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define TEE_MEM_INPUT   0x00000001
 #define TEE_MEM_OUTPUT  0x00000002
 
@@ -227,6 +230,7 @@ typedef void *TEE_Session;
 #define TEE_MEMREF_3_USED  0x00000008
 
 #define TEE_SE_READER_NAME_MAX	20
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 
 #ifndef PLAT_KEYSTONE
 // TODO: ???

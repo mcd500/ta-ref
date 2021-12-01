@@ -32,8 +32,10 @@
 #include <tee_api_defines.h>
 #include <tee_api_types.h>
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 /* This is a null define in STE TEE environment */
 #define TA_EXPORT
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 
 /*
  * TA Interface

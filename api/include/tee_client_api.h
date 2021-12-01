@@ -39,6 +39,7 @@ extern "C" {
 #include <limits.h>
 #include "tee-common.h"
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 /*
  * Defines the number of available memory references in an open session or
  * invoke command operation payload.
@@ -245,6 +246,7 @@ extern "C" {
  * @param i The i-th parameter to get the type for.
  */
 #define TEEC_PARAM_TYPE_GET(p, i) (((p) >> (i * 4)) & 0xF)
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 
 typedef uint32_t TEEC_Result;
 

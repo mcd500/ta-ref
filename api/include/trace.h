@@ -32,12 +32,14 @@
 #include <compiler.h>
 #include <trace_levels.h>
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define MAX_PRINT_SIZE      256
 #define MAX_FUNC_PRINT_SIZE 32
 
 #ifndef TRACE_LEVEL
 #define TRACE_LEVEL TRACE_MAX
 #endif
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 
 /*
  * Symbols provided by the entity that uses this API.
@@ -53,6 +55,7 @@ int trace_get_level(void);
 void trace_printf(const char *func, int line, int level, bool level_ok,
 		  const char *fmt, ...) __printf(5, 6);
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define trace_printf_helper(level, level_ok, ...) \
 	trace_printf(__func__, __LINE__, (level), (level_ok), \
 		     __VA_ARGS__)
@@ -104,8 +107,13 @@ void trace_printf(const char *func, int line, int level, bool level_ok,
 		return r;		\
 	} while (0)
 
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
+
 void dhex_dump(const char *function, int line, int level,
 	       const void *buf, int len);
+
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #if (TRACE_LEVEL < TRACE_DEBUG)
 #define DHEXDUMP(buf, len) (void)0
 #else
@@ -200,4 +208,5 @@ void dhex_dump(const char *function, int line, int level,
 #undef _PRINT_STACK
 #endif
 
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 #endif /* TRACE_H */

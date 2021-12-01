@@ -31,18 +31,24 @@
 #ifndef TEE_API_TYPES_KEYSTONE_H
 #define TEE_API_TYPES_KEYSTONE_H
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define MBEDCRYPT 1
 #define WOLFCRYPT 2
 #define SHA_LENGTH (256/8)
+#define AES256 1
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 
 #include "sha3.h"
 #include "ed25519/ed25519.h"
-#define AES256 1
+
 #if CRYPTLIB==MBEDCRYPT
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 # define MBEDTLS_CONFIG_FILE "mbed-crypto-config.h"
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 # include "mbedtls/gcm.h"
 # include "mbedtls/aes.h"
 #elif CRYPTLIB==WOLFCRYPT
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 # define HAVE_AESGCM 1
 # define HAVE_AES_CBC 1
 # define HAVE_AES_DECRYPT 1
@@ -53,6 +59,7 @@
 # define HAVE_ED25519_VERIFY 1
 # define WOLFSSL_SHA3 1
 # define WOLF_CRYPT_PORT_H
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 # include "wolfssl/wolfcrypt/sha3.h"
 # include "wolfssl/wolfcrypt/aes.h"
 # include "wolfssl/wolfcrypt/sha512.h"
@@ -61,11 +68,13 @@
 # include "tiny_AES_c/aes.h"
 #endif
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define TEE_OBJECT_NONCE_SIZE 16
 #define TEE_OBJECT_KEY_SIZE 32
 #define TEE_OBJECT_SKEY_SIZE 64
 #define TEE_OBJECT_AAD_SIZE 16
 #define TEE_OBJECT_TAG_SIZE 16
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 
 struct __TEE_OperationHandle
 {
@@ -114,6 +123,8 @@ struct __TEE_ObjectHandle
 };
 
 // Minimal constant definitions
-
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define TEE_HANDLE_NULL 0
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
+
 #endif
