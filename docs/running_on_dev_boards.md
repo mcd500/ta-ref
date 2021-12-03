@@ -1,4 +1,4 @@
-# Running on Dev Boards
+# Running on Development Boards
 
 # Keystone, Unleased
 
@@ -10,7 +10,7 @@ Build a modified gdisk which can handle the sifive specific partition types.
 
 Prerequisites: libncursesw5-dev, libpopt-dev
 
-```
+```sh
 $ cd ..
 $ sudo apt install libncursesw5-dev lib64ncurses5-dev uuid-dev libpopt-dev build-essential
 $ git clone https://192.168.100.100/rinkai/gptfdisk.git
@@ -21,8 +21,9 @@ $ make
 
 ### Create SD-card partition manually
 <br />
-```
-sudo ./gdisk /dev/mmcblk0
+
+```console
+$ sudo ./gdisk /dev/mmcblk0
 GPT fdisk (gdisk) version 1.0.4
 
 Partition table scan:
@@ -108,36 +109,42 @@ The operation has completed successfully.
 ### Write boot and rootfs files into SD-card
 <br />
 Build FSBL for hifive-Unleased board
-```
+
+```sh
 $ git clone https://github.com/keystone-enclave/freedom-u540-c000-bootloader.git
 $ cd freedom-u540-c000-bootloader
 $ git checkout -b dev-unleashed bbfcc288fb438312af51adef420aa444a0833452
-$# Make sure riscv64 compiler set to PATH (export PATH=$KEYSTONE_DIR/riscv/bin:$PATH) 
+$ # Make sure riscv64 compiler set to PATH (export PATH=$KEYSTONE_DIR/riscv/bin:$PATH) 
 $ make
 ```
 
 Writing fsbl.bin and bbl.bin
-```
-sudo dd if=freedom-u540-c000-bootloader/fsbl.bin of=/dev/mmcblk0p4 bs=4096 conv=fsync
-sudo dd if=$KEYSTONE_DIR/hifive-work/bbl.bin of=/dev/mmcblk0p1 bs=4096 conv=fsync
+
+```sh
+$ sudo dd if=freedom-u540-c000-bootloader/fsbl.bin of=/dev/mmcblk0p4 bs=4096 conv=fsync
+$ sudo dd if=$KEYSTONE_DIR/hifive-work/bbl.bin of=/dev/mmcblk0p1 bs=4096 conv=fsync
 ```
 Once files written, insert the SD-card into unleased
 
 ## Copying binaries of test_hello and test_gp
 
+```sh
+$ sudo mount /dev/mmcblk0p1 /media/rootfs/
+$ sudo mkdir /media/rootfs/root/{test_hello,test_gp}
 ```
-sudo mount /dev/mmcblk0p1 /media/rootfs/
-sudo mkdir /media/rootfs/root/{test_hello,test_gp}
 
 Copy test_hello
-sudo cp ta-ref/test_hello/keystone/Enclave/Enclave.eapp_riscv /media/rootfs/root/test_hello/
-sudo cp ta-ref/test_hello/keystone/Enclave/App.client /media/rootfs/root/test_hello/
-sudo cp $KEYSTONE_SDK_DIR/rts/eyrie/eyrie-rt /media/rootfs/root/test_hello/
+```sh
+$ sudo cp ta-ref/test_hello/keystone/Enclave/Enclave.eapp_riscv /media/rootfs/root/test_hello/
+$ sudo cp ta-ref/test_hello/keystone/Enclave/App.client /media/rootfs/root/test_hello/
+$ sudo cp $KEYSTONE_SDK_DIR/rts/eyrie/eyrie-rt /media/rootfs/root/test_hello/
+```
 
 Copy test_gp
-sudo cp ta-ref/test_gp/keystone/Enclave/Enclave.eapp_riscv /media/rootfs/root/test_gp/
-sudo cp ta-ref/test_gp/keystone/Enclave/App.client /media/rootfs/root/test_gp/
-sudo cp $KEYSTONE_SDK_DIR/rts/eyrie/eyrie-rt /media/rootfs/root/test_gp/
+```sh
+$ sudo cp ta-ref/test_gp/keystone/Enclave/Enclave.eapp_riscv /media/rootfs/root/test_gp/
+$ sudo cp ta-ref/test_gp/keystone/Enclave/App.client /media/rootfs/root/test_gp/
+$ sudo cp $KEYSTONE_SDK_DIR/rts/eyrie/eyrie-rt /media/rootfs/root/test_gp/
 ```
 
 Now, we are ready to test on unleased board.
@@ -149,22 +156,23 @@ Now, we are ready to test on unleased board.
 4. Checking on Unleased
 <br />
 Login to serial console with user=root, passwd=sifive
-```
+
+```console
 buildroot login: root
 Password: 
 $ 
 ```
 
 test_hello:
-```
-insmod keystone-driver.ko
+```console
+$ insmod keystone-driver.ko
 ./App.client Enclave.eapp_riscv eyrie-rt
 hello world!
 ```
 
 test_gp:
-```
-insmod keystone-driver.ko
+```console
+$ insmod keystone-driver.ko
 ./App.client Enclave.eapp_riscv eyrie-rt
 main start
 TEE_GenerateRandom(0x000000003FFFFEE0, 16): start
@@ -265,16 +273,16 @@ main end
 
 Test is successful.
 
-# OPTEE, RPI3
+# OP-TEE, RPI3
 
-Make sure OPTEE v3.9.0 and other dependant sources have been built
+Make sure OP-TEE v3.9.0 and other dependant sources have been built
 
 ## Preparation of rootfs on SD Card
 
 Use following examples to create partitions of boot and roots on SD-card
 
 ```sh
-make img-help 
+$ make img-help 
 $ fdisk /dev/sdx   # where sdx is the name of your sd-card
    > p             # prints partition table
    > d             # repeat until all partitions are deleted
@@ -303,7 +311,7 @@ BOOT partition 		= /dev/mmcblk0p1
 rootfs partition	= /dev/mmcblk0p2
 
 Write boot file
-```
+```sh
 $ mkfs.vfat -F16 -n BOOT /dev/mmcblk0p1
 $ mkdir -p /media/boot
 $ sudo mount /dev/mmcblk0p1 /media/boot
@@ -313,7 +321,7 @@ $ umount boot
 ```
 
 Write rootfs
-```
+```sh
 $ mkfs.ext4 -L rootfs /dev/mmcblk0p2
 $ mkdir -p /media/rootfs
 $ sudo mount /dev/mmcblk0p2 /media/rootfs
@@ -324,24 +332,29 @@ $ cd .. && sudo umount rootfs
 ```
 
 If you use CI from AIST, download rpi3_sdimage as follows
-```
+
+```sh
 $ wget http://192.168.100.100:2000/optee_rpi3_sdimage.tar.xz
 $ tar xf optee_rpi3_sdimage.tar.xz
 $ dd if=rpi3_sdimage.bin of=/dev/mmcblk0p2 conv=fsync bs=4096
 ```
+
 Now SD-card is ready to boot RPI3.
 
 ## Copying binaries of test_hello and test_gp to rootfs partition
 <br />
 Copying test_hello & test_gp
-```
+
+```sh
 $ sudo mount /dev/mmcblk0p2 /media/rootfs
 $ sudo mkdir -p /media/rootfs/home/gitlab/out/{test_hello,test_gp}
 $ sudo cp ta-ref/test_hello/optee/App/optee_ref_ta /media/rootfs/home/gitlab/out/test_hello/
-$ sudo cp ta-ref/test_hello/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /media/rootfs/home/gitlab/out/test_hello/
+$ sudo cp ta-ref/test_hello/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
+   /media/rootfs/home/gitlab/out/test_hello/
 
 $ sudo cp ta-ref/test_gp/optee/App/optee_ref_ta /media/rootfs/home/gitlab/out/test_gp/
-$ sudo cp ta-ref/test_gp/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /media/rootfs/home/gitlab/out/test_gp/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta 
+$ sudo cp ta-ref/test_gp/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
+   /media/rootfs/home/gitlab/out/test_gp/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta 
 $ sudo cp ta-ref/test_gp/optee/Enclave/Enclave.nm /media/rootfs/home/gitlab/out/test_gp/
 ```
 
@@ -352,18 +365,19 @@ $ sudo cp ta-ref/test_gp/optee/Enclave/Enclave.nm /media/rootfs/home/gitlab/out/
 <br />
 
 Login to Serial console and enter "root" as username
-```
+```sh
 buildroot login: root
 Password: 
 $ 
 ```
 
 test_hello:
-```
-cp /home/gitlab/out/test_hello/
-cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /home/gitlab/out/
-ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib64/optee_armtz/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
-./optee_ref_ta 
+```sh
+$ cp /home/gitlab/out/test_hello/
+$ cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /home/gitlab/out/
+$ ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
+    /lib64/optee_armtz/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
+$ ./optee_ref_ta 
 --- enclave log start---
 ecall_ta_main() start
 hello world!
@@ -373,11 +387,12 @@ ecall_ta_main() end
 If executed successfully, you see above messages
 
 test_gp:
-```
-cd /home/gitlab/out/test_gp/
-cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /home/gitlab/out/
-ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib64/optee_armtz/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
-./optee_ref_ta
+```sh
+$ cd /home/gitlab/out/test_gp/
+$ cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /home/gitlab/out/
+$ ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
+  /lib64/optee_armtz/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
+$ ./optee_ref_ta
 start TEEC_InvokeCommand
 --- enclave log start---
 ecall_ta_main() start
@@ -438,14 +453,14 @@ Make sure SGX SDK, sgx driver and other dependant sources have been built and in
 ## Copying binaries of test_hello and test_gp to NUC machine
 
 Login to NUC machine over SSH (Assuming that SSH enabled on NIC machine).
-Assuming that `ta-ref` was natively built on NUC machine at ~/ta-ref
+Assuming that `ta-ref` was natively built on NUC machine at `~/ta-ref`
 
-```
-ssh <ssh-user>@<IP-Address> 'mkdir -p ~/{test_hello,test_gp}'
-scp ta-ref/test_hello/sgx/Enclave/enclave.signed.so <ssh-user>@<IP-Address>:~/test_hello
-scp ta-ref/test_hello/sgx/App/sgx_app <ssh-user>@<IP-Address>:~/test_hello
-scp ta-ref/test_gp/sgx/Enclave/enclave.signed.so <ssh-user>@<IP-Address>:~/test_gp
-scp ta-ref/test_gp/sgx/App/sgx_app <ssh-user>@<IP-Address>:~/test_gp
+```sh
+$ ssh <ssh-user>@<IP-Address> 'mkdir -p ~/{test_hello,test_gp}'
+$ scp ta-ref/test_hello/sgx/Enclave/enclave.signed.so <ssh-user>@<IP-Address>:~/test_hello
+$ scp ta-ref/test_hello/sgx/App/sgx_app <ssh-user>@<IP-Address>:~/test_hello
+$ scp ta-ref/test_gp/sgx/Enclave/enclave.signed.so <ssh-user>@<IP-Address>:~/test_gp
+$ scp ta-ref/test_gp/sgx/App/sgx_app <ssh-user>@<IP-Address>:~/test_gp
 ```
 
 Now can login to NUC machine for further testing.
@@ -453,17 +468,17 @@ Now can login to NUC machine for further testing.
 ## Check test_hello and test_gp
 
 Checking test_hello
-```
-cd ~/test_hello
-./sgx_app 
+```console
+$ cd ~/test_hello
+$ ./sgx_app 
 hello world!
 Info: Enclave successfully returned.
 ```
 
 Checking test_gp
-```
-cd ~/test_gp
-./sgx_app
+```console
+$ cd ~/test_gp
+$ ./sgx_app
 main start
 TEE_GenerateRandom(): start
 @random: f35c1d1e4bbf6641c5511c9dc5aaf638

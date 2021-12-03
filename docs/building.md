@@ -8,22 +8,22 @@ This PDF was generated using Doxygen version 1.9.2. To install `doxygen-1.9.2` f
 
 Install following packages on Ubuntu 18.04
 
-```
-sudo apt install doxygen-latex graphviz texlive-full texlive-latex-base latex-cjk-all
+```sh
+$ sudo apt install doxygen-latex graphviz texlive-full texlive-latex-base latex-cjk-all
 ```
 
 Above packages required to generate PDF using doxygen.
 
-## Build and Install 
+## Build and Install
 
-```
-git clone https://github.com/doxygen/doxygen.git 
-cd doxygen
-mkdir build 
-cd build 
-cmake -G "Unix Makefiles" .. 
-make
-sudo make install 
+```sh
+$ git clone https://github.com/doxygen/doxygen.git 
+$ cd doxygen
+$ mkdir build 
+$ cd build 
+$ cmake -G "Unix Makefiles" .. 
+$ make
+$ sudo make install 
 ```
 
 # ta-ref with Keystone
@@ -35,59 +35,56 @@ Make sure Keystone and other dependant sources have been built
 Install required packages
 
 ```sh
-sudo apt-get update
-sudo apt-get install -y clang-tools-6.0 libclang-6.0-dev cmake ocaml expect screen sshpass
+$ sudo apt-get update
+$ sudo apt-get install -y clang-tools-6.0 libclang-6.0-dev cmake ocaml expect screen sshpass
 ```
 
 Setup Env
-```
-export KEYSTONE_DIR=<path to your keystone directory>
-export PATH=$PATH:$KEYSTONE_DIR/riscv/bin
+```sh
+$ export KEYSTONE_DIR=<path to your keystone directory>
+$ export PATH=$PATH:$KEYSTONE_DIR/riscv/bin
 ```
 
 Clone and Build KEYEDGE
 
 ```sh
-GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/keyedge.git
-cd keyedge
-git checkout f9406aba2117147cc54462ede4766e26f028ced9
-make
+$ GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/keyedge.git
+$ cd keyedge
+$ git checkout f9406aba2117147cc54462ede4766e26f028ced9
+$ make
 ```
 
 Clone and Build KEEDGER8R
 
 ```sh
-GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/keedger8r.git
-cd keedger8r
-make
-```
-
-
-```
-sed -i 's/MAX_EDGE_CALL 10$/MAX_EDGE_CALL 1000/' ${KEYSTONE_DIR}/sdk/lib/edge/include/edge_common.h
-make -C ${KEYSTONE_DIR}/sdk/lib clean all
+$ GIT_SSL_NO_VERIFY=1 git clone --recursive https://192.168.100.100/rinkai/keedger8r.git
+$ cd keedger8r
+$ make
+$ sed -i 's/MAX_EDGE_CALL 10$/MAX_EDGE_CALL 1000/' ${KEYSTONE_DIR}/sdk/lib/edge/include/edge_common.h
+$ make -C ${KEYSTONE_DIR}/sdk/lib clean all
 ```
 
 Clone the source
 
 ```sh
-git clone https://192.168.100.100/rinkai/ta-ref.git
-cd ta-ref
-git checkout teep-device-tb-slim
-git submodule sync --recursive
+$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ cd ta-ref
+$ git checkout teep-device-tb-slim
+$ git submodule sync --recursive
 git submodule update --init --recursive
 ```
 
 Build
-```
-export KEYSTONE_DIR=<path to keystone directory>
-export KEYSTONE_SDK_DIR=$KEYSTONE_DIR/sdk
-export KEYEDGE_DIR=<path to keyedge directory>
-export KEEDGER8R_DIR=<path to keedger8r directory>
-source env/keystone.sh 
 
-make build test-bin MACHINE=HIFIVE TEST_DIR=test_hello
-make build test-bin MACHINE=HIFIVE TEST_DIR=test_gp
+```sh
+$ export KEYSTONE_DIR=<path to keystone directory>
+$ export KEYSTONE_SDK_DIR=$KEYSTONE_DIR/sdk
+$ export KEYEDGE_DIR=<path to keyedge directory>
+$ export KEEDGER8R_DIR=<path to keedger8r directory>
+$ source env/keystone.sh 
+
+$ make build test-bin MACHINE=HIFIVE TEST_DIR=test_hello
+$ make build test-bin MACHINE=HIFIVE TEST_DIR=test_gp
 ```
 
 ## Check ta-ref by running test_gp, test_hello, on QEMU
@@ -95,10 +92,11 @@ make build test-bin MACHINE=HIFIVE TEST_DIR=test_gp
 Copy the test_hello and test_gp programs to QEMU.
 
 ### Launch QEMU Console
-<br >
-```
-cd $KEYSTONE_DIR
-./scripts/run-qemu.sh
+<br />
+
+```sh
+$ cd $KEYSTONE_DIR
+$ ./scripts/run-qemu.sh
 Welcome to Buildroot
 ```
 
@@ -108,11 +106,11 @@ Welcome to Buildroot
 <br /> 
 
 ```sh
-cp test_hello/keystone/Enclave/Enclave.eapp_riscv $KEYSTONE_DIR/buildroot_overlay/root/test_hello/
-cp test_hello/keystone/Enclave/App.client $KEYSTONE_DIR/buildroot_overlay/root/test_hello/
-cp $KEYSTONE_SDK_DIR/rts/eyrie/eyrie-rt $KEYSTONE_DIR/buildroot_overlay/root/test_hello/
-
-insmod keystone-driver.ko
+$ cp test_hello/keystone/Enclave/Enclave.eapp_riscv $KEYSTONE_DIR/buildroot_overlay/root/test_hello/
+$ cp test_hello/keystone/Enclave/App.client $KEYSTONE_DIR/buildroot_overlay/root/test_hello/
+$ cp $KEYSTONE_SDK_DIR/rts/eyrie/eyrie-rt $KEYSTONE_DIR/buildroot_overlay/root/test_hello/
+ 
+$ insmod keystone-driver.ko
 ./App.client Enclave.eapp_riscv eyrie-rt
 hello world!
 ```
@@ -120,14 +118,15 @@ hello world!
 ### test_gp
 <br /> 
 <br /> Run test_gp
-<br /> 
-```
-cp test_gp/keystone/Enclave/Enclave.eapp_riscv $KEYSTONE_DIR/buildroot_overlay/root/test_gp/
-cp test_gp/keystone/Enclave/App.client $KEYSTONE_DIR/buildroot_overlay/root/test_gp/
-cp $KEYSTONE_SDK_DIR/rts/eyrie/eyrie-rt $KEYSTONE_DIR/buildroot_overlay/root/test_gp/
+<br />
 
-insmod keystone-driver.ko
-./App.client Enclave.eapp_riscv eyrie-rt
+```sh
+$ cp test_gp/keystone/Enclave/Enclave.eapp_riscv $KEYSTONE_DIR/buildroot_overlay/root/test_gp/
+$ cp test_gp/keystone/Enclave/App.client $KEYSTONE_DIR/buildroot_overlay/root/test_gp/
+$ cp $KEYSTONE_SDK_DIR/rts/eyrie/eyrie-rt $KEYSTONE_DIR/buildroot_overlay/root/test_gp/
+
+$ insmod keystone-driver.ko
+$ ./App.client Enclave.eapp_riscv eyrie-rt
 main start
 TEE_GenerateRandom(0x000000003FFFFEE0, 16): start
 @[SE] getrandom buf fff41844 len 16 flags 0 -> 16
@@ -225,7 +224,7 @@ verify ok
 main end
 ```
 
-# ta-ref with OPTEE
+# ta-ref with OP-TEE
 
 Make sure optee_3.9.0_rpi3 has been built already. 
 
@@ -234,45 +233,50 @@ Make sure optee_3.9.0_rpi3 has been built already.
 Clone the source
 
 ```sh
-git clone https://192.168.100.100/rinkai/ta-ref.git
-cd ta-ref
-git checkout teep-device-tb-slim
-git submodule sync --recursive
-git submodule update --init --recursive
-
+$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ cd ta-ref
+$ git checkout teep-device-tb-slim
+$ git submodule sync --recursive
+$ git submodule update --init --recursive
 ```
 
 Build
 
-```
-export OPTEE_DIR=<path to optee_3.9.0_rpi3>
-source env/optee_rpi3.sh
-make build test-bin MACHINE=RPI3 TEST_DIR=test_hello
-make build test-bin MACHINE=RPI3 TEST_DIR=test_gp
+```sh
+$ export OPTEE_DIR=<path to optee_3.9.0_rpi3>
+$ source env/optee_rpi3.sh
+$ make build test-bin MACHINE=RPI3 TEST_DIR=test_hello
+$ make build test-bin MACHINE=RPI3 TEST_DIR=test_gp
 ```
 
 ## Check ta-ref by running test_gp, test_hello, on QEMU
 <br />
 Copy the test_hello and test_gp programs to QEMU buildroot directory
-``` 
-mkdir -p optee_3.9.0_qemu/out-br/target/home/gitlab/out/{test_hello,test_gp}
-cp ta-ref/test_hello/optee/App/optee_ref_ta optee_3.9.0_qemu/out-br/target/home/gitlab/out/test_hello/
-cp ta-ref/test_hello/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta optee_3.9.0_qemu/out-br/target/home/gitlab/out/test_hello/
 
-cp ta-ref/test_gp/optee/App/optee_ref_ta optee_3.9.0_qemu/out-br/target/home/gitlab/out/test_gp/
-cp ta-ref/test_gp/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta optee_3.9.0_qemu/out-br/target/home/gitlab/out/test_gp/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta 
-cp ./test_gp/optee/Enclave/Enclave.nm /TEE/demo/rpi3/optee_3.9.0_qemu/out-br/target/home/gitlab/out/test_gp/
+```sh 
+$ mkdir -p optee_3.9.0_qemu/out-br/target/home/gitlab/out/{test_hello,test_gp}
+$ cp ta-ref/test_hello/optee/App/optee_ref_ta optee_3.9.0_qemu/out-br/target/home/gitlab/out/test_hello/
+$ cp ta-ref/test_hello/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
+	 optee_3.9.0_qemu/out-br/target/home/gitlab/out/test_hello/
+$ cp ta-ref/test_gp/optee/App/optee_ref_ta
+	 optee_3.9.0_qemu/out-br/target/home/gitlab/out/test_gp/
+$ cp ta-ref/test_gp/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
+	 optee_3.9.0_qemu/out-br/target/home/gitlab/out/test_gp/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta 
+$ cp ./test_gp/optee/Enclave/Enclave.nm
+	/TEE/demo/rpi3/optee_3.9.0_qemu/out-br/target/home/gitlab/out/test_gp/
 ```
 
 ### test_hello
 <br /> 
 <br /> Run test_hello
-<br /> 
-```
-cp /home/gitlab/out/test_hello/
-cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /home/gitlab/out/
-ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib64/optee_armtz/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
-./optee_ref_ta 
+<br />
+
+```sh
+$ cd /home/gitlab/out/test_hello/
+$ cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /home/gitlab/out/
+$ ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
+	 /lib64/optee_armtz/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
+$ ./optee_ref_ta 
 --- enclave log start---
 ecall_ta_main() start
 hello world!
@@ -287,11 +291,12 @@ If executed successfully, you see above messages
 <br /> Run test_gp
 <br /> 
 
-```
-cd /home/gitlab/out/test_gp/
-cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /home/gitlab/out/
-ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib64/optee_armtz/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
-./optee_ref_ta
+```sh
+$ cd /home/gitlab/out/test_gp/
+$ cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /home/gitlab/out/
+$ ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
+	 /lib64/optee_armtz/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
+$ ./optee_ref_ta
 start TEEC_InvokeCommand
 --- enclave log start---
 ecall_ta_main() start
@@ -354,19 +359,19 @@ Build ta-ref for Intel SGX platforms
 Clone the source
 
 ```sh
-git clone https://192.168.100.100/rinkai/ta-ref.git
-cd ta-ref
-git checkout teep-device-tb-slim
-git submodule sync --recursive
-git submodule update --init --recursive
+$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ cd ta-ref
+$ git checkout teep-device-tb-slim
+$ git submodule sync --recursive
+$ git submodule update --init --recursive
 ```
 
 Build
-```
-source /opt/intel/sgxsdk/environment
-source env/sgx_x64.sh
-make build test-bin MACHINE=NUC TEST_DIR=test_hello
-make build test-bin MACHINE=NUC TEST_DIR=test_gp
+```sh
+$ source /opt/intel/sgxsdk/environment
+$ source env/sgx_x64.sh
+$ make build test-bin MACHINE=NUC TEST_DIR=test_hello
+$ make build test-bin MACHINE=NUC TEST_DIR=test_gp
 ```
 
 
@@ -377,11 +382,12 @@ Copy the ta-ref's test_hello & test_gp executables to test directory
 ### test_hello
 <br /> 
 <br /> Run test_hello
-<br /> 
-```
-cp test_hello/sgx/Enclave/enclave.signed.so <test directory>
-cp test_hello/sgx/App/sgx_app <test directory>
-<test directory>/sgx_app 
+<br />
+
+```sh
+$ cp test_hello/sgx/Enclave/enclave.signed.so <test directory>
+$ cp test_hello/sgx/App/sgx_app <test directory>
+$ <test directory>/sgx_app 
 hello world!
 Info: Enclave successfully returned.
 ```
@@ -389,11 +395,12 @@ Info: Enclave successfully returned.
 ### test_gp
 <br /> 
 <br /> Run test_gp
-<br /> 
-```
-cp test_gp/sgx/Enclave/enclave.signed.so <test directory>
-cp test_gp/sgx/App/sgx_app <test directory>
-<test directory>/sgx_app 
+<br />
+
+```sh
+$ cp test_gp/sgx/Enclave/enclave.signed.so <test directory>
+$ cp test_gp/sgx/App/sgx_app <test directory>
+$ <test directory>/sgx_app 
 main start
 TEE_GenerateRandom(): start
 @random: f35c1d1e4bbf6641c5511c9dc5aaf638

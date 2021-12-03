@@ -23,6 +23,7 @@
 \RequirePackage{stackengine}
 \RequirePackage[normalem]{ulem} % for strikeout, but don't modify emphasis
 
+
 %---------- Internal commands used in this style file ----------------
 
 \renewcommand{\ensurespace}[1]{%
@@ -96,6 +97,8 @@
   \end{alltt}%
   \normalsize%
 }
+
+
 % Necessary for redefining not defined characters, i.e. "Replacement Character" in tex output.
 \newlength{\reCodeWidthChar}
 \newlength{\reCodeHeightChar}
@@ -127,8 +130,9 @@
   {
     {\lccode`~32 \lowercase{\global\let~}}\obeyspaces%
   }
-
+  \begin{tcolorbox}[colback=gray!5,colframe=gray!50!black,breakable]
 }{%
+  \end{tcolorbox}
   \normalfont%
   \normalsize%
   \settowidth{\CodeWidthChar}{?}%

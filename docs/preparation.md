@@ -1,4 +1,4 @@
-# Preparation before building
+# Preparation before building ta-ref
 
 # Keystone(RISC-V Unleased)
 Keystone is an open-source TEE framework for RISC-V processors. For more details check, 
@@ -9,8 +9,13 @@ Install following Packages
 
 ```sh
 $ sudo apt-get update
-$ sudo apt-get install -y autoconf automake autotools-dev bc bison build-essential curl expat libexpat1-dev flex gawk gcc git gperf libgmp-dev libmpc-dev libmpfr-dev libtool texinfo tmux patchutils zlib1g-dev wget bzip2 patch vim-common lbzip2 python pkg-config libglib2.0-dev libpixman-1-dev libssl-dev screen device-tree-compiler expect makeself unzip cpio rsync cmake
+$ sudo apt-get install -y autoconf automake autotools-dev bc bison
+  build-essential curl expat libexpat1-dev flex gawk gcc git gperf libgmp-dev 
+  libmpc-dev libmpfr-dev libtool texinfo tmux patchutils zlib1g-dev wget
+  bzip2 patch vim-common lbzip2 python pkg-config libglib2.0-dev libpixman-1-dev
+  libssl-dev screen device-tree-compiler expect makeself unzip cpio rsync cmake
 ```
+
 ## Build Keystone
 Download the keystone sources 
 
@@ -27,6 +32,7 @@ $ source source.sh
 ./tests/tests/vault.sh
 $ make image
 ```
+
 RISC-V Toolchain:
 - When you execute `./fast-setup.sh`, the toolchain for RISC-V has been installed at `$KEYSTONE_DIR/riscv/bin` and it adds to your PATH.
 
@@ -40,18 +46,17 @@ Welcome to Buildroot
 ```
 
 Login to console with user=root, passwd=sifive
-```
+```console
 buildroot login: root
 Password: 
 $ 
 ```
 
 Run hello example
-```
-sh$ insmod keystone-driver.ko 
+```console
+$ insmod keystone-driver.ko 
 [  365.354299] keystone_driver: loading out-of-tree module taints kernel.
 [  365.364279] keystone_enclave: keystone enclave v0.2
-$
 $ ./hello/hello.ke 
 Verifying archive integrity...  100%   All good.
 Uncompressing Keystone vault archive  100%
@@ -63,8 +68,8 @@ Poweroff the console incase, if you want to exit.
 $ poweroff
 ```
 
-# OPTEE (ARM64 RPI3)
-OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a non-secure Linux kernel running on Arm. Lets build OPTEE for QEMU and Raspberry Pi3 Model B development board. For more details check, 
+# OP-TEE (ARM64 Raspberry Pi 3 Model B)
+OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a non-secure Linux kernel running on Arm. Lets build OP-TEE for QEMU and Raspberry Pi3 Model B development board. For more details check, 
 - https://optee.readthedocs.io/en/latest/
 
 ## Required Packages
@@ -87,7 +92,7 @@ $ sudo apt-get install -y android-tools-adb android-tools-fastboot autoconf \
 $ sudo pip3 install pycryptodomex
 ```
 
-## Build OPTEE v3.9.0
+## Build OP-TEE v3.9.0
 
 Configure git
 
@@ -114,7 +119,7 @@ $ wget http://192.168.100.100:2000/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.
 $ export PATH=${TOOLCHAIN_DIR}/aarch64/bin:${TOOLCHAIN_DIR}/aarch32/bin:${PATH}
 ```
 
-### Clone and Build OPTEE v3.9.0 for QEMU
+### Clone and Build OP-TEE v3.9.0 for QEMU
 <br />
 Clone optee version 3.9.0 for QEMU
 
@@ -133,7 +138,7 @@ If build is successfull, the rootfs can be found as follows
 $ ls -l ../out-br/images/rootfs.cpio.gz
 ```
 
-### Clone and Build OPTEE v3.9.0 for RPI3
+### Clone and Build OP-TEE v3.9.0 for RPI3
 <br />
 Copy the following lines into "optee-rpi3.sh" script 
 
@@ -148,7 +153,11 @@ cd ${OPTEE_DIR}
 ln -s ~/toolchains ${OPTEE_DIR}/. || true
 echo 'CONFIG_CMDLINE="console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 root=/dev/mmcblk0p2 rootfstype=ext4 noinitrd rw rootwait init=/lib/systemd/systemd"' > build/defconfig-cmdline.txt
 cd build
-make OPTEE_CLIENT_BIN_ARCH_EXCLUDE=/boot LINUX_DEFCONFIG_COMMON_FILES="${OPTEE_DIR}/linux/arch/arm64/configs/bcmrpi3_defconfig ${OPTEE_DIR}/build/kconfigs/rpi3.conf ${OPTEE_DIR}/build/defconfig-cmdline.txt" BR2_PACKAGE_OPTEE_OS_EXT=n BR2_PACKAGE_OPTEE_TEST_EXT=n BR2_PACKAGE_OPTEE_EXAMPLES_EXT=n BR2_TOOLCHAIN_EXTERNAL_GCC_8=y BR2_TOOLCHAIN_EXTERNAL_HEADERS_4_19=y BR2_HOST_GCC_AT_LEAST_8=y BR2_TOOLCHAIN_HEADERS_AT_LEAST="4.19" -j'nproc'
+make OPTEE_CLIENT_BIN_ARCH_EXCLUDE=/boot
+	LINUX_DEFCONFIG_COMMON_FILES="${OPTEE_DIR}/linux/arch/arm64/configs/bcmrpi3_defconfig
+ 	${OPTEE_DIR}/build/kconfigs/rpi3.conf ${OPTEE_DIR}/build/defconfig-cmdline.txt" BR2_PACKAGE_OPTEE_OS_EXT=n BR2_PACKAGE_OPTEE_TEST_EXT=n
+ 	BR2_PACKAGE_OPTEE_EXAMPLES_EXT=n BR2_TOOLCHAIN_EXTERNAL_GCC_8=y BR2_TOOLCHAIN_EXTERNAL_HEADERS_4_19=y BR2_HOST_GCC_AT_LEAST_8=y
+ 	BR2_TOOLCHAIN_HEADERS_AT_LEAST="4.19" -j'nproc'
 ```
 
 Run the script as follows
@@ -163,11 +172,11 @@ If build is successfull, the rootfs can be found as follows
 $ ls -l ../out-br/images/rootfs.cpio.gz
 ```
 
-## Run OPTEE Examples
+## Run OP-TEE Examples
 
 ### Launching QEMU Console
 <br /> 
-Run following commands from OPTEE build directory 
+Run following commands from OP-TEE build directory 
 <br /> 
 
 ```sh
@@ -175,7 +184,7 @@ $ cd $OPTEE_DIR/build
 $ make run
 ```
 Once above command is success, QEMU is ready
-```
+```console
 * QEMU is now waiting to start the execution
 * Start execution with either a 'c' followed by <enter> in the QEMU console or
 * attach a debugger and continue from there.
@@ -183,7 +192,8 @@ Once above command is success, QEMU is ready
 * To run OP-TEE tests, use the xtest command in the 'Normal World' terminal
 * Enter 'xtest -h' for help.
 
-cd /TEE/demo/rpi3/optee_3.9.0_qemu/build/../out/bin && /TEE/demo/rpi3/optee_3.9.0_qemu/build/../qemu/aarch64-softmmu/qemu-system-aarch64 \
+cd /TEE/demo/rpi3/optee_3.9.0_qemu/build/../out/bin
+	 && /TEE/demo/rpi3/optee_3.9.0_qemu/build/../qemu/aarch64-softmmu/qemu-system-aarch64 \
 	-nographic \
 	-serial tcp:localhost:54320 -serial tcp:localhost:54321 \
 	-smp 2 \
@@ -194,7 +204,8 @@ cd /TEE/demo/rpi3/optee_3.9.0_qemu/build/../out/bin && /TEE/demo/rpi3/optee_3.9.
 	-initrd rootfs.cpio.gz \
 	-kernel Image -no-acpi \
 	-append 'console=ttyAMA0,38400 keep_bootcon root=/dev/vda2' \
-	-object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0,max-bytes=1024,period=1000 -netdev user,id=vmnic -device virtio-net-device,netdev=vmnic
+	-object rng-random,filename=/dev/urandom,id=rng0 -device virtio-rng-pci,rng=rng0,max-bytes=1024,
+		period=1000 -netdev user,id=vmnic -device virtio-net-device,netdev=vmnic
 QEMU 3.0.93 monitor - type 'help' for more information
 (qemu) c
 Now Optee started to boot from another tab on the Terminal
@@ -205,7 +216,7 @@ Now Optee started to boot from another tab on the Terminal
 Once boot completed it displays following message, then enter "root" to login to the shell
 <br /> 
 
-```
+```console
 Welcome to Buildroot, type root or test to login
 buildroot login: root
 $
@@ -306,7 +317,7 @@ $ sudo apt install libsgx-enclave-common libsgx-epid libsgx-launch libsgx-urts l
 ```
 
 If you see below error, 
-```
+```console
 Errors were encountered while processing:
  /tmp/apt-dpkg-install-pCB0cR/04-libsgx-headers_2.12.100.3-bionic1_amd64.deb
 ```
@@ -426,7 +437,7 @@ $ make
 Run "run-server"
 <br />
 
-```
+```console
 $ ./run-server
 Listening for connections on port 7777
 Waiting for a client to connect...
@@ -453,7 +464,7 @@ Waiting for a client to connect...
 Open another terminal and run "run-client"
 <br />
 
-```
+```console
 $ ./run-client
 
 ---- Copy/Paste Msg0||Msg1 Below to SP -------------------------------------
@@ -505,7 +516,7 @@ Server may invoke wget command to get some files from intel servers.
 If the server side fails with following error
 <br />
 
-```
+```console
 Connecting to api.trustedservices.intel.com (api.trustedservices.intel.com)|40.87.90.88|:443... connected.
 ERROR: cannot verify api.trustedservices.intel.com's certificate, issued by 'CN=COMODO RSA Organization Validation Secure Server CA,O=COMODO CA Limited,L=Salford,ST=Greater Manchester,C=GB':
   Unable to locally verify the issuer's authority.
