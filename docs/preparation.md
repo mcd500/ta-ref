@@ -8,24 +8,24 @@ Keystone is an open-source TEE framework for RISC-V processors. For more details
 Install following Packages
 
 ```sh
-apt-get update
-apt-get install -y autoconf automake autotools-dev bc bison build-essential curl expat libexpat1-dev flex gawk gcc git gperf libgmp-dev libmpc-dev libmpfr-dev libtool texinfo tmux patchutils zlib1g-dev wget bzip2 patch vim-common lbzip2 python pkg-config libglib2.0-dev libpixman-1-dev libssl-dev screen device-tree-compiler expect makeself unzip cpio rsync cmake
+$ sudo apt-get update
+$ sudo apt-get install -y autoconf automake autotools-dev bc bison build-essential curl expat libexpat1-dev flex gawk gcc git gperf libgmp-dev libmpc-dev libmpfr-dev libtool texinfo tmux patchutils zlib1g-dev wget bzip2 patch vim-common lbzip2 python pkg-config libglib2.0-dev libpixman-1-dev libssl-dev screen device-tree-compiler expect makeself unzip cpio rsync cmake
 ```
 ## Build Keystone
 Download the keystone sources 
 
 ```sh
-git clone https://github.com/keystone-enclave/keystone.git
-cd keystone
-git checkout v0.3
-./fast-setup.sh
-make
-source source.sh
+$ git clone https://github.com/keystone-enclave/keystone.git
+$ cd keystone
+$ git checkout v0.3
+$ ./fast-setup.sh
+$ make
+$ source source.sh
 ./sdk/scripts/init.sh
 ./sdk/examples/hello/vault.sh
 ./sdk/examples/hello-native/vault.sh
 ./tests/tests/vault.sh
-make image
+$ make image
 ```
 RISC-V Toolchain:
 - When you execute `./fast-setup.sh`, the toolchain for RISC-V has been installed at `$KEYSTONE_DIR/riscv/bin` and it adds to your PATH.
@@ -34,13 +34,12 @@ RISC-V Toolchain:
 
 Launch QEMU console
 <br />
-```
-./scripts/run-qemu.sh
+```sh
+$ ./scripts/run-qemu.sh
 Welcome to Buildroot
 ```
 
 Login to console with user=root, passwd=sifive
-
 ```
 buildroot login: root
 Password: 
@@ -49,7 +48,7 @@ $
 
 Run hello example
 ```
-$ insmod keystone-driver.ko 
+sh$ insmod keystone-driver.ko 
 [  365.354299] keystone_driver: loading out-of-tree module taints kernel.
 [  365.364279] keystone_enclave: keystone enclave v0.2
 $
@@ -60,7 +59,6 @@ hello, world!
 ```
 
 Poweroff the console incase, if you want to exit.
-
 ```
 $ poweroff
 ```
@@ -74,9 +72,9 @@ OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a non-s
 Install following packages on Ubuntu 18.04
 
 ```sh
-sudo dpkg --add-architecture i386
-sudo apt-get update -y
-sudo apt-get install -y android-tools-adb android-tools-fastboot autoconf \
+$ sudo dpkg --add-architecture i386
+$ sudo apt-get update -y
+$ sudo apt-get install -y android-tools-adb android-tools-fastboot autoconf \
         automake bc bison build-essential ccache cscope curl device-tree-compiler \
         expect flex ftp-upload gdisk iasl libattr1-dev libc6:i386 libcap-dev \
         libfdt-dev libftdi-dev libglib2.0-dev libhidapi-dev libncurses5-dev \
@@ -86,7 +84,7 @@ sudo apt-get install -y android-tools-adb android-tools-fastboot autoconf \
         rsync unzip uuid-dev xdg-utils xterm xz-utils zlib1g-dev \
         git python3-pip wget cpio \
         texlive texinfo \
-sudo pip3 install pycryptodomex
+$ sudo pip3 install pycryptodomex
 ```
 
 ## Build OPTEE v3.9.0
@@ -94,43 +92,45 @@ sudo pip3 install pycryptodomex
 Configure git
 
 ```sh
-git config --global user.name "dummy"
-git config --global user.email "dummy@gmail.com"
-git config --global color.ui false
-mkdir ~/bin
-curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo && \
-chmod a+x ~/bin/repo
+$ git config --global user.name "dummy"
+$ git config --global user.email "dummy@gmail.com"
+$ git config --global color.ui false
+$ mkdir ~/bin
+$ curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo && \
+$ chmod a+x ~/bin/repo
 ```
 
 ### Download Toolchains
 <br />
+
 ```sh
-export TOOLCHAIN_DIR=${HOME}/toolchains
-sudo apt-get install -y wget xz-utils
-mkdir -p ${TOOLCHAIN_DIR}/aarch64 ${TOOLCHAIN_DIR}/aarch32
-wget http://192.168.100.100:2000/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf.tar.xz -o /dev/null -O aarch32.tar.xz && \
+$ export TOOLCHAIN_DIR=${HOME}/toolchains
+$ sudo apt-get install -y wget xz-utils
+$ mkdir -p ${TOOLCHAIN_DIR}/aarch64 ${TOOLCHAIN_DIR}/aarch32
+$ wget http://192.168.100.100:2000/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf.tar.xz -o /dev/null -O aarch32.tar.xz && \
   tar xf aarch32.tar.xz --strip-components=1 -C ${TOOLCHAIN_DIR}/aarch32
-wget http://192.168.100.100:2000/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz -o /dev/null -O aarch64.tar.xz && \
+$ wget http://192.168.100.100:2000/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz -o /dev/null -O aarch64.tar.xz && \
   tar xf aarch64.tar.xz --strip-components=1 -C ${TOOLCHAIN_DIR}/aarch64
-export PATH=${TOOLCHAIN_DIR}/aarch64/bin:${TOOLCHAIN_DIR}/aarch32/bin:${PATH}
+$ export PATH=${TOOLCHAIN_DIR}/aarch64/bin:${TOOLCHAIN_DIR}/aarch32/bin:${PATH}
 ```
 
 ### Clone and Build OPTEE v3.9.0 for QEMU
 <br />
 Clone optee version 3.9.0 for QEMU
-<br />
+
+```sh
+$ mkdir optee_3.9.0_qemu
+$ cd optee_3.9.0_qemu
+$ ~/bin/repo init -u https://github.com/knknkn1162/manifest.git -m qemu_v8.xml -b 3.9.0
+$ ~/bin/repo sync -j4 --no-clone-bundle
+$ ln -s ~/toolchains toolchains
+$ cd build
+$ make
 ```
-mkdir optee_3.9.0_qemu
-cd optee_3.9.0_qemu
-~/bin/repo init -u https://github.com/knknkn1162/manifest.git -m qemu_v8.xml -b 3.9.0
-~/bin/repo sync -j4 --no-clone-bundle
-ln -s ~/toolchains toolchains
-cd build
-make
-```
+
 If build is successfull, the rootfs can be found as follows
-```
-ls -l ../out-br/images/rootfs.cpio.gz
+```sh
+$ ls -l ../out-br/images/rootfs.cpio.gz
 ```
 
 ### Clone and Build OPTEE v3.9.0 for RPI3
@@ -154,13 +154,13 @@ make OPTEE_CLIENT_BIN_ARCH_EXCLUDE=/boot LINUX_DEFCONFIG_COMMON_FILES="${OPTEE_D
 Run the script as follows
 
 ```sh
-chmod +x optee-rpi3.sh
-./optee-rpi3.sh 3.9.0
+$ chmod +x optee-rpi3.sh
+$ ./optee-rpi3.sh 3.9.0
 ```
 
 If build is successfull, the rootfs can be found as follows
-```
-ls -l ../out-br/images/rootfs.cpio.gz
+```sh
+$ ls -l ../out-br/images/rootfs.cpio.gz
 ```
 
 ## Run OPTEE Examples
@@ -171,8 +171,8 @@ Run following commands from OPTEE build directory
 <br /> 
 
 ```sh
-cd $OPTEE_DIR/build
-make run
+$ cd $OPTEE_DIR/build
+$ make run
 ```
 Once above command is success, QEMU is ready
 ```
@@ -216,7 +216,7 @@ TA incremented value to 43
 
 Poweroff the console in case, if you want to exit.
 
-```
+```sh
 $ poweroff
 ```
 
@@ -253,7 +253,7 @@ Refer: https://github.com/intel/sgx-software-enable/blob/master/README.md
 Intall following packages on Ubuntu 18.04
 
 ```sh
-sudo apt-get install build-essential ocaml ocamlbuild automake autoconf libtool wget python libssl-dev git cmake perl libssl-dev libcurl4-openssl-dev protobuf-compiler libprotobuf-dev debhelper cmake reprepro expect unzip sshpass
+$ sudo apt-get install build-essential ocaml ocamlbuild automake autoconf libtool wget python libssl-dev git cmake perl libssl-dev libcurl4-openssl-dev protobuf-compiler libprotobuf-dev debhelper cmake reprepro expect unzip sshpass
 ```
 ## Build SGX
 
@@ -266,18 +266,18 @@ There are 3 components which need to be build for SGX
 <br /> 
 Clone and build
 
-```
-git clone https://github.com/intel/linux-sgx.git -b sgx_2.10
-cd linux-sgx
-git checkout sgx_2.10
-./download_prebuilt.sh
-sudo cp external/toolset/ubuntu18.04/{as,ld,ld.gold,objdump} /usr/local/bin/
-make -j`nproc` sdk_install_pkg DEBUG=1
+```sh
+$ git clone https://github.com/intel/linux-sgx.git -b sgx_2.10
+$ cd linux-sgx
+$ git checkout sgx_2.10
+$ ./download_prebuilt.sh
+$ sudo cp external/toolset/ubuntu18.04/{as,ld,ld.gold,objdump} /usr/local/bin/
+$ make -j`nproc` sdk_install_pkg DEBUG=1
 ```
 
 Install SGX SDK
-```
-sudo ./linux/installer/bin//sgx_linux_x64_sdk_${version}.bin
+```sh
+$ sudo ./linux/installer/bin//sgx_linux_x64_sdk_${version}.bin
 ```
 where ${version} is a string something similar to 2.10.100.2.<br />
 Answer the question with `no` and input the install dir as `/opt/intel`
@@ -287,11 +287,11 @@ Build and Install SGX PSW packages
 <br />
 See here: https://github.com/intel/linux-sgx#install-the-intelr-sgx-psw
 <br />
-```
-source /opt/intel/sgxsdk/environment
-make deb_psw_pkg DEBUG=1
-rm ./linux/installer/deb/*/*sgx-dcap-pccs*.deb
-sudo dpkg -i ./linux/installer/deb/*/*.deb
+```sh
+$ source /opt/intel/sgxsdk/environment
+$ make deb_psw_pkg DEBUG=1
+$ rm ./linux/installer/deb/*/*sgx-dcap-pccs*.deb
+$ sudo dpkg -i ./linux/installer/deb/*/*.deb
 ```
 
 <br />
@@ -301,8 +301,8 @@ See here: https://github.com/intel/linux-sgx#install-the-intelr-sgx-psw-1<br />
 Using the local repo is recommended, since the system will resolve the dependencies automatically.<br />
 Check at page no.7, https://download.01.org/intel-sgx/sgx-linux/2.9/docs/Intel_SGX_Installation_Guide_Linux_2.9_Open_Source.pdf<br />
 
-```
-sudo apt install libsgx-enclave-common libsgx-epid libsgx-launch libsgx-urts libsgx-uae-service libsgx-quote-ex
+```sh
+$ sudo apt install libsgx-enclave-common libsgx-epid libsgx-launch libsgx-urts libsgx-uae-service libsgx-quote-ex
 ```
 
 If you see below error, 
@@ -312,8 +312,8 @@ Errors were encountered while processing:
 ```
 
 Here is the fix
-```
-sudo apt -o Dpkg::Options::="--force-overwrite" --fix-broken install
+```sh
+$ sudo apt -o Dpkg::Options::="--force-overwrite" --fix-broken install
 ```
 
 ### Build and Install SGX Driver
@@ -325,7 +325,7 @@ Caveat: Whenever updating kernel, don't forget rebuilding this driver with new v
 
 Clone and build
 <br />
-```
+```sh
 $ git clone https://github.com/intel/linux-sgx-driver.git
 $ cd linux-sgx-driver
 $ make
@@ -333,7 +333,7 @@ $ make
 
 Install SGX driver
 <br />
-```
+```sh
 $ sudo mkdir -p "/lib/modules/"`uname -r`"/kernel/drivers/intel/sgx"
 $ sudo cp isgx.ko "/lib/modules/"`uname -r`"/kernel/drivers/intel/sgx"
 $ sudo sh -c "cat /etc/modules | grep -Fxq isgx || echo isgx >> /etc/modules"
@@ -349,24 +349,24 @@ If it is success, reboot your machine and verify `sudo lsmod | grep isgx` if it 
 ### Build sgx-ra-sample
 Clone and build OpenSSL 1.1.c
 
-```
-wget https://www.openssl.org/source/openssl-1.1.1c.tar.gz
-tar xf openssl-1.1.1c.tar.gz 
-cd openssl-1.1.1c/
-./config --prefix=/opt/openssl/1.1.1c --openssldir=/opt/openssl/1.1.1c
-make
-sudo make install
-cd ..
+```sh
+$ wget https://www.openssl.org/source/openssl-1.1.1c.tar.gz
+$ tar xf openssl-1.1.1c.tar.gz 
+$ cd openssl-1.1.1c/
+$ ./config --prefix=/opt/openssl/1.1.1c --openssldir=/opt/openssl/1.1.1c
+$ make
+$ sudo make install
+$ cd ..
 ```
 
 Clone and build sgx-ra-sample
 <br />
-```
-git clone https://github.com/intel/sgx-ra-sample.git
-cd sgx-ra-sample/
-./bootstrap 
-./configure --with-openssldir=/opt/openssl/1.1.1c
-make
+```sh
+$ git clone https://github.com/intel/sgx-ra-sample.git
+$ cd sgx-ra-sample/
+$ ./bootstrap 
+$ ./configure --with-openssldir=/opt/openssl/1.1.1c
+$ make
 ```
 
 ### Prepare for IAS Test
@@ -374,7 +374,8 @@ make
 2. Download Intel_SGX_Attestation_RootCA.pem form above portal.
 3. Edit `settings` file and update the file with your own values obtained from portal.
 <br />
-```
+
+```sh
 	@@ -15,14 +15,14 @@ QUERY_IAS_PRODUCTION=0
 	 # Your Service Provider ID. This should be a 32-character hex string.
 	 # [REQUIRED]
@@ -419,13 +420,14 @@ make
 	-VERBOSE=0
 	+VERBOSE=1
 ```
+
 ### Run IAS Test
 <br />
 Run "run-server"
 <br />
 
 ```
-./run-server
+$ ./run-server
 Listening for connections on port 7777
 Waiting for a client to connect...
 Connection from 127.0.0.1
@@ -450,8 +452,9 @@ Waiting for a client to connect...
 
 Open another terminal and run "run-client"
 <br />
+
 ```
-./run-client
+$ ./run-client
 
 ---- Copy/Paste Msg0||Msg1 Below to SP -------------------------------------
 00000000a7fa6ed63bec97891885abc2e2e80bd4bb2bd5bb32a7e142337f486bb9f6e76a9db59aa9
@@ -510,9 +513,7 @@ To connect to api.trustedservices.intel.com insecurely, use `--no-check-certific
 ```
 
 then add a line
-```
-ca-certificate = /etc/ssl/certs/ca-certificates.crt
-```
+<code>ca-certificate = /etc/ssl/certs/ca-certificates.crt</code>
 to /etc/wgetrc file as super user, then test again.
 
 ### BIOS Updating
@@ -527,12 +528,12 @@ Update BIOS from:
 <br />
 Running SDK code samples in simulation mode
 <br />
-```
-source /opt/intel/sgxsdk/environment
-cd linux-sgx/SampleCode/LocalAttestation
-make SGX_MODE=SIM
-cd bin
-./app
+```sh
+$ source /opt/intel/sgxsdk/environment
+$ cd linux-sgx/SampleCode/LocalAttestation
+$ make SGX_MODE=SIM
+$ cd bin
+$ ./app
 succeed to load enclaves.
 succeed to establish secure channel.
 Succeed to exchange secure message...
@@ -541,12 +542,12 @@ Succeed to close Session...
 
 Running in hardware mode (It works when you have latest BIOS and SGX support is enabled in BIOS)
 <br />
-```
-source /opt/intel/sgxsdk/environment
-cd linux-sgx/SampleCode/LocalAttestation
-make SGX_MODE=HW
-cd bin
-./app
+```sh
+$ source /opt/intel/sgxsdk/environment
+$ cd linux-sgx/SampleCode/LocalAttestation
+$ make SGX_MODE=HW
+$ cd bin
+$ ./app
 succeed to load enclaves.
 succeed to establish secure channel.
 Succeed to exchange secure message...
@@ -583,7 +584,7 @@ Example source:<br />
 
 Some sample configurations can be found in `configs/` directory.
 In Optee, the contents of configs directory is listed below.
-<pre>
+```sh
 $ ls -l optee/mbedtls/configs
 total 24
 -rw-r--r-- 1 akirat akirat 2852 Feb 17  2021 config-ccm-psk-tls1_2.h
@@ -592,7 +593,7 @@ total 24
 -rw-r--r-- 1 akirat akirat 3573 Feb 17  2021 config-suite-b.h
 -rw-r--r-- 1 akirat akirat 2680 Feb 17  2021 config-thread.h
 -rw-r--r-- 1 akirat akirat 1050 Feb 17  2021 README.txt
-</pre>
+```
 
 
 ### ta-ref mbetls config file
@@ -609,7 +610,7 @@ Example source:<br />
 
 Some sample configurations can be found in `configs/` directory.
 In ta-ref, the contents of configs directory is listed below.
-<pre>
+```sh
 $ ls -l ta-ref/teep-device/libteep/mbedtls/configs
 total 24
 -rw-r--r-- 1 akirat akirat 2852 Feb 18  2021 config-ccm-psk-tls1_2.h
@@ -618,7 +619,7 @@ total 24
 -rw-r--r-- 1 akirat akirat 3573 Feb 18  2021 config-suite-b.h
 -rw-r--r-- 1 akirat akirat 2680 Feb 18  2021 config-thread.h
 -rw-r--r-- 1 akirat akirat 1050 Feb 18  2021 README.txt
-</pre>
+```
 
 
 ### teep-device mbetls config file
@@ -635,7 +636,7 @@ Example source:<br />
 
 Some sample configurations can be found in `configs/` directory.
 In teep-device, the contents of configs directory is listed below.
-<pre>
+```sh
 $ ls -l teep-device/libteep/mbedtls/configs
 total 24
 -rw-r--r-- 1 akirat akirat 2852 Feb 18  2021 config-ccm-psk-tls1_2.h
@@ -644,17 +645,17 @@ total 24
 -rw-r--r-- 1 akirat akirat 3573 Feb 18  2021 config-suite-b.h
 -rw-r--r-- 1 akirat akirat 2680 Feb 18  2021 config-thread.h
 -rw-r--r-- 1 akirat akirat 1050 Feb 18  2021 README.txt
-</pre>
+```
 
 
 ## Supplement Investigation information
 
 It is necessary to edit the following file to select the cryptographic algorithm 
-when using mbedtls in optee.
+when using mbedtls in optee.<br />
 <code>optee/optee_os/lib/libmbedtls/include/mbedtls_config_kernel.h</code>
 
 
-In Optee, selection of algorithms can be made in the below file. GCM doesn't seem to be included by default.
+In Optee, selection of algorithms can be made in the below file. GCM doesn't seem to be included by default.<br />
 <code>optee/optee_os/lib/libmbedtls/include/mbedtls_config_uta.h</code>
 
 In ta-ref, selection of algorithms can be made in the below file. GCM is included by default.
