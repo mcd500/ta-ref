@@ -565,21 +565,38 @@ Succeed to exchange secure message...
 Succeed to close Session...
 ```
 
-# Investigation of MbedTLS Configuration file
+# Customizing MbedTLS Configuration file
 
-Mbed TLS should build out-of-the box on a large variety of platforms. 
-However, we may need to adjust a few platform-specific settings or we can customize the set of features that will be built.
-All this operation can be perfomed in a single configuration file.
+MbedTLS is a C library that implements cryptographic primitives, X.509 certificate manipulation and the SSL/TLS and DTLS protocols.
+MbedTLS has a configuration file `config.h` where we can select platform-specific settings, customize the features that will be build,
+select the modules and its configurations.
+ 
+In our case, we customize mbedtls config file to add/remove crypto algorithms when building the mbedtls.
+The mbedtls default config supports many cryto algorithms which might be unneccessary and also increases the built binary size.
+
+It is advisable to reduce the size of the binaries, by selecting only the required crypto algorithms for the embedded systems.
+
+
+## What can be customized?
+
+1. how many hash algorithms to be supported<br />
+	For ex: md5, sha1, sha256, sha3 or etc
+
+2. how many symmetric algorithms to be supported<br />
+	For ex: des, aes-cbc, aes-gcm or etc
+
+3. how many asymmetric algorithms to be supported<br />
+	For ex: dsa, rsa, ecdsa, eddsa  or etc and their key length
+
 
 ## mbedtls configuration file (config.h)
 
-The mbedtls configuation file `config.h` has the following sections
-<ul>
-<li> System Support - Select options depending on platform
-<li> Mbed TLS feature support - Select which features you want to enable for corresponding modules
-<li> Mbed TLS modules -   Select modules to build in
-<li> Module configuration options - Set specific options for each module
-</ul>
+The mbedtls official way is customizing config file is by editing the
+`include/mbedtls/config.h` file. But in optee’s build system, it require modifying<br />
+`optee_os/lib/libmbedtls/include/mbedtls_config_kernel.h`
+
+Below are the different environments mbedtls config file locations, reference file
+and sample config.h configurations.
 
 ### Optee mbetls config file
 <br />
