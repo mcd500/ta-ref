@@ -32,7 +32,9 @@
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 #define TEE_INT_CORE_API_SPEC_VERSION     0x0000000A
+
 #define TEE_HANDLE_NULL                   0
+
 #define TEE_TIMEOUT_INFINITE              0xFFFFFFFF
 
 /* API Error Codes */
