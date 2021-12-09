@@ -35,6 +35,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 // ntoa conversion buffer size, this must be big enough to hold
 // one converted numeric number including padded zeros (dynamically created on stack)
 // 32 byte is a good default
@@ -73,6 +74,8 @@
 
 extern int putchar(char ch);
 #define _putchar putchar
+
+#endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 
 // output function type
 typedef void (*out_fct_type)(char character, void* buffer, size_t idx, size_t maxlen);
