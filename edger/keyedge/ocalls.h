@@ -45,6 +45,11 @@ typedef struct invoke_command_t {
   unsigned int commandID;
   unsigned int paramTypes;
   invoke_command_param_t params[4];
+  char params0_buffer[256];
+  unsigned int params0_size;
+  int param1_fd;
+  char params1_buffer[256];
+  unsigned int params1_size;
 } invoke_command_t;
 
 invoke_command_t ocall_pull_invoke_command();

@@ -19,6 +19,8 @@
 #define NO_PERF __attribute__((no_instrument_function))
 #endif
 
+int store_invoke_callback_file(const char *name, const char *out, size_t out_len);
+
 EDGE_EXTERNC_BEGIN
 
 
@@ -73,8 +75,6 @@ ssize_t ocall_getrandom(char *buf, size_t len, unsigned int flags)
   return rtn;
 }
 
-#else
-
 // from test_sign
 nonce_t ocall_import_nonce(void) {}
 
@@ -96,46 +96,6 @@ ob256_t ocall_read_file256(int fdesc)
   return ret;
 }
 
-/**
- * ocall_ree_time() - Retrieves the current REE system time.
- * 
- * The function retrieves the current time as seen from the point of view of 
- * the REE, expressed in the number of seconds since midnight on January 1, 1970, UTC.   
- *
- * @return the value of time on success, On error, ((time_t) -1) is returned.
- */
-ree_time_t ocall_ree_time(void)
-{
-  struct timeval tv;
-  struct timezone tz;
-  ree_time_t ret;
-  int rtn = gettimeofday(&tv, &tz);
-#ifdef APP_VERBOSE
-  printf("@[SE] gettimeofday %d sec %d usec -> %d\n",tv.tv_sec,tv.tv_usec,rtn);
-#endif
-  ret.seconds = tv.tv_sec;
-  ret.millis = tv.tv_usec / 1000;
-  return ret;
-}
-
-/**
- * ocall_getrandom16() - Returns a random sixteen bit value.
- * 
- * @param flags		flags is a unsigned int data type 
- *
- * @return random	sixteen bit value, else error occurred.
- */
-ob16_t ocall_getrandom16(unsigned int flags)
-{
-  ob16_t ret;
-  ssize_t rtn = getrandom(ret.b, 16, flags);
-#ifdef APP_VERBOSE
-  printf("@[SE] getrandom buf %x len %d flags %d -> %d\n",ret.b,16,flags,rtn);
-#endif
-  ret.ret = rtn;
-  return ret;
-}
-
 void ocall_write_invoke_param(int index, unsigned int offset, unsigned int size, const char *buf)
 {
 
@@ -143,6 +103,71 @@ void ocall_write_invoke_param(int index, unsigned int offset, unsigned int size,
 
 void ocall_put_invoke_command_result(invoke_command_t cmd, unsigned int result)
 {
+}
+
+
+/**
+ * ocall_invoke_command_callback() - This function invokes store_invoke_callback_file()
+ * and return the status of function.
+ * 
+ * @param dummy		dummy is a integer data type 
+ *
+ * @return 0		on success, else error occurred.
+ */
+int ocall_invoke_command_callback(invoke_command_t cb_cmd)
+{
+  int rtn = 0;
+#ifdef APP_VERBOSE
+  printf("@[SE] ocall_invoke_command_callback\n");
+#endif
+  rtn = store_invoke_callback_file(cb_cmd.params0_buffer, cb_cmd.params1_buffer, cb_cmd.params1_size);
+  return rtn;
+}
+
+
+/**
+ * store_invoke_callback_file() - To store the callback file.
+ *
+ * In this function The opened file has been assigned to "desc".If desc
+ * is less than 0 it goes for file write mode else failed to open file
+ * error appears. It returns 0 on the successful execution of read,write
+ * and close of a file .If it fails error appears.
+ *
+ * @param name      name of the file.
+ * @param out       buffer output.
+ * @param out_len   Length of the file
+ *
+ * @return 0        if success,else error appears.
+ */
+int store_invoke_callback_file(const char *name, const char *out, size_t out_len) {
+#ifdef APP_VERBOSE
+  printf("@[SE] store_invoke_callback_file. name=%s\n", name);
+#endif
+
+  char fname[256];
+  snprintf(fname, sizeof(fname), "%s.eapp_riscv", name);
+
+#ifdef APP_VERBOSE
+  printf("@[SE] start to write file. name=%s\n", fname);
+#endif
+  // write into file(create new file)
+  int desc = open(fname, O_WRONLY | O_CREAT, 644);
+  if (desc < 0) {
+    printf("failed to open file in store_invoke_callback_file. fname=%s\n", fname);
+    return -1;
+  }
+  int rtn = write(desc, out, out_len);
+  if (rtn < 0) {
+    printf("failed to write file in store_invoke_callback_file. fname=%s\n", fname);
+    close(desc);
+    return -1;
+  }
+  close(desc);
+
+#ifdef APP_VERBOSE
+  printf("Success to store callback file. fname=%s\n", fname);
+#endif
+  return 0;
 }
 
 EDGE_EXTERNC_END
