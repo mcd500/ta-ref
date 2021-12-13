@@ -680,10 +680,12 @@ total 24
 
 It is necessary to edit the following file to select the cryptographic algorithm 
 when using mbedtls in optee.<br />
+
+In optee, AES-GCM is not included by default. So we need to modify the mbedtls config file to enable AES-GCM algorithm.<br/>
+Below is the path of the file in optee kernal where we will select the crypto algorithms. 
 <code>optee/optee_os/lib/libmbedtls/include/mbedtls_config_kernel.h</code>
 
 
-In Optee, selection of algorithms can be made in the below file. GCM doesn't seem to be included by default.<br />
+Below is the path of file in TA SDK where we will select the crypto algorithms. In TA sdk, the AES-GCM is enabled by default. <br />
+So any TA which uses AES-GCM should build successfully without any modification to the mbedtls config file.
 <code>optee/optee_os/lib/libmbedtls/include/mbedtls_config_uta.h</code>
-
-In ta-ref, selection of algorithms can be made in the below file. GCM is included by default.
