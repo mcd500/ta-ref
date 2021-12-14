@@ -1,5 +1,8 @@
 # Overview of ta-ref
 
+@image html images/ta-ref_overview_flow.png
+@image latex images/ta-ref_overview_flow.png width=\textwidth
+
 ## Features
 
 ### What we did on RISC-V
@@ -27,9 +30,15 @@
 @image html images/separate-gp-tee-internal-api.png
 @image latex images/separate-gp-tee-internal-api.png width=\textwidth
 
-## Diagram 
+## Diagram
 
 ### Dependency of category
 
 @image html images/ta-ref-overview.png
 @image latex images/ta-ref-overview.png width=\textwidth
+
+
+### TEEP Architechture
+
+@image html images/TEEP-Architechture.png
+@image latex images/TEEP-Architechture.png width=\textwidth
