@@ -37,43 +37,109 @@
 #include <stdio.h>
 #include <string.h> // for memmove
 
+#define DATA_SIZE  16
+#define CHUNK_SIZE  8
 #define SHA_LENGTH (256/8)
-#define SIG_LENGTH 64
+
+static saved_hash[SHA_LENGTH];
 
 /**
- * message_digest() - Sample program for using hash functions.
+ * message_digest_gen() - Generate hash value
  *
- * Example program to show how to use hash functions with ta-ref API
+ * Example program to show how to use hash functions with ta-ref API.
+ * Calculate hash value of a data.
  */
-void message_digest(void)
+void message_digest_gen(void)
 {
-    static unsigned char data[256] = {
-        // 0x00,0x01,...,0xff
-        #include "test.dat" // Use some small date here instead of including a file
+    uint8_t data[DATA_SIZE] = {
+        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+        0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
     };
 
-    uint8_t hash[SHA_LENGTH];
     size_t hashlen = SHA_LENGTH;
+    uint8_t hash[SHA_LENGTH];
+    uint8_t *pdata = data;
 
     TEE_OperationHandle handle;
     TEE_Result rv;
 
     // Take hash of test data
-    rv = TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
 
-    TEE_DigestUpdate(handle, data, sizeof(data));
+    /** Equivalant of sha3_init() in sha3.c */
+    TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
 
-    TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
+    /** Equivalant of sha3_update() in sha3.c */
+    TEE_DigestUpdate(handle, data, CHUNK_SIZE);
+    pdata += CHUNK_SIZE;
 
+    /** Equivalant of sha3_final() in sha3.c */
+    TEE_DigestDoFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, hash, &hashlen);
+
+    /** Closing TEE handle */
     TEE_FreeOperation(handle);
 
-    // Dump hashed data
+    /** The hash value is ready, dump hashed data */
     tee_printf("hash: ");
     for (int i = 0; i < hashlen; i++) {
-      tee_printf ("%02x", hash[i]);
+        tee_printf ("%02x ", hash[i]);
     }
     tee_printf("\n");
+
+    memcpy(saved_hash, hash, hashlen);
 }
+
+
+/**
+ * message_digest_check() - Check hash value of data
+ *
+ * Example program to show how to use hash functions with ta-ref API.
+ * Calculate hash value of a data and compared with saved hash value
+ * to verify the data is the same.
+ */
+void message_digest_check(void)
+{
+    uint8_t data[DATA_SIZE] = {
+        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+        0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
+    };
+
+    size_t hashlen = SHA_LENGTH;
+    uint8_t hash[SHA_LENGTH];
+    uint8_t *pdata = data;
+
+    TEE_OperationHandle handle;
+    TEE_Result rv;
+    int ret;
+
+    // Take hash of test data
+
+    /** Equivalant of sha3_init() in sha3.c */
+    TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
+
+    /** Equivalant of sha3_update() in sha3.c */
+    TEE_DigestUpdate(handle, data, CHUNK_SIZE);
+    pdata += CHUNK_SIZE;
+
+    /** Equivalant of sha3_final() in sha3.c */
+    TEE_DigestDoFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, hash, &hashlen);
+
+    /** Closing TEE handle */
+    TEE_FreeOperation(handle);
+
+    /** The hash value is ready, dump hashed data */
+    tee_printf("hash: ");
+    for (int i = 0; i < hashlen; i++) {
+        tee_printf ("%02x ", hash[i]);
+    }
+    tee_printf("\n");
+
+    /** Compare the */
+    ret = memcmp(saved_hash, hash, hashlen);
+    if (ret == 0) {
+        tee_printf("hash: matched!\n");
+    }
+}
+
 
 /**
  * TA_CreateEntryPoint() - Trusted application creates the entry point.
@@ -90,6 +156,7 @@ TEE_Result TA_CreateEntryPoint(void)
 
     return TEE_SUCCESS;
 }
+
 
 /**
  * TA_OpenSessionEntryPoint() - Trusted application open the session entry point.
@@ -111,6 +178,7 @@ TEE_Result TA_OpenSessionEntryPoint(uint32_t __unused param_types,
     DMSG("Session has been opened");
     return TEE_SUCCESS;
 }
+
 
 /**
  * TA_DestroyEntryPoint() - The function TA_DestroyEntryPoint is the Trusted 
@@ -139,6 +207,11 @@ void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
     IMSG("Goodbye!\n");
 }
 
+/** Command id for the first function in TA */
+#define TA_REF_HASH_GEN    1111
+/** Command id for the second function in TA */
+#define TA_REF_HASH_CHECK  2222
+
 /**
  * TA_InvokeCommandEntryPoint() - The Framework calls the client invokes a  
  * command within the given session.
@@ -158,8 +231,11 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t param_types, TEE_Param params[4])
 {
     switch (cmd_id) {
-    case TA_REF_RUN_MESSAGE_DIGEST:
-        message_digest();
+    case TA_REF_HASH_GEN:
+        message_digest_gen();
+        return TEE_SUCCESS
+    case TA_REF_HASH_CHECK:
+        message_digest_check();
         return TEE_SUCCESS
     default:
         return TEE_ERROR_BAD_PARAMETERS;

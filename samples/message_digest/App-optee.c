@@ -37,6 +37,11 @@
 // For the UUID
 #include <edger/Enclave.h>
 
+/** Command id for the first function in TA */
+#define TA_REF_HASH_GEN    1111
+/** Command id for the second function in TA */
+#define TA_REF_HASH_CHECK  2222
+
 #define PRINT_BUF_SIZE 16384
 static char print_buf[PRINT_BUF_SIZE];
 #define TEEC_PARAM_TYPE1 TEEC_MEMREF_TEMP_OUTPUT
@@ -62,18 +67,14 @@ int main(void)
     TEEC_UUID uuid = TA_REF_UUID;
     uint32_t err_origin;
 
-    // Initialize a context connecting us to the TEE
+    /** Initialize a context connecting us to the TEE */
     res = TEEC_InitializeContext(NULL, &ctx);
-    if (res != TEEC_SUCCESS)
-      errx(1, "TEEC_InitializeContext failed with code 0x%x", res);
 
-    // Open "ref_ta"
+    /** Open "ref_ta" */
     res = TEEC_OpenSession(&ctx, &sess, &uuid,
 			   TEEC_LOGIN_PUBLIC, NULL, NULL, &err_origin);
-    if (res != TEEC_SUCCESS)
-      errx(1, "TEEC_Opensession failed with code 0x%x origin 0x%x",
-	   res, err_origin);
 
+    /** Preparing param which is required for calling TA */
     memset(&op, 0, sizeof(op));
     op.paramTypes = TEEC_PARAM_TYPES(
 			TEEC_NONE,
@@ -85,18 +86,15 @@ int main(void)
     op.params[1].tmpref.buffer = (void*)print_buf;
     op.params[1].tmpref.size = PRINT_BUF_SIZE;
 
-    // only TA_REF_RUN_ALL is defined
-    res = TEEC_InvokeCommand(&sess, TA_REF_RUN_HELLO, &op,
+    /** Calling generating hash value function in TA  */
+    res = TEEC_InvokeCommand(&sess, TA_REF_HASH_GEN, &op,
 			     &err_origin);
 
-    if (res != TEEC_SUCCESS) {
-      errx(1, "TEEC_InvokeCommand failed with code 0x%x origin 0x%x",
-	   res, err_origin);
-    }
-
-    // Done
+    /** Calling comparing hash value function in TA  */
+    res = TEEC_InvokeCommand(&sess, TA_REF_HASH_CHECK, &op,
+			     &err_origin);
+    /** Freeing TEE objects */
     TEEC_CloseSession(&sess);
-
     TEEC_FinalizeContext(&ctx);
 
     return 0;
