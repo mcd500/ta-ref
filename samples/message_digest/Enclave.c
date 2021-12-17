@@ -47,7 +47,8 @@ static saved_hash[SHA_LENGTH];
  * message_digest_gen() - Generate hash value
  *
  * Example program to show how to use hash functions with ta-ref API.
- * Calculate hash value of a data.
+ * Calculate hash value of a data. It calculate sha256 value and
+ * stores it. Uses SHA256.
  */
 void message_digest_gen(void)
 {
@@ -63,16 +64,27 @@ void message_digest_gen(void)
     TEE_OperationHandle handle;
     TEE_Result rv;
 
-    // Take hash of test data
-
-    /** Equivalant of sha3_init() in sha3.c */
+    /** Equivalant of sha3_init() in sha3.c or SHA256_Init in openssl  */
     TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
 
-    /** Equivalant of sha3_update() in sha3.c */
+    /** Equivalant of sha3_update() in sha3.c or SHA256_Update in openssl.
+     * Typically it is used with moving to next pointer in a for loop to 
+     * handle large data until the last chunk.
+     * Calculating hash value in iteration makes it possible to handle
+     * large data which is not able to have entire data in memory
+     * which are larger than the memory could be used inside TEE
+     * and/or only partial data arrives through Internet in streaming
+     * fashion.
+     * Pass only a chunk of data each time */
     TEE_DigestUpdate(handle, data, CHUNK_SIZE);
+
+    /** Used combined with the TEE_DigestUpdate.
+     * When the data is larger, move to next pointer of chunk in the data 
+     * for every iteration */
     pdata += CHUNK_SIZE;
 
-    /** Equivalant of sha3_final() in sha3.c */
+    /** Equivalant of sha3_final() in sha3.c or SHA256_Final in openssl.
+     * This is the last chunk */
     TEE_DigestDoFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, hash, &hashlen);
 
     /** Closing TEE handle */
@@ -94,9 +106,13 @@ void message_digest_gen(void)
  *
  * Example program to show how to use hash functions with ta-ref API.
  * Calculate hash value of a data and compared with saved hash value
- * to verify the data is the same.
+ * to verify whether the data is the same as the previous data.
+ * Checking the hash value is easiest way to confirm the integrity of
+ * the data.
+ *
+ * @return ret		0 on data match, other if not
  */
-void message_digest_check(void)
+int message_digest_check(void)
 {
     uint8_t data[DATA_SIZE] = {
         0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
@@ -111,19 +127,13 @@ void message_digest_check(void)
     TEE_Result rv;
     int ret;
 
-    // Take hash of test data
-
-    /** Equivalant of sha3_init() in sha3.c */
+    /** Repeating the same as in message_digest_gen() until have the 
+     * hash value */
     TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
-
-    /** Equivalant of sha3_update() in sha3.c */
     TEE_DigestUpdate(handle, data, CHUNK_SIZE);
     pdata += CHUNK_SIZE;
-
-    /** Equivalant of sha3_final() in sha3.c */
     TEE_DigestDoFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, hash, &hashlen);
 
-    /** Closing TEE handle */
     TEE_FreeOperation(handle);
 
     /** The hash value is ready, dump hashed data */
@@ -133,11 +143,14 @@ void message_digest_check(void)
     }
     tee_printf("\n");
 
-    /** Compare the */
+    /** Check if the data is the same with the data in message_digest_gen() 
+     * to check the data integrity */
     ret = memcmp(saved_hash, hash, hashlen);
     if (ret == 0) {
         tee_printf("hash: matched!\n");
     }
+
+    return ret;
 }
 
 
@@ -230,13 +243,19 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t cmd_id,
 				      uint32_t param_types, TEE_Param params[4])
 {
+    int ret = TEE_SUCCESS;
+
     switch (cmd_id) {
     case TA_REF_HASH_GEN:
         message_digest_gen();
-        return TEE_SUCCESS
+        return TEE_SUCCESS;
+
     case TA_REF_HASH_CHECK:
-        message_digest_check();
-        return TEE_SUCCESS
+        ret = message_digest_check();
+        if (ret == 0)
+            ret = TEE_ERROR_SIGNATURE_INVALID
+        return ret;
+
     default:
         return TEE_ERROR_BAD_PARAMETERS;
     }

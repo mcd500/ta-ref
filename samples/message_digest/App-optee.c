@@ -28,19 +28,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <err.h>
-#include <stdio.h>
-#include <string.h>
-
 #include <tee_client_api.h>
 
-// For the UUID
 #include <edger/Enclave.h>
 
-/** Command id for the first function in TA */
-#define TA_REF_HASH_GEN    1111
+/** Command id for the first function in TA.
+ * The number must match between REE and TEE to achieve the objected
+ * behavior. It is recommended to use the number which is not easy to guess
+ * from the attacker. */
+#define TA_REF_HASH_GEN    0x1111111111111111
 /** Command id for the second function in TA */
-#define TA_REF_HASH_CHECK  2222
+#define TA_REF_HASH_CHECK  0x2222222222222222
 
 #define PRINT_BUF_SIZE 16384
 static char print_buf[PRINT_BUF_SIZE];
@@ -93,9 +91,12 @@ int main(void)
     /** Calling comparing hash value function in TA  */
     res = TEEC_InvokeCommand(&sess, TA_REF_HASH_CHECK, &op,
 			     &err_origin);
+
     /** Freeing TEE objects */
     TEEC_CloseSession(&sess);
     TEEC_FinalizeContext(&ctx);
 
-    return 0;
+    /** Add checking return value for each TEEC function in the real 
+     * product */
+    return res;
 }
