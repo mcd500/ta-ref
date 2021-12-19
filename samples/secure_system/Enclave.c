@@ -66,8 +66,10 @@ struct timeval ree_time_get(void)
  *
  * The TEE_GetSystemTime() returns the time value which is not able to be
  * changed by User Applications on the REE side, but returns a tamper safe
- * time value which normally require hardware implementation for security
- * sensitive operations, such as checking expiration date of certificates and keys.
+ * time value which normally requires hardware implementation with a separate
+ * RTC chip in the area where OS on REE can not access it and backed up with
+ * shield battery. The secure system is for security sensitive operations,
+ * such as checking expiration date of certificates and keys.
  *
  * @return		returns time value for the usage in TEE
  */
