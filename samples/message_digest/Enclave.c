@@ -28,14 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <tee_ta_api.h>
-// DMSG, IMSG
-#include "assert.h" // move this to inside tee_ta_api.h
-#include "edger/Enclave_t.h"
-
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h> // for memmove
+#include "config_ref_ta.h"
 
 #define DATA_SIZE  16
 #define CHUNK_SIZE  8
@@ -109,7 +102,7 @@ void message_digest_gen(void)
  * hash value to verify whether the data is the same as the previous data.
  * Check the return value of each API call on real product development.
  *
- * @return ret		0 on data match, other if not
+ * @return		0 on data match, others if not
  */
 int message_digest_check(void)
 {

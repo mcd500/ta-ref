@@ -44,20 +44,20 @@ struct timeval {
  * sensitive purposes but it is a good way to check what the apps on REE 
  * see the current time is.
  *
- * @return t		returns time value from OS running on REE
+ * @return		returns time value from OS running on REE
  */
-timeval ree_time_get(void)
+struct timeval ree_time_get(void)
 {
     TEE_Time time;
-    timeval t;
+    struct timeval tv;
 
     /* REE time */
     TEE_GetREETime(&time);
     tee_printf ("@GP REE time %u sec %u millis\n", time.seconds, time.millis);
 
-    t.tv_sec = time.seconds, tv_usec = time.millis * 1000;
+    tv.tv_sec = time.seconds, tv.tv_usec = time.millis * 1000;
 
-    return t;
+    return tv;
 }
 
 
@@ -69,19 +69,20 @@ timeval ree_time_get(void)
  * time value which normally require hardware implementation for security
  * sensitive operations, such as checking expiration date of certificates and keys.
  *
- * @return t		returns time value for the usage in TEE
+ * @return		returns time value for the usage in TEE
  */
-timeval tee_time_get(void)
+struct timeval tee_time_get(void)
 {
     TEE_Time time;
+    struct timeval tv;
 
     /* System time */
     TEE_GetSystemTime(&time);
     tee_printf ("@GP Secure time %u sec %u millis\n", time.seconds, time.millis);
 
-    t.tv_sec = time.seconds, tv_usec = time.millis * 1000;
+    tv.tv_sec = time.seconds, tv.tv_usec = time.millis * 1000;
 
-    return t;
+    return tv;
 }
 
 
@@ -94,7 +95,7 @@ timeval tee_time_get(void)
  * level on many cryptographic algorithms used inside TEE. It is recommended
  * to have equivalent level of SP 800-90B and FIPS 140-3.
  *
- * @return rbuf		returns random value
+ * @return		returns random value
  */
 uint64_t tee_random_get(void)
 {
