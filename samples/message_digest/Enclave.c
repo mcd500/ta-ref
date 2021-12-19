@@ -44,11 +44,11 @@
 static saved_hash[SHA_LENGTH];
 
 /**
- * message_digest_gen() - Generate hash value
+ * message_digest_gen() - Example program to show how to use hash functions
+ * with ta-ref API.
  *
- * Example program to show how to use hash functions with ta-ref API.
- * Calculate hash value of a data. It calculate sha256 value and
- * stores it. Uses SHA256.
+ * Calculate hash value of a data in SHA256 and store it.
+ * Check the return value of each API call on real product development.
  */
 void message_digest_gen(void)
 {
@@ -68,14 +68,13 @@ void message_digest_gen(void)
     TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
 
     /** Equivalant of sha3_update() in sha3.c or SHA256_Update in openssl.
-     * Typically it is used with moving to next pointer in a for loop to 
-     * handle large data until the last chunk.
-     * Calculating hash value in iteration makes it possible to handle
-     * large data which is not able to have entire data in memory
-     * which are larger than the memory could be used inside TEE
-     * and/or only partial data arrives through Internet in streaming
-     * fashion.
-     * Pass only a chunk of data each time */
+     *
+     * It passes only a chunk of data each time.
+     * Typically it is used with moving to the next pointer in a for loop to
+     * handle large data until the last chunk. Calculating hash value in
+     * iteration makes it possible to handle large data, such as 4GB which is
+     * not able to have entire data inside TEE memory size and/or only
+     * partial data arrives through the Internet in streaming fashion. */
     TEE_DigestUpdate(handle, data, CHUNK_SIZE);
 
     /** Used combined with the TEE_DigestUpdate.
@@ -102,13 +101,13 @@ void message_digest_gen(void)
 
 
 /**
- * message_digest_check() - Check hash value of data
+ * message_digest_check() - Example program to show how to use hash
+ * functions with ta-ref API.
  *
- * Example program to show how to use hash functions with ta-ref API.
- * Calculate hash value of a data and compared with saved hash value
- * to verify whether the data is the same as the previous data.
- * Checking the hash value is easiest way to confirm the integrity of
- * the data.
+ * Checking the hash value is the easiest way to confirm the integrity of
+ * the data. Calculate hash value of a data and compare it with the saved
+ * hash value to verify whether the data is the same as the previous data.
+ * Check the return value of each API call on real product development.
  *
  * @return ret		0 on data match, other if not
  */
@@ -150,6 +149,7 @@ int message_digest_check(void)
         tee_printf("hash: matched!\n");
     }
 
+    /** returns 0 on success */
     return ret;
 }
 
@@ -220,10 +220,14 @@ void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
     IMSG("Goodbye!\n");
 }
 
-/** Command id for the first function in TA */
-#define TA_REF_HASH_GEN    1111
-/** Command id for the second function in TA */
-#define TA_REF_HASH_CHECK  2222
+
+/** Command id for the first operation in TA.
+ * The number must match between REE and TEE to achieve the objected
+ * behavior. It is recommended to use a number which is not easy to guess
+ * from the attacker. */
+#define TA_REF_HASH_GEN    0x1111111111111111
+/** Command id for the second operation in TA */
+#define TA_REF_HASH_CHECK  0x2222222222222222
 
 /**
  * TA_InvokeCommandEntryPoint() - The Framework calls the client invokes a  
@@ -236,8 +240,14 @@ void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
  * @param sess_ctx		The value of the void* opaque data pointer set by  
  *				the Trusted Application in the function 
  *				TA_OpenSessionEntryPoint for this session.
+ * @cmd_id			The value passed from the REE with commandID.
+ * 				The REE uses comd_id to select which operation to be execute 
+ * 				in this TA.
+ * @param_types
+ * @TEE_Param params
  *
- * @return TEE_SUCCESS		If success, else error occurred.
+ * @return TEE_SUCCESS		If success, else return error value defined in
+ *              include/tee_api_defines.h.
  */
 TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t cmd_id,
@@ -248,12 +258,14 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
     switch (cmd_id) {
     case TA_REF_HASH_GEN:
         message_digest_gen();
-        return TEE_SUCCESS;
+
+	return TEE_SUCCESS;
 
     case TA_REF_HASH_CHECK:
         ret = message_digest_check();
-        if (ret == 0)
-            ret = TEE_ERROR_SIGNATURE_INVALID
+        if (ret != TEE_SUCCESS)
+            ret = TEE_ERROR_SIGNATURE_INVALID;
+
         return ret;
 
     default:

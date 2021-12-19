@@ -32,12 +32,12 @@
 
 #include <edger/Enclave.h>
 
-/** Command id for the first function in TA.
+/** Command id for the first operation in TA.
  * The number must match between REE and TEE to achieve the objected
- * behavior. It is recommended to use the number which is not easy to guess
+ * behavior. It is recommended to use a number which is not easy to guess
  * from the attacker. */
 #define TA_REF_HASH_GEN    0x1111111111111111
-/** Command id for the second function in TA */
+/** Command id for the second operation in TA */
 #define TA_REF_HASH_CHECK  0x2222222222222222
 
 #define PRINT_BUF_SIZE 16384
@@ -45,16 +45,17 @@ static char print_buf[PRINT_BUF_SIZE];
 #define TEEC_PARAM_TYPE1 TEEC_MEMREF_TEMP_OUTPUT
 
 /**
- * main() -To perform the TEEC operations for building 
- * TA inside TEE.
+ * main() -To perform the TEEC operations for calling TA inside TEE.
  * 
- * In this function the context is initialized for connecting to the TEE by calling
- * TEEC_InitializeContext(). After initialization of context the session is opened 
- * on TEEC_OpenSession() and then command is invoked in the TEE. Once the command 
- * is invoked the session is closed and the context is finalized. If the 
- * session is not opened properly, session_failed error appears.
+ * In this function the context is initialized for connecting to the TEE by
+ * calling TEEC_InitializeContext(). After initialization of context the
+ * session is opened on TEEC_OpenSession() and then command is invoked in the
+ * TEE. Once the command is invoked the session is closed and the context is
+ * finalized. Error is returned if session is not opened properly,
+ * session_failed, or TA in TEE returns error.
  * 
- * @return 0	If success, else displays error message.
+ * @return 0	If success, else return error value defined in
+ *              include/tee_api_defines.h.
  */
 int main(void)
 {
