@@ -31,8 +31,8 @@
 #include "config_ref_ta.h"
 
 struct timeval {
-    int32_t     tv_sec;
-    int32_t     tv_usec;
+    long        tv_sec;
+    long        tv_usec;
 };
 
 /**
