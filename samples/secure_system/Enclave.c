@@ -30,6 +30,7 @@
 
 #include "config_ref_ta.h"
 
+/** For using the same format of gettimeofday() */
 struct timeval {
     long        tv_sec;
     long        tv_usec;
