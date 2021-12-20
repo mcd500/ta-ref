@@ -42,6 +42,11 @@
 #define TA_REF_TEE_TIME 0x2222222222222222
 /** Command id for the third operation in TA */
 #define TA_REF_RAND     0x3333333333333333
+/** Command id for the fourth operation in TA */
+#define TA_REF_SEC_WRTE 0x4444444444444444
+/** Command id for the fifth operation in TA */
+#define TA_REF_SEC_READ 0x5555555555555555
+
 
 #define PRINT_BUF_SIZE 16384
 static char print_buf[PRINT_BUF_SIZE];
@@ -97,6 +102,14 @@ int main(void)
 
     /** Calling generating tee_random in TA  */
     res = TEEC_InvokeCommand(&sess, TA_REF_RAND, &op,
+			     &err_origin);
+
+    /** Calling secure storage write in TA  */
+    res = TEEC_InvokeCommand(&sess, TA_REF_SEC_WRTE, &op,
+			     &err_origin);
+
+    /** Calling secure storage read in TA  */
+    res = TEEC_InvokeCommand(&sess, TA_REF_SEC_READ, &op,
 			     &err_origin);
 
     /** Freeing TEE objects */

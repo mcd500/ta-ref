@@ -116,6 +116,108 @@ uint64_t tee_random_get(void)
 }
 
 
+#define DATA_SIZE 16
+
+/**
+ * secure_storage_write() - Example program to show how to use secure
+ * storage with ta-ref API. Write the data to secure storage.
+ *
+ * The secure storage is for storing cryptographic keys, certificates,
+ * security sensitive data such as personalization data. How the secure
+ * storage is secure is implementation dependent. Ideally the secure storage
+ * is provided separately from REE accessible areas and can not be tampered
+ * from User Application on REE, read, write, delete nore retrievable the
+ * file name. Typically requires hardware support, and if not then some easy
+ * implementation might be just saving the data on a filesystem on Linux
+ * residing in REE which does not provide the secure level as mentioned here.
+ * The data are saved with different encryption keys from other TAs, and
+ * not able to read the same data by other TAs.
+ */
+void secure_storage_write(void)
+{
+
+    /** Data to write to secure storage */
+    uint8_t data[DATA_SIZE] = {
+        0xff, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+        0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
+    };
+
+    /** Open secure storage */
+    TEE_ObjectHandle object;
+
+    /** Create a file in secure storage */
+    TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
+                                    "filename", strlen("filename"),
+                                    (TEE_DATA_FLAG_ACCESS_WRITE
+                                     | TEE_DATA_FLAG_OVERWRITE),
+                                    TEE_HANDLE_NULL,
+                                    NULL, 0,
+                                    &object);
+
+    /** Write the data  */
+    TEE_WriteObjectData(object, (const char *)data, DATA_LENGTH);
+
+    /** Close secure storage */
+    TEE_CloseObject(object);
+ 
+}
+
+
+/**
+ * secure_storage_read() - Example program to show how to use secure
+ * storage with ta-ref API. Read the data from secure storage.
+ *
+ * Read the data from the secure storage and compare with expected data.
+ *
+ * @return		0 if the data mached, others if not.
+ */
+int secure_storage_read(void)
+{
+
+    /** Data to compare with written data in secure storage */
+    uint8_t cmp_data[DATA_SIZE] = {
+        0xff, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+        0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
+    };
+
+    /** Stores read data */
+    uint8_t buf[DATA_LENGTH];
+
+    /** Open secure storage */
+    TEE_ObjectHandle object;
+
+    /** Open a file in secure storage */
+    TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
+                                  "filename", strlen("filename"),
+                                  TEE_DATA_FLAG_ACCESS_READ,
+                                  &object);
+
+    uint32_t count;
+    /** Read */
+    TEE_ReadObjectData(object, (char *)buf, DATA_SIZE, &count);
+
+    /** Close secure storage */
+    TEE_CloseObject(object);
+
+    tee_printf("%d bytes read: ", count);
+    for (uint32_t i = 0; i < count; i++) {
+      tee_printf ("%02x", buf[i]);
+    }
+    tee_printf("\n");
+
+    /** Compare read data with written data */
+    int verify_ok;
+    verify_ok = !memcmp(buf, cmp_data, count);
+    if (verify_ok) {
+        tee_printf("verify ok\n");
+	return 0;
+    } else {
+        tee_printf("verify fails\n");
+	return -1;
+    }
+}
+
+
 /**
  * TA_CreateEntryPoint() - Trusted application creates the entry point.
  * 
@@ -195,6 +297,10 @@ void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
 #define TA_REF_TEE_TIME	0x2222222222222222
 /** Command id for the third operation in TA */
 #define TA_REF_RAND	0x3333333333333333
+/** Command id for the fourth operation in TA */
+#define TA_REF_SEC_WRTE	0x4444444444444444
+/** Command id for the fifth operation in TA */
+#define TA_REF_SEC_READ	0x5555555555555555
 
 /**
  * TA_InvokeCommandEntryPoint() - The Framework calls the client invokes a  
