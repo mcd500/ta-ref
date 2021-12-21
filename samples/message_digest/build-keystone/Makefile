@@ -1,28 +1,42 @@
-KEYSTONE_LIB_DIRS = $(LIB_DIRS) ${KEYSTONE_SDK_DIR}/lib
+.PHONY: all
+all: build-keystone
 
-.PHONY: build image run app enclave
+.PHONY: test
+test: test-keystone
 
-build: app enclave
+.PHONY: install-qemu-image
+install-qemu-image: install-qemu-image-keystone
 
-app:
-	make -C App LIB_DIRS="$(KEYSTONE_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)" SEED=$(SEED)
+.PHONY: run-qemu
+run-qemu: run-qemu-keystone
 
-enclave:
-	make -C Enclave LIB_DIRS="$(KEYSTONE_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)"
+.PHONY: clean
+clean: clean-keystone
 
-image:
-	make -f image.mk
+.PHONY: distclean
+distclean: distclean-keystone
 
-run:
-	make -f run.mk
 
-qemu:
-	make -f run.mk qemu
+.PHONY: build-keystone
+build-keystone:
+	$(MAKE) -f keystone.mk all
 
-ssh:
-	make -f run.mk ssh
+.PHONY: test-keystone
+test-keystone:
+	$(MAKE) -f keystone.mk test
 
-clean:
-	make -f image.mk clean
-	make -C App clean
-	make -C Enclave clean
+.PHONY: install-qemu-image-keystone
+install-qemu-image-keystone:
+	$(MAKE) -f keystone.mk install-qemu-image
+
+.PHONY: qemu-keystone
+run-qemu-keystone:
+	$(MAKE) -f keystone.mk run-qemu
+
+.PHONY: clean-keystone
+clean-keystone:
+	$(MAKE) -f keystone.mk clean
+
+.PHONY: distclean-keystone
+distclean-keystone:
+	$(MAKE) -f keystone.mk distclean
