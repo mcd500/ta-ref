@@ -2,7 +2,7 @@ export BUILD ?= $(CURDIR)/.
 export SOURCE ?= $(CURDIR)/../..
 export PLAT = keystone
 
-export KEYSTONE_SDK_DIR ?= $(KEYSTONE_DIR)/sdk
+export KEYSTONE_SDK_DIR ?= $(KEYSTONE_DIR)/sdk/build64
 
 export TA_UUID ?= 60deb4b8-fee0-416a-adec-f76eb29583b1
 
