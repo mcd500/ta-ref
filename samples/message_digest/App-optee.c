@@ -36,9 +36,9 @@
  * The number must match between REE and TEE to achieve the objected
  * behavior. It is recommended to use a number which is not easy to guess
  * from the attacker. */
-#define TA_REF_HASH_GEN    0x1111111111111111
+#define TA_REF_HASH_GEN    0x11111111
 /** Command id for the second operation in TA */
-#define TA_REF_HASH_CHECK  0x2222222222222222
+#define TA_REF_HASH_CHECK  0x22222222
 
 #define PRINT_BUF_SIZE 16384
 static char print_buf[PRINT_BUF_SIZE];

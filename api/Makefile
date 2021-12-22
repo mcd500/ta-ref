@@ -1,6 +1,6 @@
 .PHONY: all clean
 
-CFLAGS += -Wall
+CFLAGS += -Wall -DENCLAVE_VERBOSE
 
 SRCS = $(wildcard *.c)
 # tee-dependent code

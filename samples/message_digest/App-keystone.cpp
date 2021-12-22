@@ -21,6 +21,37 @@ using namespace Keystone;
 const char* enc_path = "Enclave.eapp_riscv";
 const char* runtime_path = "eyrie-rt";
 
+/** Command id for the first operation in TA.
+ * The number must match between REE and TEE to achieve the objected
+ * behavior. It is recommended to use a number which is not easy to guess
+ * from the attacker. */
+#define TA_REF_HASH_GEN    0x11111111
+/** Command id for the second operation in TA */
+#define TA_REF_HASH_CHECK  0x22222222
+
+static void run_enclave(uint32_t command)
+{
+  Enclave enclave;
+  Params params;
+  params.setFreeMemSize(1024*1024);
+  params.setUntrustedMem(DEFAULT_UNTRUSTED_PTR, 1024*1024);
+  if(enclave.init(enc_path, runtime_path, params) != Error::Success){
+    printf("Unable to start enclave\n");
+    exit(-1);
+  }
+
+  enclave.registerOcallDispatch(incoming_call_dispatch);
+
+  register_functions();
+
+  edge_call_init_internals((uintptr_t)enclave.getSharedBuffer(),
+                           enclave.getSharedBufferSize());
+
+  *(uint32_t *)enclave.getSharedBuffer() = command;
+
+  enclave.run();
+}
+
 /**
  * main() - To start the enclave and run the enclave.
  *
@@ -41,22 +72,7 @@ const char* runtime_path = "eyrie-rt";
  */
 int main(int argc, char** argv)
 {
-  Enclave enclave;
-  Params params;
-  params.setFreeMemSize(1024*1024);
-  params.setUntrustedMem(DEFAULT_UNTRUSTED_PTR, 1024*1024);
-  if(enclave.init(enc_path, runtime_path, params) != Error::Success){
-    printf("%s: Unable to start enclave\n", argv[0]);
-    exit(-1);
-  }
-
-  enclave.registerOcallDispatch(incoming_call_dispatch);
-
-  register_functions();
-        
-  edge_call_init_internals((uintptr_t)enclave.getSharedBuffer(),
-                           enclave.getSharedBufferSize());
-
-  enclave.run();
+  run_enclave(TA_REF_HASH_GEN);
+  run_enclave(TA_REF_HASH_CHECK);
   return 0;
 }

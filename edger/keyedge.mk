@@ -19,7 +19,7 @@ TRUSTED_LIBS0 = $(patsubst %.c,lib%0.a,$(C_SRCS))
 CPP_SRCS = Enclave_u.c
 CPP_OBJS = $(CPP_SRCS:.c=.o)
 UNTRUSTED_LIBS = $(patsubst %.c,lib%.a,$(CPP_SRCS))
-UNTRUSTED_LIBS0 = $(patsubst %.c,lib%0.a,$(CPP_SRCS))
+UNTRUSTED_LIBS0 = $(patsubst %.c,lib%0.a,$(CPP_SRCS)) libApp_ocalls0.a
 
 INCLUDE_PATHS=$(EDGER_DIR)/target/include $(FLATCC_DIR)/include
 
@@ -56,9 +56,15 @@ $(C_OBJS): %.o: %.c
 $(CPP_OBJS): %.o: %.c
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+App_ocalls.o: App_ocalls.cpp
+	$(CXX) -I../api/keystone $(CXXFLAGS) -c $< -o $@
+
 libs: $(TRUSTED_LIBS) $(UNTRUSTED_LIBS)
 
 $(TRUSTED_LIBS0): lib%0.a: %.o
+	$(AR) $@ $^
+
+libApp_ocalls0.a: App_ocalls.o
 	$(AR) $@ $^
 
 .ONESHELL:
@@ -79,7 +85,8 @@ $(UNTRUSTED_LIBS0): lib%0.a: %.o
 $(UNTRUSTED_LIBS): $(UNTRUSTED_LIBS0)
 	$(AR) -M <<-EOF
 	create $@
-	addlib $^
+	addlib libEnclave_u0.a
+	addlib libApp_ocalls0.a
 	addlib $(notdir $(FLATCC_LIB))
 	save
 	end
