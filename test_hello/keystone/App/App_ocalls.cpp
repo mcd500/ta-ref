@@ -32,25 +32,7 @@ void ocall_write_invoke_param(int index, unsigned int offset, unsigned int size,
 void ocall_put_invoke_command_result(invoke_command_t cmd, unsigned int result)
 {
 }
-/**
- * ocall_open_file() - To open a file.
- * 
- * @param fname		name of the file.
- * @param flags		mode of the file.
- * @param perm		indicates permissions of a file.
- *
- * @return integer 	If success
- */
-int ocall_open_file(const char* fname, int flags, int perm) {}
 
-/**
- * ocall_close_file() - To close a file.
- *
- * @param fdesc			file descriptor. 
- *
- * @return integer value	If success
- */
-int ocall_close_file(int fdesc) {}
 
 /**
  * ocall_write_file() - To write data in to a file.
@@ -87,15 +69,6 @@ int ocall_invoke_command_callback_write(const char* str, const char *buf,  unsig
 int ocall_read_file(int fdesc, char *buf, size_t len) {}
 
 /**
- * ocall_ree_time() - gets the ree execution time.
- *
- * @param timep			pointer of time.
- * 
- * @return integer value	If success
- */
-int ocall_ree_time(struct ree_time_t *timep) {}
-
-/**
  * ocall_getrandom() - To get random data.
  *
  * @param buf			Pointer of a buffer
@@ -113,25 +86,6 @@ ssize_t ocall_getrandom(char *buf, size_t len, unsigned int flags){}
  */
 #else
 ob256_t ocall_read_file256(int fdesc) {}
-
-/**
- * ocall_ree_time() - gets the ree execution time.
- */
-ree_time_t ocall_ree_time(void) {}
-
-/**
- * ocall_getrandom16() -To get 16 bite random data
- *
- * @param flags			Indicated flags.
- */
-ob16_t ocall_getrandom16(unsigned int flags) {}
-
-/**
- * ocall_getrandom196() - To get 196 bite random data
- *
- * @param flags			Indicated flags.
- */
-ob196_t ocall_getrandom196(unsigned int flags) {}
 
 /**
  * ocall_invoke_command_polling() - to invoke command for polling.
