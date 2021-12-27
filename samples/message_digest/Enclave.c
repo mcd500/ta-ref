@@ -206,7 +206,7 @@ int message_digest_check(void)
 
     /** Check if the data is the same with the data in message_digest_gen() 
      * to check the data integrity */
-    secure_storage_write(saved_hash, hashlen, "hash_value");
+    secure_storage_read(saved_hash, hashlen, "hash_value");
     ret = memcmp(saved_hash, hash, hashlen);
     if (ret == 0) {
         tee_printf("hash: matched!\n");
