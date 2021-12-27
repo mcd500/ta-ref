@@ -30,11 +30,13 @@
 
 #include "config_ref_ta.h"
 
+
 /** For using the same format of gettimeofday() */
 struct timeval {
     long        tv_sec;
     long        tv_usec;
 };
+
 
 /**
  * ree_time_get() - Retrieves the current REE system time.

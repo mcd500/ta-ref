@@ -31,9 +31,11 @@
 #include "config_ref_ta.h"
 #include "trace.h"
 
+
 #define DATA_SIZE  16
 #define CHUNK_SIZE  8
 #define SHA_LENGTH (256/8)
+
 
 /**
  * secure_storage_write() - helper function for tutorial programs.
