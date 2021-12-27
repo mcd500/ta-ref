@@ -142,7 +142,7 @@ void secure_storage_write(void)
         0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
     };
 
-    /** Open secure storage */
+    /** For openning secure storage */
     TEE_ObjectHandle object;
 
     /** Create a file in secure storage */
