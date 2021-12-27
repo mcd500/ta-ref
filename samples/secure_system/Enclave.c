@@ -171,7 +171,7 @@ void secure_storage_write(void)
  *
  * Read the data from the secure storage and compare with expected data.
  *
- * @return		0 if the data mached, others if not.
+ * @return		TEE_SUCCESS if the data mached, others if not.
  */
 int secure_storage_read(void)
 {
@@ -212,13 +212,13 @@ int secure_storage_read(void)
     verify_ok = !memcmp(buf, cmp_data, count);
     if (verify_ok) {
         tee_printf("verify ok\n");
-	return 0;
+	return TEE_SUCCESS;
     } else {
         tee_printf("verify fails\n");
 	return -1;
     }
 
-    return 0;
+    return TEE_SUCCESS;
 }
 
 
@@ -330,13 +330,13 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
     case TA_REF_REE_TIME:
         ret = ree_time_get();
         if (ret != TEE_SUCCESS)
-            ret = TEE_ERROR_SIGNATURE_INVALID
+            ret = TEE_ERROR_SIGNATURE_INVALID;
         return TEE_SUCCESS;
 
     case TA_REF_TEE_TIME:
         ret = tee_time_get();
         if (ret != TEE_SUCCESS)
-            ret = TEE_ERROR_SIGNATURE_INVALID
+            ret = TEE_ERROR_SIGNATURE_INVALID;
         return ret;
 
     case TA_REF_RAND:
@@ -345,6 +345,15 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 	    /** It has random value succesfully */
             ret = TEE_SUCCESS;
 	}
+        return ret;
+
+    case TA_REF_SEC_WRTE:
+        secure_storage_write();
+        return TEE_SUCCESS;
+
+    case TA_REF_SEC_READ:
+        if (ret != TEE_SUCCESS)
+            ret = TEE_ERROR_NO_DATA;
         return ret;
 
     default:
