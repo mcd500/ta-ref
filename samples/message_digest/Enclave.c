@@ -37,6 +37,56 @@
 
 static saved_hash[SHA_LENGTH];
 
+
+/**
+ *
+ *
+ */
+int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
+{
+    TEE_ObjectHandle object;
+
+    /** in real product, should validate, data, size, fname here */
+
+    TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
+                                    fname, strlen(fname),
+                                    (TEE_DATA_FLAG_ACCESS_WRITE
+                                     | TEE_DATA_FLAG_OVERWRITE),
+                                    TEE_HANDLE_NULL,
+                                    NULL, 0,
+                                    &object);
+    TEE_WriteObjectData(object, (const char *)data, size);
+    TEE_CloseObject(object);
+
+    /** In real product, check the return value of each above
+     * and return error value` */
+    return 0;
+}
+
+
+/**
+ * secure_storage_read() - helper function for tutorial programs.
+ *
+ * @return      0 on success, others on error
+ */
+int secure_storage_read(uint8_t *data, size_t size, uint8_t *fname)
+{
+    TEE_ObjectHandle object;
+
+    /** In real product, should validate, data, size, fname here */
+
+    TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
+                                  fname, strlen(fname),
+                                  TEE_DATA_FLAG_ACCESS_READ,
+                                  &object);
+    TEE_ReadObjectData(object, (char *)data, size, &size);
+    TEE_CloseObject(object);
+
+    /** In real product, check the return value of each above
+     * and return error value` */
+    return 0;
+}
+
 /**
  * message_digest_gen() - Example program to show how to use hash functions
  * with ta-ref API.
