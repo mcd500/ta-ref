@@ -155,7 +155,7 @@ void secure_storage_write(void)
                                     &object);
 
     /** Write the data  */
-    TEE_WriteObjectData(object, (const char *)data, DATA_LENGTH);
+    TEE_WriteObjectData(object, (const char *)data, DATA_SIZE);
 
     /** Close secure storage */
     TEE_CloseObject(object);
@@ -181,7 +181,7 @@ int secure_storage_read(void)
     };
 
     /** Stores read data */
-    uint8_t buf[DATA_LENGTH];
+    uint8_t buf[DATA_SIZE * 2];
 
     /** Open secure storage */
     TEE_ObjectHandle object;
