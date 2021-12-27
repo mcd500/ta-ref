@@ -35,11 +35,14 @@
 #define CHUNK_SIZE  8
 #define SHA_LENGTH (256/8)
 
-static saved_hash[SHA_LENGTH];
-
-
 /**
+ * secure_storage_write() - helper function for tutorial programs.
  *
+ * @param data	pointer of buffer to write data
+ * @param size	pass bytes to write
+ * @param fname file name for writing data
+ *
+ * @return      0 on success, others on error
  *
  */
 int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
@@ -67,11 +70,17 @@ int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
 /**
  * secure_storage_read() - helper function for tutorial programs.
  *
+ * @param data	pointer of buffer to read data
+ * @param size	pass bytes to read, stores the bytes was able to read on
+ *              return
+ * @param fname file name for reading data
+ *
  * @return      0 on success, others on error
  */
-int secure_storage_read(uint8_t *data, size_t size, uint8_t *fname)
+int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
 {
     TEE_ObjectHandle object;
+    uint32_t bytes_from_storage;
 
     /** In real product, should validate, data, size, fname here */
 
@@ -79,8 +88,11 @@ int secure_storage_read(uint8_t *data, size_t size, uint8_t *fname)
                                   fname, strlen(fname),
                                   TEE_DATA_FLAG_ACCESS_READ,
                                   &object);
-    TEE_ReadObjectData(object, (char *)data, size, &size);
+    TEE_ReadObjectData(object, (char *)data, *size, &bytes_from_storage);
     TEE_CloseObject(object);
+
+    /** Give back the bytes were able to read */
+    *size = bytes_from_storage;
 
     /** In real product, check the return value of each above
      * and return error value` */
@@ -141,7 +153,8 @@ void message_digest_gen(void)
     }
     tee_printf("\n");
 
-    memcpy(saved_hash, hash, hashlen);
+    /** Save the hash value to secure storge */
+    secure_storage_write(hash, hashlen, "hash_value");
 }
 
 
@@ -166,6 +179,7 @@ int message_digest_check(void)
 
     size_t hashlen = SHA_LENGTH;
     uint8_t hash[SHA_LENGTH];
+    uint8_t saved_hash[SHA_LENGTH];
     uint8_t *pdata = data;
 
     TEE_OperationHandle handle;
@@ -190,6 +204,7 @@ int message_digest_check(void)
 
     /** Check if the data is the same with the data in message_digest_gen() 
      * to check the data integrity */
+    secure_storage_write(saved_hash, hashlen, "hash_value");
     ret = memcmp(saved_hash, hash, hashlen);
     if (ret == 0) {
         tee_printf("hash: matched!\n");
