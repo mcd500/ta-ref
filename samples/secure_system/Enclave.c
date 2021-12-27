@@ -215,6 +215,8 @@ int secure_storage_read(void)
         tee_printf("verify fails\n");
 	return -1;
     }
+
+    return 0;
 }
 
 
