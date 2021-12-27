@@ -62,7 +62,7 @@ int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
     TEE_CloseObject(object);
 
     /** In real product, check the return value of each above
-     * and return error value` */
+     * and return error value */
     return 0;
 }
 
@@ -91,11 +91,11 @@ int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
     TEE_ReadObjectData(object, (char *)data, *size, &bytes_from_storage);
     TEE_CloseObject(object);
 
-    /** Give back the bytes were able to read */
+    /** Give back the bytes which were able to read */
     *size = bytes_from_storage;
 
     /** In real product, check the return value of each above
-     * and return error value` */
+     * and return error value */
     return 0;
 }
 
@@ -121,10 +121,10 @@ void message_digest_gen(void)
     TEE_OperationHandle handle;
     TEE_Result rv;
 
-    /** Equivalant of sha3_init() in sha3.c or SHA256_Init in openssl  */
+    /** Equivalant of sha3_init() in sha3.c or SHA256_Init() in openssl  */
     TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
 
-    /** Equivalant of sha3_update() in sha3.c or SHA256_Update in openssl.
+    /** Equivalant of sha3_update() in sha3.c or SHA256_Update() in openssl.
      *
      * It passes only a chunk of data each time.
      * Typically it is used with moving to the next pointer in a for loop to
@@ -139,7 +139,7 @@ void message_digest_gen(void)
      * for every iteration */
     pdata += CHUNK_SIZE;
 
-    /** Equivalant of sha3_final() in sha3.c or SHA256_Final in openssl.
+    /** Equivalant of sha3_final() in sha3.c or SHA256_Final() in openssl.
      * This is the last chunk */
     TEE_DigestDoFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, hash, &hashlen);
 

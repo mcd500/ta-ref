@@ -142,7 +142,7 @@ void secure_storage_write(void)
         0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
     };
 
-    /** For openning secure storage */
+    /** For opening secure storage */
     TEE_ObjectHandle object;
 
     /** Create a file in secure storage */
@@ -183,7 +183,7 @@ int secure_storage_read(void)
     /** Stores read data */
     uint8_t buf[DATA_SIZE * 2];
 
-    /** Open secure storage */
+    /** For opening secure storage */
     TEE_ObjectHandle object;
 
     /** Open a file in secure storage */
