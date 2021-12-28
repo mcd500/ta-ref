@@ -69,7 +69,7 @@ void __noreturn _C_FUNCTION(__ta_entry)(unsigned long func,
 	ftrace_return();
 #endif
 
-	utee_return(res);
+	_utee_return(res);
 }
 
 /*
