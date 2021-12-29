@@ -18,6 +18,7 @@ include ./validation.mk
 
 build: select
 	mkdir -p $(BUILD_DIR)/include $(BUILD_DIR)/lib
+	cp $(OPTEE_DIR)/optee_os/out/arm/export-ta_arm64/src/user_ta_header.c $(TEST_DIR)/optee/Enclave/
 	make -C $(BUILD_DIR)
 
 test: test-bin image
