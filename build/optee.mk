@@ -20,6 +20,8 @@ OUT_DIR=out
 all: build
 
 build: depends gp benchmark
+	# copy the user_ta_header.c to local enclave dir
+	cp $(OPTEE_DIR)/optee_os/out/arm/export-ta_arm64/src/user_ta_header.c ../$(TEST_DIR)/optee/Enclave/
 
 depends: $(DEPENDS)
 
