@@ -11,6 +11,8 @@ stages:
     - test_gp
     - test_perf
 
+### ANCHORS - START ####
+
 .disable_template: &disable_definition
     only:
         - temporary
@@ -55,7 +57,6 @@ stages:
         # cleanup
         - make mrproper
 
-
 .test_template101: &test_definition101
     variables:
         ENVS: env/dummy.sh
@@ -71,12 +72,15 @@ stages:
         # cleanup
         - make mrproper
 
-###### keystone
 .tamproto_service: &tamproto_service
     services:
         - name: ${DOCKER_TAMPROTO_IMAGE}:teep-device-interop_2020-07-06
           alias: tamproto
 
+
+### ANCHORS - END ###
+
+### KEYSTONE - START ###
 
 keystone_qemu_default:
     <<: *test_definition117
@@ -87,6 +91,7 @@ keystone_qemu_default:
     stage: test_hello
     script:
         - make build test run TEST_DIR=${TEST_DIR}
+
 keystone_qemu_test_gp:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_qemu
@@ -98,6 +103,7 @@ keystone_qemu_test_gp:
         - make build test run TEST_DIR=${TEST_DIR}
 #        - make mrproper
 #        - make build test run TEST_DIR=${TEST_DIR} EDGER_TYPE=KEEDGER8R
+
 keystone_qemu_test_perf:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_qemu
@@ -152,6 +158,7 @@ keystone_hifive_test_perf:
 
 # TRV simulator(ver.20210304)
 keystone_trvsim_default:
+    <<: *disable_definition
     variables:
         # OVPSIM_LICENCE_PATH and MAC_ADDR are defined in CI/CD settings -> Variables.
         SDIMAGE_URL: http://192.168.100.100:2000/keystone_trvsim_hifive_v1.0.0_sdimage.tar.xz
@@ -174,6 +181,7 @@ keystone_trvsim_default:
         - docker-compose -p ${CI_JOB_NAME} -f services/docker-compose.trvsim_ci.yml down -v
 
 keystone_trvsim_test_gp:
+    <<: *disable_definition
     variables:
         # OVPSIM_LICENCE_PATH and MAC_ADDR are defined in CI/CD settings -> Variables.
         SDIMAGE_URL: http://192.168.100.100:2000/keystone_trvsim_hifive_v1.0.0_sdimage.tar.xz
@@ -236,6 +244,7 @@ keystone_vc707_default:
     stage: test_hello
     script:
         - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR}
+
 keystone_vc707_test_gp:
     <<: *test_definition117
     <<: *disable_definition
@@ -248,6 +257,7 @@ keystone_vc707_test_gp:
         - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR}
         - make mrproper
         - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR} EDGER_TYPE=KEEDGER8R
+
 keystone_vc707_test_perf:
     <<: *test_definition117
     <<: *disable_definition
@@ -261,7 +271,72 @@ keystone_vc707_test_perf:
     script:
         - make build test run MACHINE=VC707 TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
-###### sgx
+keystone_qemu_test_teep:
+    <<: *test_definition117
+    <<: *tamproto_service
+    only:
+        - /^teep-device.*$/
+    image: ${DOCKER_TEEP_IMAGE}:keystone_qemu
+    variables:
+        ENVS: env/keystone.sh
+        TEST_DIR: test_gp
+    stage: experimental
+    script:
+        - make
+        - cd teep-device
+        - make
+        - TAMIP=`python3 -c 'import socket;print(socket.gethostbyname("tamproto"))'`
+        - curl "http://$TAMIP:8888/api/tam"
+        - make test TAM_URL="http://$TAMIP:8888" | tr -d "\r"
+
+keystone_qemu_test_teep:
+    tags:
+        - shell117
+    variables:
+        DOCKER_COMPOSE_PATH: services/docker-compose.teep_keystone_qemu.yml
+        PROJECT: teep_keystone_qemu
+    only:
+        - /^teep-device.*$/
+    tags:
+        - shell117
+    stage: experimental
+    before_script:
+        - git submodule update --init --recursive
+    script:
+        - docker-compose -p ${PROJECT} -f ${DOCKER_COMPOSE_PATH} up --abort-on-container-exit
+    after_script:
+        - docker-compose -p ${PROJECT} -f ${DOCKER_COMPOSE_PATH} down -v
+
+keystone_trvsim_test_teep:
+    tags:
+        - shell117
+    only:
+        - /^teep-device.*$/
+    variables:
+        # OVPSIM_LICENCE and MAC_ADDR are defined in CI/CD settings -> Variables.
+        SDIMAGE_URL: http://192.168.100.100:2000/keystone_trvsim_hifive_sdimage.tar.xz
+        # PORT, OVPSIM_LICENCE, MAC_ADDR and IMAGE_DIR are required in .gitlab-ci.yml
+        IMAGE_DIR: ${CI_PROJECT_DIR}/image
+        SSH_PORT: 10125
+        DOCKER_COMPOSE_PATH: services/docker-compose.teep_keystone_trvsim.yml
+        PROJECT: teep_keystone_trvsim
+    tags:
+        - shell117
+    stage: experimental
+    before_script:
+        - wget ${SDIMAGE_URL} -o /dev/null
+        - mkdir -p ${IMAGE_DIR}
+        - tar xf keystone_trvsim_hifive_sdimage.tar.xz -C ${IMAGE_DIR}
+        - git submodule update --init --recursive
+    script:
+        - docker-compose -p ${PROJECT} -f ${DOCKER_COMPOSE_PATH} up --abort-on-container-exit
+    after_script:
+        - docker-compose -p ${PROJECT} -f ${DOCKER_COMPOSE_PATH} down -v
+
+
+### KEYSTONE - END ###
+
+### SGX - START ###
 sgx_sim_default:
     # EPYC server seems to get fault. see https://192.168.100.100/rinkai/ta-ref/-/jobs/12748
     <<: *test_definition101
@@ -272,6 +347,7 @@ sgx_sim_default:
     stage: test_hello
     script:
         - make build test run TEST_DIR=${TEST_DIR}
+
 sgx_sim_test_gp:
     <<: *test_definition101
     image: ${DOCKER_IMAGE}:sgx
@@ -281,6 +357,7 @@ sgx_sim_test_gp:
     stage: test_gp
     script:
         - make build test run TEST_DIR=${TEST_DIR}
+
 sgx_sim_test_perf:
     <<: *test_definition101
     image: ${DOCKER_IMAGE}:sgx
@@ -302,6 +379,7 @@ sgx_nuc_default:
     stage: test_hello
     script:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR}
+
 sgx_nuc_test_gp:
     <<: *test_definition101
     image: ${DOCKER_IMAGE}:sgx
@@ -311,6 +389,7 @@ sgx_nuc_test_gp:
     stage: test_gp
     script:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR}
+
 sgx_nuc_test_perf:
     <<: *test_definition101
     image: ${DOCKER_IMAGE}:sgx
@@ -325,7 +404,9 @@ sgx_nuc_test_perf:
     script:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
-###### optee
+### SGX - END ###
+
+### OPTEE - START ###
 optee_qemu_default:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_qemu_v8
@@ -335,6 +416,7 @@ optee_qemu_default:
     stage: test_hello
     script:
         - make build test run TEST_DIR=${TEST_DIR}
+
 optee_qemu_test_gp:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_qemu_v8
@@ -344,6 +426,7 @@ optee_qemu_test_gp:
     stage: test_gp
     script:
         - make build test run TEST_DIR=${TEST_DIR}
+
 optee_qemu_test_perf:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_qemu_v8
@@ -365,6 +448,7 @@ optee_rpi3_default:
     stage: test_hello
     script:
         - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR}
+
 optee_rpi3_test_gp:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_rpi3
@@ -374,6 +458,7 @@ optee_rpi3_test_gp:
     stage: test_gp
     script:
         - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR}
+
 optee_rpi3_test_perf:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_rpi3
