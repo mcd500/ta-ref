@@ -34,7 +34,7 @@ export TA_CFLAGS = \
 export TA_LDFLAGS = \
 	-L$(TEE_REF_TA_DIR)/build/lib \
 	-L$(KEYSTONE_SDK_DIR)/lib \
-	-T ../Enclave.lds
+	-T $(TEE_REF_TA_DIR)/api/keystone/Enclave.lds
 
 export TA_LIBS = \
 	-lgp -lbench \
