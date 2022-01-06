@@ -5,10 +5,12 @@ variables:
     DOCKER_TEEP_IMAGE: docker.io/trasioteam/ta_ref_teep_devel
     DOCKER_TAMPROTO_IMAGE: docker.io/trasioteam/tamproto
     AIST_DOCKER_IMAGE: docker.io/aistcpsec/tee-dev
+    AIST_DOCKER_DISTRO_IMAGE: docker.io/aistcpsec/tee-distro-dev
 
 
 stages:
     - experimental
+    - generate_docs
     - test_hello
     - test_gp
     - test_perf
@@ -569,4 +571,20 @@ optee_qemu_test_gp_aist:
 
 ### Optee on AIST Docker Image - END ###
 
-### OPTEE - START ###
+### OPTEE - END ###
+
+### DOXYGEN - START ###
+doxygen_aist:
+    <<: *test_definition117
+    image: ${AIST_DOCKER_DISTRO_IMAGE}:doxygen-20.04
+    variables:
+        ENVS: env/keystone.sh
+    stage: generate_docs
+    script:
+        - make docs
+    artifacts:
+        paths:
+            - docs/ta-ref.pdf
+        expire_in: 1 week
+
+### DOXYGEN - START ###
