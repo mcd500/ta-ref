@@ -1,10 +1,5 @@
 export SOURCE ?= $(CURDIR)/..
-#export PLAT = keystone
-
 export KEYSTONE_SDK_DIR ?= $(KEYSTONE_DIR)/sdk/build64
-
-#export TA_UUID ?= 60deb4b8-fee0-416a-adec-f76eb29583b1
-
 export TEE_REF_TA_DIR ?= $(CURDIR)/../../..
 
 export APP_CFLAGS = \
@@ -15,8 +10,7 @@ export APP_CFLAGS = \
 	-I$(TEE_REF_TA_DIR)/build/include \
 	-I$(TEE_REF_TA_DIR)/include \
 	-I$(SOURCE) \
-	-I$(TEE_REF_TA_DIR)/ref-ta/profiler \
-	-DKEYSTONE -DPLAT_KEYSTONE -DAPP_VERBOSE -Wall
+	-I$(TEE_REF_TA_DIR)/ref-ta/profiler
 
 export APP_LDFLAGS = \
 	-L$(KEYSTONE_SDK_DIR)/lib \
@@ -35,9 +29,7 @@ export TA_CFLAGS = \
 	-I$(TEE_REF_TA_DIR)/keyedge/target/include \
 	-I$(KEYSTONE_SDK_DIR)/include/app \
 	-I$(KEYSTONE_SDK_DIR)/include/edge \
-	-I$(SOURCE) \
-	-DKEYSTONE \
-	-DPLAT_KEYSTONE
+	-I$(SOURCE)
 
 export TA_LDFLAGS = \
 	-L$(TEE_REF_TA_DIR)/build/lib \
@@ -48,9 +40,7 @@ export TA_LIBS = \
 	-lgp -lbench \
 	-lEnclave_t \
 	-lkeystone-eapp \
-	-ltee_api -lmbedtls -ltiny_AES_c -ltiny_sha3 -led25519 -lwolfssl
-
-TEE_SRCS = $(SOURCE)/App-keystone.cpp $(SOURCE)/Enclave.c
+	-ltee_api -lmbedtls -ltiny_AES_c -ltiny_sha3 -led25519
 
 SHIP_BINS = \
 	App-keystone \
@@ -59,7 +49,7 @@ SHIP_BINS = \
 
 QEMU_INSTALLED_BINS = \
 	$(prefix)/root/App-keystone \
-	$(prefix)/root/Enclave \
+	$(prefix)/root/Enclave.eapp_riscv \
 	$(prefix)/root/eyrie-rt \
 	$(prefix)/root/keystone-driver.ko \
 	$(prefix)/root/env.sh
@@ -108,10 +98,6 @@ run-qemu: $(QEMU_INSTALLED_BINS)
 		-netdev user,id=net0,net=192.168.100.1/24,dhcpstart=192.168.100.128,hostfwd=tcp::10032-:22 \
 		-device virtio-net-device,netdev=net0 \
 		-device virtio-rng-pci
-
-.PHONY: test
-test:
-	TAM_URL=$(TAM_URL) expect ./script/test.expect
 
 .PHONY: clean
 clean:
