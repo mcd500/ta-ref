@@ -549,7 +549,7 @@ pctest_teep_device:
 ### Optee on AIST Docker Image - START ###
 optee_qemu_default_aist:
     <<: *test_definition117
-    image: ${AIST_DOCKER_IMAGE}:optee_qemu_v8
+    image: ${AIST_DOCKER_IMAGE}:optee-3.10.0
     variables:
         ENVS: env/optee_qemu.sh
         TEST_DIR: test_hello
@@ -559,7 +559,7 @@ optee_qemu_default_aist:
 
 optee_qemu_test_gp_aist:
     <<: *test_definition117
-    image: ${AIST_DOCKER_IMAGE}:optee_qemu_v8
+    image: ${AIST_DOCKER_IMAGE}:optee-3.10.0
     variables:
         ENVS: env/optee_qemu.sh
         TEST_DIR: test_gp
