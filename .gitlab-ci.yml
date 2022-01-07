@@ -348,7 +348,7 @@ keystone_qemu_default_aist:
         TEST_DIR: test_hello
     stage: test_hello
     script:
-        - make build test run TEST_DIR=${TEST_DIR}
+        - make build test-bin MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
 
 keystone_qemu_test_gp_aist:
     <<: *test_definition117
@@ -358,7 +358,7 @@ keystone_qemu_test_gp_aist:
         TEST_DIR: test_gp
     stage: test_gp
     script:
-        - make build test run TEST_DIR=${TEST_DIR}
+        - make build test-bin MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
 ### Keystone on AIST Docker Image - END ###
 
 ### KEYSTONE - END ###
@@ -557,7 +557,7 @@ optee_qemu_default_aist:
         TEST_DIR: test_hello
     stage: test_hello
     script:
-        - make build test run TEST_DIR=${TEST_DIR}
+        - make build test-bin MACHINE=RPI3 TEST_DIR=${TEST_DIR}
 
 optee_qemu_test_gp_aist:
     <<: *test_definition117
@@ -567,7 +567,7 @@ optee_qemu_test_gp_aist:
         TEST_DIR: test_gp
     stage: test_gp
     script:
-        - make build test run TEST_DIR=${TEST_DIR}
+        - make build test-bin MACHINE=RPI3 TEST_DIR=${TEST_DIR}
 
 ### Optee on AIST Docker Image - END ###
 
