@@ -433,7 +433,7 @@ sgx_nuc_test_perf:
 
 ### Intel SGX on AIST Docker Image - START ###
 sgx_nuc_default_aist:
-    <<: *test_definition101
+    <<: *test_definition117
     image: ${AIST_DOCKER_IMAGE}:sgx-2.10
     variables:
         ENVS: env/sgx_x64.sh
@@ -444,7 +444,7 @@ sgx_nuc_default_aist:
         - make build test-bin MACHINE=NUC TEST_DIR=test_hello
 
 sgx_nuc_test_gp_aist:
-    <<: *test_definition101
+    <<: *test_definition117
     image: ${AIST_DOCKER_IMAGE}:sgx-2.10
     variables:
         ENVS: env/sgx_x64.sh
