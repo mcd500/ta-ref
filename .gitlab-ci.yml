@@ -431,6 +431,31 @@ sgx_nuc_test_perf:
     script:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
+### Intel SGX on AIST Docker Image - START ###
+sgx_nuc_default_aist:
+    <<: *test_definition101
+    image: ${AIST_DOCKER_IMAGE}:sgx-2.10
+    variables:
+        ENVS: env/sgx_x64.sh
+        TEST_DIR: test_hello
+    stage: test_hello
+    script:
+        - source /opt/intel/sgxsdk/environment
+        - make build test-bin MACHINE=NUC TEST_DIR=test_hello
+
+sgx_nuc_test_gp_aist:
+    <<: *test_definition101
+    image: ${AIST_DOCKER_IMAGE}:sgx-2.10
+    variables:
+        ENVS: env/sgx_x64.sh
+        TEST_DIR: test_gp
+    stage: test_gp
+    script:
+        - source /opt/intel/sgxsdk/environment
+        - make build test-bin MACHINE=NUC TEST_DIR=test_gp
+
+### Intel SGX on AIST Docker Image - END ###
+
 ### SGX - END ###
 
 ### OPTEE - START ###
