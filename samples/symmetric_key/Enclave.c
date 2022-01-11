@@ -102,6 +102,8 @@ int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
     return 0;
 }
 
+#define ENCDATA_MAX 256
+
 /**
  * Example program to show how to use AES 256 GCM functions with ta-ref API.
  *
@@ -118,8 +120,8 @@ void symmetric_key_enc(void)
         0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f
     };
 
-    uint8_t out[CIPHER_LENGTH];
-    size_t  outlen = CIPHER_LENGTH;
+    uint8_t out[ENCDATA_MAX];
+    size_t  outlen = ENCDATA_MAX;
     uint8_t iv[TAG_LEN];
     uint8_t tag[TAG_LEN];
     size_t  taglen = TAG_LEN_BITS;
@@ -134,6 +136,12 @@ void symmetric_key_enc(void)
     TEE_AllocateOperation(&handle, TEE_ALG_AES_GCM, TEE_MODE_ENCRYPT, 256);
     TEE_SetOperationKey(handle, key);
 
+    tee_printf("key: ");
+    for (int i = 0; i < 256 / 8; i++) {
+      tee_printf ("%02x", key[i]);
+    }
+    tee_printf("\n");
+
     /** Prepare IV */
     TEE_GenerateRandom(iv, sizeof(iv));
 
@@ -145,7 +153,7 @@ void symmetric_key_enc(void)
      *
      * It passes only a chunk of data each time.
      * Typically it is used with moving to the next pointer in a for loop to
-     * handle large data until the last chunk. Calculating hash value in
+     * handle large data until the last chunk. Encrypting in
      * iteration makes it possible to handle large data, such as 4GB which is
      * not able to have entire data inside TEE memory size and/or only
      * partial data arrives through the Internet in streaming fashion. */
@@ -163,12 +171,12 @@ void symmetric_key_enc(void)
     TEE_FreeOperation(handle);
 
     /** Dump encrypted data and tag */
-    tee_printf("Encrypted Data: ");
+    tee_printf("Encrypted Data: size:%d ", outlen);
     for (int i = 0; i < outlen; i++) {
       tee_printf ("%02x", out[i]);
     }
     tee_printf("\n");
-    tee_printf("tag: ");
+    tee_printf("tag: size: %d ", taglen);
     for (int i = 0; i < taglen; i++) {
       tee_printf ("%02x", tag[i]);
     }
@@ -195,6 +203,75 @@ void symmetric_key_enc(void)
  */
 int symmetric_key_dec(void)
 {
+    /** Data to compare with encrypted data  */
+    uint8_t data[DATA_SIZE] = {
+        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+        0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
+        0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
+        0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f
+    };
+
+    size_t  keylen = 256;
+    uint8_t out[ENCDATA_MAX];
+    size_t  outlen = ENCDATA_MAX;
+    uint8_t iv[TAG_LEN];
+    uint8_t tag[TAG_LEN];
+    size_t  taglen = TAG_LEN_BITS;
+    uint8_t *pdata = data;
+
+    TEE_ObjectHandle key;
+    TEE_Result rv;
+
+    /** Read AES 256 KEY from secure storage */
+    secure_storage_read(key, &keylen, "sym_key");
+
+    /** Read encypted data from secure storage */
+    secure_storage_read(out, &outlen, "sym_key");
+
+    /** Start decrypting test data.
+     * Equivalant of EVP_DecryptInit_ex() in openssl  */
+    TEE_AEInit(handle, iv, sizeof(iv), TAG_LEN_BITS, 0, 0);
+
+    /** Specify for decrypting with AES 256 GCM */
+    TEE_AllocateOperation(&handle, TEE_ALG_AES_GCM, TEE_MODE_DECRYPT, 256);
+
+    /** */
+    TEE_SetOperationKey(handle, key);
+
+    /** Equivalant of EVP_EncryptUpdate() in openssl.
+     *
+     * It passes only a chunk of data each time.
+     * Typically it is used with moving to the next pointer in a for loop to
+     * handle large data until the last chunk. Encrypting in
+     * iteration makes it possible to handle large data, such as 4GB which is
+     * not able to have entire data inside TEE memory size and/or only
+     * partial data arrives through the Internet in streaming fashion. */
+    TEE_AEUpdateAAD(handle, pdata, CHUNK_SIZE);
+
+    /** Used combined with the TEE_DigestUpdate.
+     * When the data is larger, move to next pointer of chunk in the data 
+     * for every iteration */
+    pdata += CHUNK_SIZE;
+
+    /* Equivalent in openssl is EVP_EncryptFinal() */ 
+    TEE_AEDecryptFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, out, &outlen, tag, &taglen);
+
+    /** Closing TEE handle */
+    TEE_FreeOperation(handle);
+
+    /** Dump encrypted data and tag */
+    tee_printf("Decrypted Data: ");
+    for (int i = 0; i < outlen; i++) {
+      tee_printf ("%02x", out[i]);
+    }
+    tee_printf("\n");
+
+    /** Check if the decrypted data is the same with the expected data  
+     * to check the data integrity */
+    ret = memcmp(data, out, outlen);
+    if (ret == 0) {
+        tee_printf("decrypte: matched!\n");
+    }
 
     /** returns 0 on success */
     return ret;
