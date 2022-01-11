@@ -1,4 +1,4 @@
-BINARY = 8d82573a-926d-4754-9353-32dc29997f74
+BINARY = a6f77c1e-96fe-4a0e-9e74-262582a4c8f1
 CROSS_COMPILE = aarch64-linux-gnu-
 CPPFLAGS = \
 	-I../../../../ta-ref/build/include \
