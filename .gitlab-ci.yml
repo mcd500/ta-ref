@@ -82,6 +82,21 @@ stages:
           alias: tamproto
 
 
+.test_template117_aist_sgx: &test_definition117_aist_sgx
+    variables:
+        ENVS: env/dummy.sh
+    tags:
+        - ta-ref
+    before_script:
+        - git submodule sync --recursive
+        - git submodule update --init --recursive
+        - source /opt/intel/sgxsdk/environment
+        - source ${ENVS}
+    after_script:
+        - source ${ENVS}
+        # cleanup
+        - make mrproper
+
 ### ANCHORS - END ###
 
 ### KEYSTONE - START ###
@@ -433,25 +448,23 @@ sgx_nuc_test_perf:
 
 ### Intel SGX on AIST Docker Image - START ###
 sgx_nuc_default_aist:
-    <<: *test_definition117
+    <<: *test_definition117_aist_sgx
     image: ${AIST_DOCKER_IMAGE}:sgx-2.10
     variables:
-        ENVS: /opt/intel/sgxsdk/environment
+        ENVS: env/sgx_x64.sh
         TEST_DIR: test_hello
     stage: test_hello
     script:
-        - source env/sgx_x64.sh
         - make build test-bin MACHINE=NUC TEST_DIR=test_hello
 
 sgx_nuc_test_gp_aist:
-    <<: *test_definition117
+    <<: *test_definition117_aist_sgx
     image: ${AIST_DOCKER_IMAGE}:sgx-2.10
     variables:
-        ENVS: /opt/intel/sgxsdk/environment
+        ENVS: env/sgx_x64.sh
         TEST_DIR: test_gp
     stage: test_gp
     script:
-        - source env/sgx_x64.sh
         - make build test-bin MACHINE=NUC TEST_DIR=test_gp
 
 ### Intel SGX on AIST Docker Image - END ###
