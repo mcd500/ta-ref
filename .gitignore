@@ -3,3 +3,6 @@
 keystone-driver.ko
 docs/doxygen/html
 docs/doxygen/latex
+docs/doxygen/ta-ref-html*
+doxygen/html
+doxygen/latex
