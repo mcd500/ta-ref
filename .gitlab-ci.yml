@@ -612,7 +612,7 @@ optee_qemu_test_gp_aist:
 ### OPTEE - END ###
 
 ### DOXYGEN - START ###
-doxygen_aist:
+doxygen:
     <<: *test_definition117
     image: ${AIST_DOCKER_DISTRO_IMAGE}:doxygen-20.04
     variables:
