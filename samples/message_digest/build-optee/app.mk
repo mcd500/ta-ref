@@ -2,7 +2,7 @@ CROSS_COMPILE=aarch64-linux-gnu-
 CFLAGS = \
 	-Wall \
 	-I$(OPTEE_DIR)/optee_client/public \
-	-I../../../build/include
+	-I$(TAREF_DIR)/build/include
 LDFLAGS = \
 	-L$(OPTEE_DIR)/out-br/target/usr/lib
 

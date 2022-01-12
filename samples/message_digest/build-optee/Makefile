@@ -5,12 +5,6 @@ endif
 TAREF_DIR ?= $(CURDIR)/../../../
 export TAREF_DIR
 
-export user-ta-version ?= 1
-MK_DIR = Enclave/mk
-
-# LIB_DIRS INCLUDE_DIRS
-OPTEE_LIB_DIRS = $(LIB_DIRS) $(OPTEE_DIR)/out-br/target/usr/lib
-
 TUTORIAL_TA_UUID ?= a6f77c1e-96fe-4a0e-9e74-262582a4c8f1
 export TUTORIAL_TA_UUID
 
