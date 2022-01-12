@@ -1,9 +1,22 @@
-BINARY = a6f77c1e-96fe-4a0e-9e74-262582a4c8f1
+ifndef TUTORIAL_TA_UUID
+$(error TUTORIAL_TA_UUID is not set)
+endif
+
+ifndef TAREF_DIR
+$(error TAREF_DIR is not set)
+endif
+
+BINARY = $(TUTORIAL_TA_UUID)
 CROSS_COMPILE = aarch64-linux-gnu-
 CPPFLAGS = \
-	-I../../../../ta-ref/build/include \
-	-I../../../../ta-ref/build/include/api \
-	-I../../../../ta-ref/build/include/gp \
+	-I$(TAREF_DIR)/build/include \
+	-I$(TAREF_DIR)/build/include/api \
+	-I$(TAREF_DIR)/build/include/gp \
 	-Dtee_printf=printf
 
 -include $(TA_DEV_DIR)/mk/ta_dev_kit.mk
+
+.PHONY: clean
+clean:
+	rm -rf *.o .*.o.* *.dmp *.elf *.map $(BINARY).ta ta.lds .ta.ld.d
+

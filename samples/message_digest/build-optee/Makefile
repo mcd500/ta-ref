@@ -1,8 +1,18 @@
+ifndef OPTEE_DIR
+$(error OPTEE_DIR is not set)
+endif
+
+TAREF_DIR ?= $(CURDIR)/../../../
+export TAREF_DIR
+
 export user-ta-version ?= 1
 MK_DIR = Enclave/mk
 
 # LIB_DIRS INCLUDE_DIRS
 OPTEE_LIB_DIRS = $(LIB_DIRS) $(OPTEE_DIR)/out-br/target/usr/lib
+
+TUTORIAL_TA_UUID ?= a6f77c1e-96fe-4a0e-9e74-262582a4c8f1
+export TUTORIAL_TA_UUID
 
 .PHONY: build app enclave image run
 
@@ -22,7 +32,7 @@ install_qemu:
 	mkdir -p $(prefix)/rootfs
 	cd $(prefix)/rootfs; \
 	gzip -dc ../rootfs.cpio.gz | cpio -i
-	install a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta $(prefix)/rootfs/lib/optee_armtz
+	install $(TUTORIAL_TA_UUID).ta $(prefix)/rootfs/lib/optee_armtz
 	install App-optee $(prefix)/rootfs/root
 	cd $(prefix)/rootfs; \
 	find . | sudo cpio -o -H newc 2> /dev/null | gzip -c9 > ../rootfs.cpio.gz
