@@ -226,7 +226,7 @@ int symmetric_key_dec(void)
     secure_storage_read(key, &keylen, "sym_key");
 
     /** Read encypted data from secure storage */
-    secure_storage_read(out, &outlen, "sym_key");
+    secure_storage_read(out, &outlen, "enc_data");
 
     /** Start decrypting test data.
      * Equivalant of EVP_DecryptInit_ex() in openssl  */
