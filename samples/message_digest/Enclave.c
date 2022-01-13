@@ -134,7 +134,7 @@ void message_digest_gen(void)
      * iteration makes it possible to handle large data, such as 4GB which is
      * not able to have entire data inside TEE memory size and/or only
      * partial data arrives through the Internet in streaming fashion. */
-    TEE_DigestUpdate(handle, data, CHUNK_SIZE);
+    TEE_DigestUpdate(handle, pdata, CHUNK_SIZE);
 
     /** Used combined with the TEE_DigestUpdate.
      * When the data is larger, move to next pointer of chunk in the data 
