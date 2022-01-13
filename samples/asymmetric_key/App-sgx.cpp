@@ -122,7 +122,7 @@ int SGX_CDECL main(int argc, char *argv[])
     }
 
     /* Calling Trusted Application */
-    ret = ecall_ta_main(global_eid);
+    ret = ecall_ta_main(global_eid, 0);
     if (ret != SGX_SUCCESS)
         goto main_out;
 

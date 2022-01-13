@@ -34,7 +34,7 @@
 /**
  * ecall_ta_main() - Prints the string and returns the number of string.
  */
-void ecall_ta_main(void) {
+void ecall_ta_main(uint32_t command) {
   int retval;
   ocall_print_string(&retval, MESSAGE);
   return;

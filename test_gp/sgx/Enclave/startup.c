@@ -11,7 +11,7 @@
  * 
  * @return	It will return EAPP_RETURN(0).
  */
-void ecall_ta_main(void) {
+void ecall_ta_main(uint32_t command) {
   crt_begin();
 #ifdef ENCLAVE_VERBOSE
   printf("main start\n");
