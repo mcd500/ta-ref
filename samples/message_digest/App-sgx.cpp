@@ -42,9 +42,11 @@
 # include <time.h>
 
 #include "sgx_urts.h"
-#include "App.h"
+//#include "App.h"
 #include "edger/Enclave_u.h"
 #include "types.h"
+
+#define ENCLAVE_FILENAME "enclave.signed.so"
 
 /**
  * print_error_message() - Used for printing the error message.

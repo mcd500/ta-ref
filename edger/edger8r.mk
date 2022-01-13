@@ -65,5 +65,7 @@ $(COBJS): %.o: %.c
 $(LIBS): lib%.a: %.o
 	$(AR) $@ $^
 
+libEnclave_u.a: Enclave_u.o App_ocalls_sgx.o
+
 clean:
 	$(RM) $(UNTRUSTED_SRCS) $(UNTRUSTED_HEADERS) $(TRUSTED_SRCS) $(TRUSTED_HEADERS) $(CXXOBJS) $(COBJS) $(LIBS) $(EDL_PATH)
