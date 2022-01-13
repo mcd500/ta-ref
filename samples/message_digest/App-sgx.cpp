@@ -47,6 +47,13 @@
 #include "types.h"
 
 #define ENCLAVE_FILENAME "enclave.signed.so"
+/** Command id for the first operation in TA.
+ * The number must match between REE and TEE to achieve the objected
+ * behavior. It is recommended to use a number which is not easy to guess
+ * from the attacker. */
+#define TA_REF_HASH_GEN    0x11111111
+/** Command id for the second operation in TA */
+#define TA_REF_HASH_CHECK  0x22222222
 
 /**
  * print_error_message() - Used for printing the error message.
@@ -124,7 +131,10 @@ int SGX_CDECL main(int argc, char *argv[])
     }
 
     /* Calling Trusted Application */
-    ret = ecall_ta_main(global_eid);
+    ret = ecall_ta_main(global_eid, TA_REF_HASH_GEN);
+    if (ret != SGX_SUCCESS)
+        goto main_out;
+    ret = ecall_ta_main(global_eid, TA_REF_HASH_CHECK);
     if (ret != SGX_SUCCESS)
         goto main_out;
 

@@ -16,9 +16,8 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
  * 
  * @return	It will return EAPP_RETURN(0).
  */
-void ecall_ta_main(void) {
+void ecall_ta_main(uint32_t command) {
   crt_begin();
-  uint32_t command = 0;
 #ifdef ENCLAVE_VERBOSE
   printf("main start\n");
 #endif

@@ -10,3 +10,4 @@ enclave:
 	make -f enclave.mk
 
 clean:
+	rm -f *.o App_sgx *.so

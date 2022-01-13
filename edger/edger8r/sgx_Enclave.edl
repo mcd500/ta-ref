@@ -102,7 +102,7 @@ enclave {
 
     trusted {
         /* virtual ecall */
-        public void ecall_ta_main(void);
+        public void ecall_ta_main(uint32_t command);
     };
 
 };
