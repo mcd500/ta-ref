@@ -7,25 +7,25 @@
 
 ### Hardware Features of TA-Ref on TEE
 
-@image html images/Hardware_Features_for_TA-Ref.png
-@image latex images/Hardware_Features_for_TA-Ref.png width=\textwidth
+@image html docs/images/Hardware_Features_for_TA-Ref.png
+@image latex docs/images/Hardware_Features_for_TA-Ref.png width=\textwidth
 
 ## Components of TA-Ref
 
 ### TA-Ref Components on Keystone
 
-@image html images/Ta-ref_components_on_Keystone.png
-@image latex images/Ta-ref_components_on_Keystone.png width=\textwidth
+@image html docs/images/Ta-ref_components_on_Keystone.png
+@image latex docs/images/Ta-ref_components_on_Keystone.png width=\textwidth
 
 ### TA-Ref Components on OP-TEE
 
-@image html images/Ta-ref_components_on_Optee.png
-@image latex images/Ta-ref_components_on_Optee.png width=\textwidth
+@image html docs/images/Ta-ref_components_on_Optee.png
+@image latex docs/images/Ta-ref_components_on_Optee.png width=\textwidth
 
 ### TA-Ref Components on SGX
 
-@image html images/Ta-ref_components_on_SGX.png
-@image latex images/Ta-ref_components_on_SGX.png width=\textwidth
+@image html docs/images/Ta-ref_components_on_SGX.png
+@image latex docs/images/Ta-ref_components_on_SGX.png width=\textwidth
 
 
 ## What we did on RISC-V
@@ -52,13 +52,13 @@
 
 Following shows the table of CPU Dependent and Independent API's with its functions.
 
-@image html images/separate-gp-tee-internal-api.png
-@image latex images/separate-gp-tee-internal-api.png width=\textwidth
+@image html docs/images/separate-gp-tee-internal-api.png
+@image latex docs/images/separate-gp-tee-internal-api.png width=\textwidth
 
 ## Diagram
 
 ### Dependency of category
 
-@image html images/dependency_category.png
-@image latex images/dependency_category.png width=\textwidth
+@image html docs/images/dependency_category.png
+@image latex docs/images/dependency_category.png width=\textwidth
 
