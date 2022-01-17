@@ -8,6 +8,9 @@ export TAREF_DIR
 TUTORIAL_TA_UUID ?= a6f77c1e-96fe-4a0e-9e74-262582a4c8f1
 export TUTORIAL_TA_UUID
 
+CROSS_COMPILE = $(OPTEE_TOOLCHAIN_DIR)/aarch64-linux-gnu-
+export CROSS_COMPILE
+
 .PHONY: build app enclave image run
 
 build: app enclave
@@ -22,14 +25,14 @@ prefix ?= $(OPTEE_DIR)/out-br/images
 
 install_qemu:
 	test -n "$(prefix)"
-	rm -rf $(prefix)/rootfs
+	sudo rm -rf $(prefix)/rootfs
 	mkdir -p $(prefix)/rootfs
 	cd $(prefix)/rootfs; \
-	gzip -dc ../rootfs.cpio.gz | cpio -i
-	install $(TUTORIAL_TA_UUID).ta $(prefix)/rootfs/lib/optee_armtz
-	install App-optee $(prefix)/rootfs/root
+	gzip -dc ../rootfs.cpio.gz | sudo cpio -i
+	sudo install $(TUTORIAL_TA_UUID).ta $(prefix)/rootfs/lib/optee_armtz
+	sudo install App-optee $(prefix)/rootfs/root
 	cd $(prefix)/rootfs; \
-	find . | sudo cpio -o -H newc 2> /dev/null | gzip -c9 > ../rootfs.cpio.gz
+	sudo find . | sudo cpio -o -H newc 2> /dev/null | gzip -c9 > ../rootfs.cpio.gz
 
 run-qemu:
 	ln -sf $(prefix)/rootfs.cpio.gz $(OPTEE_DIR)/out/bin

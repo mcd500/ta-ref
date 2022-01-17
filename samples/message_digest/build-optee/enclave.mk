@@ -7,7 +7,6 @@ $(error TAREF_DIR is not set)
 endif
 
 BINARY = $(TUTORIAL_TA_UUID)
-CROSS_COMPILE = aarch64-linux-gnu-
 CPPFLAGS = \
 	-I$(TAREF_DIR)/build/include \
 	-I$(TAREF_DIR)/build/include/api \

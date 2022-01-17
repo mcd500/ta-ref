@@ -1,4 +1,3 @@
-CROSS_COMPILE=aarch64-linux-gnu-
 CFLAGS = \
 	-Wall \
 	-I$(OPTEE_DIR)/optee_client/public \
