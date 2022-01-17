@@ -565,6 +565,32 @@ Succeed to exchange secure message...
 Succeed to close Session...
 ```
 
+# Doxygen
+
+This PDF (ta-ref.pdf) was generated using Doxygen version 1.9.2. To install `doxygen-1.9.2` following procedure is necessary.
+
+## Required Packages
+
+Install following packages on Ubuntu. Its better to install from package rather than using apt-install.
+
+```sh
+$ sudo apt install doxygen-latex graphviz texlive-full texlive-latex-base latex-cjk-all
+```
+
+Above packages required to generate PDF using doxygen.
+
+## Build and Install Doxygen
+
+```sh
+$ git clone https://github.com/doxygen/doxygen.git 
+$ cd doxygen
+$ mkdir build 
+$ cd build 
+$ cmake -G "Unix Makefiles" .. 
+$ make
+$ sudo make install 
+```
+
 # Customizing MbedTLS Configuration file
 
 MbedTLS is a C library that implements cryptographic primitives, X.509 certificate manipulation and the SSL/TLS and DTLS protocols.

@@ -1,30 +1,4 @@
-# Building
-
-## Install Doxygen-1.9.2
-
-This PDF was generated using Doxygen version 1.9.2. To install `doxygen-1.9.2` following procedure is necessary.
-
-## Install Required Packages
-
-Install following packages on Ubuntu 18.04
-
-```sh
-$ sudo apt install doxygen-latex graphviz texlive-full texlive-latex-base latex-cjk-all
-```
-
-Above packages required to generate PDF using doxygen.
-
-## Build and Install
-
-```sh
-$ git clone https://github.com/doxygen/doxygen.git 
-$ cd doxygen
-$ mkdir build 
-$ cd build 
-$ cmake -G "Unix Makefiles" .. 
-$ make
-$ sudo make install 
-```
+# Building 
 
 # ta-ref with Keystone
 
@@ -509,3 +483,29 @@ verify ok
 main end
 Info: Enclave successfully returned.
 ```
+
+
+# Generating ta-ref.pdf with Doxygen
+
+As a pre-requisite, make sure  `doxygen-1.9.2` was installed and built already.
+
+## Cloning source and building docs
+
+Clone the ta-ref source
+
+```sh
+$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ cd ta-ref
+$ git checkout teep-master
+```
+
+Build the documentation
+
+```sh
+# Export TEE Variable, TEE can be set to anything
+$ export TEE=keystone
+# Build the docs
+$ make docs
+```
+
+After running the `make docs`, the doxygen build will be started and generates the ta-ref.pdf inside `docs` folder.
