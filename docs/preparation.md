@@ -1,42 +1,119 @@
 # Preparation before building ta-ref
 
+All the preparation steps below are based on Ubuntu 20.04
+
+
 # Keystone(RISC-V Unleased)
 Keystone is an open-source TEE framework for RISC-V processors. For more details check, 
 - http://docs.keystone-enclave.org/en/latest
 
+
 ## Required Packages
-Install following Packages
+
+Install the following packages for building ta-ref on Keystone
 
 ```sh
 $ sudo apt-get update
-$ sudo apt-get install -y autoconf automake autotools-dev bc bison
-  build-essential curl expat libexpat1-dev flex gawk gcc git gperf libgmp-dev 
-  libmpc-dev libmpfr-dev libtool texinfo tmux patchutils zlib1g-dev wget
-  bzip2 patch vim-common lbzip2 python pkg-config libglib2.0-dev libpixman-1-dev
-  libssl-dev screen device-tree-compiler expect makeself unzip cpio rsync cmake
+
+# Following packages are required for Keystone
+$ sudo apt-get install -y autoconf automake autotools-dev bc bison \
+  build-essential curl expat libexpat1-dev flex gawk gcc git gperf libgmp-dev \
+  libmpc-dev libmpfr-dev libtool texinfo tmux patchutils zlib1g-dev wget \
+  bzip2 patch vim-common lbzip2 python pkg-config libglib2.0-dev libpixman-1-dev \
+  libssl-dev screen device-tree-compiler expect makeself unzip cpio rsync cmake \
+  p7zip-full 
+
+# Following packages are required for clang, keyedge and make run commands in ta-ref.
+$ sudo apt-get install -y clang-tools-6.0 libclang-6.0-dev cmake \
+	ocaml expect screen sshpass
 ```
 
-## Build Keystone
+## Download RISC-V toolchain and Keystone SDK
+
 Download the keystone sources 
 
 ```sh
-$ git clone https://github.com/keystone-enclave/keystone.git
+$ git clone https://github.com/keystone-enclave/keystone.git -b v1.0.0
 $ cd keystone
-$ git checkout v0.3
 $ ./fast-setup.sh
+$ source ./source.sh
+```
+
+After executing the `./fast-setup.sh`, the toolchain for RISC-V has been installed at `keystone/riscv/bin` and it adds to your PATH.
+
+Make the following changes to increase the max edge calls
+```sh
+sed -i 's/MAX_EDGE_CALL 10$/MAX_EDGE_CALL 1000/' <keystone_dir>/sdk/include/edge/edge_common.h
+```
+
+Build the Keystone SDK
+
+Make sure you are in keystone directory.
+
+```sh
+$ cd sdk/ 
+$ mkdir -p build
+$ cd build
+$ cmake .. $SDK_FLAGS
 $ make
-$ source source.sh
-./sdk/scripts/init.sh
-./sdk/examples/hello/vault.sh
-./sdk/examples/hello-native/vault.sh
-./tests/tests/vault.sh
+$ make install
+```
+
+Build the Qemu Image
+
+Make sure you are in `keystone` directory.
+
+```sh
+$ mkdir -p build
+$ cd build
+$ cmake ..
+$ make
 $ make image
 ```
 
-RISC-V Toolchain:
-- When you execute `./fast-setup.sh`, the toolchain for RISC-V has been installed at `$KEYSTONE_DIR/riscv/bin` and it adds to your PATH.
+Launch the QEMU image 
+
+Make sure you are in `keystone\build` directory.
+
+```sh
+$ ./scripts/run-qemu.sh
+Welcome to Buildroot
+```
+
+Login to console with the following credentials 
+
+buildroot login = root,
+Password = sifive
+
+```console
+buildroot login: root
+Password: 
+$ 
+```
+
+Poweroff the console incase, if you want to exit.
+
+```sh
+$ poweroff
+```
+
+You can also use `CTRL^A + X` to exit Qemu Console.
 
 ## Run Keystone examples
+
+Run the following commands to generate hello world example
+programs to be executed on qemu.
+
+
+Make sure you are in `keystone\build` directory.
+
+
+```sh
+$ make hello-package
+$ cp -r examples/hello ./overlay/root/
+# Update the image
+$ make image
+```
 
 Launch QEMU console
 <br />
@@ -62,6 +139,7 @@ Verifying archive integrity...  100%   All good.
 Uncompressing Keystone vault archive  100%
 hello, world!
 ```
+You can also run the tests by executing `./tests.ke`
 
 Poweroff the console incase, if you want to exit.
 ```
@@ -69,73 +147,94 @@ $ poweroff
 ```
 
 # OP-TEE (ARM64 Raspberry Pi 3 Model B)
+
 OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a non-secure Linux kernel running on Arm. Lets build OP-TEE for QEMU and Raspberry Pi3 Model B development board. For more details check, 
 - https://optee.readthedocs.io/en/latest/
 
 ## Required Packages
 
-Install following packages on Ubuntu 18.04
+Install the following packages
 
 ```sh
 $ sudo dpkg --add-architecture i386
+
 $ sudo apt-get update -y
+
 $ sudo apt-get install -y android-tools-adb android-tools-fastboot autoconf \
-        automake bc bison build-essential ccache cscope curl device-tree-compiler \
-        expect flex ftp-upload gdisk iasl libattr1-dev libc6:i386 libcap-dev \
-        libfdt-dev libftdi-dev libglib2.0-dev libhidapi-dev libncurses5-dev \
-        libpixman-1-dev libssl-dev libstdc++6:i386 libtool libz1:i386 make \
-        mtools netcat python python-crypto python3-crypto python-pyelftools \
-        python3-pycryptodome python3-pyelftools python3-serial vim-common \
-        rsync unzip uuid-dev xdg-utils xterm xz-utils zlib1g-dev \
-        git python3-pip wget cpio \
-        texlive texinfo \
-$ sudo pip3 install pycryptodomex
+  automake bc bison build-essential ccache cscope curl device-tree-compiler \
+  expect flex ftp-upload gdisk iasl libattr1-dev libc6:i386 libcap-dev \
+  libfdt-dev libftdi-dev libglib2.0-dev libhidapi-dev libncurses5-dev \
+  libpixman-1-dev libssl-dev libstdc++6:i386 libtool libz1:i386 make \
+  mtools netcat python python-crypto python3-crypto python-pyelftools \
+  python3-pycryptodome python3-pyelftools python3-serial vim-common \
+  rsync unzip uuid-dev xdg-utils xterm xz-utils zlib1g-dev \
+  git python3-pip wget cpio texlive texinfo locales
+
 ```
 
-## Build OP-TEE v3.9.0
-
-Configure git
+Set the locale to English, to cope with the problem, https://github.com/OP-TEE/build/issues/424#issuecomment-631302208.
 
 ```sh
-$ git config --global user.name "dummy"
-$ git config --global user.email "dummy@gmail.com"
-$ git config --global color.ui false
-$ mkdir ~/bin
-$ curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo && \
-$ chmod a+x ~/bin/repo
+$ locale-gen en_US.UTF-8 
+$ export LANG=en_US.UTF-8
+$ export LANGUAGE=en_US:en
+$ export LC_ALL=en_US.UTF-8
 ```
 
-### Download Toolchains
-<br />
+## Download and build OP-TEE Toolchains 3.10.0
+
+Create the directory to build the OP-TEE toolchains and export the toolchain directory
 
 ```sh
-$ export TOOLCHAIN_DIR=${HOME}/toolchains
-$ sudo apt-get install -y wget xz-utils
-$ mkdir -p ${TOOLCHAIN_DIR}/aarch64 ${TOOLCHAIN_DIR}/aarch32
-$ wget http://192.168.100.100:2000/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf.tar.xz -o /dev/null -O aarch32.tar.xz && \
-  tar xf aarch32.tar.xz --strip-components=1 -C ${TOOLCHAIN_DIR}/aarch32
-$ wget http://192.168.100.100:2000/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz -o /dev/null -O aarch64.tar.xz && \
-  tar xf aarch64.tar.xz --strip-components=1 -C ${TOOLCHAIN_DIR}/aarch64
-$ export PATH=${TOOLCHAIN_DIR}/aarch64/bin:${TOOLCHAIN_DIR}/aarch32/bin:${PATH}
+$ mkdir -p /opt/arm-tc
+$ export TOOLCHAIN_DIR=/opt/arm-tc
 ```
 
-### Clone and Build OP-TEE v3.9.0 for QEMU
-<br />
-Clone optee version 3.9.0 for QEMU
+Clone and build the OP-TEE toolchain
 
 ```sh
-$ mkdir optee_3.9.0_qemu
-$ cd optee_3.9.0_qemu
-$ ~/bin/repo init -u https://github.com/knknkn1162/manifest.git -m qemu_v8.xml -b 3.9.0
-$ ~/bin/repo sync -j4 --no-clone-bundle
-$ ln -s ~/toolchains toolchains
+$ git clone https://github.com/OP-TEE/build.git -b 3.10.0
 $ cd build
-$ make
+$ sudo make TOOLCHAIN_ROOT=${TOOLCHAIN_DIR} -f toolchain.mk -j2
+$ export PATH=${TOOLCHAIN_DIR}/aarch64/bin;${TOOLCHAIN_DIR}/aarch32/bin;${PATH}
+```
+
+## Download OP-TEE 3.10.0
+
+Install Androi repo to sync the OP-TEE repo
+
+```sh
+$ sudo git config --global user.name "dummy" && \
+  sudo git config --global user.email "dummy@gmail.com" && \
+  sudo git config --global color.ui false && \
+  mkdir ~/bin && \
+  curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo && \
+  chmod a+x ~/bin/repo
+
+$ export PATH=$~/bin:${PATH}
+```
+
+Get the source code for optee
+
+
+```sh
+$ mkdir optee && cd optee
+$ export OPTEE_DIR=$(pwd)
+$ repo init -u https://github.com/OP-TEE/manifest.git -m qemu_v8.xml -b 3.10.0
+$ repo sync -j4 --no-clone-bundle
+```
+
+## Build OP-TEE 3.10.0
+
+```sh
+$ cd ${OPTEE_DIR}/build
+$ ln -s ${TOOLCHAIN_DIR} ${OPTEE_DIR}/toolchains
+$ make TOOLCHAIN_ROOT=${TOOLCHAIN_DIR} -j`nproc`
 ```
 
 If build is successfull, the rootfs can be found as follows
 ```sh
-$ ls -l ../out-br/images/rootfs.cpio.gz
+$ ls -l ${OPTEE_DIR}/out-br/images/rootfs.cpio.gz
 ```
 
 ### Clone and Build OP-TEE v3.9.0 for RPI3
