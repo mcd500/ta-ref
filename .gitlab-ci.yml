@@ -101,28 +101,6 @@ stages:
 
 ### KEYSTONE - START ###
 
-keystone_qemu_default:
-    <<: *test_definition117
-    image: ${DOCKER_IMAGE}:keystone_qemu
-    variables:
-        ENVS: env/keystone.sh
-        TEST_DIR: test_hello
-    stage: test_hello
-    script:
-        - make build test run TEST_DIR=${TEST_DIR}
-
-keystone_qemu_test_gp:
-    <<: *test_definition117
-    image: ${DOCKER_IMAGE}:keystone_qemu
-    variables:
-        ENVS: env/keystone.sh
-        TEST_DIR: test_gp
-    stage: test_gp
-    script:
-        - make build test run TEST_DIR=${TEST_DIR}
-#        - make mrproper
-#        - make build test run TEST_DIR=${TEST_DIR} EDGER_TYPE=KEEDGER8R
-
 keystone_qemu_test_perf:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:keystone_qemu
@@ -334,7 +312,7 @@ keystone_qemu_default_aist:
         TEST_DIR: test_hello
     stage: test_hello
     script:
-        - make build test-bin MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
+        - make build test-bin MACHINE=SIM TEST_DIR=${TEST_DIR}
 
 keystone_qemu_test_gp_aist:
     <<: *test_definition117
@@ -344,7 +322,7 @@ keystone_qemu_test_gp_aist:
         TEST_DIR: test_gp
     stage: test_gp
     script:
-        - make build test-bin MACHINE=HIFIVE TEST_DIR=${TEST_DIR}
+        - make build test-bin MACHINE=SIM TEST_DIR=${TEST_DIR}
 ### Keystone on AIST Docker Image - END ###
 
 ### KEYSTONE - END ###
@@ -382,26 +360,6 @@ sgx_sim_test_perf:
     stage: test_perf
     script:
         - make build test run TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
-
-sgx_nuc_default:
-    <<: *test_definition101
-    image: ${DOCKER_IMAGE}:sgx
-    variables:
-        ENVS: env/sgx_x64.sh
-        TEST_DIR: test_hello
-    stage: test_hello
-    script:
-        - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR}
-
-sgx_nuc_test_gp:
-    <<: *test_definition101
-    image: ${DOCKER_IMAGE}:sgx
-    variables:
-        ENVS: env/sgx_x64.sh
-        TEST_DIR: test_gp
-    stage: test_gp
-    script:
-        - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR}
 
 sgx_nuc_test_perf:
     <<: *test_definition101
@@ -443,26 +401,6 @@ sgx_nuc_test_gp_aist:
 ### SGX - END ###
 
 ### OPTEE - START ###
-optee_qemu_default:
-    <<: *test_definition117
-    image: ${DOCKER_IMAGE}:optee_qemu_v8
-    variables:
-        ENVS: env/optee_qemu.sh
-        TEST_DIR: test_hello
-    stage: test_hello
-    script:
-        - make build test run TEST_DIR=${TEST_DIR}
-
-optee_qemu_test_gp:
-    <<: *test_definition117
-    image: ${DOCKER_IMAGE}:optee_qemu_v8
-    variables:
-        ENVS: env/optee_qemu.sh
-        TEST_DIR: test_gp
-    stage: test_gp
-    script:
-        - make build test run TEST_DIR=${TEST_DIR}
-
 optee_qemu_test_perf:
     <<: *test_definition117
     image: ${DOCKER_IMAGE}:optee_qemu_v8
