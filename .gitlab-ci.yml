@@ -376,7 +376,7 @@ sgx_nuc_test_perf:
         - make build test run MACHINE=NUC TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
 ### Intel SGX on AIST Docker Image - START ###
-sgx_nuc_default_aist:
+sgx_sim_default_aist:
     <<: *test_definition117_aist_sgx
     image: ${AIST_DOCKER_IMAGE}:sgx-2.10
     variables:
@@ -384,9 +384,9 @@ sgx_nuc_default_aist:
         TEST_DIR: test_hello
     stage: test_hello
     script:
-        - make build test-bin MACHINE=NUC TEST_DIR=test_hello
+        - make build test-bin MACHINE=SIM TEST_DIR=test_hello
 
-sgx_nuc_test_gp_aist:
+sgx_sim_test_gp_aist:
     <<: *test_definition117_aist_sgx
     image: ${AIST_DOCKER_IMAGE}:sgx-2.10
     variables:
@@ -394,7 +394,7 @@ sgx_nuc_test_gp_aist:
         TEST_DIR: test_gp
     stage: test_gp
     script:
-        - make build test-bin MACHINE=NUC TEST_DIR=test_gp
+        - make build test-bin MACHINE=SIM TEST_DIR=test_gp
 
 ### Intel SGX on AIST Docker Image - END ###
 
@@ -413,25 +413,6 @@ optee_qemu_test_perf:
     script:
         - make build test run TEST_DIR=${TEST_DIR} PROFILER=${PROFILER} DEBUG_TYPE=${DEBUG_TYPE}
 
-optee_rpi3_default:
-    <<: *test_definition117
-    image: ${DOCKER_IMAGE}:optee_rpi3
-    variables:
-        ENVS: env/optee_rpi3.sh
-        TEST_DIR: test_hello
-    stage: test_hello
-    script:
-        - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR}
-
-optee_rpi3_test_gp:
-    <<: *test_definition117
-    image: ${DOCKER_IMAGE}:optee_rpi3
-    variables:
-        ENVS: env/optee_rpi3.sh
-        TEST_DIR: test_gp
-    stage: test_gp
-    script:
-        - make build test run MACHINE=RPI3 TEST_DIR=${TEST_DIR}
 
 optee_rpi3_test_perf:
     <<: *test_definition117
@@ -504,7 +485,7 @@ optee_qemu_default_aist:
         TEST_DIR: test_hello
     stage: test_hello
     script:
-        - make build test-bin MACHINE=RPI3 TEST_DIR=${TEST_DIR}
+        - make build test-bin MACHINE=SIM TEST_DIR=${TEST_DIR}
 
 optee_qemu_test_gp_aist:
     <<: *test_definition117
@@ -514,7 +495,7 @@ optee_qemu_test_gp_aist:
         TEST_DIR: test_gp
     stage: test_gp
     script:
-        - make build test-bin MACHINE=RPI3 TEST_DIR=${TEST_DIR}
+        - make build test-bin MACHINE=SIM TEST_DIR=${TEST_DIR}
 
 ### Optee on AIST Docker Image - END ###
 
