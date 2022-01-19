@@ -75,9 +75,6 @@ ssize_t ocall_getrandom(char *buf, size_t len, unsigned int flags)
   return rtn;
 }
 
-// from test_sign
-nonce_t ocall_import_nonce(void) {}
-
 /**
  * ocall_read_file256() - Function is to read file descriptor 
  *  

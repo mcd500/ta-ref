@@ -101,12 +101,6 @@ invoke_command_t ocall_invoke_command_polling(int dummy) {}
  */
 int ocall_invoke_command_callback(invoke_command_t cb_cmd) {}
 
-/**
- * ocall_import_nonce() - import nonce.
- * 
- * @return integer value	If success
- */
-nonce_t ocall_import_nonce(void) {}
 #endif
 
 EDGE_EXTERNC_END
