@@ -223,35 +223,6 @@ keystone_trvsim_test_gp:
         # cleanup
         - docker-compose -f services/docker-compose.trvsim_ci.yml down -v
 
-keystone_trvsim_test_ac_su_sign:
-    variables:
-        # OVPSIM_LICENCE_PATH and MAC_ADDR are defined in CI/CD settings -> Variables.
-        # SSH_PORT, OVPSIM_LICENCE_PATH, MAC_ADDR and IMAGE_DIR are required in .gitlab-ci.yml
-        IMAGE_DIR: ${CI_PROJECT_DIR}/image
-        SSH_PORT: 10098
-        TRVCA_PORT: 8000
-    tags:
-        - shell117
-    stage: test_ac_su_sign
-    only:
-        - stale
-    needs: []
-    before_script:
-        - git submodule update --init --recursive
-        - sudo apt-get install -y jq
-        - mkdir -p ${IMAGE_DIR}
-        - CIRCLE_TOKEN=${PRIVATE_CIRCLE_TOKEN} BRANCH=sg_with_secom IMAGE_DIR=${IMAGE_DIR} ./scripts/before_keystone_trvsim_test_ac_su_sign.sh
-        - ls . ${IMAGE_DIR}
-        # This image is not generated from 117 server, so we sync it.
-        - docker-compose -p ${CI_JOB_NAME} -f ./services/docker-compose.trvsim_su_ci.yml pull web
-        - touch uart1.log
-    script:
-        - docker-compose -p ${CI_JOB_NAME} -f ./services/docker-compose.trvsim_su_ci.yml up --abort-on-container-exit
-    after_script:
-        # cleanup
-        - cat ./uart1.log
-        - docker-compose -p ${CI_JOB_NAME} -f ./services/docker-compose.trvsim_su_ci.yml down -v
-
 ## vc707
 keystone_vc707_default:
     <<: *test_definition117
