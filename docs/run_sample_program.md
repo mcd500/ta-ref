@@ -185,9 +185,44 @@ $ cd ${TAREF_DIR}
 # Move to SGX build directory
 $ cd samples/message_digest/build-sgx/
 	
-# Make the message-digest sample
+# Make the message-digest sample for Simulation mode
 $ make
+
+# This creates the App_sgx and enclave.signed.so
+# You can copy this two files alone to any places and run the App_sgx
+$ ./App_sgx
 ```
 
-The above steps generate ./App-sgx, which has to be executed on Intel SGX device.
+Trimmed the output in the App_sgx shown below
+
+```console
+.
+.
+[read_cpusvn_file ../cpusvn_util.cpp:96] Couldn't find/open the configuration file /home/user/.cpusvn.conf.
+main start
+TEE_AllocateOperation(): start
+TEE_FreeOperation(): start
+TEE_DigestDoFinal(): start
+TEE_FreeOperation(): start
+hash: 39 46 2d 2a 23 20 f8 da 57 2a 97 b0 b3 94 73 d4 31 2e 02 28 b2 3e 2c 2f e0 ae 9b 6c 67 f2 34 3c 
+TEE_CreatePersistentObject(): start
+TEE_WriteObjectData(): start
+TEE_CloseObject(): start
+main end
+main start
+TEE_AllocateOperation(): start
+TEE_FreeOperation(): start
+TEE_DigestDoFinal(): start
+TEE_FreeOperation(): start
+hash: 39 46 2d 2a 23 20 f8 da 57 2a 97 b0 b3 94 73 d4 31 2e 02 28 b2 3e 2c 2f e0 ae 9b 6c 67 f2 34 3c 
+TEE_OpenPersistentObject(): start
+TEE_ReadObjectData(): start
+TEE_CloseObject(): start
+hash: matched!
+main end
+Info: Enclave successfully returned.
+build-user@b9755ab0abea:~/ta-ref/samples/message_digest/build-sgx$ ^C
+build-user@b9755ab0abea:~/ta-ref/samples/message_digest/build-sgx$ exit
+exit
+```
 
