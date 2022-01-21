@@ -1,4 +1,5 @@
 export TEE_REF_TA_DIR ?= $(CURDIR)/../../..
+export MACHINE ?= SIM
 
 .PHONY: build app enclave
 build: app enclave
