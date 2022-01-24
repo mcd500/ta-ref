@@ -303,10 +303,14 @@ $ make build test-bin MACHINE=SIM TEST_DIR=test_hello
 	
 # Build test_gp directory
 $ make build test-bin MACHINE=SIM TEST_DIR=test_gp
-	
-# By the above steps, we have successfully built the ta-ref.
-# Below we are going to push it into qemu and test its working
+```
 
+By the above steps, we have successfully built the ta-ref.
+Below we are going to push it into qemu and test its working
+
+**Test the built test_hello, test_gp binaries in Qemu**
+
+```sh
 # Extract the rootfs.cpio.gz into a directory
 $ cd ${OPTEE_OUTBR_DIR}/images
 $ rm -rf rootfs && mkdir rootfs && cd rootfs
@@ -353,12 +357,74 @@ $ cd /home/user/optee/out/bin && \
 # Test test_hello
 $ cd test_hello/
 $ cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib/optee_armtz/
-$ ./optee_ref_ta 
+$ ./optee_ref_ta
 	
+--- enclave log start---
+ecall_ta_main() start
+hello world!
+ecall_ta_main() end
+
+--- enclave log end---
+# 
+		
 # Test test_gp
 $ cd ../test_gp/
 $ cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib/optee_armtz/
 $ ./optee_ref_ta 
+	
+start TEEC_InvokeCommand
+--- enclave log start---
+ecall_ta_main() start
+@random: 3efa2690dc1857e1a45ee256fac75917
+@GP REE time 1643004179 sec 669 millis
+@GP System time 71 sec 804 millis
+256 bytes read: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222
+32425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e
+4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797
+a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5
+a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d
+1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfc
+fdfeff
+verify ok
+hash: 40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880
+@cipher: 1a5004415312bf2ae919686a94aeaed65bc44a84724c12871945636443f03236104e406a12d5dc1
+78b20a797b00fc38e42338e748ea60add29bbfc9c4253db4768114e019ed632408009a05cf21191e74faba54
+4510290fca5cccc16e1befdf456c73c4e564adbde6704b4a8d8ef9d910bb0cd38653ab04eba9aa332abd2274
+b6e5ea01563ff604f2ce4e7b11495b264bf9b6fd2692c609186f3413f8b893ea0b1c826f6d74da8dcb92d6d2
+367ec0dfd1874c5e9f226e6f08a3a81431d944a35c46023f72dc2538f71dcd831282111b716723b4a178fa92
+5bd901474b7392c5f7a06c0ecb7ce975677369eebeffbcfed4aa8b08d4974241ba9df0008f061395d
+decrypted to: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324
+25262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f50
+5152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c
+7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8
+a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4
+d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff
+verify ok
+@cipher: 0d3296d0049822159014b5cf781415ac6c43a57cf7d1e61abbc54eca7a802cd47c4b9f470017eff
+d2511b310b3e1bf5093a52a0a2370ac354cd97cd984bb5cf7fdeba3009b69fbded49ac8789a4ada774436807
+fe8452888fbf26eee36332894be13e7ff1ea60e02dfcc9b43a39c0088be43a871a342c119963859936c8bbce
+4ffc215c1d7115d28fa2fef08cdca0e38131e967824ffa30a072ba8f7d66d2795e19beb08e32ffaf2b2a92d8
+2a0b3ef796cbb1c290512963617abb5ecc31f14747e204057e3a90ad3e561efba681d58e0b7bb69c5a6a5250
+c892bceb3dfc9d8c79e644a7aa234c4f5e7d94fb4867bd97d6dc8f26443345995802a9a320a64c22b
+@tag: a38fd49dc4c3f453f35db8af29d8e371
+decrypted to: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324
+25262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f50
+5152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c
+7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8
+a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4
+d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff
+verify ok
+@digest: 40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880
+@signature: a43c693ccede4504bc921c41ad9c937cd5ed3bab2494a72079f51deffb4d32d3840f55e699aa3
+ec092e033efd4662bb702c6de4cb338f65bd015647d5a10bc62
+@@TEE_FreeOperation: 
+verify ok
+ecall_ta_main() end
+	
+--- enclave log end---
+res = TEEC_SUCCESS; TEEC_InvokeCommand succeeded!
+# 
+
 ```
 
 ### Building ta-ref for Intel SGX with docker
@@ -401,37 +467,36 @@ Since we are building in SIM mode, We can execute in docker itself.
 There are two files required to test_hello 
 1) ./sgx_app
 2)enclave.signed.so
-copy the files into a directory and then execute
+copy the files into a directory and then execute the ./sgx_app command
 
-**Test test_hello**
+**Test the built test_hello, test_gp binaries in Docker SIM mode**
 
 Make sure test_hello is already built in SIM mode.
 [Inside /home/user directory]
 
+Test_hello:
+
 ```sh	
 $ cd 
 $ mkdir test_hello
-	
+		
 # Copy the sgx_app for test_hello
 $ cp ta-ref/test_hello/sgx/App/sgx_app test_hello/
 # Copy the enclave
 $ cp ta-ref/test_hello/sgx/Enclave/enclave.signed.so test_hello/ 
-
+	
 # Change to test_hello
 $ cd test_hello/ 
-
+	
 # Run the program
 $ ./sgx_app
-```
 
-Output for the program
-
-```console
+# [trimmed output]
 hello world!
 Info: Enclave successfully returned.
 ```
 
-**Test test_gp**
+Test_gp:
 
 Make sure test_hello is already built in SIM mode.
 [Inside /home/user directory]
@@ -444,17 +509,14 @@ $ mkdir test_gp
 $ cp ta-ref/test_gp/sgx/App/sgx_app test_gp/
 # Copy the enclave
 $ cp ta-ref/test_gp/sgx/Enclave/enclave.signed.so test_gp/ 
-
+	
 # Change to test_gp
 $ cd test_gp/ 
-
+	
 # Run the program
 $ ./sgx_app
-```
 
-Output for the program
-
-```console
+# [trimmed output]
 main start
 TEE_GenerateRandom(): start
 @random: 59af0039e8013fd0cc698c4115b682a3
