@@ -112,15 +112,22 @@ $ make build test-bin MACHINE=SIM TEST_DIR=test_hello
 	
 # Build test_gp directory
 $ make build test-bin MACHINE=SIM TEST_DIR=test_gp
-	
-# By the above steps, we have successfully built the ta-ref.
-# Below we are going to push it into qemu and test its working
-	
+```
+
+By the above steps, we have successfully built the ta-ref.
+Below we are going to push it into qemu and test its working
+
+
+**Test the built test_hello, test_gp binaries in Qemu**
+
+
+```sh
 # Copy the test_hello inside qemu root
 $ mkdir $KEYSTONE_DIR/build/overlay/root/test_hello
 $ cp test_hello/keystone/App/App.client $KEYSTONE_DIR/build/overlay/root/test_hello/
 $ cp test_hello/keystone/Enclave/Enclave.eapp_riscv $KEYSTONE_DIR/build/overlay/root/test_hello/
 $ cp $KEYSTONE_SDK_DIR/runtime/eyrie-rt $KEYSTONE_DIR/build/overlay/root/test_hello/
+	
 	
 # Copy the test_gp inside qemu root
 $ mkdir $KEYSTONE_DIR/build/overlay/root/test_gp   
@@ -131,6 +138,7 @@ $ cp $KEYSTONE_SDK_DIR/runtime/eyrie-rt $KEYSTONE_DIR/build/overlay/root/test_gp
 # Re-build the keystone again to copy test_hello and test_gp inside qemu
 $ cd $KEYSTONE_DIR/build
 $ make
+	
 	
 # Start the Qemu console from $KEYSTONE_DIR/build dir
 $ ./scripts/run-qemu.sh 
@@ -146,12 +154,121 @@ $ insmod keystone-driver.ko
 # Test test_hello
 # cd test_hello/
 # ./App.client Enclave.eapp_riscv eyrie-rt 
-(Refer the screenshot for output)
 	
+[debug] UTM : 0xffffffff80000000-0xffffffff80100000 (1024 KB) (boot.c:127)
+[debug] DRAM: 0xb7c00000-0xb8000000 (4096 KB) (boot.c:128)
+[debug] FREE: 0xb7dbb000-0xb8000000 (2324 KB), va 0xffffffff001bb000 (boot.c:133)
+[debug] eyrie boot finished. drop to the user land ... (boot.c:172)
+hello world!
+	
+
 # Test Test_gp 
 # cd test_gp   (From base dir)
 # ./App.client Enclave.eapp_riscv eyrie-rt 
-(Refer the screenshot for output)
+	
+[debug] UTM : 0xffffffff80000000-0xffffffff80100000 (1024 KB) (boot.c:127)
+[debug] DRAM: 0xb8000000-0xb8400000 (4096 KB) (boot.c:128)
+[debug] FREE: 0xb81dd000-0xb8400000 (2188 KB), va 0xffffffff001dd000 (boot.c:133)
+[debug] eyrie boot finished. drop to the user land ... (boot.c:172)
+main start
+TEE_GenerateRandom(0x000000003FFFFEE0, 16): start
+@random: 5c066e270ed690d9f1f0a3ba094def05
+TEE_GetREETime(): start
+@GP REE time 241 sec 936 millis
+TEE_GetSystemTime(): start
+@GP System time 1312074212 sec 5 millis
+TEE_CreatePersistentObject(): start
+TEE_WriteObjectData(): start
+TEE_CloseObject(): start
+TEE_OpenPersistentObject(): start
+TEE_ReadObjectData(): start
+TEE_CloseObject(): start
+256 bytes read: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232
+425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f50
+5152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7
+d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9
+aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d
+6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff
+verify ok
+TEE_AllocateOperation(): start
+TEE_FreeOperation(): start
+TEE_DigestDoFinal(): start
+TEE_FreeOperation(): start
+hash: 9b04c091da96b997afb8f2585d608aebe9c4a904f7d52c8f28c7e4d2dd9fba5f
+TEE_AllocateTransientObject(): start
+TEE_GenerateKey(): start
+TEE_GenerateRandom(0x000000003FFFFD88, 32): start
+TEE_AllocateOperation(): start
+TEE_GenerateRandom(0x000000003FFFFED0, 16): start
+TEE_CipherInit(): start
+TEE_CipherUpdate(): start
+TEE_FreeOperation(): start
+@cipher: 50b5316159d5e023fec5006a079f11117cc82d59e3888ee815cae300b9d7def43fb05ec75912e6e0068
+a5fad284797bc61412db0b6395eb1403fd8dd5d81241654811d0e0ed6a52471dcd4958395b669f72b2ee2ab55585
+4cd4772c4e4c5b1224c345e1a2b161e048c82e28950220c757ce05cb5339b92d88dc3a8d8318ce0b0280c94c15b7
+779bcc456515176a11df946a91c40c124035a475074108f8c819d571384cff43a70fcae958ab6438fbec47bf1585
+7b6b1b1ca98edcd8bc88140a6956a62a164e4da1b76f1e36e62402ec6cb6214f1a9b1ed9fbf0505454de33efdde3
+71952be81fee1ac47e07203d41ea10024aca056d3010c01d0b1c792851cd7
+TEE_AllocateOperation(): start
+TEE_CipherInit(): start
+TEE_CipherUpdate(): start
+TEE_FreeOperation(): start
+TEE_FreeTransientObject(): start
+decrypted to: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20212223242526
+2728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f5051525354
+55565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182
+838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0
+b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcddde
+dfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff
+verify ok
+TEE_AllocateTransientObject(): start
+TEE_GenerateKey(): start
+TEE_GenerateRandom(0x000000003FFFFC68, 32): start
+TEE_AllocateOperation(): start
+TEE_GenerateRandom(0x000000003FFFFEC8, 16): start
+TEE_AEInit(): start
+TEE_AEEncryptFinal(): start
+TEE_FreeOperation(): start
+@cipher: 5fbd1a14a83504ef595f73c6af425023ec6e6aca5ffb47b2b88666ddb7f8cf17ce32486e1efa7d09a53
+369024e936eb9312431ed341feaed8cead7e985fea9baa72092cfd8e1955cd9428dd13fb48431aeae6fef34d200b
+7b3e7bd25352e9c2a705a9d1570caf6019ca157f05ce9adec42c313a54162194a691d015564d7199b2f7e3ebf9d5
+98ce408a930cf83d50924dcde08a57e110820bbad531612d3730138ca025c209f5ac285625001faffd4344ea3a72
+a85d46295de4ca573d1ff8f21754d1faa550ad12f32aa4885f5acaeed96cc795d99768c884402e3462041bd596dd
+d676dc154a7ca0c7d654a8670aec8e23486ec9e1897543d754476472fd04e
+@tag: 9b8bd6ab05b44879079b894835aaedf1
+TEE_AllocateOperation(): start
+TEE_AEInit(): start
+TEE_AEDecryptFinal(): start
+TEE_FreeOperation(): start
+TEE_FreeTransientObject(): start
+decrypted to: 000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262
+728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455
+565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838
+485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2
+b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e
+1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff
+verify ok
+TEE_AllocateOperation(): start
+TEE_FreeOperation(): start
+TEE_DigestDoFinal(): start
+TEE_FreeOperation(): start
+@digest: 9b04c091da96b997afb8f2585d608aebe9c4a904f7d52c8f28c7e4d2dd9fba5f
+TEE_AllocateOperation(): start
+TEE_AllocateTransientObject(): start
+TEE_InitValueAttribute(): start
+TEE_GenerateKey(): start
+TEE_GenerateRandom(0x000000003FFFFE28, 32): start
+TEE_AsymmetricSignDigest(): start
+TEE_FreeOperation(): start
+@signature: 3b018bbf24235c4c367c276beafbf4dcec071ab885b37f3096081e98e8cb03fb97bb637d21c98fc0d60
+06fb082d2a8690d6fa8c0fb2ae666670883b83bd27107
+TEE_AllocateOperation(): start
+TEE_AsymmetricVerifyDigest(): start
+TEE_FreeOperation(): start
+@@TEE_FreeOperation: 
+TEE_FreeTransientObject(): start
+verify ok
+main end
 ```
 
 ### Building ta-ref for OP-TEE with docker
