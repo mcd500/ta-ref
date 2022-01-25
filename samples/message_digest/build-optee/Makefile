@@ -10,7 +10,7 @@ endif
 TUTORIAL_TA_UUID ?= a6f77c1e-96fe-4a0e-9e74-262582a4c8f1
 export TUTORIAL_TA_UUID
 
-CROSS_COMPILE = $(OPTEE_TOOLCHAIN_DIR)/aarch64-linux-gnu-
+CROSS_COMPILE = aarch64-linux-gnu-
 export CROSS_COMPILE
 
 .PHONY: build app enclave image run
