@@ -20,7 +20,7 @@ LIBRARY_SUFFIX =
 endif
 
 CXXFLAGS = $(SGX_CXXFLAGS) $(DEBUG_FLAGS) \
-	-I$(TEE_REF_TA_DIR)/build/include
+	-I$(TAREF_DIR)/build/include
 
 LIBRARIES=sgx_urts sgx_uae_service
 LOAD_LIBRARIES=$(patsubst %,-l%$(LIBRARY_SUFFIX), $(LIBRARIES))
@@ -28,7 +28,7 @@ LOAD_LIBRARIES += $(addprefix -l, Enclave_u pthread)
 
 LDFLAGS = \
 	-L$(SGX_LIBRARY_DIR) \
-	-L$(TEE_REF_TA_DIR)/build/lib \
+	-L$(TAREF_DIR)/build/lib \
 	-lsgx_urts$(LIBRARY_SUFFIX) \
 	-lsgx_uae_service$(LIBRARY_SUFFIX) \
 	-lEnclave_u -lpthread

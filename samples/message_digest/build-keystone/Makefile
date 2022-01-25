@@ -1,40 +1,44 @@
 export SOURCE ?= $(CURDIR)/..
 export KEYSTONE_SDK_DIR ?= $(KEYSTONE_DIR)/sdk/build64
-export TEE_REF_TA_DIR ?= $(CURDIR)/../../..
+
+ifeq ($(TAREF_DIR),)
+$(error "Error: Environment variable TAREF_DIR must be set to ta-ref directory")
+endif
+
 
 export APP_CFLAGS = \
 	-Wall \
 	-I$(KEYSTONE_SDK_DIR)/lib/host/include \
 	-I$(KEYSTONE_SDK_DIR)/lib/edge/include \
 	-I$(KEYSTONE_SDK_DIR)/lib/verifier \
-	-I$(TEE_REF_TA_DIR)/build/include \
-	-I$(TEE_REF_TA_DIR)/include \
+	-I$(TAREF_DIR)/build/include \
+	-I$(TAREF_DIR)/include \
 	-I$(SOURCE) \
-	-I$(TEE_REF_TA_DIR)/ref-ta/profiler
+	-I$(TAREF_DIR)/ref-ta/profiler
 
 export APP_LDFLAGS = \
 	-L$(KEYSTONE_SDK_DIR)/lib \
 	-L$(KEYSTONE_SDK_DIR)/sdk/lib \
-	-L$(TEE_REF_TA_DIR)/build/lib
+	-L$(TAREF_DIR)/build/lib
 
 export APP_LIBS = \
 	-lkeystone-host -lkeystone-edge -lEnclave_u -lflatccrt
 
 export TA_CFLAGS = \
 	-Wall -fno-builtin-printf -DEDGE_IGNORE_EGDE_RESULT -DCRYPTLIB=MBEDCRYPT \
-	-I$(TEE_REF_TA_DIR)/gp/include \
-	-I$(TEE_REF_TA_DIR)/api/include \
-	-I$(TEE_REF_TA_DIR)/api/keystone \
-	-I$(TEE_REF_TA_DIR)/build/include \
-	-I$(TEE_REF_TA_DIR)/keyedge/target/include \
+	-I$(TAREF_DIR)/gp/include \
+	-I$(TAREF_DIR)/api/include \
+	-I$(TAREF_DIR)/api/keystone \
+	-I$(TAREF_DIR)/build/include \
+	-I$(TAREF_DIR)/keyedge/target/include \
 	-I$(KEYSTONE_SDK_DIR)/include/app \
 	-I$(KEYSTONE_SDK_DIR)/include/edge \
 	-I$(SOURCE)
 
 export TA_LDFLAGS = \
-	-L$(TEE_REF_TA_DIR)/build/lib \
+	-L$(TAREF_DIR)/build/lib \
 	-L$(KEYSTONE_SDK_DIR)/lib \
-	-T $(TEE_REF_TA_DIR)/api/keystone/Enclave.lds
+	-T $(TAREF_DIR)/api/keystone/Enclave.lds
 
 export TA_LIBS = \
 	-lgp -lbench \

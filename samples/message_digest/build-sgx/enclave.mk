@@ -1,5 +1,3 @@
-export TEE_REF_TA_DIR ?= $(CURDIR)/../../..
-
 ifeq ($(MACHINE), SIM)
 LIBRARY_SUFFIX = _sim
 else
@@ -10,9 +8,9 @@ CFLAGS = $(SGX_CFLAGS) $(DEBUG_FLAGS)
 CFLAGS += $(addprefix -I, $(INCLUDE_DIRS))
 
 CFLAGS += \
-	-I$(TEE_REF_TA_DIR)/gp/include \
-	-I$(TEE_REF_TA_DIR)/api/include \
-	-I$(TEE_REF_TA_DIR)/build/include
+	-I$(TAREF_DIR)/gp/include \
+	-I$(TAREF_DIR)/api/include \
+	-I$(TAREF_DIR)/build/include
 
 #LIBS = tee_api mbedtls tiny_AES_c tiny_sha3 ed25519 wolfssl
 #LIBS += gp etools
@@ -35,7 +33,7 @@ LIBS = \
 # These flags are stereotyped. For more information, see https://github.com/intel/linux-sgx/blob/9ddec08fb98c1636ed3b1a77bbc4fa3520344ede/SampleCode/SampleEnclave/Makefile#L132-L149.
 Enclave_Security_Link_Flags := -Wl,-z,relro,-z,now,-z,noexecstack
 Enclave_Link_Flags := $(Enclave_Security_Link_Flags) \
-    -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles -L$(SGX_LIBRARY_DIR) -L$(TEE_REF_TA_DIR)/build/lib \
+    -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles -L$(SGX_LIBRARY_DIR) -L$(TAREF_DIR)/build/lib \
 	-Wl,--whole-archive -lsgx_trts$(LIBRARY_SUFFIX) -Wl,--no-whole-archive \
 	-Wl,--start-group $(LIBS) -Wl,--end-group \
 	-Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined \

@@ -1,4 +1,7 @@
-export TEE_REF_TA_DIR ?= $(CURDIR)/../../..
+ifeq ($(TAREF_DIR),)
+$(error "Error: Environment variable TAREF_DIR must be set to ta-ref directory")
+endif
+
 export MACHINE ?= SIM
 
 .PHONY: build app enclave

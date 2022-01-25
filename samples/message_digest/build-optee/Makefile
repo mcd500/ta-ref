@@ -1,9 +1,11 @@
 ifndef OPTEE_DIR
-$(error OPTEE_DIR is not set)
+$(error "Error: Environment variable OPTEE_DIR must be set to optee directory")
 endif
 
-TAREF_DIR ?= $(CURDIR)/../../../
-export TAREF_DIR
+ifeq ($(TAREF_DIR),)
+$(error "Error: Environment variable TAREF_DIR must be set to ta-ref directory")
+endif
+
 
 TUTORIAL_TA_UUID ?= a6f77c1e-96fe-4a0e-9e74-262582a4c8f1
 export TUTORIAL_TA_UUID
