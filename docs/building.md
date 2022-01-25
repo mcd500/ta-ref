@@ -1,4 +1,4 @@
-# Building 
+# Building ta-ref without Docker
 
 # ta-ref with Keystone
 

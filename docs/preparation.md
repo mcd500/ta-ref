@@ -1,4 +1,4 @@
-# Preparation before building ta-ref
+# Preparation before building ta-ref without Docker
 
 All the preparation steps below are based on Ubuntu 20.04
 

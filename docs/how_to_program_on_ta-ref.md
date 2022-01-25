@@ -1,16 +1,26 @@
 # How to write your first 'Hello World' TA Program
 
 To explains the steps to write our first TA program,
-we are going to write a simple 'Hello World' TA on OP-TEE.
+we are going to write a simple 'Hello World' TA.
 
 
 ## Step 1: Run the docker image
 
 Run the ta-ref pre-built docker for keystone/optee/sgx depending on your purpose.
-In our case, its going to be OP-TEE
 
+For Keystone,
+```sh
+$ docker run -it trasioteam/taref-dev:keystone
+```
+
+For OP-TEE,
 ```sh
 $ docker run -it trasioteam/taref-dev:optee
+```
+
+For SGX,
+```sh
+$ docker run -it trasioteam/taref-dev:sgx
 ```
 
 ## Step 2: Copy sample directory and modify
@@ -50,17 +60,12 @@ hello_world_ta/
 
 Basically we need to modify two files
 
-1) Enclave.c
+1) Enclave.c  (Common to all three targets)
 
 2) App-<target>.c
     - App-keystone.cpp (incase of Keystone) 
     - App-optee.c (Incase of OP-TEE)
     - App-sgx.cpp (Incase of SGX)
-
-
-In our case, we are going to modify the following
-1) Enclave.c
-2) App-optee.c
 
 
 ## Step 3 : Modifications to Enclave.c
@@ -138,12 +143,44 @@ below.
 Please save your changes and exit Enclave.c
 
 
-## Step 4 : Modifications to App-optee.c
+## Step 4 : Modifications to App-<target>.c
+
+### Modification to App-keystone.cpp
+
+App-keystone.cpp is the main function which invokes Enclave.c.
+The objective is to call the TA_InvokeCommandEntryPoint() which we modified in the previous step.
+
+**What to modify**
+
+Before Modification
+
+```C
+    #define TA_REF_HASH_GEN    0x11111111
+    /** Command id for the second operation in TA */
+    #define TA_REF_HASH_CHECK  0x22222222
+
+    // Inside main() function
+
+  run_enclave(TA_REF_HASH_GEN);
+  run_enclave(TA_REF_HASH_CHECK);
+```
+
+After modification
+```C
+    #define TA_REF_PRINT_HELLO    0x11111111
+
+    // Inside main() function
+
+    run_enclave(TA_REF_PRINT_HELLO);
+```
+
+
+### Modification to App-optee.cpp
 
 App-optee.c is the main function which invokes Enclave.c.
 The objective is to call the TA_InvokeCommandEntryPoint() which we modified in the previous step.
 
-### What to modify
+**What to modify**
 
 Look for the #define statement and  `main(void)` function in the program
 
@@ -177,10 +214,86 @@ After modification
                              &err_origin);
 ```
 
+### Modification to App-sgx.cpp
+
+
+App-sgx.c is the main function which invokes Enclave.c.
+The objective is to call the TA_InvokeCommandEntryPoint() which we modified in the previous step.
+
+**What to modify**
+
+Look for the #define statement and  `main(void)` function in the program
+
+Before modification
+```C
+    #define TA_REF_HASH_GEN    0x11111111
+    /** Command id for the second operation in TA */
+    #define TA_REF_HASH_CHECK  0x22222222
+
+
+    // Inside main(void) function
+    
+    /* Calling Trusted Application */
+    ret = ecall_ta_main(global_eid, TA_REF_HASH_GEN);
+    if (ret != SGX_SUCCESS)
+        goto main_out;
+    ret = ecall_ta_main(global_eid, TA_REF_HASH_CHECK);
+    if (ret != SGX_SUCCESS)
+        goto main_out;
+```
+
+After modification
+```C
+    #define TA_REF_PRINT_HELLO    0x11111111
+
+    // Inside main(void) function
+    
+    /* Calling Trusted Application */
+    ret = ecall_ta_main(global_eid, TA_REF_PRINT_HELLO);
+    if (ret != SGX_SUCCESS)
+        goto main_out;
+```
+
+
 ## Step 5 : Execute the Hello World TA
 
-Change directory to the `build-<target>` directory. 
-In our case its `build-optee`.
+
+### Execute the 'Hello World' TA for Keystone
+
+Change directory to the `build-keystone` directory. 
+
+```sh
+# Change to build-<target> directory
+$ cd build-keystone
+    
+# Make the TA
+$ make
+    
+# Run the qemu console
+$ make run-qemu
+    
+# This opens us qemu console and login using
+# buildroot login: root
+# Password: sifive
+#
+    
+# [Inside Qemu Console]
+# Execute the sample and see the output
+# Load the keystone driver
+$ insmod keystone-driver.ko
+
+# Run the message-digest program
+$./App-keystone
+# Exit the qemu console by clicking Ctrl-A X or $ poweroff command
+### Ctrl-a x
+```
+
+Here you can see the text 'Hello World' printed in the log.
+
+
+### Execute the 'Hello World' TA for OP-TEE
+
+Change directory to the `build-optee` directory. 
 
 ```sh
 # Change to build-<target> directory
@@ -219,4 +332,28 @@ D/TC:? 0 tee_ta_close_session:518 Destroy session
 ```
 
 Here you can see the text 'Hello World' printed in the log.
-Hope our first Hello World TA has executed successfully.
+
+
+### Execute the 'Hello World' TA for Intel SGX
+
+Change directory to the `build-sgx` directory. 
+
+```sh
+# Change to build-<target> directory
+$ cd build-sgx
+    
+# Make the TA
+$ make
+    
+# Make the message-digest sample for Simulation mode
+$ make
+    
+# This creates the App_sgx and enclave.signed.so
+# You can copy this two files alone to any places and run the App_sgx
+$ ./App_sgx
+    
+# Exit the qemu console by clicking Ctrl-A X or $ poweroff command
+### Ctrl-a x
+```
+
+Here you can see the text 'Hello World' printed in the log.
