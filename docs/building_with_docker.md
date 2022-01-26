@@ -347,8 +347,11 @@ $ cd /home/user/optee/out/bin && \
         -bios bl1.bin \
         -initrd rootfs.cpio.gz \
         -kernel Image -no-acpi \
-        -append 'console=ttyAMA0,38400 keep_bootcon root=/dev/vda2'
+        -append "console=ttyAMA0,38400 keep_bootcon root=/dev/vda2"
 
+# If you face any error like 
+# qemu-system-aarch64: keep_bootcon: Could not open 'keep_bootcon': No such file or directory
+# Just replace the double quotes in the last line with single quotes.
 
 # When asked for builroot login, please enter root
 # buildroot login: root

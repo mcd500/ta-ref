@@ -55,9 +55,7 @@ Following shows the table of CPU Dependent and Independent API's with its functi
 @image html docs/images/separate-gp-tee-internal-api.png
 @image latex docs/images/separate-gp-tee-internal-api.png width=\textwidth
 
-## Diagram
-
-### Dependency of category
+## Dependency of category
 
 @image html docs/images/dependency_category.png
 @image latex docs/images/dependency_category.png width=\textwidth
