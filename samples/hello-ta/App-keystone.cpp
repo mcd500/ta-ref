@@ -21,6 +21,9 @@ using namespace Keystone;
 const char* enc_path = "Enclave.eapp_riscv";
 const char* runtime_path = "eyrie-rt";
 
+// Define the constant value
+#define TA_REF_RUN_HELLO   0x11111111
+
 /**
  * main() - To start the enclave and run the enclave.
  *
@@ -56,6 +59,8 @@ int main(int argc, char** argv)
         
   edge_call_init_internals((uintptr_t)enclave.getSharedBuffer(),
                            enclave.getSharedBufferSize());
+
+  *(uint32_t *)enclave.getSharedBuffer() = TA_REF_RUN_HELLO;
 
   enclave.run();
   return 0;

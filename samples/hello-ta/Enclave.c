@@ -30,12 +30,16 @@
 
 #include <tee_ta_api.h>
 // DMSG, IMSG
+#include "trace.h"  // for DMSG
+#include "config_ref_ta.h"
+
 #include "assert.h" // move this to inside tee_ta_api.h
 #include "edger/Enclave_t.h"
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h> // for memmove
+
+#define TA_REF_RUN_HELLO 0x11111111
 
 /**
  * TA_CreateEntryPoint() - Trusted application creates the entry point.
@@ -120,9 +124,11 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t param_types, TEE_Param params[4])
 {
     switch (cmd_id) {
+
     case TA_REF_RUN_HELLO:
-        tee_printf("Hello TA");
-        return TEE_SUCCESS
+        tee_printf("Hello TA\n");
+        return TEE_SUCCESS;
+
     default:
         return TEE_ERROR_BAD_PARAMETERS;
     }

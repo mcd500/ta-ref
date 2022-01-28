@@ -41,6 +41,9 @@
 static char print_buf[PRINT_BUF_SIZE];
 #define TEEC_PARAM_TYPE1 TEEC_MEMREF_TEMP_OUTPUT
 
+// Define the constant value
+#define TA_REF_RUN_HELLO   0x11111111
+
 /**
  * main() -To perform the TEEC operations for building 
  * TA inside TEE.
