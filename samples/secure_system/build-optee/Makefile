@@ -1,33 +1,56 @@
-export user-ta-version ?= 1
-MK_DIR = Enclave/mk
+ifndef OPTEE_DIR
+$(error "Error: Environment variable OPTEE_DIR must be set to optee directory")
+endif
 
-# LIB_DIRS INCLUDE_DIRS
-OPTEE_LIB_DIRS = $(LIB_DIRS) $(OPTEE_DIR)/out-br/target/usr/lib
+ifeq ($(TAREF_DIR),)
+$(error "Error: Environment variable TAREF_DIR must be set to ta-ref directory")
+endif
+
+
+TUTORIAL_TA_UUID ?= a6f77c1e-96fe-4a0e-9e74-262582a4c8f1
+export TUTORIAL_TA_UUID
+
+CROSS_COMPILE = aarch64-linux-gnu-
+export CROSS_COMPILE
 
 .PHONY: build app enclave image run
 
 build: app enclave
 
 app:
-	make -C App LIB_DIRS="$(OPTEE_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)"
+	make -f app.mk
 
 enclave:
-	make -C Enclave LIB_DIRS="$(OPTEE_LIB_DIRS)" INCLUDE_DIRS="$(INCLUDE_DIRS)"
+	make -f enclave.mk
 
-image:
-	make -f image.mk
+prefix ?= $(OPTEE_DIR)/out-br/images
 
-run:
-	make -f run.mk
+install_qemu:
+	test -n "$(prefix)"
+	sudo rm -rf $(prefix)/rootfs
+	mkdir -p $(prefix)/rootfs
+	cd $(prefix)/rootfs; \
+	gzip -dc ../rootfs.cpio.gz | sudo cpio -i
+	sudo install $(TUTORIAL_TA_UUID).ta $(prefix)/rootfs/lib/optee_armtz
+	sudo install App-optee $(prefix)/rootfs/root
+	cd $(prefix)/rootfs; \
+	sudo find . | sudo cpio -o -H newc 2> /dev/null | gzip -c9 > ../rootfs.cpio.gz
 
-qemu:
-	make -f run.mk qemu
-
-ssh:
-	make -f run.mk ssh
+run-qemu:
+	ln -sf $(prefix)/rootfs.cpio.gz $(OPTEE_DIR)/out/bin
+	cd $(OPTEE_DIR)/out/bin && \
+		$(OPTEE_DIR)/qemu/aarch64-softmmu/qemu-system-aarch64 \
+			-nographic \
+			-serial mon:stdio -serial file:serial1.log \
+			-smp 2 \
+			-machine virt,secure=on -cpu cortex-a57 \
+			-d unimp -semihosting-config enable,target=native \
+			-m 1057 \
+			-bios bl1.bin \
+			-initrd rootfs.cpio.gz \
+			-kernel Image -no-acpi \
+			-append 'console=ttyAMA0,38400 keep_bootcon root=/dev/vda2' \
+			$(QEMU_EXTRA_ARGS)
 
 clean:
-	make -f image.mk clean
-	make -C App clean
-	make -C Enclave clean
-	$(RM) -r $(MK_DIR)/*.mk
+	rm -f *.dmp *.elf *.map *.ta *.o ta.lds App-optee

@@ -29,14 +29,20 @@
  */
 
 #include "config_ref_ta.h"
+#include "trace.h"
 
+/* The struct timeval is already defined for Intel SGX,
+but not for other targets. So we define the struct timeval
+only when it is not defined already */
+#ifndef __timeval_defined
+#define __timeval_defined 1
 
 /** For using the same format of gettimeofday() */
 struct timeval {
     long        tv_sec;
     long        tv_usec;
 };
-
+#endif
 
 /**
  * ree_time_get() - Retrieves the current REE system time.
@@ -102,19 +108,17 @@ struct timeval tee_time_get(void)
  *
  * @return		returns random value
  */
-uint64_t tee_random_get(void)
+void tee_random_get(void)
 {
-    uint64_t rbuf;
+    unsigned char rbuf[16];
 
-    TEE_GenerateRandom(rbuf, sizeof(uint64_t));
+    TEE_GenerateRandom(rbuf, sizeof(rbuf));
 
     tee_printf("random: ");
-    for (int i = 0; i < sizeof(uint64_t); i++) {
-        tee_printf ("%02x ", rbuf[i]);
+    for (int i = 0; i < sizeof(rbuf); i++) {
+        tee_printf ("%02x", rbuf[i]);
     }
     tee_printf("\n");
-
-    return rbuf;
 }
 
 
@@ -328,30 +332,23 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 
     switch (cmd_id) {
     case TA_REF_REE_TIME:
-        ret = ree_time_get();
-        if (ret != TEE_SUCCESS)
-            ret = TEE_ERROR_SIGNATURE_INVALID;
-        return TEE_SUCCESS;
+        ree_time_get();
+        return ret;
 
     case TA_REF_TEE_TIME:
-        ret = tee_time_get();
-        if (ret != TEE_SUCCESS)
-            ret = TEE_ERROR_SIGNATURE_INVALID;
+        tee_time_get();
         return ret;
 
     case TA_REF_RAND:
-	ret = tee_random_get();
-        if (ret != TEE_SUCCESS) {
-	    /** It has random value succesfully */
-            ret = TEE_SUCCESS;
-	}
-        return ret;
+	   tee_random_get();
+       return ret;
 
     case TA_REF_SEC_WRTE:
         secure_storage_write();
-        return TEE_SUCCESS;
+        return ret;
 
     case TA_REF_SEC_READ:
+        ret = secure_storage_read();
         if (ret != TEE_SUCCESS)
             ret = TEE_ERROR_NO_DATA;
         return ret;

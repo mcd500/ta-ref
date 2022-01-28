@@ -21,6 +21,44 @@ using namespace Keystone;
 const char* enc_path = "Enclave.eapp_riscv";
 const char* runtime_path = "eyrie-rt";
 
+
+/** Command id for the first operation in TA.
+ * The number must match between REE and TEE to achieve the objected
+ * behavior. It is recommended to use a number which is not easy to guess
+ * from the attacker. */
+#define TA_REF_REE_TIME 0x1111111111111111
+/** Command id for the second operation in TA */
+#define TA_REF_TEE_TIME 0x2222222222222222
+/** Command id for the third operation in TA */
+#define TA_REF_RAND     0x3333333333333333
+/** Command id for the fourth operation in TA */
+#define TA_REF_SEC_WRTE 0x4444444444444444
+/** Command id for the fifth operation in TA */
+#define TA_REF_SEC_READ 0x5555555555555555
+
+static void run_enclave(uint32_t command)
+{
+  Enclave enclave;
+  Params params;
+  params.setFreeMemSize(1024*1024);
+  params.setUntrustedMem(DEFAULT_UNTRUSTED_PTR, 1024*1024);
+  if(enclave.init(enc_path, runtime_path, params) != Error::Success){
+    printf("Unable to start enclave\n");
+    exit(-1);
+  }
+
+  enclave.registerOcallDispatch(incoming_call_dispatch);
+
+  register_functions();
+
+  edge_call_init_internals((uintptr_t)enclave.getSharedBuffer(),
+                           enclave.getSharedBufferSize());
+
+  *(uint32_t *)enclave.getSharedBuffer() = command;
+
+  enclave.run();
+}
+
 /**
  * main() - To start the enclave and run the enclave.
  *
@@ -31,32 +69,21 @@ const char* runtime_path = "eyrie-rt";
  * enclave must register the edge call handler and then the enclave    
  * will run and return 0.
  *
- * @param argc		Argument count is int and stores number of command-line
- *			arguments passed by the user including the name of the 
- *			program.
- * @param argv		Argument Vector is array of character pointers listing all
- *			the arguments.
+ * @param argc    Argument count is int and stores number of command-line
+ *      arguments passed by the user including the name of the 
+ *      program.
+ * @param argv    Argument Vector is array of character pointers listing all
+ *      the arguments.
  *
- * @return 0		If success, else error occurred.
+ * @return 0    If success, else error occurred.
  */
 int main(int argc, char** argv)
 {
-  Enclave enclave;
-  Params params;
-  params.setFreeMemSize(1024*1024);
-  params.setUntrustedMem(DEFAULT_UNTRUSTED_PTR, 1024*1024);
-  if(enclave.init(enc_path, runtime_path, params) != Error::Success){
-    printf("%s: Unable to start enclave\n", argv[0]);
-    exit(-1);
-  }
+  run_enclave(TA_REF_REE_TIME);
+  run_enclave(TA_REF_TEE_TIME);
+  run_enclave(TA_REF_RAND);
+  run_enclave(TA_REF_SEC_WRTE);
+  run_enclave(TA_REF_SEC_READ);
 
-  enclave.registerOcallDispatch(incoming_call_dispatch);
-
-  register_functions();
-        
-  edge_call_init_internals((uintptr_t)enclave.getSharedBuffer(),
-                           enclave.getSharedBufferSize());
-
-  enclave.run();
   return 0;
 }

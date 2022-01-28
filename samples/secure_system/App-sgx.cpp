@@ -42,9 +42,24 @@
 # include <time.h>
 
 #include "sgx_urts.h"
-#include "App.h"
 #include "edger/Enclave_u.h"
 #include "types.h"
+
+#define ENCLAVE_FILENAME "enclave.signed.so"
+
+/** Command id for the first operation in TA.
+ * The number must match between REE and TEE to achieve the objected
+ * behavior. It is recommended to use a number which is not easy to guess
+ * from the attacker. */
+#define TA_REF_REE_TIME 0x1111111111111111
+/** Command id for the second operation in TA */
+#define TA_REF_TEE_TIME 0x2222222222222222
+/** Command id for the third operation in TA */
+#define TA_REF_RAND     0x3333333333333333
+/** Command id for the fourth operation in TA */
+#define TA_REF_SEC_WRTE 0x4444444444444444
+/** Command id for the fifth operation in TA */
+#define TA_REF_SEC_READ 0x5555555555555555
 
 /**
  * print_error_message() - Used for printing the error message.
@@ -122,11 +137,31 @@ int SGX_CDECL main(int argc, char *argv[])
     }
 
     /* Calling Trusted Application */
-    ret = ecall_ta_main(global_eid, 0);
+    ret = ecall_ta_main(global_eid, TA_REF_REE_TIME);
     if (ret != SGX_SUCCESS)
         goto main_out;
 
-main_destory_out:
+    /* Calling Trusted Application */
+    ret = ecall_ta_main(global_eid, TA_REF_TEE_TIME);
+    if (ret != SGX_SUCCESS)
+        goto main_out;
+
+    /* Calling Trusted Application */
+    ret = ecall_ta_main(global_eid, TA_REF_RAND);
+    if (ret != SGX_SUCCESS)
+        goto main_out;
+
+    /* Calling Trusted Application */
+    ret = ecall_ta_main(global_eid, TA_REF_SEC_WRTE);
+    if (ret != SGX_SUCCESS)
+        goto main_out;
+
+    /* Calling Trusted Application */
+    ret = ecall_ta_main(global_eid, TA_REF_SEC_READ);
+    if (ret != SGX_SUCCESS)
+        goto main_out;
+
+    main_destory_out:
     /* Destroy the enclave */
     sgx_destroy_enclave(global_eid);
     
