@@ -42,10 +42,16 @@
 # include <time.h>
 
 #include "sgx_urts.h"
-#include "App.h"
 #include "edger/Enclave_u.h"
 #include "types.h"
 
+#define ENCLAVE_FILENAME "enclave.signed.so"
+
+/** Command id for the Asymmetric Encryption operation in TA */
+#define TA_REF_ASYM_ENC    0x11111111
+
+/** Command id for the Asymmetric Decryption operation in TA */
+#define TA_REF_ASYM_DEC  0x22222222
 /**
  * print_error_message() - Used for printing the error message.
  * 
@@ -122,9 +128,13 @@ int SGX_CDECL main(int argc, char *argv[])
     }
 
     /* Calling Trusted Application */
-    ret = ecall_ta_main(global_eid, 0);
+    ret = ecall_ta_main(global_eid, TA_REF_ASYM_ENC);
     if (ret != SGX_SUCCESS)
         goto main_out;
+    ret = ecall_ta_main(global_eid, TA_REF_ASYM_DEC);
+    if (ret != SGX_SUCCESS)
+        goto main_out;
+
 
 main_destory_out:
     /* Destroy the enclave */

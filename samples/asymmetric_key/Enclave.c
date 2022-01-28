@@ -103,17 +103,20 @@ int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
 #define TAG_LEN_BITS TAG_LEN * 8
 #define ENCDATA_MAX 256
 #define SIG_LENGTH 64
+#define SHA_LENGTH (256/8)
 
 
 /**
- * Example program to show how to use asymmetric key functions with ECDSA_P256
+ * Example program to show how to use asymmetric key encryption functions with ECDSA_P256
  * on ta-ref API.
  *
  * Generate a keypair and creating signature of a data and stores them.
  * Check the return value of each API call on real product development.
  */
-void symmetric_key_enc(void)
+void asymmetric_key_enc(void)
 {
+    tee_printf("Start of Aysmmetric Encryption\n");
+
     /** Data to encrypt as a example */
     uint8_t data[DATA_SIZE] = {
         0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
@@ -125,8 +128,11 @@ void symmetric_key_enc(void)
     uint8_t sig[SIG_LENGTH];
     size_t  siglen = SIG_LENGTH;
     uint8_t *pdata = data;
+    unsigned char hash[DATA_SIZE];
+    uint32_t hashlen = DATA_SIZE;
 
     TEE_ObjectHandle keypair;
+    TEE_OperationHandle handle;
     TEE_Attribute attr;
     TEE_Result rv;
 
@@ -152,11 +158,6 @@ void symmetric_key_enc(void)
     TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, 256);
     TEE_SetOperationKey(handle, keypair);
 
-    tee_printf("keypair: ");
-    for (int i = 0; i < 256 / 8; i++) {
-      tee_printf ("%02x", keypair[i]);
-    }
-    tee_printf("\n");
 
     /** Signing test data.
      * Keystone has ed25519_sign()
@@ -178,22 +179,20 @@ void symmetric_key_enc(void)
 
     /** Save the signature to secure storge */
     secure_storage_write(sig, siglen, "sig_data");
+
+    tee_printf("End of Aysmmetric Encryption\n");
 }
 
-
 /**
- * message_digest_check() - Example program to show how to use hash
- * functions with ta-ref API.
+ * Example program to show how to use asymmetric key Decryption functions with ECDSA_P256
+ * on ta-ref API.
  *
- * Checking the hash value is the easiest way to confirm the integrity of
- * the data. Calculate hash value of a data and compare it with the saved
- * hash value to verify whether the data is the same as the previous data.
- * Check the return value of each API call on real product development.
- *
- * @return		0 on data match, others if not
+ * @return		0 on successful decryption, others if not
  */
-int symmetric_key_dec(void)
+int asymmetric_key_dec(void)
 {
+    tee_printf("Start of Aysmmetric Decryption\n");
+    
     /** Data to compare with encrypted data  */
     uint8_t data[DATA_SIZE] = {
         0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
@@ -205,16 +204,20 @@ int symmetric_key_dec(void)
     uint8_t sig[TAG_LEN];
     size_t  siglen = TAG_LEN_BITS;
     uint8_t *pdata = data;
+    unsigned char hash[DATA_SIZE];
+    uint32_t hashlen = DATA_SIZE;
     int ret;
 
+    TEE_OperationHandle handle;
     TEE_ObjectHandle key;
     TEE_Result verify_ok;
+    TEE_ObjectHandle keypair;
 
     /** Read pub key from secure storage */
-    secure_storage_read(key, &keylen, "keypair");
+    // secure_storage_read(keypair, 256 / 8, "keypair");
 
     /** Read signature from secure storage */
-    secure_storage_read(key, &keylen, "sig_key");
+    //secure_storage_read(sig, siglen, "sig_data");
 
     /** Calculate hash of the test data first */
     TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
@@ -249,6 +252,8 @@ int symmetric_key_dec(void)
       tee_printf("verify fails\n");
       ret = -1;
     }
+
+    tee_printf("End of Aysmmetric Decryption\n");
 
     /** returns 0 on success */
     return ret;
@@ -321,14 +326,11 @@ void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
     IMSG("Goodbye!\n");
 }
 
+/** Command id for the Asymmetric Encryption operation in TA */
+#define TA_REF_ASYM_ENC    0x11111111
 
-/** Command id for the first operation in TA.
- * The number must match between REE and TEE to achieve the objected
- * behavior. It is recommended to use a number which is not easy to guess
- * from the attacker. */
-#define TA_REF_HASH_GEN    0x11111111
-/** Command id for the second operation in TA */
-#define TA_REF_HASH_CHECK  0x22222222
+/** Command id for the Asymmetric Decryption operation in TA */
+#define TA_REF_ASYM_DEC  0x22222222
 
 /**
  * TA_InvokeCommandEntryPoint() - The Framework calls the client invokes a  
@@ -357,19 +359,21 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
     int ret = TEE_SUCCESS;
 
     switch (cmd_id) {
-    case TA_REF_HASH_GEN:
-        message_digest_gen();
+        // For Asymmetric Encryption
+        case TA_REF_ASYM_ENC:
+            asymmetric_key_enc();
 
-	return TEE_SUCCESS;
+    	return TEE_SUCCESS;
 
-    case TA_REF_HASH_CHECK:
-        ret = message_digest_check();
-        if (ret != TEE_SUCCESS)
-            ret = TEE_ERROR_SIGNATURE_INVALID;
+        // For Asymmetric Decryption
+        case TA_REF_ASYM_DEC:
+            ret = asymmetric_key_dec();
+            if (ret != TEE_SUCCESS)
+                ret = TEE_ERROR_SIGNATURE_INVALID;
 
-        return ret;
+            return ret;
 
-    default:
-        return TEE_ERROR_BAD_PARAMETERS;
+        default:
+            return TEE_ERROR_BAD_PARAMETERS;
     }
 }

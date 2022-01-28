@@ -32,13 +32,11 @@
 
 #include <edger/Enclave.h>
 
-/** Command id for the first operation in TA.
- * The number must match between REE and TEE to achieve the objected
- * behavior. It is recommended to use a number which is not easy to guess
- * from the attacker. */
-#define TA_REF_HASH_GEN    0x11111111
-/** Command id for the second operation in TA */
-#define TA_REF_HASH_CHECK  0x22222222
+/** Command id for the Asymmetric Encryption operation in TA */
+#define TA_REF_ASYM_ENC    0x11111111
+
+/** Command id for the Asymmetric Decryption operation in TA */
+#define TA_REF_ASYM_DEC  0x22222222
 
 #define PRINT_BUF_SIZE 16384
 static char print_buf[PRINT_BUF_SIZE];
@@ -85,12 +83,12 @@ int main(void)
     op.params[1].tmpref.buffer = (void*)print_buf;
     op.params[1].tmpref.size = PRINT_BUF_SIZE;
 
-    /** Calling generating hash value function in TA  */
-    res = TEEC_InvokeCommand(&sess, TA_REF_HASH_GEN, &op,
+    /** Calling Asymmetric encryption value function in TA  */
+    res = TEEC_InvokeCommand(&sess, TA_REF_ASYM_ENC, &op,
 			     &err_origin);
 
-    /** Calling comparing hash value function in TA  */
-    res = TEEC_InvokeCommand(&sess, TA_REF_HASH_CHECK, &op,
+    /** Calling Asymmetric decryption hash value function in TA  */
+    res = TEEC_InvokeCommand(&sess, TA_REF_ASYM_DEC, &op,
 			     &err_origin);
 
     /** Freeing TEE objects */
