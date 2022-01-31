@@ -21,13 +21,11 @@ using namespace Keystone;
 const char* enc_path = "Enclave.eapp_riscv";
 const char* runtime_path = "eyrie-rt";
 
-/** Command id for the first operation in TA.
- * The number must match between REE and TEE to achieve the objected
- * behavior. It is recommended to use a number which is not easy to guess
- * from the attacker. */
-#define TA_REF_HASH_GEN    0x11111111
-/** Command id for the second operation in TA */
-#define TA_REF_HASH_CHECK  0x22222222
+/** Command id for the Symmetric Encryption operation in TA */
+#define TA_REF_SYM_ENC    0x11111111
+
+/** Command id for the Symmetric Decryption operation in TA */
+#define TA_REF_SYM_DEC  0x22222222
 
 static void run_enclave(uint32_t command)
 {
@@ -72,7 +70,7 @@ static void run_enclave(uint32_t command)
  */
 int main(int argc, char** argv)
 {
-  run_enclave(TA_REF_HASH_GEN);
-  run_enclave(TA_REF_HASH_CHECK);
+  run_enclave(TA_REF_SYM_ENC);
+  run_enclave(TA_REF_SYM_DEC);
   return 0;
 }

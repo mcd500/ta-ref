@@ -103,6 +103,7 @@ int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
 }
 
 #define ENCDATA_MAX 256
+TEE_ObjectHandle key;
 
 /**
  * Example program to show how to use AES 256 GCM functions with ta-ref API.
@@ -126,8 +127,9 @@ void symmetric_key_enc(void)
     uint8_t tag[TAG_LEN];
     size_t  taglen = TAG_LEN_BITS;
     uint8_t *pdata = data;
+    size_t  keylen = 256;
 
-    TEE_ObjectHandle key;
+    TEE_OperationHandle handle;
     TEE_Result rv;
 
     /** Generating Key with AES 256 GSM */
@@ -136,11 +138,11 @@ void symmetric_key_enc(void)
     TEE_AllocateOperation(&handle, TEE_ALG_AES_GCM, TEE_MODE_ENCRYPT, 256);
     TEE_SetOperationKey(handle, key);
 
-    tee_printf("key: ");
-    for (int i = 0; i < 256 / 8; i++) {
-      tee_printf ("%02x", key[i]);
-    }
-    tee_printf("\n");
+    // tee_printf("key: ");
+    // for (int i = 0; i < 256 / 8; i++) {
+    //   tee_printf ("%02x", key[i]);
+    // }
+    // tee_printf("\n");
 
     /** Prepare IV */
     TEE_GenerateRandom(iv, sizeof(iv));
@@ -183,7 +185,7 @@ void symmetric_key_enc(void)
     tee_printf("\n");
 
     /** Save the symmetric key to secure storge */
-    secure_storage_write(key, keylen, "sym_key");
+    // secure_storage_write(key, keylen, "sym_key");
 
     /** Save the encrypted data to secure storge */
     secure_storage_write(out, outlen, "enc_data");
@@ -191,13 +193,9 @@ void symmetric_key_enc(void)
 
 
 /**
- * message_digest_check() - Example program to show how to use hash
- * functions with ta-ref API.
+ * Example program to show how to use AES 256 GCM functions with ta-ref API.
  *
- * Checking the hash value is the easiest way to confirm the integrity of
- * the data. Calculate hash value of a data and compare it with the saved
- * hash value to verify whether the data is the same as the previous data.
- * Check the return value of each API call on real product development.
+ * Retrive the key from secure store and decrypt the data.
  *
  * @return		0 on data match, others if not
  */
@@ -218,25 +216,33 @@ int symmetric_key_dec(void)
     uint8_t tag[TAG_LEN];
     size_t  taglen = TAG_LEN_BITS;
     uint8_t *pdata = data;
+    int ret;
 
-    TEE_ObjectHandle key;
+    TEE_OperationHandle handle;
     TEE_Result rv;
 
     /** Read AES 256 KEY from secure storage */
-    secure_storage_read(key, &keylen, "sym_key");
+    // secure_storage_read(key, &keylen, "sym_key");
 
     /** Read encypted data from secure storage */
     secure_storage_read(out, &outlen, "enc_data");
 
-    /** Start decrypting test data.
-     * Equivalant of EVP_DecryptInit_ex() in openssl  */
-    TEE_AEInit(handle, iv, sizeof(iv), TAG_LEN_BITS, 0, 0);
+    tee_printf("Reading Stored Data: size:%d ", outlen);
+    for (int i = 0; i < outlen; i++) {
+      tee_printf ("%02x", out[i]);
+    }
+    tee_printf("\n");
+
+    /** Start decrypting test data. */
 
     /** Specify for decrypting with AES 256 GCM */
     TEE_AllocateOperation(&handle, TEE_ALG_AES_GCM, TEE_MODE_DECRYPT, 256);
 
     /** */
     TEE_SetOperationKey(handle, key);
+
+    /* Equivalant of EVP_DecryptInit_ex() in openssl  */
+    TEE_AEInit(handle, iv, sizeof(iv), TAG_LEN_BITS, 0, 0);
 
     /** Equivalant of EVP_EncryptUpdate() in openssl.
      *
@@ -259,6 +265,8 @@ int symmetric_key_dec(void)
     /** Closing TEE handle */
     TEE_FreeOperation(handle);
 
+    TEE_FreeTransientObject(key);
+
     /** Dump encrypted data and tag */
     tee_printf("Decrypted Data: ");
     for (int i = 0; i < outlen; i++) {
@@ -266,11 +274,19 @@ int symmetric_key_dec(void)
     }
     tee_printf("\n");
 
+    tee_printf("Actual Data: ");
+    for (int i = 0; i < outlen; i++) {
+      tee_printf ("%02x", data[i]);
+    }
+    tee_printf("\n");
+
     /** Check if the decrypted data is the same with the expected data  
      * to check the data integrity */
     ret = memcmp(data, out, outlen);
     if (ret == 0) {
-        tee_printf("decrypte: matched!\n");
+        tee_printf("decrypt: Data matched!\n");
+    } else {
+        tee_printf("decrypt: Data does not match!\n");
     }
 
     /** returns 0 on success */
@@ -345,13 +361,12 @@ void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
 }
 
 
-/** Command id for the first operation in TA.
- * The number must match between REE and TEE to achieve the objected
- * behavior. It is recommended to use a number which is not easy to guess
- * from the attacker. */
-#define TA_REF_HASH_GEN    0x11111111
-/** Command id for the second operation in TA */
-#define TA_REF_HASH_CHECK  0x22222222
+/** Command id for the Symmetric Encryption operation in TA */
+#define TA_REF_SYM_ENC    0x11111111
+
+/** Command id for the Symmetric Decryption operation in TA */
+#define TA_REF_SYM_DEC  0x22222222
+
 
 /**
  * TA_InvokeCommandEntryPoint() - The Framework calls the client invokes a  
@@ -380,17 +395,17 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
     int ret = TEE_SUCCESS;
 
     switch (cmd_id) {
-    case TA_REF_HASH_GEN:
-        message_digest_gen();
+        // For Symmetric Encryption
+        case TA_REF_SYM_ENC:
+            symmetric_key_enc();
+            return TEE_SUCCESS;
 
-	return TEE_SUCCESS;
-
-    case TA_REF_HASH_CHECK:
-        ret = message_digest_check();
-        if (ret != TEE_SUCCESS)
-            ret = TEE_ERROR_SIGNATURE_INVALID;
-
-        return ret;
+        // For Symmetric Decryption
+        case TA_REF_SYM_DEC:
+            ret = symmetric_key_dec();
+            if (ret != TEE_SUCCESS)
+                ret = TEE_ERROR_SIGNATURE_INVALID;
+            return ret;
 
     default:
         return TEE_ERROR_BAD_PARAMETERS;
