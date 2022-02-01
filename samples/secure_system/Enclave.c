@@ -44,6 +44,7 @@ struct timeval {
 };
 #endif
 
+/*MD_UPDATE_REE_COMMENT_START*/
 /**
  * ree_time_get() - Retrieves the current REE system time.
  *
@@ -55,6 +56,8 @@ struct timeval {
  *
  * @return		returns time value from OS running on REE
  */
+/*MD_UPDATE_REE_COMMENT_END*/
+/*MD_UPDATE_REE_CODE_START*/
 struct timeval ree_time_get(void)
 {
     TEE_Time time;
@@ -68,8 +71,9 @@ struct timeval ree_time_get(void)
 
     return tv;
 }
+/*MD_UPDATE_REE_CODE_END*/
 
-
+/*MD_UPDATE_TEE_COMMENT_START*/
 /**
  * tee_time_get() - Retrieves the current secure system time for the usage in TEE.
  *
@@ -82,6 +86,8 @@ struct timeval ree_time_get(void)
  *
  * @return		returns time value for the usage in TEE
  */
+ /*MD_UPDATE_TEE_COMMENT_END*/
+ /*MD_UPDATE_TEE_CODE_START*/
 struct timeval tee_time_get(void)
 {
     TEE_Time time;
@@ -95,8 +101,8 @@ struct timeval tee_time_get(void)
 
     return tv;
 }
-
-
+/*MD_UPDATE_TEE_CODE_END*/
+/*MD_UPDATE_TEE_RANDOM_COMMENT_START*/
 /**
  * tee_random_get() - Generates the random value for secure operation in TEE.
  *
@@ -108,6 +114,8 @@ struct timeval tee_time_get(void)
  *
  * @return		returns random value
  */
+ /*MD_UPDATE_TEE_RANDOM_COMMENT_END*/
+ /*MD_UPDATE_TEE_RANDOM_CODE_START*/
 void tee_random_get(void)
 {
     unsigned char rbuf[16];
@@ -120,7 +128,7 @@ void tee_random_get(void)
     }
     tee_printf("\n");
 }
-
+ /*MD_UPDATE_TEE_RANDOM_CODE_END*/
 
 #define DATA_SIZE 16
 
@@ -300,12 +308,6 @@ void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
  * The number must match between REE and TEE to achieve the objected
  * behavior. It is recommended to use a number which is not easy to guess
  * from the attacker. */
-#define TA_REF_REE_TIME	0x1111111111111111
-/** Command id for the second operation in TA */
-#define TA_REF_TEE_TIME	0x2222222222222222
-/** Command id for the third operation in TA */
-#define TA_REF_RAND	0x3333333333333333
-/** Command id for the fourth operation in TA */
 #define TA_REF_SEC_WRTE	0x4444444444444444
 /** Command id for the fifth operation in TA */
 #define TA_REF_SEC_READ	0x5555555555555555

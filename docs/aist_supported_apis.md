@@ -6,64 +6,36 @@ writing your own TA is shown below.
 
 ## Time Functions
 
-This function retrieves the current time as seen from the point of view of the REE,
-which expressed in the number of seconds and prints the "GP REE second and millisecond".
+/*MD_UPDATE_REE_COMMENT_START*/
+/*MD_UPDATE_REE_COMMENT_END*/
+
 
 ```C
 --- start Ree time ---
-void gp_ree_time_test(void)
-{
-    TEE_Time time;
- 
-    /* REE time */
-    TEE_GetREETime(&time); 
- 
-    tee_printf ("@GP REE time %u sec %u millis\n", time.seconds, time.millis);
-}
+/*MD_UPDATE_REE_CODE_START*/
+/*MD_UPDATE_REE_CODE_END*/
 --- end Ree Time ---
 ```
+/*MD_UPDATE_TEE_COMMENT_START*/
+/*MD_UPDATE_TEE_COMMENT_END*/
 
-This function retrieves the current system time as seen from the point of view of the TA,
-which expressed in the number of seconds and print the "GP System time second and
-millisecond".
 
 ```C
 --- start System time ---
-void gp_trusted_time_test(void)
-{
-    TEE_Time time;
- 
-    /* System time */
-    TEE_GetSystemTime(&time);
- 
-    tee_printf ("@GP System time %u sec %u millis\n", time.seconds, time.millis);
-}
-
+/*MD_UPDATE_TEE_CODE_START*/
+/*MD_UPDATE_TEE_CODE_END*/
 --- end System time ---
 ```
 
 ## Random Functions
 
-This function generates the random data by invoking TEE_GenerateRandom function
-and it prints the generated random data.\n
-
+/*MD_UPDATE_TEE_RANDOM_COMMENT_START*/
+/*MD_UPDATE_TEE_RANDOM_COMMENT_END*/
 
 ```C
 --- start Random ---
- void gp_random_test(void)
-{
-    unsigned char rbuf[16];
- 
-    // Generate Random
-    TEE_GenerateRandom(rbuf, sizeof(rbuf));
- 
-    tee_printf("@random: ");
-    for (int i = 0; i < sizeof(rbuf); i++) {
-        tee_printf ("%02x", rbuf[i]);
-    }
-    tee_printf("\n");
-}
-
+/*MD_UPDATE_TEE_RANDOM_CODE_START*/
+/*MD_UPDATE_TEE_RANDOM_CODE_END*/
 --- end Random ---
 ```
 
