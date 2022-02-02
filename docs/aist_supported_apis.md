@@ -6,17 +6,17 @@ writing your own TA is shown below.
 
 ## Time Functions
 
-```console
+
 /*START_REE_TIME_COMMENT_MD_UPD*/
-```
+
 
 ```C
 /*START_REE_TIME_SOURCE_MD_UPD*/
 ```
 
-```console
+
 /*START_TEE_TIME_COMMENT_MD_UPD*/
-```
+
 
 ```C
 /*START_TEE_TIME_SOURCE_MD_UPD*/
@@ -24,9 +24,9 @@ writing your own TA is shown below.
 
 ## Random Functions
 
-```console
+
 /*START_TEE_RANDOM_COMMENT_MD_UPD*/
-```
+
 
 ```C
 /*START_TEE_RANDOM_SOURCE_MD_UPD*/
