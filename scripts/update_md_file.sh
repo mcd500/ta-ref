@@ -57,6 +57,8 @@ do
     # Find the line number to insert the souce code / comments from source file to md file.
     output_line_start="$(cat ${OUTPUT_MD_FILE} | grep -Fn ${startTag[count]}  | cut -f1 -d:)" 
 
+    # Delete the start tag comment in the md file
+    sed -i "$output_line_start"d ${OUTPUT_MD_FILE}
     # Insert the extracted text into the md file
     sed -i "$output_line_start"r<(sed $input_line_start,$input_line_end'!d' ${SECURE_SYSTEM_INPUT_FILE}) ${OUTPUT_MD_FILE}
     
