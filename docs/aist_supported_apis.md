@@ -6,37 +6,30 @@ writing your own TA is shown below.
 
 ## Time Functions
 
-/*MD_UPDATE_REE_COMMENT_START*/
-/*MD_UPDATE_REE_COMMENT_END*/
-
-
-```C
---- start Ree time ---
-/*MD_UPDATE_REE_CODE_START*/
-/*MD_UPDATE_REE_CODE_END*/
---- end Ree Time ---
+```console
+/*START_REE_TIME_COMMENT_MD_UPD*/
 ```
-/*MD_UPDATE_TEE_COMMENT_START*/
-/*MD_UPDATE_TEE_COMMENT_END*/
-
 
 ```C
---- start System time ---
-/*MD_UPDATE_TEE_CODE_START*/
-/*MD_UPDATE_TEE_CODE_END*/
---- end System time ---
+/*START_REE_TIME_SOURCE_MD_UPD*/
+```
+
+```console
+/*START_TEE_TIME_COMMENT_MD_UPD*/
+```
+
+```C
+/*START_TEE_TIME_SOURCE_MD_UPD*/
 ```
 
 ## Random Functions
 
-/*MD_UPDATE_TEE_RANDOM_COMMENT_START*/
-/*MD_UPDATE_TEE_RANDOM_COMMENT_END*/
+```console
+/*START_TEE_RANDOM_COMMENT_MD_UPD*/
+```
 
 ```C
---- start Random ---
-/*MD_UPDATE_TEE_RANDOM_CODE_START*/
-/*MD_UPDATE_TEE_RANDOM_CODE_END*/
---- end Random ---
+/*START_TEE_RANDOM_SOURCE_MD_UPD*/
 ```
 
 ## Hash Functions
@@ -266,9 +259,9 @@ void gp_asymmetric_key_sign_test(void)
  
     TEE_Attribute attr;
     TEE_InitValueAttribute(&attr,
-			   TEE_ATTR_ECC_CURVE,
-			   TEE_ECC_CURVE_NIST_P256,
-			   256);
+         TEE_ATTR_ECC_CURVE,
+         TEE_ECC_CURVE_NIST_P256,
+         256);
     rv = TEE_GenerateKey(keypair, 256, &attr, 1);
     GP_ASSERT(rv, "TEE_GenerateKey fails");
  
@@ -347,12 +340,12 @@ void gp_secure_storage_test(void)
     /* write */
     TEE_ObjectHandle object;
     rv = TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
-				    "FileOne", strlen("FileOne"),
-				    (TEE_DATA_FLAG_ACCESS_WRITE
-				     | TEE_DATA_FLAG_OVERWRITE),
-				    TEE_HANDLE_NULL,
-				    NULL, 0,
-				    &object);
+            "FileOne", strlen("FileOne"),
+            (TEE_DATA_FLAG_ACCESS_WRITE
+             | TEE_DATA_FLAG_OVERWRITE),
+            TEE_HANDLE_NULL,
+            NULL, 0,
+            &object);
     GP_ASSERT(rv, "TEE_CreatePersistentObject fails");
  
     memcpy(buf, data, DATA_LENGTH);
@@ -370,9 +363,9 @@ void gp_secure_storage_test(void)
     --- read file start ---
     /* read */
     rv = TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
-				  "FileOne", strlen("FileOne"),
-				  TEE_DATA_FLAG_ACCESS_READ,
-				  &object);
+          "FileOne", strlen("FileOne"),
+          TEE_DATA_FLAG_ACCESS_READ,
+          &object);
     GP_ASSERT(rv, "TEE_OpenPersistentObject fails");
  
     uint32_t count;

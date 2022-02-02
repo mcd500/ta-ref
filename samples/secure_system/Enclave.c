@@ -44,7 +44,7 @@ struct timeval {
 };
 #endif
 
-/*MD_UPDATE_REE_COMMENT_START*/
+/*START_REE_TIME_COMMENT_MD_UPD*/
 /**
  * ree_time_get() - Retrieves the current REE system time.
  *
@@ -56,8 +56,8 @@ struct timeval {
  *
  * @return		returns time value from OS running on REE
  */
-/*MD_UPDATE_REE_COMMENT_END*/
-/*MD_UPDATE_REE_CODE_START*/
+/*END_REE_TIME_COMMENT_MD_UPD*/
+/*START_REE_TIME_SOURCE_MD_UPD*/
 struct timeval ree_time_get(void)
 {
     TEE_Time time;
@@ -71,9 +71,9 @@ struct timeval ree_time_get(void)
 
     return tv;
 }
-/*MD_UPDATE_REE_CODE_END*/
+/*END_REE_TIME_SOURCE_MD_UPD*/
 
-/*MD_UPDATE_TEE_COMMENT_START*/
+/*START_TEE_TIME_COMMENT_MD_UPD*/
 /**
  * tee_time_get() - Retrieves the current secure system time for the usage in TEE.
  *
@@ -86,8 +86,8 @@ struct timeval ree_time_get(void)
  *
  * @return		returns time value for the usage in TEE
  */
- /*MD_UPDATE_TEE_COMMENT_END*/
- /*MD_UPDATE_TEE_CODE_START*/
+ /*END_TEE_TIME_COMMENT_MD_UPD*/
+ /*START_TEE_TIME_SOURCE_MD_UPD*/
 struct timeval tee_time_get(void)
 {
     TEE_Time time;
@@ -101,8 +101,8 @@ struct timeval tee_time_get(void)
 
     return tv;
 }
-/*MD_UPDATE_TEE_CODE_END*/
-/*MD_UPDATE_TEE_RANDOM_COMMENT_START*/
+/*END_TEE_TIME_SOURCE_MD_UPD*/
+/*START_TEE_RANDOM_COMMENT_MD_UPD*/
 /**
  * tee_random_get() - Generates the random value for secure operation in TEE.
  *
@@ -114,8 +114,8 @@ struct timeval tee_time_get(void)
  *
  * @return		returns random value
  */
- /*MD_UPDATE_TEE_RANDOM_COMMENT_END*/
- /*MD_UPDATE_TEE_RANDOM_CODE_START*/
+ /*END_TEE_RANDOM_COMMENT_MD_UPD*/
+ /*START_TEE_RANDOM_SOURCE_MD_UPD*/
 void tee_random_get(void)
 {
     unsigned char rbuf[16];
@@ -128,7 +128,7 @@ void tee_random_get(void)
     }
     tee_printf("\n");
 }
- /*MD_UPDATE_TEE_RANDOM_CODE_END*/
+ /*END_TEE_RANDOM_SOURCE_MD_UPD*/
 
 #define DATA_SIZE 16
 

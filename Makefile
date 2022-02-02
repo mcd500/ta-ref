@@ -31,6 +31,8 @@ run:
 	make -C $(TEST_DIR) run TEE=$(TEE)
 
 docs:
+	@echo "Running the script to update MD files"
+	bash ./scripts/update_md_file.sh
 	@echo "Generating doxygen files"
 	@doxygen docs/doxygen/Doxyfile
 	make -C docs/doxygen/latex
