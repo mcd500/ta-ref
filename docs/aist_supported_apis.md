@@ -7,95 +7,29 @@ writing your own TA is shown below.
 ## Time Functions
 
 
-/**
- * ree_time_get() - Retrieves the current REE system time.
- *
- * Retrieves the current time as seen from the point of view of the REE which
- * typically runs on Linux/Android or Windows with gettimeofday().
- * It is not safe to use the value of TEE_GetREETime() in TEE for security
- * sensitive purposes but it is a good way to check what the apps on REE 
- * see the current time is.
- *
- * @return		returns time value from OS running on REE
- */
+/*START_REE_TIME_COMMENT_MD_UPD*/
 
 
 ```C
-struct timeval ree_time_get(void)
-{
-    TEE_Time time;
-    struct timeval tv;
-
-    /* REE time */
-    TEE_GetREETime(&time);
-    tee_printf ("@GP REE time %u sec %u millis\n", time.seconds, time.millis);
-
-    tv.tv_sec = time.seconds, tv.tv_usec = time.millis * 1000;
-
-    return tv;
-}
+/*START_REE_TIME_SOURCE_MD_UPD*/
 ```
 
 
-/**
- * tee_time_get() - Retrieves the current secure system time for the usage in TEE.
- *
- * The TEE_GetSystemTime() returns the time value which is not able to be
- * changed by User Applications on the REE side, but returns a tamper safe
- * time value which normally requires hardware implementation with a separate
- * RTC chip in the area where OS on REE can not access it and backed up with
- * shield battery. The secure system is for security sensitive operations,
- * such as checking expiration date of certificates and keys.
- *
- * @return		returns time value for the usage in TEE
- */
+/*START_TEE_TIME_COMMENT_MD_UPD*/
 
 
 ```C
-struct timeval tee_time_get(void)
-{
-    TEE_Time time;
-    struct timeval tv;
-
-    /* System time */
-    TEE_GetSystemTime(&time);
-    tee_printf ("@GP Secure time %u sec %u millis\n", time.seconds, time.millis);
-
-    tv.tv_sec = time.seconds, tv.tv_usec = time.millis * 1000;
-
-    return tv;
-}
+/*START_TEE_TIME_SOURCE_MD_UPD*/
 ```
 
 ## Random Functions
 
 
-/**
- * tee_random_get() - Generates the random value for secure operation in TEE.
- *
- * It returns the closest value to the true random generator but the quality
- * of the randomness depends on the hardware implementation.
- * Quality of the random value is very important for having a good security
- * level on many cryptographic algorithms used inside TEE. It is recommended
- * to have equivalent level of SP 800-90B and FIPS 140-3.
- *
- * @return		returns random value
- */
+/*START_TEE_RANDOM_COMMENT_MD_UPD*/
 
 
 ```C
-void tee_random_get(void)
-{
-    unsigned char rbuf[16];
-
-    TEE_GenerateRandom(rbuf, sizeof(rbuf));
-
-    tee_printf("random: ");
-    for (int i = 0; i < sizeof(rbuf); i++) {
-        tee_printf ("%02x", rbuf[i]);
-    }
-    tee_printf("\n");
-}
+/*START_TEE_RANDOM_SOURCE_MD_UPD*/
 ```
 
 ## Hash Functions
@@ -265,250 +199,33 @@ void gp_symmetric_key_gcm_verify_test(void)
 
 ## Asymmetric Crypto Functions
 
-/**
- * secure_storage_write() - helper function for tutorial programs.
- *
- * @param data	pointer of buffer to write data
- * @param size	pass bytes to write
- * @param fname file name for writing data
- *
- * @return      0 on success, others on error
- *
- */
+/*START_ASYMMETRIC_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
 
 ```C
-int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
-{
-    TEE_ObjectHandle object;
-
-    /** in real product, should validate, data, size, fname here */
-
-    TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
-                                    fname, strlen(fname),
-                                    (TEE_DATA_FLAG_ACCESS_WRITE
-                                     | TEE_DATA_FLAG_OVERWRITE),
-                                    TEE_HANDLE_NULL,
-                                    NULL, 0,
-                                    &object);
-    TEE_WriteObjectData(object, (const char *)data, size);
-    TEE_CloseObject(object);
-
-    /** In real product, check the return value of each above
-     * and return error value */
-    return 0;
-}
+/*START_ASYMMETRIC_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
 ```
 
-/**
- * secure_storage_read() - helper function for tutorial programs.
- *
- * @param data	pointer of buffer to read data
- * @param size	pass bytes to read, stores the bytes was able to read on
- *              return
- * @param fname file name for reading data
- *
- * @return      0 on success, others on error
- */
+/*START_ASYMMETRIC_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
 
 ```C
-int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
-{
-    TEE_ObjectHandle object;
-    uint32_t bytes_from_storage;
-
-    /** In real product, should validate, data, size, fname here */
-
-    TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
-                                  fname, strlen(fname),
-                                  TEE_DATA_FLAG_ACCESS_READ,
-                                  &object);
-    TEE_ReadObjectData(object, (char *)data, *size, &bytes_from_storage);
-    TEE_CloseObject(object);
-
-    /** Give back the bytes which were able to read */
-    *size = bytes_from_storage;
-
-    /** In real product, check the return value of each above
-     * and return error value */
-    return 0;
-}
+/*START_ASYMMETRIC_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
 ```
 
-/**
- * Example program to show how to use asymmetric key encryption functions with ECDSA_P256
- * on ta-ref API.
- *
- * Generate a keypair and creating signature of a data and stores them.
- * Check the return value of each API call on real product development.
- */
+/*START_ASYMMETRIC_KEY_ENCRYPTION_COMMENT_MD_UPD*/
 
 ```C
-void asymmetric_key_enc(void)
-{
-    tee_printf("Start of Aysmmetric Encryption\n");
-
-    /** Data to encrypt as a example */
-    uint8_t data[DATA_SIZE] = {
-        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-        0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
-        0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
-        0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f
-    };
-
-    uint8_t sig[SIG_LENGTH];
-    size_t  siglen = SIG_LENGTH;
-    uint8_t *pdata = data;
-    unsigned char hash[DATA_SIZE];
-    uint32_t hashlen = DATA_SIZE;
-
-    TEE_ObjectHandle keypair;
-    TEE_OperationHandle handle;
-    TEE_Attribute attr;
-    TEE_Result rv;
-
-    /** Calculate hash of the test data first */
-    TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
-    TEE_DigestUpdate(handle, pdata, CHUNK_SIZE);
-    pdata += CHUNK_SIZE;
-    TEE_DigestDoFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, hash, &hashlen);
-    TEE_FreeOperation(handle);
-
-    /** Dump hash data */
-    tee_printf("hash: size %d", hashlen);
-    for (int i = 0; i < hashlen; i++) {
-      tee_printf ("%02x", hash[i]);
-    }
-    tee_printf("\n");
-
-    /** Generating Keypair with ECDSA_P256 */
-    TEE_AllocateTransientObject(TEE_TYPE_ECDSA_KEYPAIR, 256, &keypair);
-    TEE_InitValueAttribute(&attr, TEE_ATTR_ECC_CURVE, TEE_ECC_CURVE_NIST_P256,
-                           256);
-    TEE_GenerateKey(keypair, 256, &attr, 1);
-    TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, 256);
-    TEE_SetOperationKey(handle, keypair);
-
-
-    /** Signing test data.
-     * Keystone has ed25519_sign()
-     * Equivalent in openssl is EVP_DigestSign() */
-    TEE_AsymmetricSignDigest(handle, NULL, 0, hash, hashlen, sig, &siglen);
-
-    /** Closing TEE handle */
-    TEE_FreeOperation(handle);
-
-    /** Dump encrypted data and tag */
-    tee_printf("Signature: size:%d ", siglen);
-    for (int i = 0; i < siglen; i++) {
-      tee_printf ("%02x", sig[i]);
-    }
-
-    /** Save the asymmetric keypair to secure storge
-     * TODO: would be better saving only pub key here */
-    secure_storage_write(keypair, 256 / 8, "keypair");
-
-    /** Save the signature to secure storge */
-    secure_storage_write(sig, siglen, "sig_data");
-
-    tee_printf("End of Aysmmetric Encryption\n");
-}
+/*START_ASYMMETRIC_KEY_ENCRYPTION_SOURCE_MD_UPD*/
 ```
 
-/**
- * Example program to show how to use asymmetric key Decryption functions with ECDSA_P256
- * on ta-ref API.
- *
- * @return		0 on successful decryption, others if not
- */
+/*START_ASYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/
 
 ```C
-int asymmetric_key_dec(void)
-{
-    tee_printf("Start of Aysmmetric Decryption\n");
-    
-    /** Data to compare with encrypted data  */
-    uint8_t data[DATA_SIZE] = {
-        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-        0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
-        0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
-        0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f
-    };
-
-    uint8_t sig[TAG_LEN];
-    size_t  siglen = TAG_LEN_BITS;
-    uint8_t *pdata = data;
-    unsigned char hash[DATA_SIZE];
-    uint32_t hashlen = DATA_SIZE;
-    int ret;
-
-    TEE_OperationHandle handle;
-    TEE_ObjectHandle key;
-    TEE_Result verify_ok;
-    TEE_ObjectHandle keypair;
-
-    /** Read pub key from secure storage */
-    // secure_storage_read(keypair, 256 / 8, "keypair");
-
-    /** Read signature from secure storage */
-    //secure_storage_read(sig, siglen, "sig_data");
-
-    /** Calculate hash of the test data first */
-    TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
-    TEE_DigestUpdate(handle, pdata, CHUNK_SIZE);
-    pdata += CHUNK_SIZE;
-    TEE_DigestDoFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, hash, &hashlen);
-    TEE_FreeOperation(handle);
-
-    /** Dump hash data */
-    tee_printf("hash: size %d", hashlen);
-    for (int i = 0; i < hashlen; i++) {
-      tee_printf ("%02x", hash[i]);
-    }
-    tee_printf("\n");
-
-    /** Set pub key */
-    TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_VERIFY, 256);
-    TEE_SetOperationKey(handle, keypair);
-
-    /** Check data with the signature    
-     * Keystone has ed25519_verify()
-     * Equivalent in openssl is EVP_DigestVerify() */
-    verify_ok = TEE_AsymmetricVerifyDigest(handle, NULL, 0, hash, hashlen, sig, siglen);
-
-    TEE_FreeOperation(handle);
-//    TEE_FreeTransientObject(keypair);
-
-    if (verify_ok == TEE_SUCCESS) {
-      tee_printf("verify ok\n");
-      ret = 0;
-    } else {
-      tee_printf("verify fails\n");
-      ret = -1;
-    }
-
-    tee_printf("End of Aysmmetric Decryption\n");
-
-    /** returns 0 on success */
-    return ret;
-}
+/*START_ASYMMETRIC_KEY_DECRYPTION_SOURCE_MD_UPD*/
 ```
-/**
- * TA_CreateEntryPoint() - Trusted application creates the entry point.
- * 
- * TA_CreateEntryPoint function is the Trusted Application’s constructor, which 
- * the framework calls when it creates a new instance of the Trusted 
- * Application.
- * 
- * @return TEE_SUCCESS		If success, else error occurred.
- */
+/*START_ASYMMETRIC_KEY_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/
 
 ```C
-TEE_Result TA_CreateEntryPoint(void)
-{
-    DMSG("has been called");
-
-    return TEE_SUCCESS;
-}
+/*START_ASYMMETRIC_KEY_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/
 ```
 
 ## Message Digest
