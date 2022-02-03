@@ -77,125 +77,49 @@ void gp_message_digest_test(void)
 
 ## Symmetric Crypto AES-GCM Functions
 
-This function encrypt and decrypt the test data.
-The function allocates an uninitialized transient object, i.e. a container for attributes. 
-Transient objects are used to hold a cryptographic object (key or key-pair).With the generation
-of a key, a new cryptographic operation for encrypt and decrypt data is initiated with a symmetric
-cipher operation. The data is also checked whether it is completely encrypted or decrypted.
-The original data is compared with decrypted data by checking the data and cipher length. 
+/*START_SYMMETRIC_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
 
 ```C
---- start Symmetric Key GCM  ---
-
-void gp_symmetric_key_gcm_verify_test(void)
-{
-    TEE_OperationHandle handle;
- 
-    static unsigned char data[CIPHER_LENGTH] = {
-        // 0x00,0x01,...,0xff
-        #include "test.dat"
-    };
- 
-    uint8_t iv[16];
-    unsigned char out[CIPHER_LENGTH];
-    uint32_t outlen;
-    unsigned char tag[16];
- 
-    TEE_ObjectHandle key;
-    TEE_Result rv;
- 
-    // Generate key
-    rv = TEE_AllocateTransientObject(TEE_TYPE_AES, 256, &key);
-    GP_ASSERT(rv, "TEE_AllocateTransientObject fails");
- 
-    rv = TEE_GenerateKey(key, 256, NULL, 0);
-    GP_ASSERT(rv, "TEE_GenerateKey fails");
- 
-    // Encrypt test data
-    rv = TEE_AllocateOperation(&handle, TEE_ALG_AES_GCM, TEE_MODE_ENCRYPT, 256);
-    GP_ASSERT(rv, "TEE_AllocateOperation fails");
- 
-    rv = TEE_SetOperationKey(handle, key);
-    GP_ASSERT(rv, "TEE_SetOperationKey fails");
- 
-    TEE_GenerateRandom(iv, sizeof(iv));
- 
-    /* Equivalent in openssl is EVP_EncryptInit_ex() */
-    rv = TEE_AEInit(handle, iv, sizeof(iv), 16*8, 16, 16);
-    GP_ASSERT(rv, "TEE_AEInit fails");
- 
-    /* Equivalent in openssl is EVP_EncryptUpdate() */
-    //  rv = TEE_AEUpdateAAD(handle, aad, 16);
-    //  GP_ASSERT(rv, "TEE_AEUpdateAAD fails");
- 
-    unsigned int taglen = 16;
-    memset(tag, 0, 16);
- 
-    outlen = CIPHER_LENGTH;
- 
-    /* Equivalent in openssl is EVP_EncryptFinal() */
-    rv = TEE_AEEncryptFinal(handle, data, 256, out, &outlen, tag, &taglen);
- 
-    TEE_FreeOperation(handle);
- 
-    /* Get the auth_tag */
-    // Dump encrypted data and tag
-    tee_printf("@cipher: ");
-    for (int i = 0; i < CIPHER_LENGTH; i++) {
-      tee_printf ("%02x", out[i]);
-    }
-    tee_printf("\n");
-    tee_printf("@tag: ");
-    for (int i = 0; i < 16; i++) {
-      tee_printf ("%02x", tag[i]);
-    }
-    tee_printf("\n");
- 
-    // Decrypt it
-    rv = TEE_AllocateOperation(&handle, TEE_ALG_AES_GCM, TEE_MODE_DECRYPT, 256);
-    GP_ASSERT(rv, "TEE_AllocateOperation fails");
- 
-    rv = TEE_SetOperationKey(handle, key);
-    GP_ASSERT(rv, "TEE_SetOperationKey fails");
- 
-    /* Equivalent in openssl is EVP_DecryptInit_ex() */
-    rv = TEE_AEInit(handle, iv, sizeof(iv), 16*8, 16, 16);
-    GP_ASSERT(rv, "TEE_AEInit fails");
- 
-    //  rv = TEE_AEUpdateAAD(handle, aad, 16);
-    //  GP_ASSERT(rv, "TEE_AEUpdateAAD fails");
- 
-    unsigned char decode[CIPHER_LENGTH];
-    outlen = 256;
-    /* Equivalent in openssl require two functions 
-       EVP_CIPHER_CTX_ctrl(tag) and EVP_DecryptFinal(others) */
-    rv = TEE_AEDecryptFinal(handle, out, 256, decode, &outlen, tag, 16);
-    GP_ASSERT(rv, "TEE_AEDecryptFinal fails");
- 
-    TEE_FreeOperation(handle);
-    TEE_FreeTransientObject(key);
- 
-    // Dump data and tag
-    tee_printf("decrypted to: ");
-    for (int i = 0; i < CIPHER_LENGTH; i++) {
-      tee_printf ("%02x", decode[i]);
-    }
-    tee_printf("\n");
-  
-    // Verify decrypted data against original one
-    /* Check verify_ok for success of decrypting and authentication */
-    int verify_ok;
-    verify_ok = !memcmp(decode, data, CIPHER_LENGTH);
-    if (verify_ok) {
-      tee_printf("verify ok\n");
-    } else {
-      tee_printf("verify fails\n");
-    }
- 
-}
---- end Symmetric Key GCM ---
-
+/*START_SYMMETRIC_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
 ```
+/*START_SYMMETRIC_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
+```C
+/*START_SYMMETRIC_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
+```
+/*START_SYMMETRIC_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
+```C
+/*START_SYMMETRIC_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
+```
+/*START_SYMMETRIC_SYMMETRIC_KEY_ENCRYPTION_COMMENT_MD_UPD*/
+```C
+/*START_SYMMETRIC_SYMMETRIC_KEY_ENCRYPTION_SOURCE_MD_UPD*/
+```
+/*START_SYMMETRIC_SYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/
+```C
+/*START_SYMMETRIC_SYMMETRIC_KEY_DECRYPTION_SOURCE_MD_UPD*/
+```
+/*START_SYMMETRIC_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/
+```C
+/*START_SYMMETRIC_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/
+```
+/*START_SYMMETRIC_OPEN_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/
+```C
+/*START_SYMMETRIC_OPEN_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/
+```
+/*START_SYMMETRIC_DESTROY_ENTRY_POINT_COMMENT_MD_UPD*/
+```C
+/*START_SYMMETRIC_DESTROY_ENTRY_POINT_SOURCE_MD_UPD*/
+```
+/*START_SYMMETRIC_CLOSE_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/
+```C
+/*START_SYMMETRIC_CLOSE_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/
+```
+/*START_SYMMETRIC_INVOKE_COMMAND_ENTRY_COMMENT_MD_UPD*/
+```C
+/*START_SYMMETRIC_INVOKE_COMMAND_ENTRY_SOURCE_MD_UPD*/
+```C
+
+
 
 ## Asymmetric Crypto Functions
 
