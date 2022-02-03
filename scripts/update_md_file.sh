@@ -17,7 +17,11 @@ SECURE_SYSTEM_INPUT_FILE="${SAMPLE_SOURCE_PATH}/${SECURE_SYSTEM}/${ENCLAVE_C}"
 ASYMMETRIC_KEY_INPUT_FILE="${SAMPLE_SOURCE_PATH}/${ASYMMETRIC_KEY}/${ENCLAVE_C}"
 SYMMETRIC_KEY_INPUT_FILE="${SAMPLE_SOURCE_PATH}/${SYMMETRIC_KEY}/${ENCLAVE_C}"
 MESSAGE_DIGEST_INPUT_FILE="${SAMPLE_SOURCE_PATH}/${MESSAGE_DIGEST}/${ENCLAVE_C}"
-
+INPUT_FILES=(
+    "$SECURE_SYSTEM_INPUT_FILE"
+    "$ASYMMETRIC_KEY_INPUT_FILE"
+    "$SYMMETRIC_KEY_INPUT_FILE"
+    "$MESSAGE_DIGEST_INPUT_FILE")
 
 # Start tag of the source code and MD file
 startTag=(
@@ -26,7 +30,35 @@ startTag=(
     "/*START_TEE_TIME_COMMENT_MD_UPD*/"
     "/*START_TEE_TIME_SOURCE_MD_UPD*/"
     "/*START_TEE_RANDOM_COMMENT_MD_UPD*/"
-    "/*START_TEE_RANDOM_SOURCE_MD_UPD*/")
+    "/*START_TEE_RANDOM_SOURCE_MD_UPD*/"
+    "/*START_ASYMMETRIC_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/"
+    "/*START_ASYMMETRIC_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/"
+    "/*START_ASYMMETRIC_SECURE_STORAGE_READ_COMMENT_MD_UPD*/"
+    "/*START_ASYMMETRIC_SECURE_STORAGE_READ_SOURCE_MD_UPD*/"
+    "/*START_ASYMMETRIC_KEY_ENCRYPTION_COMMENT_MD_UPD*/"
+    "/*START_ASYMMETRIC_KEY_ENCRYPTION_SOURCE_MD_UPD*/"
+    "/*START_ASYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/"
+    "/*START_ASYMMETRIC_KEY_DECRYPTION_SOURCE_MD_UPD*/"
+    "/*START_ASYMMETRIC_KEY_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/"
+    "/*START_ASYMMETRIC_KEY_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_SECURE_STORAGE_WRITE_SOURCE_MD_UPD"
+    "/*START_MESSAGE_DIGEST_SECURE_STORAGE_READ_COMMENT_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_SECURE_STORAGE_READ_SOURCE_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_DIGEST_GEN_COMMENT_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_DIGEST_GEN_SOURCE_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_DIGEST_CHECK_COMMENT_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_DIGEST_CHECK_SOURCE_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_OPEN_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_OPEN_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_DESTROY_ENTRY_POINT_COMMENT_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_DESTROY_ENTRY_POINT_SOURCE_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_CLOSE_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_CLOSE_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_INVOKE_COMMAND_ENTRY_POINT_COMMENT_MD_UPD*/"
+    "/*START_MESSAGE_DIGEST_INVOKE_COMMAND_ENTRY_POINT_SOURCE_MD_UPD*/")
 
 # End tag of the source code
 endTag=(
@@ -35,31 +67,67 @@ endTag=(
     "/*END_TEE_TIME_COMMENT_MD_UPD*/"
     "/*END_TEE_TIME_SOURCE_MD_UPD*/"
     "/*END_TEE_RANDOM_COMMENT_MD_UPD*/"
-    "/*END_TEE_RANDOM_SOURCE_MD_UPD*/")
+    "/*END_TEE_RANDOM_SOURCE_MD_UPD*/"
+    "/*END_ASYMMETRIC_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/"
+    "/*END_ASYMMETRIC_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/"
+    "/*END_ASYMMETRIC_SECURE_STORAGE_READ_COMMENT_MD_UPD*/"
+    "/*END_ASYMMETRIC_SECURE_STORAGE_READ_SOURCE_MD_UPD*/"
+    "/*END_ASYMMETRIC_KEY_ENCRYPTION_COMMENT_MD_UPD*/"
+    "/*END_ASYMMETRIC_KEY_ENCRYPTION_SOURCE_MD_UPD*/"
+    "/*END_ASYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/"
+    "/*END_ASYMMETRIC_KEY_DECRYPTION_SOURCE_MD_UPD*/"
+    "/*END_ASYMMETRIC_KEY_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/"
+    "/*END_ASYMMETRIC_KEY_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_SECURE_STORAGE_READ_COMMENT_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_SECURE_STORAGE_READ_SOURCE_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_DIGEST_GEN_COMMENT_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_DIGEST_GEN_SOURCE_MD_UPD*"
+    "/*END_MESSAGE_DIGEST_DIGEST_CHECK_COMMENT_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_DIGEST_CHECK_SOURCE_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_OPEN_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_OPEN_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_DESTROY_ENTRY_POINT_COMMENT_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_DESTROY_ENTRY_POINT_SOURCE_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_CLOSE_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_CLOSE_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_INVOKE_COMMAND_ENTRY_POINT_COMMENT_MD_UPD*/"
+    "/*END_MESSAGE_DIGEST_INVOKE_COMMAND_ENTRY_POINT_SOURCE_MD_UPD*/")
 
-
-# Compute the total length of tags to be iterated
-len=$((${#startTag[@]}-1))
-
-# Iterate for the number of tags present
-for (( count = 0; count <= $len; count++ )) 
+for INPUT_FILE in ${INPUT_FILES[@]}
 do
-    # Read the input start line number from source file
-    input_line_start="$(cat ${SECURE_SYSTEM_INPUT_FILE}| grep -Fn ${startTag[count]} | cut -f1 -d:)" 
-    # Skip the line number of the start tag
-    input_line_start=$((${input_line_start}+1)) 
 
-    # Read the input end line number from source file
-    input_line_end="$(cat ${SECURE_SYSTEM_INPUT_FILE}| grep -Fn ${endTag[count]} | cut -f1 -d:)" 
-    # Skip the line number of end tag
-    input_line_end=$((${input_line_end}-1))
-    
-    # Find the line number to insert the souce code / comments from source file to md file.
-    output_line_start="$(cat ${OUTPUT_MD_FILE} | grep -Fn ${startTag[count]}  | cut -f1 -d:)" 
+    # Compute the total length of tags to be iterated
+    len=$((${#startTag[@]}-1))
 
-    # Delete the start tag comment in the md file
-    sed -i "$output_line_start"d ${OUTPUT_MD_FILE}
-    # Insert the extracted text into the md file
-    sed -i "$((${output_line_start}-1))"r<(sed $input_line_start,$input_line_end'!d' ${SECURE_SYSTEM_INPUT_FILE}) ${OUTPUT_MD_FILE}
-    
+    # Iterate for the number of tags present
+    for (( count = 0; count <= $len; count++ )) 
+    do
+        # Check if the tag is present in the file
+        if  grep -qF "${startTag[count]}" "$INPUT_FILE" ; then
+             # Read the input start line number from source file
+            input_line_start="$(cat ${INPUT_FILE}| grep -Fn ${startTag[count]} | cut -f1 -d:)" 
+            # Skip the line number of the start tag
+            input_line_start=$((${input_line_start}+1)) 
+
+            # Read the input end line number from source file
+            input_line_end="$(cat ${INPUT_FILE}| grep -Fn ${endTag[count]} | cut -f1 -d:)" 
+            # Skip the line number of end tag
+            input_line_end=$((${input_line_end}-1))
+            
+            # Find the line number to insert the souce code / comments from source file to md file.
+            output_line_start="$(cat ${OUTPUT_MD_FILE} | grep -Fn ${startTag[count]}  | cut -f1 -d:)" 
+
+            # Delete the start tag comment in the md file
+            sed -i "$output_line_start"d ${OUTPUT_MD_FILE}
+            # Insert the extracted text into the md file
+            sed -i "$((${output_line_start}-1))"r<(sed $input_line_start,$input_line_end'!d' ${INPUT_FILE}) ${OUTPUT_MD_FILE}
+
+        fi
+
+    done
+
 done

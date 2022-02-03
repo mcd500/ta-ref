@@ -31,7 +31,7 @@
 #include "config_ref_ta.h"
 #include "trace.h"
 
-
+/*START_ASYMMETRIC_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
 /**
  * secure_storage_write() - helper function for tutorial programs.
  *
@@ -42,6 +42,8 @@
  * @return      0 on success, others on error
  *
  */
+/*END_ASYMMETRIC_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
+/*START_ASYMMETRIC_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
 int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
 {
     TEE_ObjectHandle object;
@@ -62,8 +64,8 @@ int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
      * and return error value */
     return 0;
 }
-
-
+/*END_ASYMMETRIC_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
+/*START_ASYMMETRIC_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
 /**
  * secure_storage_read() - helper function for tutorial programs.
  *
@@ -74,6 +76,8 @@ int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
  *
  * @return      0 on success, others on error
  */
+/*END_ASYMMETRIC_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
+/*START_ASYMMETRIC_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
 int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
 {
     TEE_ObjectHandle object;
@@ -95,7 +99,7 @@ int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
      * and return error value */
     return 0;
 }
-
+/*END_ASYMMETRIC_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
 
 #define DATA_SIZE  32
 #define CHUNK_SIZE  16
@@ -105,7 +109,7 @@ int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
 #define SIG_LENGTH 64
 #define SHA_LENGTH (256/8)
 
-
+/*START_ASYMMETRIC_KEY_ENCRYPTION_COMMENT_MD_UPD*/
 /**
  * Example program to show how to use asymmetric key encryption functions with ECDSA_P256
  * on ta-ref API.
@@ -113,6 +117,8 @@ int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
  * Generate a keypair and creating signature of a data and stores them.
  * Check the return value of each API call on real product development.
  */
+/*END_ASYMMETRIC_KEY_ENCRYPTION_COMMENT_MD_UPD*/
+/*START_ASYMMETRIC_KEY_ENCRYPTION_SOURCE_MD_UPD*/
 void asymmetric_key_enc(void)
 {
     tee_printf("Start of Aysmmetric Encryption\n");
@@ -182,13 +188,18 @@ void asymmetric_key_enc(void)
 
     tee_printf("End of Aysmmetric Encryption\n");
 }
+/*END_ASYMMETRIC_KEY_ENCRYPTION_SOURCE_MD_UPD*/
 
+/*START_ASYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/
 /**
  * Example program to show how to use asymmetric key Decryption functions with ECDSA_P256
  * on ta-ref API.
  *
  * @return		0 on successful decryption, others if not
  */
+/*END_ASYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/
+
+/*START_ASYMMETRIC_KEY_DECRYPTION_SOURCE_MD_UPD*/
 int asymmetric_key_dec(void)
 {
     tee_printf("Start of Aysmmetric Decryption\n");
@@ -258,8 +269,8 @@ int asymmetric_key_dec(void)
     /** returns 0 on success */
     return ret;
 }
-
-
+/*END_ASYMMETRIC_KEY_DECRYPTION_SOURCE_MD_UPD*/
+/*START_ASYMMETRIC_KEY_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/
 /**
  * TA_CreateEntryPoint() - Trusted application creates the entry point.
  * 
@@ -269,13 +280,15 @@ int asymmetric_key_dec(void)
  * 
  * @return TEE_SUCCESS		If success, else error occurred.
  */
+/*END_ASYMMETRIC_KEY_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/
+/*START_ASYMMETRIC_KEY_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/
 TEE_Result TA_CreateEntryPoint(void)
 {
     DMSG("has been called");
 
     return TEE_SUCCESS;
 }
-
+/*END_ASYMMETRIC_KEY_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/
 
 /**
  * TA_OpenSessionEntryPoint() - Trusted application open the session entry point.
