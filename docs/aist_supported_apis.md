@@ -31,6 +31,7 @@ writing your own TA is shown below.
 
 ## Hash Functions
 
+**Generate message digest**
 
 /*START_MESSAGE_DIGEST_DIGEST_GEN_COMMENT_MD_UPD*/
 
@@ -38,6 +39,7 @@ writing your own TA is shown below.
 /*START_MESSAGE_DIGEST_DIGEST_GEN_SOURCE_MD_UPD*/
 ```
 
+**Verify the generated message disgest**
 
 /*START_MESSAGE_DIGEST_DIGEST_CHECK_COMMENT_MD_UPD*/
 
@@ -47,6 +49,7 @@ writing your own TA is shown below.
 
 ## Symmetric Crypto AES-GCM Functions
 
+**Symmetric Key Encryption**
 
 /*START_SYMMETRIC_SYMMETRIC_KEY_ENCRYPTION_COMMENT_MD_UPD*/
 
@@ -54,6 +57,7 @@ writing your own TA is shown below.
 /*START_SYMMETRIC_SYMMETRIC_KEY_ENCRYPTION_SOURCE_MD_UPD*/
 ```
 
+**Symmetric Key Decryption**
 
 /*START_SYMMETRIC_SYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/
 
@@ -63,6 +67,7 @@ writing your own TA is shown below.
 
 ## Asymmetric Crypto Functions
 
+**Asymmetric Key Encryption**
 
 /*START_ASYMMETRIC_KEY_ENCRYPTION_COMMENT_MD_UPD*/
 
@@ -70,6 +75,7 @@ writing your own TA is shown below.
 /*START_ASYMMETRIC_KEY_ENCRYPTION_SOURCE_MD_UPD*/
 ```
 
+**Asymmetric Key Decryption**
 
 /*START_ASYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/
 
@@ -79,6 +85,7 @@ writing your own TA is shown below.
 
 ## Open, Read, Write, Close On Secure Storage
 
+**Secure Storage Write**
 
 /*START_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
 
@@ -86,6 +93,7 @@ writing your own TA is shown below.
 /*START_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
 ```
 
+**Secure Storage Read**
 
 /*START_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
 
@@ -126,8 +134,3 @@ writing your own TA is shown below.
 | TEE_ERROR_MAC_INVALID                | 0xFFFF3071 |
 | TEE_ERROR_SIGNATURE_INVALID          | 0xFFFF3072 |
 | TEE_ERROR_TIME_NOT_SET               | 0xFFFF5000 |
-
-
-
-
- 
