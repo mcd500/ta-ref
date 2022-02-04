@@ -33,10 +33,14 @@ run:
 docs:
 	@echo "Running the script to update MD files"
 	bash ./scripts/update_md_file.sh
-	@echo "Generating doxygen files"
-	@doxygen docs/doxygen/Doxyfile
-	make -C docs/doxygen/latex
-	cp docs/doxygen/latex/refman.pdf docs/ta-ref.pdf
+	@echo "Generating doxygen MD file - ta-ref.pdf"
+	@doxygen docs/doxygen/Doxyfile_md
+	make -C docs/doxygen/latex_md
+	cp docs/doxygen/latex_md/refman.pdf docs/ta-ref.pdf
+	@echo "Generating doxygen SRC file - ta-ref-src.pdf"
+	@doxygen docs/doxygen/Doxyfile_src
+	make -C docs/doxygen/latex_src
+	cp docs/doxygen/latex_src/refman.pdf docs/ta-ref-src.pdf
 
 qemu:
 	make -C $(TEST_DIR) qemu TEE=$(TEE)
@@ -66,14 +70,14 @@ all_test_clean:
 	make -C test_hello clean
 	make -C test_gp clean
 
-clean: select build_clean all_test_clean
+clean: select build_clean all_test_clean docs_clean
 	$(RM) $(BUILD_DIR)/Makefile
-	rm -f -r docs/doxygen/html
-	rm -f -r docs/doxygen/latex
 
 docs_clean:
-	rm -f -r docs/doxygen/html
-	rm -f -r docs/doxygen/latex
+	rm -f -r docs/doxygen/html_md
+	rm -f -r docs/doxygen/html_src
+	rm -f -r docs/doxygen/latex_md
+	rm -f -r docs/doxygen/latex_src
 
 # delete including dependencies
 mrproper: select build_clean all_test_clean
