@@ -102,6 +102,7 @@ struct timeval tee_time_get(void)
     return tv;
 }
 /*END_TEE_TIME_SOURCE_MD_UPD*/
+
 /*START_TEE_RANDOM_COMMENT_MD_UPD*/
 /**
  * tee_random_get() - Generates the random value for secure operation in TEE.
@@ -132,6 +133,7 @@ void tee_random_get(void)
 
 #define DATA_SIZE 16
 
+/*START_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
 /**
  * secure_storage_write() - Example program to show how to use secure
  * storage with ta-ref API. Write the data to secure storage.
@@ -147,6 +149,8 @@ void tee_random_get(void)
  * The data are saved with different encryption keys from other TAs, and
  * not able to read the same data by other TAs.
  */
+/*END_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
+/*START_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
 void secure_storage_write(void)
 {
 
@@ -175,8 +179,9 @@ void secure_storage_write(void)
     TEE_CloseObject(object);
  
 }
+/*END_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
 
-
+/*START_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
 /**
  * secure_storage_read() - Example program to show how to use secure
  * storage with ta-ref API. Read the data from secure storage.
@@ -185,6 +190,8 @@ void secure_storage_write(void)
  *
  * @return		TEE_SUCCESS if the data mached, others if not.
  */
+/*END_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
+/*START_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
 int secure_storage_read(void)
 {
 
@@ -232,6 +239,7 @@ int secure_storage_read(void)
 
     return TEE_SUCCESS;
 }
+/*END_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
 
 
 /**

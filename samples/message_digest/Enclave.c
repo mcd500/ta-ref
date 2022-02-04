@@ -36,7 +36,6 @@
 #define CHUNK_SIZE  8
 #define SHA_LENGTH (256/8)
 
-/*START_MESSAGE_DIGEST_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
 /**
  * secure_storage_write() - helper function for tutorial programs.
  *
@@ -47,9 +46,6 @@
  * @return      0 on success, others on error
  *
  */
-/*END_MESSAGE_DIGEST_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
-
-/*START_MESSAGE_DIGEST_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
 int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
 {
     TEE_ObjectHandle object;
@@ -70,8 +66,7 @@ int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
      * and return error value */
     return 0;
 }
-/*END_MESSAGE_DIGEST_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
-/*START_MESSAGE_DIGEST_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
+
 /**
  * secure_storage_read() - helper function for tutorial programs.
  *
@@ -82,8 +77,6 @@ int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
  *
  * @return      0 on success, others on error
  */
-/*END_MESSAGE_DIGEST_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
-/*START_MESSAGE_DIGEST_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
 int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
 {
     TEE_ObjectHandle object;
@@ -105,7 +98,7 @@ int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
      * and return error value */
     return 0;
 }
-/*END_MESSAGE_DIGEST_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
+
 /*START_MESSAGE_DIGEST_DIGEST_GEN_COMMENT_MD_UPD*/
 /**
  * message_digest_gen() - Example program to show how to use hash functions
@@ -167,6 +160,7 @@ void message_digest_gen(void)
     secure_storage_write(hash, hashlen, "hash_value");
 }
 /*END_MESSAGE_DIGEST_DIGEST_GEN_SOURCE_MD_UPD*/
+
 /*START_MESSAGE_DIGEST_DIGEST_CHECK_COMMENT_MD_UPD*/
 /**
  * message_digest_check() - Example program to show how to use hash
@@ -226,7 +220,7 @@ int message_digest_check(void)
     return ret;
 }
 /*END_MESSAGE_DIGEST_DIGEST_CHECK_SOURCE_MD_UPD*/
-/*START_MESSAGE_DIGEST_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/
+
 /**
  * TA_CreateEntryPoint() - Trusted application creates the entry point.
  * 
@@ -236,16 +230,13 @@ int message_digest_check(void)
  * 
  * @return TEE_SUCCESS		If success, else error occurred.
  */
-/*END_MESSAGE_DIGEST_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/
-/*START_MESSAGE_DIGEST_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/
 TEE_Result TA_CreateEntryPoint(void)
 {
     DMSG("has been called");
 
     return TEE_SUCCESS;
 }
-/*END_MESSAGE_DIGEST_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/
-/*START_MESSAGE_DIGEST_OPEN_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/
+
 /**
  * TA_OpenSessionEntryPoint() - Trusted application open the session entry point.
  * 
@@ -260,29 +251,23 @@ TEE_Result TA_CreateEntryPoint(void)
  *
  * @return TEE_SUCCESS		If success, else error occurred.
  */
-/*END_MESSAGE_DIGEST_OPEN_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/
-/*START_MESSAGE_DIGEST_OPEN_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/
 TEE_Result TA_OpenSessionEntryPoint(uint32_t __unused param_types,
                                     TEE_Param __unused params[4],
                                     void __unused **sess_ctx) {
     DMSG("Session has been opened");
     return TEE_SUCCESS;
 }
-/*END_MESSAGE_DIGEST_OPEN_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/
-/*START_MESSAGE_DIGEST_DESTROY_ENTRY_POINT_COMMENT_MD_UPD*/
+
 /**
  * TA_DestroyEntryPoint() - The function TA_DestroyEntryPoint is the Trusted 
  * Application’s destructor, which the Framework calls when the instance is being 
  * destroyed.
  */
-/*END_MESSAGE_DIGEST_DESTROY_ENTRY_POINT_COMMENT_MD_UPD*/
-/*START_MESSAGE_DIGEST_DESTROY_ENTRY_POINT_SOURCE_MD_UPD*/
 void TA_DestroyEntryPoint(void)
 {
     DMSG("has been called");
 }
-/*END_MESSAGE_DIGEST_DESTROY_ENTRY_POINT_SOURCE_MD_UPD*/
-/*START_MESSAGE_DIGEST_CLOSE_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/
+
 /**
  * TA_CloseSessionEntryPoint() - The Framework calls to close a client session.
  * 
@@ -293,14 +278,11 @@ void TA_DestroyEntryPoint(void)
  *			Trusted Application in this TA_OpenSessionEntryPoint() 
  *			for this session.
  */
-/*END_MESSAGE_DIGEST_CLOSE_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/
-/*START_MESSAGE_DIGEST_CLOSE_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/
 void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
 {
     (void)&sess_ctx; /* Unused parameter */
     IMSG("Goodbye!\n");
 }
-/*END_MESSAGE_DIGEST_CLOSE_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/
 
 /** Command id for the first operation in TA.
  * The number must match between REE and TEE to achieve the objected
@@ -309,7 +291,7 @@ void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
 #define TA_REF_HASH_GEN    0x11111111
 /** Command id for the second operation in TA */
 #define TA_REF_HASH_CHECK  0x22222222
-/*START_MESSAGE_DIGEST_INVOKE_COMMAND_ENTRY_POINT_COMMENT_MD_UPD*/
+
 /**
  * TA_InvokeCommandEntryPoint() - The Framework calls the client invokes a  
  * command within the given session.
@@ -330,8 +312,6 @@ void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
  * @return TEE_SUCCESS		If success, else return error value defined in
  *              include/tee_api_defines.h.
  */
-/*END_MESSAGE_DIGEST_INVOKE_COMMAND_ENTRY_POINT_COMMENT_MD_UPD*/
-/*START_MESSAGE_DIGEST_INVOKE_COMMAND_ENTRY_POINT_SOURCE_MD_UPD*/
 TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t cmd_id,
 				      uint32_t param_types, TEE_Param params[4])
@@ -355,4 +335,3 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
         return TEE_ERROR_BAD_PARAMETERS;
     }
 }
-/*END_MESSAGE_DIGEST_INVOKE_COMMAND_ENTRY_POINT_SOURCE_MD_UPD*/

@@ -37,7 +37,6 @@
 #define TAG_LEN    16
 #define TAG_LEN_BITS TAG_LEN * 8
 
-/*START_SYMMETRIC_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
 /**
  * secure_storage_write() - helper function for tutorial programs.
  *
@@ -48,8 +47,6 @@
  * @return      0 on success, others on error
  *
  */
-/*END_SYMMETRIC_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
-/*START_SYMMETRIC_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
 int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
 {
     TEE_ObjectHandle object;
@@ -70,8 +67,7 @@ int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
      * and return error value */
     return 0;
 }
-/*END_SYMMETRIC_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
-/*START_SYMMETRIC_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
+
 /**
  * secure_storage_read() - helper function for tutorial programs.
  *
@@ -82,8 +78,6 @@ int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
  *
  * @return      0 on success, others on error
  */
-/*END_SYMMETRIC_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
-/*START_SYMMETRIC_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
 int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
 {
     TEE_ObjectHandle object;
@@ -105,7 +99,6 @@ int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
      * and return error value */
     return 0;
 }
-/*END_SYMMETRIC_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
 
 #define ENCDATA_MAX 256
 TEE_ObjectHandle key;
@@ -199,6 +192,7 @@ void symmetric_key_enc(void)
     secure_storage_write(out, outlen, "enc_data");
 }
 /*END_SYMMETRIC_SYMMETRIC_KEY_ENCRYPTION_SOURCE_MD_UPD*/
+
 /*START_SYMMETRIC_SYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/
 /**
  * Example program to show how to use AES 256 GCM functions with ta-ref API.
@@ -303,7 +297,7 @@ int symmetric_key_dec(void)
     return ret;
 }
 /*END_SYMMETRIC_SYMMETRIC_KEY_DECRYPTION_SOURCE_MD_UPD*/
-/*START_SYMMETRIC_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/
+
 /**
  * TA_CreateEntryPoint() - Trusted application creates the entry point.
  * 
@@ -313,16 +307,13 @@ int symmetric_key_dec(void)
  * 
  * @return TEE_SUCCESS		If success, else error occurred.
  */
-/*END_SYMMETRIC_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/
-/*START_SYMMETRIC_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/
 TEE_Result TA_CreateEntryPoint(void)
 {
     DMSG("has been called");
 
     return TEE_SUCCESS;
 }
-/*END_SYMMETRIC_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/
-/*START_SYMMETRIC_OPEN_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/
+
 /**
  * TA_OpenSessionEntryPoint() - Trusted application open the session entry point.
  * 
@@ -337,29 +328,23 @@ TEE_Result TA_CreateEntryPoint(void)
  *
  * @return TEE_SUCCESS		If success, else error occurred.
  */
-/*END_SYMMETRIC_OPEN_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/
-/*START_SYMMETRIC_OPEN_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/
 TEE_Result TA_OpenSessionEntryPoint(uint32_t __unused param_types,
                                     TEE_Param __unused params[4],
                                     void __unused **sess_ctx) {
     DMSG("Session has been opened");
     return TEE_SUCCESS;
 }
-/*END_SYMMETRIC_OPEN_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/
-/*START_SYMMETRIC_DESTROY_ENTRY_POINT_COMMENT_MD_UPD*/
+
 /**
  * TA_DestroyEntryPoint() - The function TA_DestroyEntryPoint is the Trusted 
  * Application’s destructor, which the Framework calls when the instance is being 
  * destroyed.
  */
-/*END_SYMMETRIC_DESTROY_ENTRY_POINT_COMMENT_MD_UPD*/
-/*START_SYMMETRIC_DESTROY_ENTRY_POINT_SOURCE_MD_UPD*/
 void TA_DestroyEntryPoint(void)
 {
     DMSG("has been called");
 }
-/*END_SYMMETRIC_DESTROY_ENTRY_POINT_SOURCE_MD_UPD*/
-/*START_SYMMETRIC_CLOSE_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/
+
 /**
  * TA_CloseSessionEntryPoint() - The Framework calls to close a client session.
  * 
@@ -370,14 +355,11 @@ void TA_DestroyEntryPoint(void)
  *			Trusted Application in this TA_OpenSessionEntryPoint() 
  *			for this session.
  */
-/*END_SYMMETRIC_CLOSE_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/
-/*START_SYMMETRIC_CLOSE_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/
 void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
 {
     (void)&sess_ctx; /* Unused parameter */
     IMSG("Goodbye!\n");
 }
-/*END_SYMMETRIC_CLOSE_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/
 
 /** Command id for the Symmetric Encryption operation in TA */
 #define TA_REF_SYM_ENC    0x11111111
@@ -385,7 +367,6 @@ void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
 /** Command id for the Symmetric Decryption operation in TA */
 #define TA_REF_SYM_DEC  0x22222222
 
-/*START_SYMMETRIC_INVOKE_COMMAND_ENTRY_COMMENT_MD_UPD*/
 /**
  * TA_InvokeCommandEntryPoint() - The Framework calls the client invokes a  
  * command within the given session.
@@ -406,8 +387,6 @@ void TA_CloseSessionEntryPoint(void __maybe_unused *sess_ctx)
  * @return TEE_SUCCESS		If success, else return error value defined in
  *              include/tee_api_defines.h.
  */
-/*END_SYMMETRIC_INVOKE_COMMAND_ENTRY_COMMENT_MD_UPD*/
-/*START_SYMMETRIC_INVOKE_COMMAND_ENTRY_SOURCE_MD_UPD*/
 TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t cmd_id,
 				      uint32_t param_types, TEE_Param params[4])
@@ -431,4 +410,3 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
         return TEE_ERROR_BAD_PARAMETERS;
     }
 }
-/*END_SYMMETRIC_INVOKE_COMMAND_ENTRY_SOURCE_MD_UPD*/

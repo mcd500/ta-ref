@@ -9,14 +9,12 @@ writing your own TA is shown below.
 
 /*START_REE_TIME_COMMENT_MD_UPD*/
 
-
 ```C
 /*START_REE_TIME_SOURCE_MD_UPD*/
 ```
 
 
 /*START_TEE_TIME_COMMENT_MD_UPD*/
-
 
 ```C
 /*START_TEE_TIME_SOURCE_MD_UPD*/
@@ -27,113 +25,44 @@ writing your own TA is shown below.
 
 /*START_TEE_RANDOM_COMMENT_MD_UPD*/
 
-
 ```C
 /*START_TEE_RANDOM_SOURCE_MD_UPD*/
 ```
 
 ## Hash Functions
 
-Pseudo code of how to use Message Digest Functions. Keystone uses sha3.c which 
-is almost identical. The function performs many operations to achieve message data hash techniques to allocate the handle 
-for a new cryptographic operation. And then finalize the message digest operation 
-to produce the message hash. It prints the hash message.
+
+/*START_MESSAGE_DIGEST_DIGEST_GEN_COMMENT_MD_UPD*/
 
 ```C
---- start Message Digest ---
-void gp_message_digest_test(void)
-{
-    static unsigned char data[256] = {
-     #include "test.dat"
-    };
-    unsigned char hash[SHA_LENGTH];
-    uint32_t hashlen = SHA_LENGTH;
-    TEE_OperationHandle handle;
-    TEE_Result rv;
- 
-    // Take hash of test data
-    /* sha3_init() in sha3.c */
-    rv = TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
-    GP_ASSERT(rv, "TEE_AllocateOperation fails");
- 
-    /* sha3_update() in sha3.c */
-    TEE_DigestUpdate(handle, data, sizeof(data));  
-    
-    /* sha3_final() in sha3.c */
-    rv = TEE_DigestDoFinal(handle, NULL, 0, hash, &hashlen);
-    GP_ASSERT(rv, "TEE_DigestDoFinal fails");
- 
-    TEE_FreeOperation(handle);
-    /* hash value is ready */
-    // Dump hashed data
-    tee_printf("hash: ");
-    for (int i = 0; i < hashlen; i++) {
-      tee_printf ("%02x", hash[i]);
-    }
-    tee_printf("\n");
-}
---- end Message Digest ---
+/*START_MESSAGE_DIGEST_DIGEST_GEN_SOURCE_MD_UPD*/
+```
+
+
+/*START_MESSAGE_DIGEST_DIGEST_CHECK_COMMENT_MD_UPD*/
+
+```C
+/*START_MESSAGE_DIGEST_DIGEST_CHECK_SOURCE_MD_UPD*/
 ```
 
 ## Symmetric Crypto AES-GCM Functions
 
-/*START_SYMMETRIC_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
 
-```C
-/*START_SYMMETRIC_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
-```
-/*START_SYMMETRIC_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
-```C
-/*START_SYMMETRIC_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
-```
-/*START_SYMMETRIC_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
-```C
-/*START_SYMMETRIC_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
-```
 /*START_SYMMETRIC_SYMMETRIC_KEY_ENCRYPTION_COMMENT_MD_UPD*/
+
 ```C
 /*START_SYMMETRIC_SYMMETRIC_KEY_ENCRYPTION_SOURCE_MD_UPD*/
 ```
+
+
 /*START_SYMMETRIC_SYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/
+
 ```C
 /*START_SYMMETRIC_SYMMETRIC_KEY_DECRYPTION_SOURCE_MD_UPD*/
 ```
-/*START_SYMMETRIC_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/
-```C
-/*START_SYMMETRIC_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/
-```
-/*START_SYMMETRIC_OPEN_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/
-```C
-/*START_SYMMETRIC_OPEN_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/
-```
-/*START_SYMMETRIC_DESTROY_ENTRY_POINT_COMMENT_MD_UPD*/
-```C
-/*START_SYMMETRIC_DESTROY_ENTRY_POINT_SOURCE_MD_UPD*/
-```
-/*START_SYMMETRIC_CLOSE_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/
-```C
-/*START_SYMMETRIC_CLOSE_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/
-```
-/*START_SYMMETRIC_INVOKE_COMMAND_ENTRY_COMMENT_MD_UPD*/
-```C
-/*START_SYMMETRIC_INVOKE_COMMAND_ENTRY_SOURCE_MD_UPD*/
-```C
-
-
 
 ## Asymmetric Crypto Functions
 
-/*START_ASYMMETRIC_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
-
-```C
-/*START_ASYMMETRIC_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
-```
-
-/*START_ASYMMETRIC_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
-
-```C
-/*START_ASYMMETRIC_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
-```
 
 /*START_ASYMMETRIC_KEY_ENCRYPTION_COMMENT_MD_UPD*/
 
@@ -141,148 +70,27 @@ void gp_message_digest_test(void)
 /*START_ASYMMETRIC_KEY_ENCRYPTION_SOURCE_MD_UPD*/
 ```
 
+
 /*START_ASYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/
 
 ```C
 /*START_ASYMMETRIC_KEY_DECRYPTION_SOURCE_MD_UPD*/
 ```
-/*START_ASYMMETRIC_KEY_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/
-
-```C
-/*START_ASYMMETRIC_KEY_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/
-```
-
-## Message Digest
-
-/*START_MESSAGE_DIGEST_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
-
-```C
-/*START_MESSAGE_DIGEST_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
-```
-/*START_MESSAGE_DIGEST_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
-
-```C
-/*START_MESSAGE_DIGEST_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
-```
-
-/*START_MESSAGE_DIGEST_DIGEST_GEN_COMMENT_MD_UPD*/
-
-```C
-/*START_MESSAGE_DIGEST_DIGEST_GEN_SOURCE_MD_UPD*/
-```
-/*START_MESSAGE_DIGEST_DIGEST_CHECK_COMMENT_MD_UPD*/
-
-```C
-/*START_MESSAGE_DIGEST_DIGEST_CHECK_SOURCE_MD_UPD*/
-```
-
-/*START_MESSAGE_DIGEST_CREATE_ENTRY_POINT_COMMENT_MD_UPD*/
-
-```C
-/*START_MESSAGE_DIGEST_CREATE_ENTRY_POINT_SOURCE_MD_UPD*/
-```
-
-/*START_MESSAGE_DIGEST_OPEN_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/
-
-```C
-/*START_MESSAGE_DIGEST_OPEN_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/
-```
-
-/*START_MESSAGE_DIGEST_DESTROY_ENTRY_POINT_COMMENT_MD_UPD*/
-```C
-/*START_MESSAGE_DIGEST_DESTROY_ENTRY_POINT_SOURCE_MD_UPD*/
-```
-
-/*START_MESSAGE_DIGEST_CLOSE_SESSION_ENTRY_POINT_COMMENT_MD_UPD*/
-
-```C
-/*START_MESSAGE_DIGEST_CLOSE_SESSION_ENTRY_POINT_SOURCE_MD_UPD*/
-```
-/*START_MESSAGE_DIGEST_INVOKE_COMMAND_ENTRY_POINT_COMMENT_MD_UPD*/
-
-```C
-/*START_MESSAGE_DIGEST_INVOKE_COMMAND_ENTRY_POINT_SOURCE_MD_UPD*/
-```
-
 
 ## Open, Read, Write, Close On Secure Storage
 
-Core Functions, Secure Storage Functions.
-Pseudo code of how to use Secure Storage.
-These could be implemented using ocall on Keystone.
-Almost identical to open(), clone(), read(), write() in POSIX API.
-The function creates a persistent object for reading and writing the data. 
-The created data individually for read and write are compared for data length. 
-If the length of both the objects are same,  the function prints "verify ok" 
-and prints "verify fails" if it is not the same. 
+
+/*START_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
 
 ```C
---- start Secure storage ---
-void gp_secure_storage_test(void)
-{
-    static unsigned char data[] = {
-        // 0x00,0x01,...,0xff
-        #include "test.dat"
-    };
-    static unsigned char buf[DATA_LENGTH];
- 
-    TEE_Result rv;
- 
-    /* write */
-    TEE_ObjectHandle object;
-    rv = TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
-            "FileOne", strlen("FileOne"),
-            (TEE_DATA_FLAG_ACCESS_WRITE
-             | TEE_DATA_FLAG_OVERWRITE),
-            TEE_HANDLE_NULL,
-            NULL, 0,
-            &object);
-    GP_ASSERT(rv, "TEE_CreatePersistentObject fails");
- 
-    memcpy(buf, data, DATA_LENGTH);
- 
-    /* fill the date in buffer */
-    rv = TEE_WriteObjectData(object, (const char *)data, DATA_LENGTH);
-    GP_ASSERT(rv, "TEE_WriteObjectData fails");
- 
-    TEE_CloseObject(object);
-    --- write file end ---
-    
-    /* clear buf */
-    memset(buf, 0, DATA_LENGTH);
-    
-    --- read file start ---
-    /* read */
-    rv = TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
-          "FileOne", strlen("FileOne"),
-          TEE_DATA_FLAG_ACCESS_READ,
-          &object);
-    GP_ASSERT(rv, "TEE_OpenPersistentObject fails");
- 
-    uint32_t count;
-    rv = TEE_ReadObjectData(object, (char *)buf, DATA_LENGTH, &count);
-    
-    GP_ASSERT(rv, "TEE_ReadObjectData fails");
-    TEE_CloseObject(object);
- 
-    /* use the date in buffer */
-    tee_printf("%d bytes read: ", count);
-    for (uint32_t i = 0; i < count; i++) {
-      tee_printf ("%02x", buf[i]);
-    }
-    tee_printf("\n");
- 
-    /* Compare read data with written data */
-    int verify_ok;
-    verify_ok = !memcmp(buf, data, DATA_LENGTH);
-    if (verify_ok) {
-      tee_printf("verify ok\n");
-    } else {
-      tee_printf("verify fails\n");
-    }
- 
-}
---- end Secure storage ---
+/*START_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
+```
+
+
+/*START_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
+
+```C
+/*START_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
 ```
 
 ## API Error Codes and its values
