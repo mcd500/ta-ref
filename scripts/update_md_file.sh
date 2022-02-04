@@ -83,7 +83,8 @@ do
     do
         # Check if the tag is present in the file
         if  grep -qF "${startTag[count]}" "$INPUT_FILE" ; then
-             # Read the input start line number from source file
+
+            # Read the input start line number from source file
             input_line_start="$(cat ${INPUT_FILE}| grep -Fn ${startTag[count]} | cut -f1 -d:)" 
             # Skip the line number of the start tag
             input_line_start=$((${input_line_start}+1)) 
@@ -92,15 +93,26 @@ do
             input_line_end="$(cat ${INPUT_FILE}| grep -Fn ${endTag[count]} | cut -f1 -d:)" 
             # Skip the line number of end tag
             input_line_end=$((${input_line_end}-1))
-            
+                
+
             # Find the line number to insert the souce code / comments from source file to md file.
             output_line_start="$(cat ${OUTPUT_MD_FILE} | grep -Fn ${startTag[count]}  | cut -f1 -d:)" 
 
             # Delete the start tag comment in the md file
             sed -i "$output_line_start"d ${OUTPUT_MD_FILE}
-            # Insert the extracted text into the md file
-            sed -i "$((${output_line_start}-1))"r<(sed $input_line_start,$input_line_end'!d' ${INPUT_FILE}) ${OUTPUT_MD_FILE}
 
+
+            # Check if the tag comment
+            if  [[ "${startTag[count]}" == *"COMMENT"* ]] ;
+            then            
+                # Remove all comment characters (/* , * and */) from the text and Insert the extracted text into the md file
+                sed -i "$((${output_line_start}-1))"r<(sed $input_line_start,$input_line_end'!d;s/\/\*//;s/\*\///;s/*//' ${INPUT_FILE}) ${OUTPUT_MD_FILE}
+            # If tag is not comment, considering it source
+            else
+                # Insert the extracted text into the md file
+                sed -i "$((${output_line_start}-1))"r<(sed $input_line_start,$input_line_end'!d' ${INPUT_FILE}) ${OUTPUT_MD_FILE}
+
+            fi
         fi
 
     done
