@@ -21,7 +21,7 @@ $ sudo apt-get install -y autoconf automake autotools-dev bc bison \
   libmpc-dev libmpfr-dev libtool texinfo tmux patchutils zlib1g-dev wget \
   bzip2 patch vim-common lbzip2 python pkg-config libglib2.0-dev libpixman-1-dev \
   libssl-dev screen device-tree-compiler expect makeself unzip cpio rsync cmake \
-  p7zip-full 
+  p7zip-full python3-pip
 
 # Following packages are required for clang, keyedge and make run commands in ta-ref.
 $ sudo apt-get install -y clang-tools-6.0 libclang-6.0-dev cmake \
@@ -158,7 +158,7 @@ Install the following packages
 ```sh
 $ sudo dpkg --add-architecture i386
 
-$ sudo apt-get update -y
+$ sudo apt-get update
 
 $ sudo apt-get install -y android-tools-adb android-tools-fastboot autoconf \
   automake bc bison build-essential ccache cscope curl device-tree-compiler \
@@ -201,7 +201,7 @@ $ export PATH=${TOOLCHAIN_DIR}/aarch64/bin;${TOOLCHAIN_DIR}/aarch32/bin;${PATH}
 
 ## Download OP-TEE 3.10.0
 
-Install Androi repo to sync the OP-TEE repo
+Install Android repo to sync the OP-TEE repo
 
 ```sh
 $ sudo git config --global user.name "dummy" && \
@@ -215,7 +215,6 @@ $ export PATH=$~/bin:${PATH}
 ```
 
 Get the source code for optee
-
 
 ```sh
 $ mkdir optee && cd optee
@@ -237,43 +236,10 @@ If build is successfull, the rootfs can be found as follows
 $ ls -l ${OPTEE_DIR}/out-br/images/rootfs.cpio.gz
 ```
 
-### Clone and Build OP-TEE v3.9.0 for RPI3
-<br />
-Copy the following lines into "optee-rpi3.sh" script 
-
-```sh
-#!/bin/bash -u
-export OPTEE_VER=$1
-export OPTEE_DIR=${PWD}/optee_${OPTEE_VER}_rpi3
-mkdir ${OPTEE_DIR} || true
-cd ${OPTEE_DIR}
-~/bin/repo init -u https://github.com/knknkn1162/manifest.git -m rpi3.xml -b ${OPTEE_VER}
-~/bin/repo sync -j4 --no-clone-bundle
-ln -s ~/toolchains ${OPTEE_DIR}/. || true
-echo 'CONFIG_CMDLINE="console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 root=/dev/mmcblk0p2 rootfstype=ext4 noinitrd rw rootwait init=/lib/systemd/systemd"' > build/defconfig-cmdline.txt
-cd build
-make OPTEE_CLIENT_BIN_ARCH_EXCLUDE=/boot
-	LINUX_DEFCONFIG_COMMON_FILES="${OPTEE_DIR}/linux/arch/arm64/configs/bcmrpi3_defconfig
- 	${OPTEE_DIR}/build/kconfigs/rpi3.conf ${OPTEE_DIR}/build/defconfig-cmdline.txt" BR2_PACKAGE_OPTEE_OS_EXT=n BR2_PACKAGE_OPTEE_TEST_EXT=n
- 	BR2_PACKAGE_OPTEE_EXAMPLES_EXT=n BR2_TOOLCHAIN_EXTERNAL_GCC_8=y BR2_TOOLCHAIN_EXTERNAL_HEADERS_4_19=y BR2_HOST_GCC_AT_LEAST_8=y
- 	BR2_TOOLCHAIN_HEADERS_AT_LEAST="4.19" -j'nproc'
-```
-
-Run the script as follows
-
-```sh
-$ chmod +x optee-rpi3.sh
-$ ./optee-rpi3.sh 3.9.0
-```
-
-If build is successfull, the rootfs can be found as follows
-```sh
-$ ls -l ../out-br/images/rootfs.cpio.gz
-```
-
 ## Run OP-TEE Examples
 
 ### Launching QEMU Console
+
 <br /> 
 Run following commands from OP-TEE build directory 
 <br /> 
@@ -331,16 +297,21 @@ $ poweroff
 ```
 
 # SGX (Intel NUC)
+
 Intel(R) Software Guard Extensions (Intel(R) SGX) is an Intel technology for application developers 
 who is seeking to protect selected code and data from disclosure or modification. For more details check, 
 - https://github.com/intel/linux-sgx/blob/master/README.md
 
-## List of machines which are confirmed to work
+## System Requirements
+
+### List of machines which are confirmed to work
+Following are the the Intel NUC device which has been tested to make sure the ta-ref sdk worked fine.
+
 1. Intel NUC7PJYH	- 	Intel(R) Celeron(R) J4005 CPU @ 2.00GHz
 2. Intel NUC7PJYH	- 	Intel(R) Pentium(R) Silver J5005 CPU @ 1.50GHz
 3. Intel NUC9VXQNX	-	Intel(R) Xeon(R) E-2286M CPU @ 2.40GHz (Partially working)
 
-## BIOS Versions which are failed or scucceeded in IAS Test
+### BIOS Versions which are failed or scucceeded in IAS Test
 1. BIOS Version JYGLKCPX.86A.0050.2019.0418.1441 - IAS Test was Failed
 2. BIOS Version JYGLKCPX.86A.0053.2019.1015.1510 - IAS Test was Failed
 3. BIOS Version JYGLKCPX.86A.0057.2020.1020.1637 - IAS Test was Success
@@ -351,7 +322,7 @@ Update BIOS from:
 - https://downloadcenter.intel.com/download/29987/BIOS-Update-JYGLKCPX-
 - https://downloadcenter.intel.com/download/30069/BIOS-Update-QNCFLX70-
 
-## BIOS Settings
+### BIOS Settings
 1. Make sure you are running with latest version BIOS
 2. Make sure you enabled SGX support in BIOS
 3. Make sure `Secure Boot` disabled in BIOS
@@ -360,11 +331,15 @@ Refer: https://github.com/intel/sgx-software-enable/blob/master/README.md
 
 ## Required Packages
 
-Intall following packages on Ubuntu 18.04
+Install following packages on Ubuntu 20.04
 
 ```sh
-$ sudo apt-get install build-essential ocaml ocamlbuild automake autoconf libtool wget python libssl-dev git cmake perl libssl-dev libcurl4-openssl-dev protobuf-compiler libprotobuf-dev debhelper cmake reprepro expect unzip sshpass
+$ sudo apt-get install -y build-essential ocaml ocamlbuild automake autoconf \
+  libtool wget python libssl-dev git cmake perl libssl-dev \
+  libcurl4-openssl-dev protobuf-compiler libprotobuf-dev debhelper cmake \
+  reprepro expect unzip libcurl4 libprotobuf17 python3-pip
 ```
+
 ## Build SGX
 
 There are 3 components which need to be build for SGX
@@ -372,61 +347,76 @@ There are 3 components which need to be build for SGX
 2. linux-sgx-driver
 3. sgx-ra-sample
 
-### SGX SDK
-<br /> 
-Clone and build
+
+### Build and install linux-sgx
+
+Setup the environment variables
+
+```sh
+$ export OPT_INTEL=/opt/intel
+$ export SDK_INSTALL_DIR=${OPT_INTEL}/sgxsdk
+$ export PATH=${PATH}:${SDK_INSTALL_DIR}/bin:${SDK_INSTALL_DIR}/bin/x64
+$ export PKG_CONFIG_PATH=${SDK_INSTALL_DIR}/pkgconfig
+$ export LD_LIBRARY_PATH=${SDK_INSTALL_DIR}/sdk_libs
+```
+
+**Build and install Intel SGX SDK**
 
 ```sh
 $ git clone https://github.com/intel/linux-sgx.git -b sgx_2.10
 $ cd linux-sgx
-$ git checkout sgx_2.10
+ 
+# Download the prebuilt binaries for intel sgx
 $ ./download_prebuilt.sh
-$ sudo cp external/toolset/ubuntu18.04/{as,ld,ld.gold,objdump} /usr/local/bin/
-$ make -j`nproc` sdk_install_pkg DEBUG=1
+$ cd external/toolset/ubuntu20.04/ && sudo cp as ld ld.gold objdump /usr/local/bin
+
+# Make the intel sdk package
+$ make sdk_install_pkg DEBUG=1
 ```
 
-Install SGX SDK
-```sh
-$ sudo ./linux/installer/bin//sgx_linux_x64_sdk_${version}.bin
-```
-where ${version} is a string something similar to 2.10.100.2.<br />
-Answer the question with `no` and input the install dir as `/opt/intel`
-
-
-Build and Install SGX PSW packages
-<br />
-See here: https://github.com/intel/linux-sgx#install-the-intelr-sgx-psw
-<br />
-```sh
-$ source /opt/intel/sgxsdk/environment
-$ make deb_psw_pkg DEBUG=1
-$ rm ./linux/installer/deb/*/*sgx-dcap-pccs*.deb
-$ sudo dpkg -i ./linux/installer/deb/*/*.deb
-```
-
-<br />
-Install SGX PSW packages from Intel Repository
-
-See here: https://github.com/intel/linux-sgx#install-the-intelr-sgx-psw-1<br />
-Using the local repo is recommended, since the system will resolve the dependencies automatically.<br />
-Check at page no.7, https://download.01.org/intel-sgx/sgx-linux/2.9/docs/Intel_SGX_Installation_Guide_Linux_2.9_Open_Source.pdf<br />
+Make a script to install the intel sgx in OPT_INTEL
 
 ```sh
-$ sudo apt install libsgx-enclave-common libsgx-epid libsgx-launch libsgx-urts libsgx-uae-service libsgx-quote-ex
+$ echo '#!/usr/bin/expect -f \n\
+set install_bin [lindex $argv 0]; \n\
+set output_dir [lindex $argv 1]; \n\
+spawn $install_bin \n\
+expect "Do you want to install in current directory?" \n\
+send "no\r" \n\
+expect "Please input the directory which you want to install in" \n\
+send "$output_dir\r" \n\
+expect eof' > exp.sh
 ```
 
-If you see below error, 
-```console
-Errors were encountered while processing:
- /tmp/apt-dpkg-install-pCB0cR/04-libsgx-headers_2.12.100.3-bionic1_amd64.deb
-```
+Set the executable permissions for the script and execute the script
 
-Here is the fix
 ```sh
-$ sudo apt -o Dpkg::Options::="--force-overwrite" --fix-broken install
+$ chmod u+x exp.sh
+$ sudo mkdir -p ${OPT_INTEL}
+$ sudo ./exp.sh <linux-sgx dir>/linux/installer/bin/sgx_linux_x64_sdk_2.10.100.2.bin ${OPT_INTEL}
 ```
+
+**Build the Intel(R) SGX PSW and its installer**
+
+```sh
+# deb_psw_pkg includes `make psw`
+# see Note) in https://github.com/intel/linux-sgx/tree/sgx_2.8#build-the-intelr-sgx-psw-and-intelr-sgx-psw-installer
+$ export DEB_BUILD_OPTIONS="nostrip"
+$ SGX_PSW_INSTALLER_DIR=${CLONE_DIR}/linux/installer
+$ make deb_psw_pkg DEBUG=${DEBUG}
+
+
+# install *.deb in PSW except sgx-dcap-pccs because this package requires npm and nodejs,
+# which cannot be installed via apt-get
+$ rm ${SGX_PSW_INSTALLER_DIR}/deb/*/sgx-dcap-pccs*.deb
+$ sudo dpkg -i ${SGX_PSW_INSTALLER_DIR}/deb/*/*.deb
+```
+
+If you are going to run in a SIM mode (not running in actaul Intel SGX hardware),
+then you can skip the following steps and go to building ta-ref for Intel sgx section.
 
 ### Build and Install SGX Driver
+
 <br />
 See [linux-sgx-driver](https://github.com/intel/linux-sgx-driver).
 

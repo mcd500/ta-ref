@@ -271,6 +271,12 @@ verify ok
 main end
 ```
 
+Poweroff the console incase, if you want to exit.
+```
+$ poweroff
+```
+You can also press Ctrl a+x to exit the qemu console. 
+
 ### Building ta-ref for OP-TEE with docker
 
 Following commands are to be executed on Ubuntu 20.04.
