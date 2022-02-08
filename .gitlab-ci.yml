@@ -514,6 +514,8 @@ doxygen:
         paths:
             - docs/ta-ref.pdf
             - docs/ta-ref-spec.pdf
+            - docs/html_readme.tar.gz
+            - docs/html_spec.tar.gz
         expire_in: 1 week
 
 ### DOXYGEN - START ###
