@@ -513,7 +513,7 @@ doxygen:
     artifacts:
         paths:
             - docs/ta-ref.pdf
-            - docs/ta-ref-src.pdf
+            - docs/ta-ref-spec.pdf
         expire_in: 1 week
 
 ### DOXYGEN - START ###
