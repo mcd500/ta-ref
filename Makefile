@@ -84,6 +84,12 @@ docs_clean:
 	rm -f -r docs/doxygen/html_spec
 	rm -f -r docs/doxygen/latex_readme
 	rm -f -r docs/doxygen/latex_spec
+	rm -f -r docs/ta-ref_readme_html
+	rm -f -r docs/ta-ref_spec_html
+	rm -f -r docs/html_readme.tar.gz
+	rm -f -r docs/html_spec.tar.gz
+	rm -f -r docs/ta-ref.pdf
+	rm -f -r docs/ta-ref-spec.pdf
 
 # delete including dependencies
 mrproper: select build_clean all_test_clean
