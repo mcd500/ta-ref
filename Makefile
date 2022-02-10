@@ -30,8 +30,10 @@ test-bin:
 run:
 	make -C $(TEST_DIR) run TEE=$(TEE)
 
-docs:
+docs: docs_clean
 	@echo "Running the script to update MD files"
+	# Copy the source file into another file to make changes in it.
+	cp docs/aist_supported_apis.md docs/aist_supported_apis_tmp.md
 	bash ./scripts/update_md_file.sh
 	@echo "Generating doxygen readme file - ta-ref.pdf"
 	@doxygen docs/doxygen/Doxyfile_readme
@@ -47,6 +49,8 @@ docs:
 	rm -fr docs/html_spec
 	mv docs/doxygen/html_spec docs/ta-ref_spec_html
 	cd docs; tar czf html_spec.tar.gz open-spec.html ta-ref_spec_html
+	# Delete the temp file used as input
+	rm docs/aist_supported_apis_tmp.md
 
 qemu:
 	make -C $(TEST_DIR) qemu TEE=$(TEE)

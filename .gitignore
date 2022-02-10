@@ -1,8 +1,9 @@
 *.tmp
 */*/screenlog*
 keystone-driver.ko
-docs/doxygen/html
-docs/doxygen/latex
-docs/doxygen/ta-ref-html*
-doxygen/html
-doxygen/latex
+docs/doxygen/latex_readme/
+docs/doxygen/latex_spec/
+docs/html_readme.tar.gz
+docs/html_spec.tar.gz
+docs/ta-ref_readme_html/
+docs/ta-ref_spec_html/
