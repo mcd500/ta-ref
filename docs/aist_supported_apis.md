@@ -1,4 +1,4 @@
-# AIST supported GP API's in TA's
+# Tutorials of using GP API's in TEE
 
 Following are the set of AIST supported GP API's that can be used when
 writing your own TA is shown below.
