@@ -38,15 +38,15 @@ docs:
 	make -C docs/doxygen/latex_readme
 	mv docs/doxygen/latex_readme/refman.pdf docs/ta-ref.pdf
 	rm -fr docs/html_readme
-	mv docs/doxygen/html_readme docs/html_readme
-	cd docs; tar czf html_readme.tar.gz open-readme.html html_readme
+	mv docs/doxygen/html_readme docs/ta-ref_readme_html
+	cd docs; tar czf html_readme.tar.gz open-readme.html ta-ref_readme_html
 	@echo "Generating doxygen SRC file - ta-ref-spec.pdf"
 	@doxygen docs/doxygen/Doxyfile_spec
 	make -C docs/doxygen/latex_spec
 	mv docs/doxygen/latex_spec/refman.pdf docs/ta-ref-spec.pdf
 	rm -fr docs/html_spec
-	mv docs/doxygen/html_spec docs/html_spec
-	cd docs; tar czf html_spec.tar.gz open-spec.html html_spec
+	mv docs/doxygen/html_spec docs/ta-ref_spec_html
+	cd docs; tar czf html_spec.tar.gz open-spec.html ta-ref_spec_html
 
 qemu:
 	make -C $(TEST_DIR) qemu TEE=$(TEE)
