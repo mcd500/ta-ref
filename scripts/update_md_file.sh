@@ -1,10 +1,7 @@
 # Output MD file name to which the source code and comments are pasted
 DOCS_SOURCE_PATH="docs"
-MD_FILE_IN="aist_supported_apis_tmp.md"
-OUTPUT_MD_FILE="${DOCS_SOURCE_PATH}/${MD_FILE_IN}"
-
-# Copy the output src file into a temp file.
-cp ${OUTPUT_MD_FILE_SRC} ${OUTPUT_MD_FILE} 
+MD_FILE="aist_supported_apis.md"
+OUTPUT_MD_FILE="${DOCS_SOURCE_PATH}/${MD_FILE}"
 
 # Variables declartions for Input source code 
 SAMPLE_SOURCE_PATH="samples"

@@ -1,0 +1,136 @@
+# Tutorials of using GP API's in TEE
+
+Following are the set of AIST supported GP API's that can be used when
+writing your own TA is shown below.
+
+
+## Time Functions
+
+
+/*START_REE_TIME_COMMENT_MD_UPD*/
+
+```C
+/*START_REE_TIME_SOURCE_MD_UPD*/
+```
+
+
+/*START_TEE_TIME_COMMENT_MD_UPD*/
+
+```C
+/*START_TEE_TIME_SOURCE_MD_UPD*/
+```
+
+## Random Functions
+
+
+/*START_TEE_RANDOM_COMMENT_MD_UPD*/
+
+```C
+/*START_TEE_RANDOM_SOURCE_MD_UPD*/
+```
+
+## Hash Functions
+
+**Generate message digest**
+
+/*START_MESSAGE_DIGEST_DIGEST_GEN_COMMENT_MD_UPD*/
+
+```C
+/*START_MESSAGE_DIGEST_DIGEST_GEN_SOURCE_MD_UPD*/
+```
+
+**Verify the generated message disgest**
+
+/*START_MESSAGE_DIGEST_DIGEST_CHECK_COMMENT_MD_UPD*/
+
+```C
+/*START_MESSAGE_DIGEST_DIGEST_CHECK_SOURCE_MD_UPD*/
+```
+
+## Symmetric Crypto AES-GCM Functions
+
+**Symmetric Key Encryption**
+
+/*START_SYMMETRIC_SYMMETRIC_KEY_ENCRYPTION_COMMENT_MD_UPD*/
+
+```C
+/*START_SYMMETRIC_SYMMETRIC_KEY_ENCRYPTION_SOURCE_MD_UPD*/
+```
+
+**Symmetric Key Decryption**
+
+/*START_SYMMETRIC_SYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/
+
+```C
+/*START_SYMMETRIC_SYMMETRIC_KEY_DECRYPTION_SOURCE_MD_UPD*/
+```
+
+## Asymmetric Crypto Functions
+
+**Asymmetric Key Encryption**
+
+/*START_ASYMMETRIC_KEY_ENCRYPTION_COMMENT_MD_UPD*/
+
+```C
+/*START_ASYMMETRIC_KEY_ENCRYPTION_SOURCE_MD_UPD*/
+```
+
+**Asymmetric Key Decryption**
+
+/*START_ASYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/
+
+```C
+/*START_ASYMMETRIC_KEY_DECRYPTION_SOURCE_MD_UPD*/
+```
+
+## Open, Read, Write, Close On Secure Storage
+
+**Secure Storage Write**
+
+/*START_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
+
+```C
+/*START_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
+```
+
+**Secure Storage Read**
+
+/*START_SECURE_STORAGE_READ_COMMENT_MD_UPD*/
+
+```C
+/*START_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
+```
+
+## API Error Codes and its values
+
+| API ERROR CODE | VALUE |
+| ------ | ------ |
+| TEE_SUCCESS                          | 0x00000000 |
+| TEE_ERROR_CORRUPT_OBJECT             | 0xF0100001 |
+| TEE_ERROR_CORRUPT_OBJECT_2           | 0xF0100002 |
+| TEE_ERROR_STORAGE_NOT_AVAILABLE      | 0xF0100003 |
+| TEE_ERROR_STORAGE_NOT_AVAILABLE_2    | 0xF0100004 |
+| TEE_ERROR_GENERIC                    | 0xFFFF0000 |
+| TEE_ERROR_ACCESS_DENIED              | 0xFFFF0001 |
+| TEE_ERROR_CANCEL                     | 0xFFFF0002 |
+| TEE_ERROR_ACCESS_CONFLICT            | 0xFFFF0003 |
+| TEE_ERROR_EXCESS_DATA                | 0xFFFF0004 |
+| TEE_ERROR_BAD_FORMAT                 | 0xFFFF0005 |
+| TEE_ERROR_BAD_PARAMETERS             | 0xFFFF0006 |
+| TEE_ERROR_BAD_STATE                  | 0xFFFF0007 |
+| TEE_ERROR_ITEM_NOT_FOUND             | 0xFFFF0008 |
+| TEE_ERROR_NOT_IMPLEMENTED            | 0xFFFF0009 |
+| TEE_ERROR_NOT_SUPPORTED              | 0xFFFF000A |
+| TEE_ERROR_NO_DATA                    | 0xFFFF000B |
+| TEE_ERROR_OUT_OF_MEMORY              | 0xFFFF000C |
+| TEE_ERROR_BUSY                       | 0xFFFF000D |
+| TEE_ERROR_COMMUNICATION              | 0xFFFF000E |
+| TEE_ERROR_SECURITY                   | 0xFFFF000F |
+| TEE_ERROR_SHORT_BUFFER               | 0xFFFF0010 |
+| TEE_ERROR_EXTERNAL_CANCEL            | 0xFFFF0011 |
+| TEE_ERROR_OVERFLOW                   | 0xFFFF300F |
+| TEE_ERROR_TARGET_DEAD                | 0xFFFF3024 |
+| TEE_ERROR_STORAGE_NO_SPACE           | 0xFFFF3041 |
+| TEE_ERROR_MAC_INVALID                | 0xFFFF3071 |
+| TEE_ERROR_SIGNATURE_INVALID          | 0xFFFF3072 |
+| TEE_ERROR_TIME_NOT_SET               | 0xFFFF5000 |
