@@ -152,8 +152,8 @@ $ ./scripts/run-qemu.sh
 $ insmod keystone-driver.ko
 	
 # Test test_hello
-# cd test_hello/
-# ./App.client Enclave.eapp_riscv eyrie-rt 
+$ cd test_hello/
+$ ./App.client Enclave.eapp_riscv eyrie-rt 
 	
 [debug] UTM : 0xffffffff80000000-0xffffffff80100000 (1024 KB) (boot.c:127)
 [debug] DRAM: 0xb7c00000-0xb8000000 (4096 KB) (boot.c:128)
@@ -163,8 +163,8 @@ hello world!
 	
 
 # Test Test_gp 
-# cd test_gp   (From base dir)
-# ./App.client Enclave.eapp_riscv eyrie-rt 
+$ cd ../test_gp/  
+$ ./App.client Enclave.eapp_riscv eyrie-rt 
 	
 [debug] UTM : 0xffffffff80000000-0xffffffff80100000 (1024 KB) (boot.c:127)
 [debug] DRAM: 0xb8000000-0xb8400000 (4096 KB) (boot.c:128)
