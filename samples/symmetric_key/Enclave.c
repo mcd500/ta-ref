@@ -195,6 +195,7 @@ void symmetric_key_enc(void)
 
 /*START_SYMMETRIC_SYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/
 /**
+ * TODO: Fails to match decrypted data.
  * Example program to show how to use AES 256 GCM functions with ta-ref API.
  *
  * Retrive the key from secure store and decrypt the data.

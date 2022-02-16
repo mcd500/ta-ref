@@ -185,6 +185,7 @@ void asymmetric_key_enc(void)
 
 /*START_ASYMMETRIC_KEY_DECRYPTION_COMMENT_MD_UPD*/
 /**
+ * TODO: Fails to match decrypted data.
  * Example program to show how to use asymmetric key Decryption functions with ECDSA_P256
  * on ta-ref API.
  *
