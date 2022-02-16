@@ -209,6 +209,7 @@ int asymmetric_key_dec(void)
     uint8_t *pdata = data;
     unsigned char hash[DATA_SIZE];
     uint32_t hashlen = DATA_SIZE;
+    size_t  keypairlen = 256 / 8;
     int ret;
 
     TEE_OperationHandle handle;
@@ -217,10 +218,10 @@ int asymmetric_key_dec(void)
     TEE_ObjectHandle keypair;
 
     /** Read pub key from secure storage */
-    // secure_storage_read(keypair, 256 / 8, "keypair");
+    // secure_storage_read(keypair, &keypairlen, "keypair");
 
     /** Read signature from secure storage */
-    //secure_storage_read(sig, siglen, "sig_data");
+    //secure_storage_read(sig, &siglen, "sig_data");
 
     /** Calculate hash of the test data first */
     TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
