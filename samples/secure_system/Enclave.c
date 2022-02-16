@@ -148,6 +148,9 @@ void tee_random_get(void)
  * residing in REE which does not provide the secure level as mentioned here.
  * The data are saved with different encryption keys from other TAs, and
  * not able to read the same data by other TAs.
+ *
+ * TODO: Relax the limitation of the size constraint.
+ *       The size is limited to multiple of 16 bytes at the moment.
  */
 /*END_SECURE_STORAGE_WRITE_COMMENT_MD_UPD*/
 /*START_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
