@@ -1,5 +1,11 @@
 # Overview of Trusted Application Reference (TA-Ref)
 
+The TEE is a feature of having capability of running software from an isolated area assisted by CPU hardware.
+
+Many recent devices are able to be customized by installing software from end users, dealers and security service companies which are different entities from the device vendors, for example, smart phones, Android TVs, set top boxes. infotainment system on cars, surveillance cameras, home security gateways, and etc. In this situation, malicious software could be installed on a regular operating system, such as Linux.
+
+The TEE provides a secure software runtime environment for the security sensitive software from preventing interference of softwares running on a normal operating system.
+
 ## Features of TA-Ref
   - Provides Portable API and SDK among Intel SGX, ARM TrustZone-A and RISC-V Keystone 
   - Provides portability for source codes of Trusted Applications among SGX, TrustZone and Keystone
