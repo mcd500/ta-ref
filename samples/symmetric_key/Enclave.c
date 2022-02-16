@@ -242,28 +242,28 @@ int symmetric_key_dec(void)
     /** Specify for decrypting with AES 256 GCM */
     TEE_AllocateOperation(&handle, TEE_ALG_AES_GCM, TEE_MODE_DECRYPT, 256);
 
-    /** */
+    /** Set the key read from secure storage */
     TEE_SetOperationKey(handle, key);
 
     /* Equivalant of EVP_DecryptInit_ex() in openssl  */
     TEE_AEInit(handle, iv, sizeof(iv), TAG_LEN_BITS, 0, 0);
 
-    /** Equivalant of EVP_EncryptUpdate() in openssl.
+    /** Equivalant of EVP_DecryptUpdate() in openssl.
      *
      * It passes only a chunk of data each time.
      * Typically it is used with moving to the next pointer in a for loop to
-     * handle large data until the last chunk. Encrypting in
+     * handle large data until the last chunk. Decrypting in
      * iteration makes it possible to handle large data, such as 4GB which is
      * not able to have entire data inside TEE memory size and/or only
      * partial data arrives through the Internet in streaming fashion. */
     TEE_AEUpdateAAD(handle, pdata, CHUNK_SIZE);
 
-    /** Used combined with the TEE_DigestUpdate.
+    /** Used combined with the TEE_AEUpdateAAD().
      * When the data is larger, move to next pointer of chunk in the data 
      * for every iteration */
     pdata += CHUNK_SIZE;
 
-    /* Equivalent in openssl is EVP_EncryptFinal() */ 
+    /* Equivalent in openssl is EVP_DecryptFinal() */ 
     TEE_AEDecryptFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, out, &outlen, tag, &taglen);
 
     /** Closing TEE handle */

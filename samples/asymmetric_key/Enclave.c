@@ -245,8 +245,8 @@ int asymmetric_key_dec(void)
      * Equivalent in openssl is EVP_DigestVerify() */
     verify_ok = TEE_AsymmetricVerifyDigest(handle, NULL, 0, hash, hashlen, sig, siglen);
 
-    TEE_FreeOperation(handle);
 //    TEE_FreeTransientObject(keypair);
+    TEE_FreeOperation(handle);
 
     if (verify_ok == TEE_SUCCESS) {
       tee_printf("verify ok\n");
