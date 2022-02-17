@@ -50,7 +50,7 @@
 int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
 {
     TEE_ObjectHandle object;
-	
+
     /** in real product, should validate, data, size, fname here */
 
     TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
@@ -62,7 +62,7 @@ int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
                                     &object);
     TEE_WriteObjectData(object, (const char *)data, size);
     TEE_CloseObject(object);
-	
+
     /** In real product, check the return value of each above
      * and return error value */
     return 0;
@@ -82,19 +82,19 @@ int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
 {
     TEE_ObjectHandle object;
     uint32_t bytes_from_storage;
-	
+
     /** In real product, should validate, data, size, fname here */
-	
+
     TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
                                   fname, strlen(fname),
                                   TEE_DATA_FLAG_ACCESS_READ,
                                   &object);
     TEE_ReadObjectData(object, (char *)data, *size, &bytes_from_storage);
     TEE_CloseObject(object);
-	
+
     /** Give back the bytes which were able to read */
     *size = bytes_from_storage;
-	
+
     /** In real product, check the return value of each above
      * and return error value */
     return 0;
@@ -121,7 +121,7 @@ void symmetric_key_enc(void)
         0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
         0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f
     };
-	
+
     uint8_t out[ENCDATA_MAX];
     size_t  outlen = ENCDATA_MAX;
     uint8_t iv[TAG_LEN];
@@ -129,29 +129,29 @@ void symmetric_key_enc(void)
     size_t  taglen = TAG_LEN_BITS;
     uint8_t *pdata = data;
     size_t  keylen = 256;
-	
+
     TEE_OperationHandle handle;
     TEE_Result rv;
-	
+
     /* Generating Key with AES 256 GSM */
     TEE_AllocateTransientObject(TEE_TYPE_AES, 256, &key);
     TEE_GenerateKey(key, 256, NULL, 0);
     TEE_AllocateOperation(&handle, TEE_ALG_AES_GCM, TEE_MODE_ENCRYPT, 256);
     TEE_SetOperationKey(handle, key);
-	
+
     // tee_printf("key: ");
     // for (int i = 0; i < 256 / 8; i++) {
     //   tee_printf ("%02x", key[i]);
     // }
     // tee_printf("\n");
-	
+
     /* Prepare IV */
     TEE_GenerateRandom(iv, sizeof(iv));
-	
+
     /* Start encrypting test data.
      * Equivalant of EVP_EncryptInit_ex() in openssl  */
     TEE_AEInit(handle, iv, sizeof(iv), TAG_LEN_BITS, 0, 0);
-	
+
     /* Equivalant of EVP_EncryptUpdate() in openssl.
      *
      * It passes only a chunk of data each time.
@@ -161,18 +161,18 @@ void symmetric_key_enc(void)
      * not able to have entire data inside TEE memory size and/or only
      * partial data arrives through the Internet in streaming fashion. */
     TEE_AEUpdateAAD(handle, pdata, CHUNK_SIZE);
-	
+
     /* Used combined with the TEE_DigestUpdate.
      * When the data is larger, move to next pointer of chunk in the data 
      * for every iteration */
     pdata += CHUNK_SIZE;
-	
+
     /* Equivalent in openssl is EVP_EncryptFinal() */ 
     TEE_AEEncryptFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, out, &outlen, tag, &taglen);
-	
+
     /* Closing TEE handle */
     TEE_FreeOperation(handle);
-	
+
     /* Dump encrypted data and tag */
     tee_printf("Encrypted Data: size:%d ", outlen);
     for (int i = 0; i < outlen; i++) {
@@ -184,10 +184,10 @@ void symmetric_key_enc(void)
       tee_printf ("%02x", tag[i]);
     }
     tee_printf("\n");
-	
+
     /* Save the symmetric key to secure storge */
     // secure_storage_write(key, keylen, "sym_key");
-	
+
     /* Save the encrypted data to secure storge */
     secure_storage_write(out, outlen, "enc_data");
 }
@@ -213,7 +213,7 @@ int symmetric_key_dec(void)
         0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
         0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f
     };
-	
+
     size_t  keylen = 256;
     uint8_t out[ENCDATA_MAX];
     size_t  outlen = ENCDATA_MAX;
@@ -222,33 +222,33 @@ int symmetric_key_dec(void)
     size_t  taglen = TAG_LEN_BITS;
     uint8_t *pdata = data;
     int ret;
-	
+
     TEE_OperationHandle handle;
     TEE_Result rv;
-	
+
     /* Read AES 256 KEY from secure storage */
     // secure_storage_read(key, &keylen, "sym_key");
-	
+
     /* Read encypted data from secure storage */
     secure_storage_read(out, &outlen, "enc_data");
-	
+
     tee_printf("Reading Stored Data: size:%d ", outlen);
     for (int i = 0; i < outlen; i++) {
       tee_printf ("%02x", out[i]);
     }
     tee_printf("\n");
-	
+
     /* Start decrypting test data. */
-	
+
     /* Specify for decrypting with AES 256 GCM */
     TEE_AllocateOperation(&handle, TEE_ALG_AES_GCM, TEE_MODE_DECRYPT, 256);
-	
+
     /* Set the key read from secure storage */
     TEE_SetOperationKey(handle, key);
-	
+
     /* Equivalant of EVP_DecryptInit_ex() in openssl  */
     TEE_AEInit(handle, iv, sizeof(iv), TAG_LEN_BITS, 0, 0);
-	
+
     /* Equivalant of EVP_DecryptUpdate() in openssl.
      *
      * It passes only a chunk of data each time.
@@ -258,33 +258,33 @@ int symmetric_key_dec(void)
      * not able to have entire data inside TEE memory size and/or only
      * partial data arrives through the Internet in streaming fashion. */
     TEE_AEUpdateAAD(handle, pdata, CHUNK_SIZE);
-	
+
     /* Used combined with the TEE_AEUpdateAAD().
      * When the data is larger, move to next pointer of chunk in the data 
      * for every iteration */
     pdata += CHUNK_SIZE;
-	
+
     /* Equivalent in openssl is EVP_DecryptFinal() */ 
     TEE_AEDecryptFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, out, &outlen, tag, &taglen);
-	
+
     /* Closing TEE handle */
     TEE_FreeOperation(handle);
-	
+
     TEE_FreeTransientObject(key);
-	
+
     /* Dump encrypted data and tag */
     tee_printf("Decrypted Data: ");
     for (int i = 0; i < outlen; i++) {
       tee_printf ("%02x", out[i]);
     }
     tee_printf("\n");
-	
+
     tee_printf("Actual Data: ");
     for (int i = 0; i < outlen; i++) {
       tee_printf ("%02x", data[i]);
     }
     tee_printf("\n");
-	
+
     /* Check if the decrypted data is the same with the expected data  
      * to check the data integrity */
     ret = memcmp(data, out, outlen);
@@ -293,7 +293,7 @@ int symmetric_key_dec(void)
     } else {
         tee_printf("decrypt: Data does not match!\n");
     }
-	
+
     /* returns 0 on success */
     return ret;
 }
@@ -311,7 +311,7 @@ int symmetric_key_dec(void)
 TEE_Result TA_CreateEntryPoint(void)
 {
     DMSG("has been called");
-	
+
     return TEE_SUCCESS;
 }
 
@@ -393,20 +393,20 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t param_types, TEE_Param params[4])
 {
     int ret = TEE_SUCCESS;
-	
+
     switch (cmd_id) {
         // For Symmetric Encryption
         case TA_REF_SYM_ENC:
             symmetric_key_enc();
             return TEE_SUCCESS;
-	
+
         // For Symmetric Decryption
         case TA_REF_SYM_DEC:
             ret = symmetric_key_dec();
             if (ret != TEE_SUCCESS)
                 ret = TEE_ERROR_SIGNATURE_INVALID;
             return ret;
-	
+
     default:
         return TEE_ERROR_BAD_PARAMETERS;
     }
