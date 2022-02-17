@@ -157,16 +157,16 @@ void tee_random_get(void)
 void secure_storage_write(void)
 {
 
-    /** Data to write to secure storage */
+    /* Data to write to secure storage */
     uint8_t data[DATA_SIZE] = {
         0xff, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
         0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
     };
 
-    /** For opening secure storage */
+    /* For opening secure storage */
     TEE_ObjectHandle object;
 
-    /** Create a file in secure storage */
+    /* Create a file in secure storage */
     TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
                                     "filename", strlen("filename"),
                                     (TEE_DATA_FLAG_ACCESS_WRITE
@@ -175,10 +175,10 @@ void secure_storage_write(void)
                                     NULL, 0,
                                     &object);
 
-    /** Write the data  */
+    /* Write the data  */
     TEE_WriteObjectData(object, (const char *)data, DATA_SIZE);
 
-    /** Close secure storage */
+    /* Close secure storage */
     TEE_CloseObject(object);
  
 }
@@ -198,29 +198,29 @@ void secure_storage_write(void)
 int secure_storage_read(void)
 {
 
-    /** Data to compare with written data in secure storage */
+    /* Data to compare with written data in secure storage */
     uint8_t cmp_data[DATA_SIZE] = {
         0xff, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
         0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
     };
 
-    /** Stores read data */
+    /* Stores read data */
     uint8_t buf[DATA_SIZE * 2];
 
-    /** For opening secure storage */
+    /* For opening secure storage */
     TEE_ObjectHandle object;
 
-    /** Open a file in secure storage */
+    /* Open a file in secure storage */
     TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
                                   "filename", strlen("filename"),
                                   TEE_DATA_FLAG_ACCESS_READ,
                                   &object);
 
     uint32_t count;
-    /** Read */
+    /* Read */
     TEE_ReadObjectData(object, (char *)buf, DATA_SIZE, &count);
 
-    /** Close secure storage */
+    /* Close secure storage */
     TEE_CloseObject(object);
 
     tee_printf("%d bytes read: ", count);
@@ -229,7 +229,7 @@ int secure_storage_read(void)
     }
     tee_printf("\n");
 
-    /** Compare read data with written data */
+    /* Compare read data with written data */
     int verify_ok;
     verify_ok = !memcmp(buf, cmp_data, count);
     if (verify_ok) {

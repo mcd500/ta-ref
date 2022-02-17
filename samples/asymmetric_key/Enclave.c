@@ -116,7 +116,7 @@ void asymmetric_key_enc(void)
 {
     tee_printf("Start of Aysmmetric Encryption\n");
 
-    /** Data to encrypt as a example */
+    /* Data to encrypt as a example */
     uint8_t data[DATA_SIZE] = {
         0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
         0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
@@ -135,21 +135,21 @@ void asymmetric_key_enc(void)
     TEE_Attribute attr;
     TEE_Result rv;
 
-    /** Calculate hash of the test data first */
+    /* Calculate hash of the test data first */
     TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
     TEE_DigestUpdate(handle, pdata, CHUNK_SIZE);
     pdata += CHUNK_SIZE;
     TEE_DigestDoFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, hash, &hashlen);
     TEE_FreeOperation(handle);
 
-    /** Dump hash data */
+    /* Dump hash data */
     tee_printf("hash: size %d", hashlen);
     for (int i = 0; i < hashlen; i++) {
       tee_printf ("%02x", hash[i]);
     }
     tee_printf("\n");
 
-    /** Generating Keypair with ECDSA_P256 */
+    /* Generating Keypair with ECDSA_P256 */
     TEE_AllocateTransientObject(TEE_TYPE_ECDSA_KEYPAIR, 256, &keypair);
     TEE_InitValueAttribute(&attr, TEE_ATTR_ECC_CURVE, TEE_ECC_CURVE_NIST_P256,
                            256);
@@ -158,25 +158,25 @@ void asymmetric_key_enc(void)
     TEE_SetOperationKey(handle, keypair);
 
 
-    /** Signing test data.
+    /* Signing test data.
      * Keystone has ed25519_sign()
      * Equivalent in openssl is EVP_DigestSign() */
     TEE_AsymmetricSignDigest(handle, NULL, 0, hash, hashlen, sig, &siglen);
 
-    /** Closing TEE handle */
+    /* Closing TEE handle */
     TEE_FreeOperation(handle);
 
-    /** Dump encrypted data and tag */
+    /* Dump encrypted data and tag */
     tee_printf("Signature: size:%d ", siglen);
     for (int i = 0; i < siglen; i++) {
       tee_printf ("%02x", sig[i]);
     }
 
-    /** Save the asymmetric keypair to secure storge
+    /* Save the asymmetric keypair to secure storge
      * TODO: would be better saving only pub key here */
     secure_storage_write(keypair, 256 / 8, "keypair");
 
-    /** Save the signature to secure storge */
+    /* Save the signature to secure storge */
     secure_storage_write(sig, siglen, "sig_data");
 
     tee_printf("End of Aysmmetric Encryption\n");
@@ -197,7 +197,7 @@ int asymmetric_key_dec(void)
 {
     tee_printf("Start of Aysmmetric Decryption\n");
     
-    /** Data to compare with encrypted data  */
+    /* Data to compare with encrypted data  */
     uint8_t data[DATA_SIZE] = {
         0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
         0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
@@ -218,31 +218,31 @@ int asymmetric_key_dec(void)
     TEE_Result verify_ok;
     TEE_ObjectHandle keypair;
 
-    /** Read pub key from secure storage */
+    /* Read pub key from secure storage */
     // secure_storage_read(keypair, &keypairlen, "keypair");
 
-    /** Read signature from secure storage */
+    /* Read signature from secure storage */
     //secure_storage_read(sig, &siglen, "sig_data");
 
-    /** Calculate hash of the test data first */
+    /* Calculate hash of the test data first */
     TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
     TEE_DigestUpdate(handle, pdata, CHUNK_SIZE);
     pdata += CHUNK_SIZE;
     TEE_DigestDoFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, hash, &hashlen);
     TEE_FreeOperation(handle);
 
-    /** Dump hash data */
+    /* Dump hash data */
     tee_printf("hash: size %d", hashlen);
     for (int i = 0; i < hashlen; i++) {
       tee_printf ("%02x", hash[i]);
     }
     tee_printf("\n");
 
-    /** Set pub key */
+    /* Set pub key */
     TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_VERIFY, 256);
     TEE_SetOperationKey(handle, keypair);
 
-    /** Check data with the signature    
+    /* Check data with the signature    
      * Keystone has ed25519_verify()
      * Equivalent in openssl is EVP_DigestVerify() */
     verify_ok = TEE_AsymmetricVerifyDigest(handle, NULL, 0, hash, hashlen, sig, siglen);
@@ -260,7 +260,7 @@ int asymmetric_key_dec(void)
 
     tee_printf("End of Aysmmetric Decryption\n");
 
-    /** returns 0 on success */
+    /* returns 0 on success */
     return ret;
 }
 /*END_ASYMMETRIC_KEY_DECRYPTION_SOURCE_MD_UPD*/

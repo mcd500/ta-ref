@@ -111,7 +111,7 @@ int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
 /*START_MESSAGE_DIGEST_DIGEST_GEN_SOURCE_MD_UPD*/
 void message_digest_gen(void)
 {
-    /** Data to take hash value as a example */
+    /* Data to take hash value as a example */
     uint8_t data[DATA_SIZE] = {
         0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
         0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
@@ -124,10 +124,10 @@ void message_digest_gen(void)
     TEE_OperationHandle handle;
     TEE_Result rv;
 
-    /** Equivalant of sha3_init() in sha3.c or SHA256_Init() in openssl  */
+    /* Equivalant of sha3_init() in sha3.c or SHA256_Init() in openssl  */
     TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
 
-    /** Equivalant of sha3_update() in sha3.c or SHA256_Update() in openssl.
+    /* Equivalant of sha3_update() in sha3.c or SHA256_Update() in openssl.
      *
      * It passes only a chunk of data each time.
      * Typically it is used with moving to the next pointer in a for loop to
@@ -137,26 +137,26 @@ void message_digest_gen(void)
      * partial data arrives through the Internet in streaming fashion. */
     TEE_DigestUpdate(handle, pdata, CHUNK_SIZE);
 
-    /** Used combined with the TEE_DigestUpdate.
+    /* Used combined with the TEE_DigestUpdate.
      * When the data is larger, move to next pointer of chunk in the data 
      * for every iteration */
     pdata += CHUNK_SIZE;
 
-    /** Equivalant of sha3_final() in sha3.c or SHA256_Final() in openssl.
+    /* Equivalant of sha3_final() in sha3.c or SHA256_Final() in openssl.
      * This is the last chunk */
     TEE_DigestDoFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, hash, &hashlen);
 
-    /** Closing TEE handle */
+    /* Closing TEE handle */
     TEE_FreeOperation(handle);
 
-    /** The hash value is ready, dump hashed data */
+    /* The hash value is ready, dump hashed data */
     tee_printf("hash: ");
     for (int i = 0; i < hashlen; i++) {
         tee_printf ("%02x ", hash[i]);
     }
     tee_printf("\n");
 
-    /** Save the hash value to secure storge */
+    /* Save the hash value to secure storge */
     secure_storage_write(hash, hashlen, "hash_value");
 }
 /*END_MESSAGE_DIGEST_DIGEST_GEN_SOURCE_MD_UPD*/
@@ -177,7 +177,7 @@ void message_digest_gen(void)
 /*START_MESSAGE_DIGEST_DIGEST_CHECK_SOURCE_MD_UPD*/
 int message_digest_check(void)
 {
-    /** Data to compare the hash value with previous data */
+    /* Data to compare the hash value with previous data */
     uint8_t data[DATA_SIZE] = {
         0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
         0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
@@ -192,8 +192,7 @@ int message_digest_check(void)
     TEE_Result rv;
     int ret;
 
-    /** Repeating the same as in message_digest_gen() until have the 
-     * hash value */
+    /* Repeating the same as in message_digest_gen() until have the hash value */
     TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
     TEE_DigestUpdate(handle, data, CHUNK_SIZE);
     pdata += CHUNK_SIZE;
@@ -201,14 +200,14 @@ int message_digest_check(void)
 
     TEE_FreeOperation(handle);
 
-    /** The hash value is ready, dump hashed data */
+    /* The hash value is ready, dump hashed data */
     tee_printf("hash: ");
     for (int i = 0; i < hashlen; i++) {
         tee_printf ("%02x ", hash[i]);
     }
     tee_printf("\n");
 
-    /** Check if the data is the same with the data in message_digest_gen() 
+    /* Check if the data is the same with the data in message_digest_gen() 
      * to check the data integrity */
     secure_storage_read(saved_hash, &hashlen, "hash_value");
     ret = memcmp(saved_hash, hash, hashlen);
@@ -216,7 +215,7 @@ int message_digest_check(void)
         tee_printf("hash: matched!\n");
     }
 
-    /** returns 0 on success */
+    /* returns 0 on success */
     return ret;
 }
 /*END_MESSAGE_DIGEST_DIGEST_CHECK_SOURCE_MD_UPD*/
