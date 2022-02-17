@@ -110,7 +110,7 @@ do
             # If tag is not comment, considering it source
             else
                 # Insert the extracted text into the md file
-                sed -i "$((${output_line_start}-1))"r<(sed $input_line_start,$input_line_end'!d' ${INPUT_FILE}) ${OUTPUT_MD_FILE}
+                sed -i "$((${output_line_start}-1))"r<(sed $input_line_start,$input_line_end'!d;s/^$/   /' ${INPUT_FILE}) ${OUTPUT_MD_FILE}
 
             fi
         fi
