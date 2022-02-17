@@ -62,13 +62,13 @@ struct timeval ree_time_get(void)
 {
     TEE_Time time;
     struct timeval tv;
-
+	
     /* REE time */
     TEE_GetREETime(&time);
     tee_printf ("@GP REE time %u sec %u millis\n", time.seconds, time.millis);
-
+	
     tv.tv_sec = time.seconds, tv.tv_usec = time.millis * 1000;
-
+	
     return tv;
 }
 /*END_REE_TIME_SOURCE_MD_UPD*/
@@ -92,13 +92,13 @@ struct timeval tee_time_get(void)
 {
     TEE_Time time;
     struct timeval tv;
-
+	
     /* System time */
     TEE_GetSystemTime(&time);
     tee_printf ("@GP Secure time %u sec %u millis\n", time.seconds, time.millis);
-
+	
     tv.tv_sec = time.seconds, tv.tv_usec = time.millis * 1000;
-
+	
     return tv;
 }
 /*END_TEE_TIME_SOURCE_MD_UPD*/
@@ -120,9 +120,9 @@ struct timeval tee_time_get(void)
 void tee_random_get(void)
 {
     unsigned char rbuf[16];
-
+	
     TEE_GenerateRandom(rbuf, sizeof(rbuf));
-
+	
     tee_printf("random: ");
     for (int i = 0; i < sizeof(rbuf); i++) {
         tee_printf ("%02x", rbuf[i]);
@@ -162,10 +162,10 @@ void secure_storage_write(void)
         0xff, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
         0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
     };
-
+	
     /* For opening secure storage */
     TEE_ObjectHandle object;
-
+	
     /* Create a file in secure storage */
     TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
                                     "filename", strlen("filename"),
@@ -174,13 +174,13 @@ void secure_storage_write(void)
                                     TEE_HANDLE_NULL,
                                     NULL, 0,
                                     &object);
-
+	
     /* Write the data  */
     TEE_WriteObjectData(object, (const char *)data, DATA_SIZE);
-
+	
     /* Close secure storage */
     TEE_CloseObject(object);
- 
+ 	
 }
 /*END_SECURE_STORAGE_WRITE_SOURCE_MD_UPD*/
 
@@ -197,38 +197,38 @@ void secure_storage_write(void)
 /*START_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
 int secure_storage_read(void)
 {
-
+	
     /* Data to compare with written data in secure storage */
     uint8_t cmp_data[DATA_SIZE] = {
         0xff, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
         0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
     };
-
+	
     /* Stores read data */
     uint8_t buf[DATA_SIZE * 2];
-
+	
     /* For opening secure storage */
     TEE_ObjectHandle object;
-
+	
     /* Open a file in secure storage */
     TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
                                   "filename", strlen("filename"),
                                   TEE_DATA_FLAG_ACCESS_READ,
                                   &object);
-
+	
     uint32_t count;
     /* Read */
     TEE_ReadObjectData(object, (char *)buf, DATA_SIZE, &count);
-
+	
     /* Close secure storage */
     TEE_CloseObject(object);
-
+	
     tee_printf("%d bytes read: ", count);
     for (uint32_t i = 0; i < count; i++) {
       tee_printf ("%02x", buf[i]);
     }
     tee_printf("\n");
-
+	
     /* Compare read data with written data */
     int verify_ok;
     verify_ok = !memcmp(buf, cmp_data, count);
@@ -239,7 +239,7 @@ int secure_storage_read(void)
         tee_printf("verify fails\n");
 	return -1;
     }
-
+	
     return TEE_SUCCESS;
 }
 /*END_SECURE_STORAGE_READ_SOURCE_MD_UPD*/
@@ -257,7 +257,7 @@ int secure_storage_read(void)
 TEE_Result TA_CreateEntryPoint(void)
 {
     DMSG("has been called");
-
+	
     return TEE_SUCCESS;
 }
 
@@ -342,30 +342,30 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t param_types, TEE_Param params[4])
 {
     int ret = TEE_SUCCESS;
-
+	
     switch (cmd_id) {
     case TA_REF_REE_TIME:
         ree_time_get();
         return ret;
-
+	
     case TA_REF_TEE_TIME:
         tee_time_get();
         return ret;
-
+	
     case TA_REF_RAND:
 	   tee_random_get();
        return ret;
-
+	
     case TA_REF_SEC_WRTE:
         secure_storage_write();
         return ret;
-
+	
     case TA_REF_SEC_READ:
         ret = secure_storage_read();
         if (ret != TEE_SUCCESS)
             ret = TEE_ERROR_NO_DATA;
         return ret;
-
+	
     default:
         return TEE_ERROR_BAD_PARAMETERS;
     }

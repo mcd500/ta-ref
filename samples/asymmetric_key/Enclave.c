@@ -44,9 +44,9 @@
 int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
 {
     TEE_ObjectHandle object;
-
+	
     /** in real product, should validate, data, size, fname here */
-
+	
     TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
                                     fname, strlen(fname),
                                     (TEE_DATA_FLAG_ACCESS_WRITE
@@ -56,7 +56,7 @@ int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
                                     &object);
     TEE_WriteObjectData(object, (const char *)data, size);
     TEE_CloseObject(object);
-
+	
     /** In real product, check the return value of each above
      * and return error value */
     return 0;
@@ -76,19 +76,19 @@ int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
 {
     TEE_ObjectHandle object;
     uint32_t bytes_from_storage;
-
+	
     /** In real product, should validate, data, size, fname here */
-
+	
     TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
                                   fname, strlen(fname),
                                   TEE_DATA_FLAG_ACCESS_READ,
                                   &object);
     TEE_ReadObjectData(object, (char *)data, *size, &bytes_from_storage);
     TEE_CloseObject(object);
-
+	
     /** Give back the bytes which were able to read */
     *size = bytes_from_storage;
-
+	
     /** In real product, check the return value of each above
      * and return error value */
     return 0;
@@ -123,32 +123,32 @@ void asymmetric_key_enc(void)
         0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
         0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f
     };
-
+	
     uint8_t sig[SIG_LENGTH];
     size_t  siglen = SIG_LENGTH;
     uint8_t *pdata = data;
     unsigned char hash[DATA_SIZE];
     uint32_t hashlen = DATA_SIZE;
-
+	
     TEE_ObjectHandle keypair;
     TEE_OperationHandle handle;
     TEE_Attribute attr;
     TEE_Result rv;
-
+	
     /* Calculate hash of the test data first */
     TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
     TEE_DigestUpdate(handle, pdata, CHUNK_SIZE);
     pdata += CHUNK_SIZE;
     TEE_DigestDoFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, hash, &hashlen);
     TEE_FreeOperation(handle);
-
+	
     /* Dump hash data */
     tee_printf("hash: size %d", hashlen);
     for (int i = 0; i < hashlen; i++) {
       tee_printf ("%02x", hash[i]);
     }
     tee_printf("\n");
-
+	
     /* Generating Keypair with ECDSA_P256 */
     TEE_AllocateTransientObject(TEE_TYPE_ECDSA_KEYPAIR, 256, &keypair);
     TEE_InitValueAttribute(&attr, TEE_ATTR_ECC_CURVE, TEE_ECC_CURVE_NIST_P256,
@@ -156,29 +156,29 @@ void asymmetric_key_enc(void)
     TEE_GenerateKey(keypair, 256, &attr, 1);
     TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, 256);
     TEE_SetOperationKey(handle, keypair);
-
-
+	
+	
     /* Signing test data.
      * Keystone has ed25519_sign()
      * Equivalent in openssl is EVP_DigestSign() */
     TEE_AsymmetricSignDigest(handle, NULL, 0, hash, hashlen, sig, &siglen);
-
+	
     /* Closing TEE handle */
     TEE_FreeOperation(handle);
-
+	
     /* Dump encrypted data and tag */
     tee_printf("Signature: size:%d ", siglen);
     for (int i = 0; i < siglen; i++) {
       tee_printf ("%02x", sig[i]);
     }
-
+	
     /* Save the asymmetric keypair to secure storge
      * TODO: would be better saving only pub key here */
     secure_storage_write(keypair, 256 / 8, "keypair");
-
+	
     /* Save the signature to secure storge */
     secure_storage_write(sig, siglen, "sig_data");
-
+	
     tee_printf("End of Aysmmetric Encryption\n");
 }
 /*END_ASYMMETRIC_KEY_ENCRYPTION_SOURCE_MD_UPD*/
@@ -196,7 +196,7 @@ void asymmetric_key_enc(void)
 int asymmetric_key_dec(void)
 {
     tee_printf("Start of Aysmmetric Decryption\n");
-    
+	    
     /* Data to compare with encrypted data  */
     uint8_t data[DATA_SIZE] = {
         0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
@@ -204,7 +204,7 @@ int asymmetric_key_dec(void)
         0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
         0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f
     };
-
+	
     uint8_t sig[TAG_LEN];
     size_t  siglen = TAG_LEN_BITS;
     uint8_t *pdata = data;
@@ -212,44 +212,44 @@ int asymmetric_key_dec(void)
     uint32_t hashlen = DATA_SIZE;
     size_t  keypairlen = 256 / 8;
     int ret;
-
+	
     TEE_OperationHandle handle;
     TEE_ObjectHandle key;
     TEE_Result verify_ok;
     TEE_ObjectHandle keypair;
-
+	
     /* Read pub key from secure storage */
     // secure_storage_read(keypair, &keypairlen, "keypair");
-
+	
     /* Read signature from secure storage */
     //secure_storage_read(sig, &siglen, "sig_data");
-
+	
     /* Calculate hash of the test data first */
     TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
     TEE_DigestUpdate(handle, pdata, CHUNK_SIZE);
     pdata += CHUNK_SIZE;
     TEE_DigestDoFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, hash, &hashlen);
     TEE_FreeOperation(handle);
-
+	
     /* Dump hash data */
     tee_printf("hash: size %d", hashlen);
     for (int i = 0; i < hashlen; i++) {
       tee_printf ("%02x", hash[i]);
     }
     tee_printf("\n");
-
+	
     /* Set pub key */
     TEE_AllocateOperation(&handle, TEE_ALG_ECDSA_P256, TEE_MODE_VERIFY, 256);
     TEE_SetOperationKey(handle, keypair);
-
+	
     /* Check data with the signature    
      * Keystone has ed25519_verify()
      * Equivalent in openssl is EVP_DigestVerify() */
     verify_ok = TEE_AsymmetricVerifyDigest(handle, NULL, 0, hash, hashlen, sig, siglen);
-
+	
 //    TEE_FreeTransientObject(keypair);
     TEE_FreeOperation(handle);
-
+	
     if (verify_ok == TEE_SUCCESS) {
       tee_printf("verify ok\n");
       ret = 0;
@@ -257,9 +257,9 @@ int asymmetric_key_dec(void)
       tee_printf("verify fails\n");
       ret = -1;
     }
-
+	
     tee_printf("End of Aysmmetric Decryption\n");
-
+	
     /* returns 0 on success */
     return ret;
 }
@@ -277,7 +277,7 @@ int asymmetric_key_dec(void)
 TEE_Result TA_CreateEntryPoint(void)
 {
     DMSG("has been called");
-
+	
     return TEE_SUCCESS;
 }
 
@@ -361,22 +361,22 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t param_types, TEE_Param params[4])
 {
     int ret = TEE_SUCCESS;
-
+	
     switch (cmd_id) {
         // For Asymmetric Encryption
         case TA_REF_ASYM_ENC:
             asymmetric_key_enc();
-
+	
     	return TEE_SUCCESS;
-
+	
         // For Asymmetric Decryption
         case TA_REF_ASYM_DEC:
             ret = asymmetric_key_dec();
             if (ret != TEE_SUCCESS)
                 ret = TEE_ERROR_SIGNATURE_INVALID;
-
+	
             return ret;
-
+	
         default:
             return TEE_ERROR_BAD_PARAMETERS;
     }

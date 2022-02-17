@@ -49,9 +49,9 @@
 int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
 {
     TEE_ObjectHandle object;
-
+	
     /** in real product, should validate, data, size, fname here */
-
+	
     TEE_CreatePersistentObject(TEE_STORAGE_PRIVATE,
                                     fname, strlen(fname),
                                     (TEE_DATA_FLAG_ACCESS_WRITE
@@ -61,7 +61,7 @@ int secure_storage_write(uint8_t *data, size_t size, uint8_t *fname)
                                     &object);
     TEE_WriteObjectData(object, (const char *)data, size);
     TEE_CloseObject(object);
-
+	
     /** In real product, check the return value of each above
      * and return error value */
     return 0;
@@ -81,19 +81,19 @@ int secure_storage_read(uint8_t *data, size_t *size, uint8_t *fname)
 {
     TEE_ObjectHandle object;
     uint32_t bytes_from_storage;
-
+	
     /** In real product, should validate, data, size, fname here */
-
+	
     TEE_OpenPersistentObject(TEE_STORAGE_PRIVATE,
                                   fname, strlen(fname),
                                   TEE_DATA_FLAG_ACCESS_READ,
                                   &object);
     TEE_ReadObjectData(object, (char *)data, *size, &bytes_from_storage);
     TEE_CloseObject(object);
-
+	
     /** Give back the bytes which were able to read */
     *size = bytes_from_storage;
-
+	
     /** In real product, check the return value of each above
      * and return error value */
     return 0;
@@ -116,17 +116,17 @@ void message_digest_gen(void)
         0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
         0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
     };
-
+	
     size_t hashlen = SHA_LENGTH;
     uint8_t hash[SHA_LENGTH];
     uint8_t *pdata = data;
-
+	
     TEE_OperationHandle handle;
     TEE_Result rv;
-
+	
     /* Equivalant of sha3_init() in sha3.c or SHA256_Init() in openssl  */
     TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
-
+	
     /* Equivalant of sha3_update() in sha3.c or SHA256_Update() in openssl.
      *
      * It passes only a chunk of data each time.
@@ -136,26 +136,26 @@ void message_digest_gen(void)
      * not able to have entire data inside TEE memory size and/or only
      * partial data arrives through the Internet in streaming fashion. */
     TEE_DigestUpdate(handle, pdata, CHUNK_SIZE);
-
+	
     /* Used combined with the TEE_DigestUpdate.
      * When the data is larger, move to next pointer of chunk in the data 
      * for every iteration */
     pdata += CHUNK_SIZE;
-
+	
     /* Equivalant of sha3_final() in sha3.c or SHA256_Final() in openssl.
      * This is the last chunk */
     TEE_DigestDoFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, hash, &hashlen);
-
+	
     /* Closing TEE handle */
     TEE_FreeOperation(handle);
-
+	
     /* The hash value is ready, dump hashed data */
     tee_printf("hash: ");
     for (int i = 0; i < hashlen; i++) {
         tee_printf ("%02x ", hash[i]);
     }
     tee_printf("\n");
-
+	
     /* Save the hash value to secure storge */
     secure_storage_write(hash, hashlen, "hash_value");
 }
@@ -182,31 +182,31 @@ int message_digest_check(void)
         0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
         0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
     };
-
+	
     size_t hashlen = SHA_LENGTH;
     uint8_t hash[SHA_LENGTH];
     uint8_t saved_hash[SHA_LENGTH];
     uint8_t *pdata = data;
-
+	
     TEE_OperationHandle handle;
     TEE_Result rv;
     int ret;
-
+	
     /* Repeating the same as in message_digest_gen() until have the hash value */
     TEE_AllocateOperation(&handle, TEE_ALG_SHA256, TEE_MODE_DIGEST, SHA_LENGTH);
     TEE_DigestUpdate(handle, data, CHUNK_SIZE);
     pdata += CHUNK_SIZE;
     TEE_DigestDoFinal(handle, pdata, DATA_SIZE - CHUNK_SIZE, hash, &hashlen);
-
+	
     TEE_FreeOperation(handle);
-
+	
     /* The hash value is ready, dump hashed data */
     tee_printf("hash: ");
     for (int i = 0; i < hashlen; i++) {
         tee_printf ("%02x ", hash[i]);
     }
     tee_printf("\n");
-
+	
     /* Check if the data is the same with the data in message_digest_gen() 
      * to check the data integrity */
     secure_storage_read(saved_hash, &hashlen, "hash_value");
@@ -214,7 +214,7 @@ int message_digest_check(void)
     if (ret == 0) {
         tee_printf("hash: matched!\n");
     }
-
+	
     /* returns 0 on success */
     return ret;
 }
@@ -232,7 +232,7 @@ int message_digest_check(void)
 TEE_Result TA_CreateEntryPoint(void)
 {
     DMSG("has been called");
-
+	
     return TEE_SUCCESS;
 }
 
@@ -316,20 +316,20 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t param_types, TEE_Param params[4])
 {
     int ret = TEE_SUCCESS;
-
+	
     switch (cmd_id) {
     case TA_REF_HASH_GEN:
         message_digest_gen();
-
+	
 	return TEE_SUCCESS;
-
+	
     case TA_REF_HASH_CHECK:
         ret = message_digest_check();
         if (ret != TEE_SUCCESS)
             ret = TEE_ERROR_SIGNATURE_INVALID;
-
+	
         return ret;
-
+	
     default:
         return TEE_ERROR_BAD_PARAMETERS;
     }

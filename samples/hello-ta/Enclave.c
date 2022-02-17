@@ -53,7 +53,7 @@
 TEE_Result TA_CreateEntryPoint(void)
 {
     DMSG("has been called");
-
+	
     return TEE_SUCCESS;
 }
 
@@ -124,11 +124,11 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t param_types, TEE_Param params[4])
 {
     switch (cmd_id) {
-
+	
     case TA_REF_RUN_HELLO:
         tee_printf("Hello TA\n");
         return TEE_SUCCESS;
-
+	
     default:
         return TEE_ERROR_BAD_PARAMETERS;
     }
