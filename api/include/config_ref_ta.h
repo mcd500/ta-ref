@@ -37,6 +37,7 @@
 #include "edger/Enclave_t.h"
 #include "tee-ta-internal.h"
 #include "trace.h"
+#include "assert.h"
 
 #ifdef __cplusplus
 extern "C" {
