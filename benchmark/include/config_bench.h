@@ -29,7 +29,7 @@
  */
 
 #pragma once
-#include "gp/config_ref_ta.h" // for TEE_** API
+#include "config_ref_ta.h" // for TEE_** API
 
 enum BENCH_TYPE {
     REE_TIME_TEST,
