@@ -36,6 +36,11 @@
 
 #include "edger/Enclave_t.h"
 #include "tee-ta-internal.h"
+#include "trace.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 int tee_printf(const char* fmt, ...);
 #ifdef GP_VERBOSE
@@ -49,4 +54,8 @@ int tee_printf(const char* fmt, ...);
 #define GP_ASSERT(rv,msg)
 #endif
 
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+#endif /* _CONFIG_REF_TA_H */
