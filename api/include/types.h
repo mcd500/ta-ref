@@ -126,5 +126,5 @@ static sgx_errlist_t sgx_errlist[] = {
 };
 
 #ifdef __cplusplus
-extern "C" {
+}
 #endif
