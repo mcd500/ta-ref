@@ -232,31 +232,4 @@ typedef void *TEE_Session;
 #define TEE_SE_READER_NAME_MAX	20
 #endif /*DOXYGEN_SHOULD_SKIP_THIS*/
 
-#ifndef PLAT_KEYSTONE
-// TODO: ???
-
-typedef unsigned long int nfds_t;
-
-struct pollfd
-{
-     	int fd;                     /* File descriptor to poll.  */
-	short int events;           /* Types of events poller cares about.  */
-	short int revents;          /* Types of events that actually occurred.  */
-};
-
-typedef uint32_t socklen_t;
-
-struct addrinfo {
-	int              ai_flags;
-	int              ai_family;
-	int              ai_socktype;
-	int              ai_protocol;
-	socklen_t        ai_addrlen;
-	struct sockaddr *ai_addr;
-	char            *ai_canonname;
-	struct addrinfo *ai_next;
-};
-
-#endif /* !PLAT_KEYSTONE */
-
 #endif /* TEE_API_TYPES_H */

@@ -28,14 +28,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <string.h>
+
 #include "tee_ta_api.h"
 #include "edger/Enclave_t.h"
 #include "crt.h"
 #include "tools.h"
+#include "sgx_trts.h" /* for sgx_ocalloc, sgx_is_outside_enclave */
 
-TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
+__attribute__((weak)) TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 				      uint32_t cmd_id,
-				      uint32_t param_types, TEE_Param params[4]);
+				      uint32_t param_types, TEE_Param params[4])
+{
+  return 0;
+}
 
 /**
  * The eapp_entry() - It contains enclave verbose and invokes the main function.
@@ -46,7 +52,7 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
  * 
  * @return	It will return EAPP_RETURN(0).
  */
-void ecall_ta_main(uint32_t command) {
+__attribute__((weak)) void ecall_ta_main(uint32_t command) {
   crt_begin();
 #ifdef ENCLAVE_VERBOSE
   printf("main start\n");
@@ -57,4 +63,20 @@ void ecall_ta_main(uint32_t command) {
 #endif
   crt_end();
   return;
+}
+
+
+__attribute__((weak)) uint32_t ecall_TA_OpenSessionEntryPoint()
+{
+  return 0;
+}
+
+__attribute__((weak)) void ecall_TA_CloseSessionEntryPoint()
+{
+}
+
+__attribute__((weak)) uint32_t ecall_TA_InvokeCommandEntryPoint(uint32_t session, uint32_t cmd_id, uint32_t param_types, struct command_param p[4])
+{
+  TEE_Result r = TA_InvokeCommandEntryPoint(session, cmd_id, param_types, NULL);
+  return r;
 }

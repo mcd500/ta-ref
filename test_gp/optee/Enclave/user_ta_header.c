@@ -2,7 +2,6 @@
 /*
  * Copyright (c) 2014, STMicroelectronics International N.V.
  */
-// from ${TA_DEV_DIR}/src
 #include <compiler.h>
 #include <tee_ta_api.h>
 #include <tee_internal_api_extensions.h>
@@ -23,7 +22,7 @@ const char trace_ext_prefix[]  = "TA";
 #define TA_DESCRIPTION "Undefined description"
 #endif
 
-/* exported to user_ta_header.c, built within TA */
+/* exprted to user_ta_header.c, built within TA */
 struct utee_params;
 
 #ifdef ARM32
@@ -32,21 +31,7 @@ struct utee_params;
 #define _C_FUNCTION(name) name
 #endif /* ARM32 */
 
-/**
- * __utee_entry() - From libutee. 
- * 
- * Receiving the session and command id and if defined macro is CFG_FTRACE_SUPPORT 
- * the function invokes the ftrace_return() in TA API just before the utee_return  
- * syscall to get proper ftrace call graph. The return of this function is TEE_SUCCESS
- * when all the above functions are performed. 
- *
- * @param func		func is the unsigned long data type.
- * @param session_id	session_id is the unsigned long data type.
- * @param up		up is the structure type of the utee_params.
- * @param cmd_id	cmd_id is the unsigned long data type.
- * 
- * @return TEE_SUCCESS	If the command is successfully executed. 
- */
+/* From libutee */
 TEE_Result __utee_entry(unsigned long func, unsigned long session_id,
 			struct utee_params *up, unsigned long cmd_id);
 
@@ -66,12 +51,12 @@ void __noreturn _C_FUNCTION(__ta_entry)(unsigned long func,
 	/*
 	 * __ta_entry is the first TA API called from TEE core. As it being
 	 * __noreturn API, we need to call ftrace_return in this API just
-	 * before utee_return syscall to get proper ftrace call graph.
+	 * before _utee_return syscall to get proper ftrace call graph.
 	 */
 	ftrace_return();
 #endif
 
-	utee_return(res);
+	_utee_return(res);
 }
 
 /*
@@ -155,12 +140,6 @@ struct __ftrace_info __ftrace_info = {
 };
 #endif
 
-/**
- * tahead_get_trace_level() - Store trace level in TA head structure,
- * as ta_head.prop_tracelevel.   
- *
- * @return 	trace level for success, else error occured.  
- */
 int tahead_get_trace_level(void)
 {
 	/*

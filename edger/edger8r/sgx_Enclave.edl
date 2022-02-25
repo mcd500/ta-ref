@@ -47,6 +47,13 @@ enclave {
         unsigned int params1_size;
     };
 
+    struct command_param {
+        void *p;
+        size_t *size;
+        uint32_t *a;
+        uint32_t *b;
+    };
+
     /* 
      * ocall_print_string - invokes OCALL to display string buffer inside the enclave.
      *  [in, ]: copy the string buffer to App outside.
@@ -103,6 +110,15 @@ enclave {
     trusted {
         /* virtual ecall */
         public void ecall_ta_main(uint32_t command);
+
+        public uint32_t ecall_TA_OpenSessionEntryPoint();
+        public void ecall_TA_CloseSessionEntryPoint();
+        public uint32_t ecall_TA_InvokeCommandEntryPoint(
+            uint32_t session,
+            uint32_t cmd_id,
+            uint32_t param_types,
+            [in]struct command_param params[4]
+        );
     };
 
 };
