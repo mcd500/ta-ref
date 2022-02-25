@@ -122,22 +122,3 @@ install_optee_qemu:
 	cd ${OPTEE_OUTBR_DIR}/images/rootfs; \
 	sudo find . | sudo cpio -o -H newc 2> /dev/null | gzip -c9 > ../rootfs.cpio.gz
 
-
-
-
-test_hello_optee:
-	ln -sf /home/user/optee/out-br/images/rootfs.cpio.gz /home/user/optee/out/bin
-	cd /home/user/optee/out/bin && \
-		QEMU=/home/user/optee/qemu/aarch64-softmmu/qemu-system-aarch64 \
-			QEMU_SMP=2 \
-			expect /home/user/ta-ref/scripts/test_hello_optee.expect
-
-test_gp_optee:
-	ln -sf /home/user/optee/out-br/images/rootfs.cpio.gz /home/user/optee/out/bin
-	cd /home/user/optee/out/bin && \
-		QEMU=/home/user/optee/qemu/aarch64-softmmu/qemu-system-aarch64 \
-			QEMU_SMP=2 \
-			expect /home/user/ta-ref/scripts/test_gp_optee.expect
-
-
-
