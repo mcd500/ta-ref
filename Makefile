@@ -5,9 +5,9 @@ endif
 export TOPDIR=$(CURDIR)
 BUILD_DIR=build
 TEST_DIR=test_hello
-OPTEE_OUTBR_DIR=/home/user/optee/out-br
-OPTEE_TEST_HELLO_DIR=${OPTEE_OUTBR_DIR}/images/rootfs/root/test_hello
-OPTEE_TEST_GP_DIR=${OPTEE_OUTBR_DIR}/images/rootfs/root/test_gp
+# OPTEE_OUTBR_DIR=/home/user/optee/out-br
+# OPTEE_TEST_HELLO_DIR=${OPTEE_OUTBR_DIR}/images/rootfs/root/test_hello
+# OPTEE_TEST_GP_DIR=${OPTEE_OUTBR_DIR}/images/rootfs/root/test_gp
 
 
 # used only on sgx/App
@@ -103,22 +103,22 @@ mrproper: select build_clean all_test_clean
 	make -C $(BUILD_DIR) mrproper
 	$(RM) $(BUILD_DIR)/Makefile
 
-#optee
-install_optee_qemu:
-	cd ${OPTEE_OUTBR_DIR}/images
-	sudo rm -rf ${OPTEE_OUTBR_DIR}/images/rootfs
-	mkdir -p ${OPTEE_OUTBR_DIR}/images/rootfs/
-	cd ${OPTEE_OUTBR_DIR}/images/rootfs; \
-	sudo gzip -dc ../rootfs.cpio.gz | sudo cpio -i
-	export OPTEE_TEST_HELLO_DIR=${OPTEE_OUTBR_DIR}/images/rootfs/root/test_hello
-	sudo mkdir ${OPTEE_TEST_HELLO_DIR}
-	sudo cp ~/ta-ref/test_hello/optee/App/optee_ref_ta ${OPTEE_TEST_HELLO_DIR}
-	sudo cp ~/ta-ref/test_hello/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta ${OPTEE_TEST_HELLO_DIR}
-	export OPTEE_TEST_GP_DIR=${OPTEE_OUTBR_DIR}/images/rootfs/root/test_gp
-	sudo mkdir ${OPTEE_TEST_GP_DIR}
-	sudo cp ~/ta-ref/test_gp/optee/App/optee_ref_ta ${OPTEE_TEST_GP_DIR}
-	sudo cp ~/ta-ref/test_gp/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta ${OPTEE_TEST_GP_DIR}
-	sudo cp ~/ta-ref/test_gp/optee/Enclave/Enclave.nm ${OPTEE_TEST_GP_DIR}
-	cd ${OPTEE_OUTBR_DIR}/images/rootfs; \
-	sudo find . | sudo cpio -o -H newc 2> /dev/null | gzip -c9 > ../rootfs.cpio.gz
+# optee
+# install_optee_qemu:
+# 	cd ${OPTEE_OUTBR_DIR}/images
+# 	sudo rm -rf ${OPTEE_OUTBR_DIR}/images/rootfs
+# 	mkdir -p ${OPTEE_OUTBR_DIR}/images/rootfs/
+# 	cd ${OPTEE_OUTBR_DIR}/images/rootfs; \
+# 	sudo gzip -dc ../rootfs.cpio.gz | sudo cpio -i
+# 	export OPTEE_TEST_HELLO_DIR=${OPTEE_OUTBR_DIR}/images/rootfs/root/test_hello
+# 	sudo mkdir ${OPTEE_TEST_HELLO_DIR}
+# 	sudo cp ~/ta-ref/test_hello/optee/App/optee_ref_ta ${OPTEE_TEST_HELLO_DIR}
+# 	sudo cp ~/ta-ref/test_hello/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta ${OPTEE_TEST_HELLO_DIR}
+# 	export OPTEE_TEST_GP_DIR=${OPTEE_OUTBR_DIR}/images/rootfs/root/test_gp
+# 	sudo mkdir ${OPTEE_TEST_GP_DIR}
+# 	sudo cp ~/ta-ref/test_gp/optee/App/optee_ref_ta ${OPTEE_TEST_GP_DIR}
+# 	sudo cp ~/ta-ref/test_gp/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta ${OPTEE_TEST_GP_DIR}
+# 	sudo cp ~/ta-ref/test_gp/optee/Enclave/Enclave.nm ${OPTEE_TEST_GP_DIR}
+# 	cd ${OPTEE_OUTBR_DIR}/images/rootfs; \
+# 	sudo find . | sudo cpio -o -H newc 2> /dev/null | gzip -c9 > ../rootfs.cpio.gz
 
