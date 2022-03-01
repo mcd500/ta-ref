@@ -27,6 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
 // #include <tee_internal_api.h>
 // #include <tee_internal_api_extensions.h>
 // this is defined in Enclave/ta.lds

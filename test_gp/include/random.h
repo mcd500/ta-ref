@@ -27,6 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
 #include <sys/types.h>
 // for keystone-enclave v0.4 we saw the getrandom(2) function freeze, so we use srandom/random instead when we set `SEED` value.
 #ifdef SEED

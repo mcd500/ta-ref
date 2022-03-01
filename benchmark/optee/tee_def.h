@@ -27,6 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+
 static char buf[BUF_SIZE];
 static int buf_flag = 1;
 static void NO_PERF tee_init(void) {}
