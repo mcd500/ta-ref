@@ -321,7 +321,7 @@ Below we are going to push it into qemu and test its working
 # copy the binaries into qemu rootfs directory
 # Re-pack the rootfs folder into a cpio archive
 $ make install_optee_qemu
-
+	
 # Start the Qemu console from $OPTEE_DIR/build directory
 $ ln -sf /home/user/optee/out-br/images/rootfs.cpio.gz /home/user/optee/out/bin
 $ cd /home/user/optee/out/bin && \
