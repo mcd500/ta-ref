@@ -54,7 +54,9 @@ docs: docs_clean
 	mv docs/doxygen/html_spec docs/ta-ref_spec_html
 	cd docs; tar czf html_spec.tar.gz open-spec.html ta-ref_spec_html
 
-
+gen_readme:
+	bash ./scripts/update_readme.sh
+	
 qemu:
 	make -C $(TEST_DIR) qemu TEE=$(TEE)
 
