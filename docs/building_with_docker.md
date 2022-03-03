@@ -317,29 +317,11 @@ Below we are going to push it into qemu and test its working
 **Test the built test_hello, test_gp binaries in Qemu**
 
 ```sh
-# Extract the rootfs.cpio.gz into a directory
-$ cd ${OPTEE_OUTBR_DIR}/images
-$ rm -rf rootfs && mkdir rootfs && cd rootfs
-$ gzip -dc ../rootfs.cpio.gz | sudo cpio -i
-	
-# Copy the test binaries into the extracted directory
-# Create test directories inside root folder and copy the binaries - TEST_HELLO
-$ export OPTEE_TEST_HELLO_DIR=${OPTEE_OUTBR_DIR}/images/rootfs/root/test_hello
-$ sudo mkdir ${OPTEE_TEST_HELLO_DIR}
-$ sudo cp ~/ta-ref/test_hello/optee/App/optee_ref_ta ${OPTEE_TEST_HELLO_DIR}
-$ sudo cp ~/ta-ref/test_hello/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta ${OPTEE_TEST_HELLO_DIR}
-	
-# Create test directories inside root folder and copy the binaries - TEST_GP
-$ export OPTEE_TEST_GP_DIR=${OPTEE_OUTBR_DIR}/images/rootfs/root/test_gp
-$ sudo mkdir ${OPTEE_TEST_GP_DIR}
-$ sudo cp ~/ta-ref/test_gp/optee/App/optee_ref_ta ${OPTEE_TEST_GP_DIR}
-$ sudo cp ~/ta-ref/test_gp/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta ${OPTEE_TEST_GP_DIR}
-$ sudo cp ~/ta-ref/test_gp/optee/Enclave/Enclave.nm ${OPTEE_TEST_GP_DIR}
-	
-# Re-pack the rootfs folder into a cpio archive 
-$ cd ${OPTEE_OUTBR_DIR}/images/rootfs
-$ sudo find . | sudo cpio -o -H newc 2> /dev/null | gzip -c9 > ../rootfs.cpio.gz
-	
+# Extract the rootfs.cpio.gz
+# copy the binaries into qemu rootfs directory
+# Re-pack the rootfs folder into a cpio archive
+$ make install_optee_qemu
+
 # Start the Qemu console from $OPTEE_DIR/build directory
 $ ln -sf /home/user/optee/out-br/images/rootfs.cpio.gz /home/user/optee/out/bin
 $ cd /home/user/optee/out/bin && \
