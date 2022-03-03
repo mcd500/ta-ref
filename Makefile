@@ -103,7 +103,7 @@ mrproper: select build_clean all_test_clean
 	make -C $(BUILD_DIR) mrproper
 	$(RM) $(BUILD_DIR)/Makefile
 
-optee
+# For installing test_hello and test_gp into optee qemu
 install_optee_qemu:
 	cd ${OPTEE_OUTBR_DIRECTORY}/images
 	sudo rm -rf ${OPTEE_OUTBR_DIRECTORY}/images/rootfs
