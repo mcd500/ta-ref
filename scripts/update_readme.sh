@@ -1,2 +1,3 @@
-output_line_start="$(cat README.md | grep -Fn "## Docker image table" | cut -f1 -d:)"
-sed -i "$((${output_line_start}-1))"r<(cat docs/overview_of_ta-ref.md docs/building_with_docker.md $f; echo $'\n') README.md
+cat docs/overview_of_ta-ref.md docs/building_with_docker.md > README.md
+sed -i 's/@image html /![](/g' README.md
+sed -i '/^\!\[\]/ s/$/)/' README.md
