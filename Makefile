@@ -58,6 +58,7 @@ gen_readme:
 	cat docs/overview_of_ta-ref.md docs/building_with_docker.md > README.md
 	sed -i 's/@image html /![](/g' README.md
 	sed -i '/^\!\[\]/ s/$$/)/' README.md
+	sed -i '/^@image latex/,/textwidth$$/d' README.md
 	
 qemu:
 	make -C $(TEST_DIR) qemu TEE=$(TEE)
