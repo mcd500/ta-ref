@@ -18,7 +18,7 @@ export PROFILER ?= $(BENCHMARK)
 export MACHINE ?= SIM
 include ./validation.mk
 
-.PHONY: build test run docs clean mrproper docs_clean install_optee_qemu
+.PHONY: build test run docs clean mrproper docs_clean install_optee_qemu gen_readme
 
 build: select
 	mkdir -p $(BUILD_DIR)/include $(BUILD_DIR)/lib
@@ -55,7 +55,9 @@ docs: docs_clean
 	cd docs; tar czf html_spec.tar.gz open-spec.html ta-ref_spec_html
 
 gen_readme:
-	bash ./scripts/update_readme.sh
+	cat docs/overview_of_ta-ref.md docs/building_with_docker.md > README.md
+	sed -i 's/@image html /![](/g' README.md
+	sed -i '/^\!\[\]/ s/$$/)/' README.md
 	
 qemu:
 	make -C $(TEST_DIR) qemu TEE=$(TEE)
