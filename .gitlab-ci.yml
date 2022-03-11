@@ -14,6 +14,7 @@ stages:
     - test_hello
     - test_gp
     - test_perf
+    - trigger
 
 ### ANCHORS - START ####
 
@@ -519,3 +520,13 @@ doxygen:
         expire_in: 1 week
 
 ### DOXYGEN - START ###
+
+trigger_docker-taref-dev:
+    variables:
+        TOKEN: 29d9f4acb972460d03f8bd22e76880
+    stage: trigger
+    tags:
+        - shell117
+    script:
+        - "curl -X POST --fail -F token=${TOKEN} -F ref=main https://192.168.100.100/api/v4/projects/132/trigger/pipeline"
+
