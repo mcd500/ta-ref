@@ -504,7 +504,7 @@ optee_qemu_test_gp_aist:
 
 ### DOXYGEN - START ###
 doxygen:
-    <<: *test_definition117
+    <<: *test_teep_definition
     image: ${AIST_DOCKER_DISTRO_IMAGE}:doxygen-20.04
     variables:
         ENVS: env/keystone.sh
