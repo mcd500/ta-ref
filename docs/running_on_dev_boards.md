@@ -331,14 +331,6 @@ $ rm -rf /media/rootfs/boot/*
 $ cd .. && sudo umount rootfs
 ```
 
-If you use CI from AIST, download rpi3_sdimage as follows
-
-```sh
-$ wget http://192.168.100.100:2000/optee_rpi3_sdimage.tar.xz
-$ tar xf optee_rpi3_sdimage.tar.xz
-$ dd if=rpi3_sdimage.bin of=/dev/mmcblk0p2 conv=fsync bs=4096
-```
-
 Now SD-card is ready to boot RPI3.
 
 ## Copying binaries of test_hello and test_gp to rootfs partition
