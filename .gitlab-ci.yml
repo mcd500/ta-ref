@@ -1,6 +1,6 @@
 variables:
 #    GIT_STRATEGY: none
-    GIT_SUBMODULE_STRATEGY: none
+    GIT_SUBMODULE_STRATEGY: recursive
     DOCKER_IMAGE: docker.io/trasioteam/ta_ref_devel
     DOCKER_TEEP_IMAGE: docker.io/trasioteam/ta_ref_teep_devel
     DOCKER_TAMPROTO_IMAGE: docker.io/trasioteam/tamproto
