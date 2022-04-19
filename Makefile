@@ -1,7 +1,3 @@
-ifeq ($(TEE),)
-$(error "Error: variable TEE must be set")
-endif
-
 export TOPDIR=$(CURDIR)
 BUILD_DIR=build
 TEST_DIR=test_hello
@@ -20,6 +16,14 @@ include ./validation.mk
 
 .PHONY: build test run docs clean mrproper docs_clean install_optee_qemu gen_readme
 
+select:
+	if [ -z "$(TEE)" ]; then \
+		echo "Error: variable TEE must be set"; exit 1; \
+	fi
+	rm -f $(BUILD_DIR)/Makefile
+	ln -sf $(TEE).mk $(BUILD_DIR)/Makefile
+
+# build test -> ship execs -> make image
 build: select
 	mkdir -p $(BUILD_DIR)/include $(BUILD_DIR)/lib
 	make -C $(BUILD_DIR)
@@ -27,7 +31,6 @@ build: select
 test: test-bin image
 	@echo "Building test-bin and image"
 
-# build test -> ship execs -> make image
 test-bin:
 	make -C $(TEST_DIR) build TEE=$(TEE)
 
@@ -73,10 +76,6 @@ build_test:
 image:
 	make -C $(TEST_DIR) image TEE=$(TEE)
 
-select:
-	rm -f $(BUILD_DIR)/Makefile
-	ln -sf $(TEE).mk $(BUILD_DIR)/Makefile
-
 build_clean: select
 	make -C $(BUILD_DIR) clean
 	$(RM) -rf $(BUILD_DIR)/include $(BUILD_DIR)/lib
@@ -88,7 +87,7 @@ all_test_clean:
 	make -C test_hello clean
 	make -C test_gp clean
 
-clean: select build_clean all_test_clean docs_clean
+clean: docs_clean all_test_clean select build_clean
 	$(RM) $(BUILD_DIR)/Makefile
 
 docs_clean:
