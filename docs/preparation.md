@@ -765,7 +765,7 @@ total 24
 ```
 
 
-### teep-device mbetls config file
+### TEEP-Device mbetls config file
 <br />
 
 Location of the config file in teep-device environment<br />
