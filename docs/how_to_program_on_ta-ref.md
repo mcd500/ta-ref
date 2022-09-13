@@ -44,9 +44,9 @@ Basically we need to modify two files
 ## Writing 'Hello World' TA for Keystone
 
 
-**Step 1: Run the docker image**
+**Step 1: Run the Docker image**
 
-Run the TA-Ref pre-built docker for keystone.
+Run the TA-Ref pre-built Docker for keystone.
 
 ```sh
 # Download / Refresh the docker image
@@ -212,9 +212,9 @@ Here you can see the text 'Hello World' printed in the log.
 
 ## Writing 'Hello World' TA for OP-TEE
 
-**Step 1: Run the docker image**
+**Step 1: Run the Docker image**
 
-Run the TA-Ref pre-built docker for optee.
+Run the TA-Ref pre-built Docker for optee.
 
 ```sh
 # Download / Refresh the docker image
@@ -323,9 +323,9 @@ Here you can see the text 'Hello World' printed in the log.
 
 ## Writing 'Hello World' TA for Intel SGX
 
-**Step 1: Run the docker image**
+**Step 1: Run the Docker image**
 
-Run the TA-Ref pre-built docker for sgx.
+Run the TA-Ref pre-built Docker for sgx.
 
 ```sh
 # Download / Refresh the docker image

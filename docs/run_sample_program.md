@@ -5,10 +5,10 @@ Currently TA-Ref supports writing TA's for three targets namely
 - OP-TEE
 - Intel SGX
 
-The pre-built TA-Ref docker images for all three targets are already available.
+The pre-built TA-Ref Docker images for all three targets are already available.
 The details are mentioned below
 
-| Target | docker image |
+| Target | Docker image |
 | ------ | ------ |
 | Keystone | trasioteam/taref-dev:keystone |
 | OP-TEE | trasioteam/taref-dev:optee |

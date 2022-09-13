@@ -15,7 +15,7 @@ $ cp /home/main/optee/out-br/images/rootfs.cpio.gz /home/out
 Write the above image to sd card according to `make img-help` @ optee_build:
 
 ```
-# no longer use docker container!
+# no longer use Docker container!
 # check `lsblk` and umount mountpoints connected with /dev/sde
 # assume that device file with SD card is /dev/sde. This instruction is followed by `make img-help`
 $ umount /media/$(whoami)/{rootfs,BOOT}
