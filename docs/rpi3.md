@@ -1,4 +1,4 @@
-# raspberry pi3 tutorial
+# Raspberry PI 3 tutorial
 
 In this chapter, we configure image based on [3.8.0](https://github.com/OP-TEE/manifest/tree/3.8.0).
 
@@ -165,11 +165,11 @@ mkdir -p ./${ROOTFS}/lib/optee_armtz/
 cd ../ && sudo umount ./mnt
 ```
 
-## TEE api test in raspberry pi3
+## TEE api test in Raspberry PI 3
 
 ### Launch ssh daemon
 
-Insert the SD card in the raspberry pi board and poweron. exec ssh and tee-supplicant daemon **in chroot environment**:
+Insert the SD card in the Raspberry PI board and poweron. exec ssh and tee-supplicant daemon **in chroot environment**:
 
 ```sh
 # login and make sure that we are in /root directory.
