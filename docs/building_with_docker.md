@@ -1,9 +1,9 @@
-# Preparation and building ta-ref with docker
+# Preparation and building TA-Ref with docker
 
 
 ## Preparation
 
-For building ta-ref with docker, it is required to install docker on Ubuntu.
+For building TA-Ref with docker, it is required to install docker on Ubuntu.
 
 For the first time users of docker, please have a look on https://docs.docker.com/engine/
 
@@ -57,7 +57,7 @@ $ docker run hello-world
 
 ### Create a docker network tamproto
 
-A docker network named tamproto is required when we run ta-ref for Keystone.
+A docker network named tamproto is required when we run TA-Ref for Keystone.
 The local network is required to connect with tamproto service running locally.
 
 ```sh
@@ -66,7 +66,7 @@ $ docker network create tamproto_default
 
 ## Docker images details
 
-The docker images with all necessary packages for building ta-ref for all three targets are already available.
+The docker images with all necessary packages for building TA-Ref for all three targets are already available.
 Make sure you have account on docker-hub. If not please create one on `dockerhub.com`
 The details are mentioned below
 
@@ -77,14 +77,14 @@ The details are mentioned below
 | Intel SGX | aistcpsec/tee-dev:sgx-2.10 |
 
 
-## Building ta-ref with Docker
+## Building TA-Ref with Docker
 
-### Building ta-ref for Keystone with docker
+### Building TA-Ref for Keystone with docker
 
 Following commands are to be executed on Ubuntu 20.04.
 
 ```sh
-# Clone the ta-ref repo and checkout teep-master branch
+# Clone the TA-Ref repo and checkout teep-master branch
 $ git clone https://192.168.100.100/rinkai/ta-ref.git
 $ cd ta-ref/
 $ git checkout teep-master
@@ -114,7 +114,7 @@ $ make build test-bin MACHINE=SIM TEST_DIR=test_hello
 $ make build test-bin MACHINE=SIM TEST_DIR=test_gp
 ```
 
-By the above steps, we have successfully built the ta-ref.
+By the above steps, we have successfully built the TA-Ref.
 Below we are going to push it into qemu and test its working
 
 
@@ -277,7 +277,7 @@ $ poweroff
 ```
 You can also press Ctrl a+x to exit the qemu console. 
 
-### Building ta-ref for OP-TEE with docker
+### Building TA-Ref for OP-TEE with docker
 
 Following commands are to be executed on Ubuntu 20.04.
 
@@ -311,7 +311,7 @@ $ make build test-bin MACHINE=SIM TEST_DIR=test_hello
 $ make build test-bin MACHINE=SIM TEST_DIR=test_gp
 ```
 
-By the above steps, we have successfully built the ta-ref.
+By the above steps, we have successfully built the TA-Ref.
 Below we are going to push it into qemu and test its working
 
 **Test the built test_hello, test_gp binaries in Qemu**
@@ -418,7 +418,7 @@ res = TEEC_SUCCESS; TEEC_InvokeCommand succeeded!
 
 ```
 
-### Building ta-ref for Intel SGX with docker
+### Building TA-Ref for Intel SGX with docker
 
 Following commands are to be executed on Ubuntu 20.04.
 
@@ -452,7 +452,7 @@ $ make build test-bin MACHINE=SIM TEST_DIR=test_hello
 $ make build test-bin MACHINE=SIM TEST_DIR=test_gp
 ```
 
-By the above steps, we have successfully built the ta-ref.
+By the above steps, we have successfully built the TA-Ref.
 Since we are building in SIM mode, We can execute in docker itself.
 
 There are two files required to test_hello 

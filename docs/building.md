@@ -1,6 +1,6 @@
-# Building ta-ref without Docker
+# Building TA-Ref without Docker
 
-# ta-ref with Keystone
+# TA-Ref with Keystone
 
 Make sure Keystone SDK has been already built in the preparation steps.
 
@@ -213,7 +213,7 @@ verify ok
 main end
 ```
 
-# ta-ref with OP-TEE
+# TA-Ref with OP-TEE
 
 Make sure optee has been built already from the preparation steps. 
 
@@ -242,7 +242,7 @@ $ make build test-bin MACHINE=SIM TEST_DIR=test_hello
 $ make build test-bin MACHINE=SIM TEST_DIR=test_gp
 ```
 
-By the above steps, we have successfully built the ta-ref.
+By the above steps, we have successfully built the TA-Ref.
 Below we are going to push it into qemu and test its working
 
 **Test the built test_hello, test_gp binaries in Qemu**
@@ -366,9 +366,9 @@ res = TEEC_SUCCESS; TEEC_InvokeCommand succeeded!
 # 
 
 ```
-# ta-ref with SGX
+# TA-Ref with SGX
 
-Build ta-ref for Intel SGX platforms
+Build TA-Ref for Intel SGX platforms
 
 ## Clone the ta-ref source
 
@@ -395,7 +395,7 @@ $ make build test-bin MACHINE=SIM TEST_DIR=test_hello
 $ make build test-bin MACHINE=SIM TEST_DIR=test_gp
 ```
 
-By the above steps, we have successfully built the ta-ref.
+By the above steps, we have successfully built the TA-Ref.
 Since we are building in SIM mode, We can execute in docker itself.
 
 There are two files required to test_hello 
@@ -559,7 +559,7 @@ verify ok
 main end
 Info: Enclave successfully returned.
 ```
-## Check ta-ref by running test_gp, test_hello, simulation mode on any pc
+## Check TA-Ref by running test_gp, test_hello, simulation mode on any pc
 
 Copy the ta-ref's test_hello & test_gp executables to test directory
 
