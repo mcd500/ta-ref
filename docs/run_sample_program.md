@@ -10,24 +10,24 @@ The details are mentioned below
 
 | Target | Docker image |
 | ------ | ------ |
-| Keystone | trasioteam/taref-dev:keystone |
-| OP-TEE | trasioteam/taref-dev:optee |
-| Intel SGX | trasioteam/taref-dev:sgx |
+| Keystone | aistcpsec/taref-dev:keystone |
+| OP-TEE | aistcpsec/taref-dev:optee |
+| Intel SGX | aistcpsec/taref-dev:sgx |
 
 ## Run samples for Keystone
 
 Sample to be executed : **message_digest**
 
-Docker Image : **trasioteam/taref-dev:keystone**
+Docker Image : **aistcpsec/taref-dev:keystone**
 
 Following are the steps to be executed to run samples for Keystone.
 
 ```sh
 # Pull the docker image
-$ docker pull trasioteam/taref-dev:keystone
+$ docker pull aistcpsec/taref-dev:keystone
 
 #Run the docker image
-$ docker run -it trasioteam/taref-dev:keystone
+$ docker run -it aistcpsec/taref-dev:keystone
 
 # [Inside docker image]
 # Initally you would be logged-in as build-user.
@@ -105,16 +105,16 @@ main end
 
 Sample to be executed : **message_digest**
 
-Docker Image : **trasioteam/taref-dev:optee**
+Docker Image : **aistcpsec/taref-dev:optee**
 
 Following are the steps to be executed to run samples for OP-TEE.
 
 ```sh
 # Pull the docker image
-$ docker pull trasioteam/taref-dev:optee
+$ docker pull aistcpsec/taref-dev:optee
 
 # Run the docker image
-$ docker run -it trasioteam/taref-dev:optee
+$ docker run -it aistcpsec/taref-dev:optee
 
 # [Inside docker image]
 # Initally you would be logged-in as build-user.
@@ -166,16 +166,16 @@ D/TC:? 0 tee_ta_close_session:518 Destroy session
 
 Sample to be executed : **message_digest**
 
-Docker Image : **trasioteam/taref-dev:sgx**
+Docker Image : **aistcpsec/taref-dev:sgx**
 
 Following are the steps to be executed to run samples for SGX.
 
 ```sh
 # Pull the docker image
-$ docker pull trasioteam/taref-dev:sgx
+$ docker pull aistcpsec/taref-dev:sgx
 
 # Run the docker image
-$ docker run -it trasioteam/taref-dev:sgx
+$ docker run -it aistcpsec/taref-dev:sgx
 
 # [Inside docker image]
 # Initally you would be logged-in as build-user.
