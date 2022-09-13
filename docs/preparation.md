@@ -4,7 +4,7 @@ All the preparation steps below are based on Ubuntu 20.04
 
 
 # Keystone(RISC-V Unleased)
-Keystone is an open-source TEE framework for RISC-V processors. For more details check, 
+Keystone is an open-source TEE framework for RISC-V processors. For more details check,
 - http://docs.keystone-enclave.org/en/latest
 
 
@@ -30,7 +30,7 @@ $ sudo apt-get install -y clang-tools-6.0 libclang-6.0-dev cmake \
 
 ## Download RISC-V toolchain and Keystone SDK
 
-Download the keystone sources 
+Download the keystone sources
 
 ```sh
 $ git clone https://github.com/keystone-enclave/keystone.git -b v1.0.0
@@ -51,7 +51,7 @@ Build the Keystone SDK
 Make sure you are in keystone directory.
 
 ```sh
-$ cd sdk/ 
+$ cd sdk/
 $ mkdir -p build
 $ cd build
 $ cmake .. $SDK_FLAGS
@@ -71,7 +71,7 @@ $ make
 $ make image
 ```
 
-Launch the QEMU image 
+Launch the QEMU image
 
 Make sure you are in `keystone\build` directory.
 
@@ -80,15 +80,15 @@ $ ./scripts/run-qemu.sh
 Welcome to Buildroot
 ```
 
-Login to console with the following credentials 
+Login to console with the following credentials
 
 buildroot login = root,
 Password = sifive
 
 ```console
 buildroot login: root
-Password: 
-$ 
+Password:
+$
 ```
 
 Poweroff the console incase, if you want to exit.
@@ -125,16 +125,16 @@ Welcome to Buildroot
 Login to console with user=root, passwd=sifive
 ```console
 buildroot login: root
-Password: 
-$ 
+Password:
+$
 ```
 
 Run hello example
 ```console
-$ insmod keystone-driver.ko 
+$ insmod keystone-driver.ko
 [  365.354299] keystone_driver: loading out-of-tree module taints kernel.
 [  365.364279] keystone_enclave: keystone enclave v0.2
-$ ./hello/hello.ke 
+$ ./hello/hello.ke
 Verifying archive integrity...  100%   All good.
 Uncompressing Keystone vault archive  100%
 hello, world!
@@ -148,7 +148,7 @@ $ poweroff
 
 # OP-TEE (ARM64 Raspberry Pi 3 Model B)
 
-OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a non-secure Linux kernel running on Arm. Lets build OP-TEE for QEMU and Raspberry Pi3 Model B development board. For more details check, 
+OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a non-secure Linux kernel running on Arm. Lets build OP-TEE for QEMU and Raspberry Pi3 Model B development board. For more details check,
 - https://optee.readthedocs.io/en/latest/
 
 ## Required Packages
@@ -175,7 +175,7 @@ $ sudo apt-get install -y android-tools-adb android-tools-fastboot autoconf \
 Set the locale to English, to cope with the problem, https://github.com/OP-TEE/build/issues/424#issuecomment-631302208.
 
 ```sh
-$ locale-gen en_US.UTF-8 
+$ locale-gen en_US.UTF-8
 $ export LANG=en_US.UTF-8
 $ export LANGUAGE=en_US:en
 $ export LC_ALL=en_US.UTF-8
@@ -240,9 +240,9 @@ $ ls -l ${OPTEE_DIR}/out-br/images/rootfs.cpio.gz
 
 ### Launching QEMU Console
 
-<br /> 
-Run following commands from OP-TEE build directory 
-<br /> 
+<br />
+Run following commands from OP-TEE build directory
+<br />
 
 ```sh
 $ cd $OPTEE_DIR/build
@@ -277,15 +277,15 @@ Now Optee started to boot from another tab on the Terminal
 ```
 
 ### Run hello world example
-<br /> 
+<br />
 Once boot completed it displays following message, then enter "root" to login to the shell
-<br /> 
+<br />
 
 ```console
 Welcome to Buildroot, type root or test to login
 buildroot login: root
 $
-$ optee_example_hello_world 
+$ optee_example_hello_world
 Invoking TA to increment 42
 TA incremented value to 43
 ```
@@ -298,8 +298,8 @@ $ poweroff
 
 # SGX (Intel NUC)
 
-Intel(R) Software Guard Extensions (Intel(R) SGX) is an Intel technology for application developers 
-who is seeking to protect selected code and data from disclosure or modification. For more details check, 
+Intel(R) Software Guard Extensions (Intel(R) SGX) is an Intel technology for application developers
+who is seeking to protect selected code and data from disclosure or modification. For more details check,
 - https://github.com/intel/linux-sgx/blob/master/README.md
 
 ## System Requirements
@@ -365,7 +365,7 @@ $ export LD_LIBRARY_PATH=${SDK_INSTALL_DIR}/sdk_libs
 ```sh
 $ git clone https://github.com/intel/linux-sgx.git -b sgx_2.10
 $ cd linux-sgx
- 
+
 # Download the prebuilt binaries for intel sgx
 $ ./download_prebuilt.sh
 $ cd external/toolset/ubuntu20.04/ && sudo cp as ld ld.gold objdump /usr/local/bin
@@ -451,7 +451,7 @@ Clone and build OpenSSL 1.1.c
 
 ```sh
 $ wget https://www.openssl.org/source/openssl-1.1.1c.tar.gz
-$ tar xf openssl-1.1.1c.tar.gz 
+$ tar xf openssl-1.1.1c.tar.gz
 $ cd openssl-1.1.1c/
 $ ./config --prefix=/opt/openssl/1.1.1c --openssldir=/opt/openssl/1.1.1c
 $ make
@@ -464,7 +464,7 @@ Clone and build sgx-ra-sample
 ```sh
 $ git clone https://github.com/intel/sgx-ra-sample.git
 $ cd sgx-ra-sample/
-$ ./bootstrap 
+$ ./bootstrap
 $ ./configure --with-openssldir=/opt/openssl/1.1.1c
 $ make
 ```
@@ -479,44 +479,44 @@ $ make
 	@@ -15,14 +15,14 @@ QUERY_IAS_PRODUCTION=0
 	 # Your Service Provider ID. This should be a 32-character hex string.
 	 # [REQUIRED]
-	 
+
 	-SPID=0123456789ABCDEF0123456789ABCDEF
 	+SPID=EF9AE4A8635825B88751C8698CB370B4
-	 
-	 
-	 # Set to a non-zero value if this SPID is associated with linkable 
+
+
+	 # Set to a non-zero value if this SPID is associated with linkable
 	 # quotes. If you change this, you'll need to change SPID,
 	 # IAS_PRIMARY_SUBSCRIPTION_KEY and IAS_SECONDARY_SUBSCRIPTION_KEY too.
-	 
+
 	-LINKABLE=0
 	+LINKABLE=1
-	 
+
 	 #======================================================================
 	@@ -50,18 +50,18 @@ USE_PLATFORM_SERVICES=0
 	 # More Info: https://api.portal.trustedservices.intel.com/EPID-attestation
 	 # Associated SPID above is required
-	 
+
 	-IAS_PRIMARY_SUBSCRIPTION_KEY=
 	+IAS_PRIMARY_SUBSCRIPTION_KEY=b6da4c9c41464924a14954ad8c03e8cf
-	 
+
 	 # Intel Attestation Service  Secondary Subscription Key
 	 # This will be used in case the primary subscription key does not work
-	 
+
 	-IAS_SECONDARY_SUBSCRIPTION_KEY=
 	+IAS_SECONDARY_SUBSCRIPTION_KEY=188d91f86c064deb97e7472175ae1e79
-	 
+
 	 # The Intel IAS SGX Report Signing CA file. You are sent this certificate
-	 # when you apply for access to SGX Developer Services at 
+	 # when you apply for access to SGX Developer Services at
 	 # http://software.intel.com/sgx [REQUIRED]
-	 
+
 	-IAS_REPORT_SIGNING_CA_FILE=
 	+IAS_REPORT_SIGNING_CA_FILE=./Intel_SGX_Attestation_RootCA.pem
-	 
+
 	 # Debugging options
 	@@ -82,7 +82,7 @@ IAS_REPORT_SIGNING_CA_FILE=
-	 
+
 	 # Set to non-zero for verbose output
-	 
+
 	-VERBOSE=0
 	+VERBOSE=1
 ```
@@ -671,13 +671,13 @@ Above packages required to generate PDF using doxygen.
 ## Build and Install Doxygen
 
 ```sh
-$ git clone https://github.com/doxygen/doxygen.git 
+$ git clone https://github.com/doxygen/doxygen.git
 $ cd doxygen
-$ mkdir build 
-$ cd build 
-$ cmake -G "Unix Makefiles" .. 
+$ mkdir build
+$ cd build
+$ cmake -G "Unix Makefiles" ..
 $ make
-$ sudo make install 
+$ sudo make install
 ```
 
 # Customizing MbedTLS Configuration file
@@ -685,7 +685,7 @@ $ sudo make install
 MbedTLS is a C library that implements cryptographic primitives, X.509 certificate manipulation and the SSL/TLS and DTLS protocols.
 MbedTLS has a configuration file `config.h` where we can select platform-specific settings, customize the features that will be build,
 select the modules and its configurations.
- 
+
 In our case, we customize mbedtls config file to add/remove crypto algorithms when building the mbedtls.
 The mbedtls default config supports many cryto algorithms which might be unneccessary and also increases the built binary size.
 
@@ -793,7 +793,7 @@ total 24
 
 ## Supplement Investigation information
 
-It is necessary to edit the following file to select the cryptographic algorithm 
+It is necessary to edit the following file to select the cryptographic algorithm
 when using mbedtls in optee.<br />
 
 In optee, AES-GCM is not included by default. So we need to modify the mbedtls config file to enable AES-GCM algorithm.

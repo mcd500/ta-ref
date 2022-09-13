@@ -36,7 +36,7 @@ Basically we need to modify two files
 1) Enclave.c  (Common to all three targets)
 
 2) App-<target>.c
-    - App-keystone.cpp (incase of Keystone) 
+    - App-keystone.cpp (incase of Keystone)
     - App-optee.c (Incase of OP-TEE)
     - App-sgx.cpp (Incase of SGX)
 
@@ -51,7 +51,7 @@ Run the TA-Ref pre-built Docker for keystone.
 ```sh
 # Download / Refresh the docker image
 $ docker pull trasioteam/taref-dev:keystone
-    
+
 # Run the docker image
 $ docker run -it trasioteam/taref-dev:keystone
 ```
@@ -134,7 +134,7 @@ TEE_Result TA_InvokeCommandEntryPoint(void *sess_ctx,
 
 In the modification, we have removed the existing switch cases and added a new case
 to print 'Hello World' text. Various functions available to be used here are
-shown in Chapter 2 and few important functions are explained in detail 
+shown in Chapter 2 and few important functions are explained in detail
 below.
 
 Please save your changes and exit Enclave.c
@@ -169,38 +169,38 @@ After modification
 
 **Step 5: Execute the 'Hello World' TA for Keystone**
 
-Change directory to the `build-keystone` directory. 
+Change directory to the `build-keystone` directory.
 
 ```sh
 # Change to build-<target> directory
 $ cd build-keystone
-    
+
 # Make the TA
 $ make
-    
+
 # Run the qemu console
 $ make run-qemu
-    
+
 # This opens us qemu console and login using
 # buildroot login: root
 # Password: sifive
 #
-    
+
 # [Inside Qemu Console]
 # Execute the sample and see the output
 # Load the keystone driver
 $ insmod keystone-driver.ko
-    
+
 # Run the message-digest program
 $./App-keystone
 
-# [Ouput log printing Hello world]    
+# [Ouput log printing Hello world]
 [debug] UTM : 0xffffffff80000000-0xffffffff80100000 (1024 KB) (boot.c:127)
 [debug] DRAM: 0x179800000-0x179c00000 (4096 KB) (boot.c:128)
 [debug] FREE: 0x1799dd000-0x179c00000 (2188 KB), va 0xffffffff001dd000 (boot.c:133)
 [debug] eyrie boot finished. drop to the user land ... (boot.c:172)
 main start
-Hello World 
+Hello World
 main end
 
 # Exit the qemu console by clicking Ctrl-A X or $ poweroff command
@@ -219,7 +219,7 @@ Run the TA-Ref pre-built Docker for optee.
 ```sh
 # Download / Refresh the docker image
 $ docker pull trasioteam/taref-dev:optee
-    
+
 # Run the docker image
 $ docker run -it trasioteam/taref-dev:optee
 ```
@@ -251,10 +251,10 @@ Before modification
     #define TA_REF_HASH_GEN    0x11111111
     /** Command id for the second operation in TA */
     #define TA_REF_HASH_CHECK  0x22222222
-    
+
     // Inside main(void) function
-    
-    
+
+
     /** Calling generating hash value function in TA  */
     res = TEEC_InvokeCommand(&sess, TA_REF_HASH_GEN, &op,
                              &err_origin);
@@ -268,9 +268,9 @@ Before modification
 After modification
 ```C
     #define TA_REF_PRINT_HELLO    0x11111111
-    
+
     // Inside main(void) function
-    
+
     /** Calling Hello World function in TA  */
     res = TEEC_InvokeCommand(&sess, TA_REF_PRINT_HELLO, &op,
                              &err_origin);
@@ -280,29 +280,29 @@ After modification
 **Step 5: Execute the 'Hello World' TA for OP-TEE**
 
 
-Change directory to the `build-optee` directory. 
+Change directory to the `build-optee` directory.
 
 ```sh
 # Change to build-<target> directory
 $ cd build-optee
-    
+
 # Make the TA
 $ make
-    
+
 # After successful make of TA, Make the qemu
 $ make install_qemu
-    
+
 # Run the qemu console
 $ make run-qemu
 
 # This opens us qemu console and login using
 # buildroot login: root
-    
+
 # [Inside Qemu Console]
 # Execute the create TA program
 # No ouput is shown inside qemu, its stored in serial.log
 # ./App-optee
-    
+
 # Exit the qemu console by clicking Ctrl-A X or $ poweroff command
 ### Ctrl-a x
 ```
@@ -310,10 +310,10 @@ $ make run-qemu
 To view the output, open the serial log file by executing the following command outside qemu.
 ```console
 $ cat /home/user/optee/out/bin/serial1.log
-    
+
 [Trimmed output]
 D/TC:? 0 tee_ta_close_session:518 Destroy session
-**Hello World** 
+**Hello World**
 D/TC:? 0 tee_ta_close_session:499 csess 0x3293e860 id 1
 D/TC:? 0 tee_ta_close_session:518 Destroy session
 ```
@@ -330,7 +330,7 @@ Run the TA-Ref pre-built Docker for sgx.
 ```sh
 # Download / Refresh the docker image
 $ docker pull trasioteam/taref-dev:sgx
-    
+
 # Run the docker image
 $ docker run -it trasioteam/taref-dev:sgx
 ```
@@ -365,7 +365,7 @@ Before modification
 
 
     // Inside main(void) function
-    
+
     /* Calling Trusted Application */
     ret = ecall_ta_main(global_eid, TA_REF_HASH_GEN);
     if (ret != SGX_SUCCESS)
@@ -380,7 +380,7 @@ After modification
     #define TA_REF_PRINT_HELLO    0x11111111
 
     // Inside main(void) function
-    
+
     /* Calling Trusted Application */
     ret = ecall_ta_main(global_eid, TA_REF_PRINT_HELLO);
     if (ret != SGX_SUCCESS)
@@ -390,22 +390,22 @@ After modification
 
 **Step 5: Execute the 'Hello World' TA for Intel SGX**
 
-Change directory to the `build-sgx` directory. 
+Change directory to the `build-sgx` directory.
 
 ```sh
 # Change to build-<target> directory
 $ cd build-sgx
-     
+
 # Make the message-digest sample for Simulation mode
 $ make
-    
+
 # This creates the App_sgx and enclave.signed.so
 # You can copy this two files alone to any places and run the App_sgx
 $ ./App_sgx
-    
+
 # [Trimmed Output]
 main start
-Hello World 
+Hello World
 main end
 Info: Enclave successfully returned.
 ```

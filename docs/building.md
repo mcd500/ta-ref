@@ -32,10 +32,10 @@ $ export KEYEDGE_DIR=<path to keyedge directory>
 **Install Keystone-runtime**
 
 ```sh
-$ cd ${KEYSTONE_SDK_DIR} 
-$ git clone https://github.com/keystone-enclave/keystone-runtime.git -b v1.0.0 runtime 
-$ cd runtime 
-$ touch .options_log 
+$ cd ${KEYSTONE_SDK_DIR}
+$ git clone https://github.com/keystone-enclave/keystone-runtime.git -b v1.0.0 runtime
+$ cd runtime
+$ touch .options_log
 $ make BITS=64 OPTIONS_FLAGS="-DUSE_FREEMEM"
 ```
 
@@ -52,7 +52,7 @@ $ git submodule update --init --recursive
 ## Build the ta-ref source for test_hello and test_gp
 
 ```sh
-$ source env/keystone.sh 
+$ source env/keystone.sh
 
 # Build the test_hello TA
 $ make build test-bin MACHINE=SIM TEST_DIR=test_hello
@@ -69,45 +69,45 @@ $ mkdir $KEYSTONE_DIR/build/overlay/root/test_hello
 $ cp test_hello/keystone/App/App.client $KEYSTONE_DIR/build/overlay/root/test_hello/
 $ cp test_hello/keystone/Enclave/Enclave.eapp_riscv $KEYSTONE_DIR/build/overlay/root/test_hello/
 $ cp $KEYSTONE_SDK_DIR/runtime/eyrie-rt $KEYSTONE_DIR/build/overlay/root/test_hello/
-	
-	
+
+
 # Copy the test_gp inside qemu root
-$ mkdir $KEYSTONE_DIR/build/overlay/root/test_gp   
+$ mkdir $KEYSTONE_DIR/build/overlay/root/test_gp
 $ cp test_gp/keystone/App/App.client $KEYSTONE_DIR/build/overlay/root/test_gp/
 $ cp test_gp/keystone/Enclave/Enclave.eapp_riscv $KEYSTONE_DIR/build/overlay/root/test_gp/
-$ cp $KEYSTONE_SDK_DIR/runtime/eyrie-rt $KEYSTONE_DIR/build/overlay/root/test_gp/ 
-	
+$ cp $KEYSTONE_SDK_DIR/runtime/eyrie-rt $KEYSTONE_DIR/build/overlay/root/test_gp/
+
 # Re-build the keystone again to copy test_hello and test_gp inside qemu
 $ cd $KEYSTONE_DIR/build
 $ make
-	
-	
+
+
 # Start the Qemu console from $KEYSTONE_DIR/build dir
-$ ./scripts/run-qemu.sh 
-	
-# When asked for username and password use 
+$ ./scripts/run-qemu.sh
+
+# When asked for username and password use
 # username : root
 # password : sifive
-	
+
 # Inside Qemu run the steps to test test_hello and test_gp
 # Load keystone driver
 $ insmod keystone-driver.ko
-	
+
 # Test test_hello
 # cd test_hello/
-# ./App.client Enclave.eapp_riscv eyrie-rt 
-	
+# ./App.client Enclave.eapp_riscv eyrie-rt
+
 [debug] UTM : 0xffffffff80000000-0xffffffff80100000 (1024 KB) (boot.c:127)
 [debug] DRAM: 0xb7c00000-0xb8000000 (4096 KB) (boot.c:128)
 [debug] FREE: 0xb7dbb000-0xb8000000 (2324 KB), va 0xffffffff001bb000 (boot.c:133)
 [debug] eyrie boot finished. drop to the user land ... (boot.c:172)
 hello world!
-	
 
-# Test Test_gp 
+
+# Test Test_gp
 # cd test_gp   (From base dir)
-# ./App.client Enclave.eapp_riscv eyrie-rt 
-	
+# ./App.client Enclave.eapp_riscv eyrie-rt
+
 [debug] UTM : 0xffffffff80000000-0xffffffff80100000 (1024 KB) (boot.c:127)
 [debug] DRAM: 0xb8000000-0xb8400000 (4096 KB) (boot.c:128)
 [debug] FREE: 0xb81dd000-0xb8400000 (2188 KB), va 0xffffffff001dd000 (boot.c:133)
@@ -207,7 +207,7 @@ TEE_FreeOperation(): start
 TEE_AllocateOperation(): start
 TEE_AsymmetricVerifyDigest(): start
 TEE_FreeOperation(): start
-@@TEE_FreeOperation: 
+@@TEE_FreeOperation:
 TEE_FreeTransientObject(): start
 verify ok
 main end
@@ -215,7 +215,7 @@ main end
 
 # TA-Ref with OP-TEE
 
-Make sure optee has been built already from the preparation steps. 
+Make sure optee has been built already from the preparation steps.
 
 ## Clone the ta-ref source
 
@@ -252,25 +252,25 @@ Below we are going to push it into qemu and test its working
 $ cd ${OPTEE_OUTBR_DIR}/images
 $ rm -rf rootfs && mkdir rootfs && cd rootfs
 $ gzip -dc ../rootfs.cpio.gz | sudo cpio -i
-	
+
 # Copy the test binaries into the extracted directory
 # Create test directories inside root folder and copy the binaries - TEST_HELLO
 $ export OPTEE_TEST_HELLO_DIR=${OPTEE_OUTBR_DIR}/images/rootfs/root/test_hello
 $ sudo mkdir ${OPTEE_TEST_HELLO_DIR}
 $ sudo cp ~/ta-ref/test_hello/optee/App/optee_ref_ta ${OPTEE_TEST_HELLO_DIR}
 $ sudo cp ~/ta-ref/test_hello/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta ${OPTEE_TEST_HELLO_DIR}
-	
+
 # Create test directories inside root folder and copy the binaries - TEST_GP
 $ export OPTEE_TEST_GP_DIR=${OPTEE_OUTBR_DIR}/images/rootfs/root/test_gp
 $ sudo mkdir ${OPTEE_TEST_GP_DIR}
 $ sudo cp ~/ta-ref/test_gp/optee/App/optee_ref_ta ${OPTEE_TEST_GP_DIR}
 $ sudo cp ~/ta-ref/test_gp/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta ${OPTEE_TEST_GP_DIR}
 $ sudo cp ~/ta-ref/test_gp/optee/Enclave/Enclave.nm ${OPTEE_TEST_GP_DIR}
-	
-# Re-pack the rootfs folder into a cpio archive 
+
+# Re-pack the rootfs folder into a cpio archive
 $ cd ${OPTEE_OUTBR_DIR}/images/rootfs
 $ sudo find . | sudo cpio -o -H newc 2> /dev/null | gzip -c9 > ../rootfs.cpio.gz
-	
+
 # Start the Qemu console from $OPTEE_DIR/build directory
 $ ln -sf /home/user/optee/out-br/images/rootfs.cpio.gz /home/user/optee/out/bin
 $ cd /home/user/optee/out/bin && \
@@ -286,32 +286,32 @@ $ cd /home/user/optee/out/bin && \
         -kernel Image -no-acpi \
         -append "console=ttyAMA0,38400 keep_bootcon root=/dev/vda2"
 
-# If you face any error like 
+# If you face any error like
 # qemu-system-aarch64: keep_bootcon: Could not open 'keep_bootcon': No such file or directory
 # Just replace the double quotes in the last line with single quotes.
 
 # When asked for builroot login, please enter root
 # buildroot login: root
-	
+
 # Inside Qemu run the steps to test test_hello and test_gp
 # Test test_hello
 $ cd test_hello/
 $ cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib/optee_armtz/
 $ ./optee_ref_ta
-	
+
 --- enclave log start---
 ecall_ta_main() start
 hello world!
 ecall_ta_main() end
 
 --- enclave log end---
-# 
-		
+#
+
 # Test test_gp
 $ cd ../test_gp/
 $ cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib/optee_armtz/
-$ ./optee_ref_ta 
-	
+$ ./optee_ref_ta
+
 start TEEC_InvokeCommand
 --- enclave log start---
 ecall_ta_main() start
@@ -357,13 +357,13 @@ verify ok
 @digest: 40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880
 @signature: a43c693ccede4504bc921c41ad9c937cd5ed3bab2494a72079f51deffb4d32d3840f55e699aa3
 ec092e033efd4662bb702c6de4cb338f65bd015647d5a10bc62
-@@TEE_FreeOperation: 
+@@TEE_FreeOperation:
 verify ok
 ecall_ta_main() end
-	
+
 --- enclave log end---
 res = TEEC_SUCCESS; TEEC_InvokeCommand succeeded!
-# 
+#
 
 ```
 # TA-Ref with SGX
@@ -387,10 +387,10 @@ $ git submodule update --init --recursive
 # Source SGX environment variables
 $ source /opt/intel/sgxsdk/environment
 $ source env/sgx_x64.sh
-	
+
 # Build test_hello directory
 $ make build test-bin MACHINE=SIM TEST_DIR=test_hello
-	
+
 # Build test_gp directory
 $ make build test-bin MACHINE=SIM TEST_DIR=test_gp
 ```
@@ -398,7 +398,7 @@ $ make build test-bin MACHINE=SIM TEST_DIR=test_gp
 By the above steps, we have successfully built the TA-Ref.
 Since we are building in SIM mode, We can execute in docker itself.
 
-There are two files required to test_hello 
+There are two files required to test_hello
 1) ./sgx_app
 2)enclave.signed.so
 copy the files into a directory and then execute the ./sgx_app command
@@ -410,18 +410,18 @@ Make sure test_hello is already built in SIM mode.
 
 Test_hello:
 
-```sh	
-$ cd 
+```sh
+$ cd
 $ mkdir test_hello
-		
+
 # Copy the sgx_app for test_hello
 $ cp ta-ref/test_hello/sgx/App/sgx_app test_hello/
 # Copy the enclave
-$ cp ta-ref/test_hello/sgx/Enclave/enclave.signed.so test_hello/ 
-	
+$ cp ta-ref/test_hello/sgx/Enclave/enclave.signed.so test_hello/
+
 # Change to test_hello
-$ cd test_hello/ 
-	
+$ cd test_hello/
+
 # Run the program
 $ ./sgx_app
 
@@ -435,18 +435,18 @@ Test_gp:
 Make sure test_hello is already built in SIM mode.
 [Inside /home/user directory]
 
-```sh	
-$ cd 
+```sh
+$ cd
 $ mkdir test_gp
-	
+
 # Copy the sgx_app for test_gp
 $ cp ta-ref/test_gp/sgx/App/sgx_app test_gp/
 # Copy the enclave
-$ cp ta-ref/test_gp/sgx/Enclave/enclave.signed.so test_gp/ 
-	
+$ cp ta-ref/test_gp/sgx/Enclave/enclave.signed.so test_gp/
+
 # Change to test_gp
-$ cd test_gp/ 
-	
+$ cd test_gp/
+
 # Run the program
 $ ./sgx_app
 
@@ -553,7 +553,7 @@ TEE_FreeOperation(): start
 TEE_AllocateOperation(): start
 TEE_AsymmetricVerifyDigest(): start
 TEE_FreeOperation(): start
-@@TEE_FreeOperation: 
+@@TEE_FreeOperation:
 TEE_FreeTransientObject(): start
 verify ok
 main end
@@ -564,27 +564,27 @@ Info: Enclave successfully returned.
 Copy the ta-ref's test_hello & test_gp executables to test directory
 
 ### test_hello
-<br /> 
+<br />
 <br /> Run test_hello
 <br />
 
 ```sh
 $ cp test_hello/sgx/Enclave/enclave.signed.so <test directory>
 $ cp test_hello/sgx/App/sgx_app <test directory>
-$ <test directory>/sgx_app 
+$ <test directory>/sgx_app
 hello world!
 Info: Enclave successfully returned.
 ```
 
 ### test_gp
-<br /> 
+<br />
 <br /> Run test_gp
 <br />
 
 ```sh
 $ cp test_gp/sgx/Enclave/enclave.signed.so <test directory>
 $ cp test_gp/sgx/App/sgx_app <test directory>
-$ <test directory>/sgx_app 
+$ <test directory>/sgx_app
 main start
 TEE_GenerateRandom(): start
 @random: f35c1d1e4bbf6641c5511c9dc5aaf638
@@ -687,7 +687,7 @@ TEE_FreeOperation(): start
 TEE_AllocateOperation(): start
 TEE_AsymmetricVerifyDigest(): start
 TEE_FreeOperation(): start
-@@TEE_FreeOperation: 
+@@TEE_FreeOperation:
 TEE_FreeTransientObject(): start
 verify ok
 main end

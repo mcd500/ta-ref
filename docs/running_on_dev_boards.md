@@ -35,8 +35,8 @@ Partition table scan:
 Found valid GPT with protective MBR; using GPT.
 
 Command (? for help): n
-Partition number (1-128, default 1): 1 
-First sector (34-15523806, default = 2048) or {+-}size{KMGTP}: 
+Partition number (1-128, default 1): 1
+First sector (34-15523806, default = 2048) or {+-}size{KMGTP}:
 Last sector (2048-15523806, default = 15523806) or {+-}size{KMGTP}: 67583
 Current type is 'Linux filesystem'
 Hex code or GUID (L to show codes, Enter = 8300): 5202
@@ -44,16 +44,16 @@ Changed type of partition to 'SiFive bare-metal (or stage 2 loader)'
 
 Command (? for help): n
 Partition number (2-128, default 2): 4
-First sector (34-15523806, default = 67584) or {+-}size{KMGTP}: 
+First sector (34-15523806, default = 67584) or {+-}size{KMGTP}:
 Last sector (67584-15523806, default = 15523806) or {+-}size{KMGTP}: 67839
 Current type is 'Linux filesystem'
 Hex code or GUID (L to show codes, Enter = 8300): 5201
 Changed type of partition to 'SiFive FSBL (first-stage bootloader)'
 
 Command (? for help): n
-Partition number (2-128, default 2): 
+Partition number (2-128, default 2):
 First sector (34-15523806, default = 69632) or {+-}size{KMGTP}: 264192
-Last sector (264192-15523806, default = 15523806) or {+-}size{KMGTP}: 
+Last sector (264192-15523806, default = 15523806) or {+-}size{KMGTP}:
 Current type is 'Linux filesystem'
 Hex code or GUID (L to show codes, Enter = 8300): 8300
 Changed type of partition to 'Linux filesystem'
@@ -114,7 +114,7 @@ Build FSBL for hifive-Unleased board
 $ git clone https://github.com/keystone-enclave/freedom-u540-c000-bootloader.git
 $ cd freedom-u540-c000-bootloader
 $ git checkout -b dev-unleashed bbfcc288fb438312af51adef420aa444a0833452
-$ # Make sure riscv64 compiler set to PATH (export PATH=$KEYSTONE_DIR/riscv/bin:$PATH) 
+$ # Make sure riscv64 compiler set to PATH (export PATH=$KEYSTONE_DIR/riscv/bin:$PATH)
 $ make
 ```
 
@@ -159,8 +159,8 @@ Login to serial console with user=root, passwd=sifive
 
 ```console
 buildroot login: root
-Password: 
-$ 
+Password:
+$
 ```
 
 test_hello:
@@ -265,7 +265,7 @@ TEE_FreeOperation(): start
 TEE_AllocateOperation(): start
 TEE_AsymmetricVerifyDigest(): start
 TEE_FreeOperation(): start
-@@TEE_FreeOperation: 
+@@TEE_FreeOperation:
 TEE_FreeTransientObject(): start
 verify ok
 main end
@@ -282,7 +282,7 @@ Make sure OP-TEE v3.9.0 and other dependant sources have been built
 Use following examples to create partitions of boot and roots on SD-card
 
 ```sh
-$ make img-help 
+$ make img-help
 $ fdisk /dev/sdx   # where sdx is the name of your sd-card
    > p             # prints partition table
    > d             # repeat until all partitions are deleted
@@ -346,7 +346,7 @@ $ sudo cp ta-ref/test_hello/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.t
 
 $ sudo cp ta-ref/test_gp/optee/App/optee_ref_ta /media/rootfs/home/gitlab/out/test_gp/
 $ sudo cp ta-ref/test_gp/optee/Enclave/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
-   /media/rootfs/home/gitlab/out/test_gp/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta 
+   /media/rootfs/home/gitlab/out/test_gp/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
 $ sudo cp ta-ref/test_gp/optee/Enclave/Enclave.nm /media/rootfs/home/gitlab/out/test_gp/
 ```
 
@@ -359,8 +359,8 @@ $ sudo cp ta-ref/test_gp/optee/Enclave/Enclave.nm /media/rootfs/home/gitlab/out/
 Login to Serial console and enter "root" as username
 ```sh
 buildroot login: root
-Password: 
-$ 
+Password:
+$
 ```
 
 test_hello:
@@ -369,7 +369,7 @@ $ cp /home/gitlab/out/test_hello/
 $ cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /home/gitlab/out/
 $ ln -s /home/gitlab/out/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
     /lib64/optee_armtz/a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta
-$ ./optee_ref_ta 
+$ ./optee_ref_ta
 --- enclave log start---
 ecall_ta_main() start
 hello world!
@@ -429,7 +429,7 @@ verify ok
 @digest: 40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880
 @signature: 719fa9898f3423b754675b835268f9b2368b77a429eeabf7369d60d135dee08158c3902fd2ed3c1bf17cb34e
 76f2ba25da915fa3970c757962f7533c8d8bad7d
-@@TEE_FreeOperation: 
+@@TEE_FreeOperation:
 verify ok
 ecall_ta_main() end
 --- enclave log end---
@@ -462,7 +462,7 @@ Now can login to NUC machine for further testing.
 Checking test_hello
 ```console
 $ cd ~/test_hello
-$ ./sgx_app 
+$ ./sgx_app
 hello world!
 Info: Enclave successfully returned.
 ```
@@ -573,7 +573,7 @@ TEE_FreeOperation(): start
 TEE_AllocateOperation(): start
 TEE_AsymmetricVerifyDigest(): start
 TEE_FreeOperation(): start
-@@TEE_FreeOperation: 
+@@TEE_FreeOperation:
 TEE_FreeTransientObject(): start
 verify ok
 main end

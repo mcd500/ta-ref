@@ -7,7 +7,7 @@ Many recent devices are able to be customized by installing softwares from end u
 The TEE provides a secure software runtime environment for the security sensitive software from preventing interference on customizable devices of softwares running on a normal operating system.
 
 ## Features of TA-Ref
-  - Provides Portable API and SDK among Intel SGX, ARM TrustZone-A and RISC-V Keystone 
+  - Provides Portable API and SDK among Intel SGX, ARM TrustZone-A and RISC-V Keystone
   - Provides portability for source codes of Trusted Applications among SGX, TrustZone and Keystone
   - Provides subset of Global Platform API on TEE
   - Tutorial programs of common usage of hash functions, symmetric algorithm and asymmetric algorithm
@@ -57,7 +57,7 @@ The diagram shows implementation of TA-Ref and Trusted Applications on SGX. Unli
   - Keystone SDK is utilized because of runtime "Eyrie".
   - The library is ported to Intel SGX as well as RISC-V Keystone.
 
-### Challenges faced during Implementation 
+### Challenges faced during Implementation
   - The combination of GP internal API and cipher suite is big.
     - To reduce the size, We pick up some important GP internal APIs.
   - Some APIs depend on CPU architecture.
