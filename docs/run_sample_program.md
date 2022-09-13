@@ -1,11 +1,11 @@
-# How to run sample TA programs on ta-ref
+# How to run sample TA programs on TA-Ref
 
-Currently ta-ref supports writing TA's for three targets namely
+Currently TA-Ref supports writing TA's for three targets namely
 - Keystone
 - OP-TEE
 - Intel SGX
 
-The pre-built ta-ref docker images for all three targets are already available.
+The pre-built TA-Ref docker images for all three targets are already available.
 The details are mentioned below
 
 | Target | docker image |

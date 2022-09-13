@@ -46,7 +46,7 @@ Basically we need to modify two files
 
 **Step 1: Run the docker image**
 
-Run the ta-ref pre-built docker for keystone.
+Run the TA-Ref pre-built docker for keystone.
 
 ```sh
 # Download / Refresh the docker image
@@ -214,7 +214,7 @@ Here you can see the text 'Hello World' printed in the log.
 
 **Step 1: Run the docker image**
 
-Run the ta-ref pre-built docker for optee.
+Run the TA-Ref pre-built docker for optee.
 
 ```sh
 # Download / Refresh the docker image
@@ -325,7 +325,7 @@ Here you can see the text 'Hello World' printed in the log.
 
 **Step 1: Run the docker image**
 
-Run the ta-ref pre-built docker for sgx.
+Run the TA-Ref pre-built docker for sgx.
 
 ```sh
 # Download / Refresh the docker image

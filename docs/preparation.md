@@ -1,4 +1,4 @@
-# Preparation before building ta-ref without Docker
+# Preparation before building TA-Ref without Docker
 
 All the preparation steps below are based on Ubuntu 20.04
 
@@ -10,7 +10,7 @@ Keystone is an open-source TEE framework for RISC-V processors. For more details
 
 ## Required Packages
 
-Install the following packages for building ta-ref on Keystone
+Install the following packages for building TA-Ref on Keystone
 
 ```sh
 $ sudo apt-get update
@@ -23,7 +23,7 @@ $ sudo apt-get install -y autoconf automake autotools-dev bc bison \
   libssl-dev screen device-tree-compiler expect makeself unzip cpio rsync cmake \
   p7zip-full python3-pip
 
-# Following packages are required for clang, keyedge and make run commands in ta-ref.
+# Following packages are required for clang, keyedge and make run commands in TA-Ref.
 $ sudo apt-get install -y clang-tools-6.0 libclang-6.0-dev cmake \
 	ocaml expect screen sshpass
 ```
@@ -305,7 +305,7 @@ who is seeking to protect selected code and data from disclosure or modification
 ## System Requirements
 
 ### List of machines which are confirmed to work
-Following are the the Intel NUC device which has been tested to make sure the ta-ref sdk worked fine.
+Following are the the Intel NUC device which has been tested to make sure the TA-Ref sdk worked fine.
 
 1. Intel NUC7PJYH	- 	Intel(R) Celeron(R) J4005 CPU @ 2.00GHz
 2. Intel NUC7PJYH	- 	Intel(R) Pentium(R) Silver J5005 CPU @ 1.50GHz
@@ -413,7 +413,7 @@ $ sudo dpkg -i ${SGX_PSW_INSTALLER_DIR}/deb/*/*.deb
 ```
 
 If you are going to run in a SIM mode (not running in actaul Intel SGX hardware),
-then you can skip the following steps and go to building ta-ref for Intel sgx section.
+then you can skip the following steps and go to building TA-Ref for Intel sgx section.
 
 ### Build and Install SGX Driver
 
@@ -739,10 +739,10 @@ total 24
 ```
 
 
-### ta-ref mbetls config file
+### TA-Ref mbetls config file
 <br />
 
-Location of the config file in ta-ref environment<br />
+Location of the config file in TA-Ref environment<br />
 <code>ta-ref/teep-device/libteep/mbedtls/include/mbedtls/config.h</code>
 <br />
 
@@ -752,7 +752,7 @@ Example source:<br />
 <br />
 
 Some sample configurations can be found in `configs/` directory.
-In ta-ref, the contents of configs directory is listed below.
+In TA-Ref, the contents of configs directory is listed below.
 ```sh
 $ ls -l ta-ref/teep-device/libteep/mbedtls/configs
 total 24
