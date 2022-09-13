@@ -273,7 +273,7 @@ main end
 
 Test is successful.
 
-# OP-TEE, RPI3
+# OP-TEE, Raspberry PI 3
 
 Make sure OP-TEE v3.9.0 and other dependant sources have been built
 
@@ -331,7 +331,7 @@ $ rm -rf /media/rootfs/boot/*
 $ cd .. && sudo umount rootfs
 ```
 
-Now SD-card is ready to boot RPI3.
+Now SD-card is ready to boot Raspberry PI 3.
 
 ## Copying binaries of test_hello and test_gp to rootfs partition
 <br />
@@ -351,9 +351,9 @@ $ sudo cp ta-ref/test_gp/optee/Enclave/Enclave.nm /media/rootfs/home/gitlab/out/
 ```
 
 ## Check test_hello and test_gp
-1. Insert SD-card into RPI3 board, then power-on
-2. Connect RPI3 board Serial console to your laptop (/dev/ttyUSB0 over minicom)
-3. Checking on RPI3
+1. Insert SD-card into Raspberry PI 3 board, then power-on
+2. Connect Raspberry PI 3 board Serial console to your laptop (/dev/ttyUSB0 over minicom)
+3. Checking on Raspberry PI 3
 <br />
 
 Login to Serial console and enter "root" as username
