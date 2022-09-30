@@ -56,7 +56,7 @@ int tee_printf(const char* fmt, ...);
 #endif
 
 #ifdef __cplusplus
-extern "C" {
+}
 #endif
 
 #endif /* _CONFIG_REF_TA_H */

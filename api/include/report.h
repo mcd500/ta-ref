@@ -66,7 +66,7 @@ struct report
 };
 
 #ifdef __cplusplus
-extern "C" {
+}
 #endif
 
 #endif /* _REPORT_H */
