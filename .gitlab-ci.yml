@@ -519,11 +519,11 @@ trigger_docker-taref-dev:
     variables:
         GIT_STRATEGY: none
         GIT_SUBMODULE_STRATEGY: none
-        TOKEN: 29d9f4acb972460d03f8bd22e76880
+        TOKEN: a53b1d7a89b225601a16d6522f402b
     stage: trigger
     tags:
         - fast-shells
     script:
-        - "curl -X POST -F token=${TOKEN} -F ref=main
+        - "curl -X POST --fail -F token=${TOKEN} -F ref=main
             -k https://192.168.100.100/api/v4/projects/132/trigger/pipeline"
 
