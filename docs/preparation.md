@@ -461,9 +461,11 @@ $ cd ..
 
 Clone and build sgx-ra-sample
 <br />
+
 ```sh
 $ git clone https://github.com/intel/sgx-ra-sample.git
 $ cd sgx-ra-sample/
+$ sudo ldconfig /opt/intel/sgxsdk/lib64
 $ ./bootstrap
 $ ./configure --with-openssldir=/opt/openssl/1.1.1c
 $ make
