@@ -506,6 +506,7 @@ doxygen:
     script:
         - make docs
     artifacts:
+        name: "ta-ref-docs"
         paths:
             - docs/ta-ref.pdf
             - docs/ta-ref-spec.pdf
@@ -513,7 +514,7 @@ doxygen:
             - docs/html_spec.tar.gz
         expire_in: 1 week
 
-### DOXYGEN - START ###
+### DOXYGEN - END ###
 
 trigger_docker-taref-dev:
     variables:
