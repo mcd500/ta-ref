@@ -412,8 +412,14 @@ $ rm ${SGX_PSW_INSTALLER_DIR}/deb/*/sgx-dcap-pccs*.deb
 $ sudo dpkg -i ${SGX_PSW_INSTALLER_DIR}/deb/*/*.deb
 ```
 
+Making it sure the installed SGX libaries will properly working.
+
+```
+$ sudo ldconfig /opt/intel/sgxsdk/lib64
+```
+
 If you are going to run in a SIM mode (not running in actaul Intel SGX hardware),
-then you can skip the following steps and go to building TA-Ref for Intel sgx section.
+then you can skip the following steps and go to building TA-Ref for Intel SGX section.
 
 ### Build and Install SGX Driver
 
@@ -465,7 +471,6 @@ Clone and build sgx-ra-sample
 ```sh
 $ git clone https://github.com/intel/sgx-ra-sample.git
 $ cd sgx-ra-sample/
-$ sudo ldconfig /opt/intel/sgxsdk/lib64
 $ ./bootstrap
 $ ./configure --with-openssldir=/opt/openssl/1.1.1c
 $ make
