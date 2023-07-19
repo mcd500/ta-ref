@@ -175,7 +175,7 @@ $ sudo apt-get install -y android-tools-adb android-tools-fastboot autoconf \
 Set the locale to English, to cope with the problem, https://github.com/OP-TEE/build/issues/424#issuecomment-631302208.
 
 ```sh
-$ locale-gen en_US.UTF-8
+$ sudo locale-gen en_US.UTF-8
 $ export LANG=en_US.UTF-8
 $ export LANGUAGE=en_US:en
 $ export LC_ALL=en_US.UTF-8
@@ -186,7 +186,7 @@ $ export LC_ALL=en_US.UTF-8
 Create the directory to build the OP-TEE toolchains and export the toolchain directory
 
 ```sh
-$ mkdir -p /opt/arm-tc
+$ sudo mkdir -p /opt/arm-tc
 $ export TOOLCHAIN_DIR=/opt/arm-tc
 ```
 
