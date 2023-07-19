@@ -196,7 +196,7 @@ Clone and build the OP-TEE toolchain
 $ git clone https://github.com/OP-TEE/build.git -b 3.10.0
 $ cd build
 $ sudo make TOOLCHAIN_ROOT=${TOOLCHAIN_DIR} -f toolchain.mk -j2
-$ export PATH=${TOOLCHAIN_DIR}/aarch64/bin;${TOOLCHAIN_DIR}/aarch32/bin;${PATH}
+$ export PATH=${TOOLCHAIN_DIR}/aarch64/bin:${TOOLCHAIN_DIR}/aarch32/bin:${PATH}
 ```
 
 ## Download OP-TEE 3.10.0
