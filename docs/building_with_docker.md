@@ -85,7 +85,7 @@ Following commands are to be executed on Ubuntu 20.04.
 
 ```sh
 # Clone the TA-Ref repo and checkout teep-master branch
-$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ git clone https://github.com/mcd500/ta-ref.git
 $ cd ta-ref/
 $ git checkout teep-master
 
@@ -283,7 +283,7 @@ Following commands are to be executed on Ubuntu 20.04.
 
 ```sh
 # Clone the ta-ref repo and checkout teep-master branch
-$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ git clone https://github.com/mcd500/ta-ref.git
 $ cd ta-ref/
 $ git checkout teep-master
 
@@ -424,7 +424,7 @@ Following commands are to be executed on Ubuntu 20.04.
 
 ```sh
 # Clone the ta-ref repo and checkout teep-master branch
-$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ git clone https://github.com/mcd500/ta-ref.git
 $ cd ta-ref/
 $ git checkout teep-master
 
