@@ -7,7 +7,7 @@ Many recent devices are able to be customized by installing softwares from end u
 The TEE provides a secure software runtime environment for the security sensitive software from preventing interference on customizable devices of softwares running on a normal operating system.
 
 ## Features of TA-Ref
-  - Provides Portable API and SDK among Intel SGX, ARM TrustZone-A and RISC-V Keystone 
+  - Provides Portable API and SDK among Intel SGX, ARM TrustZone-A and RISC-V Keystone
   - Provides portability for source codes of Trusted Applications among SGX, TrustZone and Keystone
   - Provides subset of Global Platform API on TEE
   - Tutorial programs of common usage of hash functions, symmetric algorithm and asymmetric algorithm
@@ -53,7 +53,7 @@ The diagram shows implementation of TA-Ref and Trusted Applications on SGX. Unli
   - Keystone SDK is utilized because of runtime "Eyrie".
   - The library is ported to Intel SGX as well as RISC-V Keystone.
 
-### Challenges faced during Implementation 
+### Challenges faced during Implementation
   - The combination of GP internal API and cipher suite is big.
     - To reduce the size, We pick up some important GP internal APIs.
   - Some APIs depend on CPU architecture.
@@ -78,12 +78,12 @@ Following shows the table of CPU Dependent and Independent API's with its functi
 
 ![](docs/images/dependency_category.png)
 
-# Preparation and building ta-ref with docker
+# Preparation and building TA-Ref with docker
 
 
 ## Preparation
 
-For building ta-ref with docker, it is required to install docker on Ubuntu.
+For building TA-Ref with docker, it is required to install docker on Ubuntu.
 
 For the first time users of docker, please have a look on https://docs.docker.com/engine/
 
@@ -93,20 +93,20 @@ The following installation steps is for Ubuntu 20.04
 
 ```sh
 $ sudo apt update
-	 
+
 # Next, install a few prerequisite packages which let apt use packages over HTTPS:
 $ sudo apt install apt-transport-https ca-certificates curl software-properties-common
-	 
+
 # Then add the GPG key for the official Docker repository to your system:
 $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-	
+
 # Add the Docker repository to APT sources:
 $ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
-	 
+
 # This will also update our package database with the Docker packages from the newly added repo.
 # Make sure you are about to install from the Docker repo instead of the default Ubuntu repo:
 $ apt-cache policy docker-ce
-		 
+
 #Finally, install Docker
 $ sudo apt install docker-ce
 ```
@@ -137,16 +137,16 @@ $ docker run hello-world
 
 ### Create a docker network tamproto
 
-A docker network named tamproto is required when we run ta-ref for Keystone.
+A docker network named tamproto is required when we run TA-Ref for Keystone.
 The local network is required to connect with tamproto service running locally.
 
 ```sh
-$ docker network create tamproto_default 
+$ docker network create tamproto_default
 ```
 
 ## Docker images details
 
-The docker images with all necessary packages for building ta-ref for all three targets are already available.
+The docker images with all necessary packages for building TA-Ref for all three targets are already available.
 Make sure you have account on docker-hub. If not please create one on `dockerhub.com`
 The details are mentioned below
 
@@ -157,22 +157,22 @@ The details are mentioned below
 | Intel SGX | aistcpsec/tee-dev:sgx-2.10 |
 
 
-## Building ta-ref with Docker
+## Building TA-Ref with Docker
 
-### Building ta-ref for Keystone with docker
+### Building TA-Ref for Keystone with docker
 
 Following commands are to be executed on Ubuntu 20.04.
 
 ```sh
-# Clone the ta-ref repo and checkout teep-master branch
-$ git clone https://192.168.100.100/rinkai/ta-ref.git
+# Clone the TA-Ref repo and checkout teep-master branch
+$ git clone https://github.com/mcd500/ta-ref.git
 $ cd ta-ref/
 $ git checkout teep-master
-	
+
 # Sync and update the submodules
 $ git submodule sync --recursive
 $ git submodule update --init --recursive
-	
+
 # Start the docker
 $ docker run --network tamproto_default -it --rm -v $(pwd):/home/user/ta-ref
  aistcpsec/tee-dev:keystone-1.0.0
@@ -183,18 +183,18 @@ Following are the  commands to be executed inside the docker
 
 ```sh
 # [Inside docker image]
-	
+
 $ cd ta-ref/
 $ source env/keystone.sh
-	
+
 # Build test_hello directory
 $ make build test-bin MACHINE=SIM TEST_DIR=test_hello
-	
+
 # Build test_gp directory
 $ make build test-bin MACHINE=SIM TEST_DIR=test_gp
 ```
 
-By the above steps, we have successfully built the ta-ref.
+By the above steps, we have successfully built the TA-Ref.
 Below we are going to push it into qemu and test its working
 
 
@@ -207,45 +207,45 @@ $ mkdir $KEYSTONE_DIR/build/overlay/root/test_hello
 $ cp test_hello/keystone/App/App.client $KEYSTONE_DIR/build/overlay/root/test_hello/
 $ cp test_hello/keystone/Enclave/Enclave.eapp_riscv $KEYSTONE_DIR/build/overlay/root/test_hello/
 $ cp $KEYSTONE_SDK_DIR/runtime/eyrie-rt $KEYSTONE_DIR/build/overlay/root/test_hello/
-	
-	
+
+
 # Copy the test_gp inside qemu root
-$ mkdir $KEYSTONE_DIR/build/overlay/root/test_gp   
+$ mkdir $KEYSTONE_DIR/build/overlay/root/test_gp
 $ cp test_gp/keystone/App/App.client $KEYSTONE_DIR/build/overlay/root/test_gp/
 $ cp test_gp/keystone/Enclave/Enclave.eapp_riscv $KEYSTONE_DIR/build/overlay/root/test_gp/
-$ cp $KEYSTONE_SDK_DIR/runtime/eyrie-rt $KEYSTONE_DIR/build/overlay/root/test_gp/ 
-	
+$ cp $KEYSTONE_SDK_DIR/runtime/eyrie-rt $KEYSTONE_DIR/build/overlay/root/test_gp/
+
 # Re-build the keystone again to copy test_hello and test_gp inside qemu
 $ cd $KEYSTONE_DIR/build
 $ make
-	
-	
+
+
 # Start the Qemu console from $KEYSTONE_DIR/build dir
-$ ./scripts/run-qemu.sh 
-	
-# When asked for username and password use 
+$ ./scripts/run-qemu.sh
+
+# When asked for username and password use
 # username : root
 # password : sifive
-	
+
 # Inside Qemu run the steps to test test_hello and test_gp
 # Load keystone driver
 $ insmod keystone-driver.ko
-	
+
 # Test test_hello
 $ cd test_hello/
-$ ./App.client Enclave.eapp_riscv eyrie-rt 
-	
+$ ./App.client Enclave.eapp_riscv eyrie-rt
+
 [debug] UTM : 0xffffffff80000000-0xffffffff80100000 (1024 KB) (boot.c:127)
 [debug] DRAM: 0xb7c00000-0xb8000000 (4096 KB) (boot.c:128)
 [debug] FREE: 0xb7dbb000-0xb8000000 (2324 KB), va 0xffffffff001bb000 (boot.c:133)
 [debug] eyrie boot finished. drop to the user land ... (boot.c:172)
 hello world!
-	
 
-# Test Test_gp 
-$ cd ../test_gp/  
-$ ./App.client Enclave.eapp_riscv eyrie-rt 
-	
+
+# Test Test_gp
+$ cd ../test_gp/
+$ ./App.client Enclave.eapp_riscv eyrie-rt
+
 [debug] UTM : 0xffffffff80000000-0xffffffff80100000 (1024 KB) (boot.c:127)
 [debug] DRAM: 0xb8000000-0xb8400000 (4096 KB) (boot.c:128)
 [debug] FREE: 0xb81dd000-0xb8400000 (2188 KB), va 0xffffffff001dd000 (boot.c:133)
@@ -345,7 +345,7 @@ TEE_FreeOperation(): start
 TEE_AllocateOperation(): start
 TEE_AsymmetricVerifyDigest(): start
 TEE_FreeOperation(): start
-@@TEE_FreeOperation: 
+@@TEE_FreeOperation:
 TEE_FreeTransientObject(): start
 verify ok
 main end
@@ -355,22 +355,22 @@ Poweroff the console incase, if you want to exit.
 ```
 $ poweroff
 ```
-You can also press Ctrl a+x to exit the qemu console. 
+You can also press Ctrl a+x to exit the qemu console.
 
-### Building ta-ref for OP-TEE with docker
+### Building TA-Ref for OP-TEE with docker
 
 Following commands are to be executed on Ubuntu 20.04.
 
 ```sh
 # Clone the ta-ref repo and checkout teep-master branch
-$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ git clone https://github.com/mcd500/ta-ref.git
 $ cd ta-ref/
 $ git checkout teep-master
-	
+
 # Sync and update the submodules
 $ git submodule sync --recursive
 $ git submodule update --init --recursive
-	
+
 # Start the docker
 $ docker run -it --rm -v $(pwd):/home/user/ta-ref aistcpsec/tee-dev:optee-3.10.0
 ```
@@ -380,18 +380,18 @@ Following are the  commands to be executed inside the docker
 
 ```sh
 # [Inside docker image]
-	
+
 $ cd ta-ref/
-$ source env/optee_qemu.sh 
-	
+$ source env/optee_qemu.sh
+
 # Build test_hello directory
 $ make build test-bin MACHINE=SIM TEST_DIR=test_hello
-	
+
 # Build test_gp directory
 $ make build test-bin MACHINE=SIM TEST_DIR=test_gp
 ```
 
-By the above steps, we have successfully built the ta-ref.
+By the above steps, we have successfully built the TA-Ref.
 Below we are going to push it into qemu and test its working
 
 **Test the built test_hello, test_gp binaries in Qemu**
@@ -401,7 +401,7 @@ Below we are going to push it into qemu and test its working
 # copy the binaries into qemu rootfs directory
 # Re-pack the rootfs folder into a cpio archive
 $ make install_optee_qemu
-	
+
 # Start the Qemu console from $OPTEE_DIR/build directory
 $ ln -sf /home/user/optee/out-br/images/rootfs.cpio.gz /home/user/optee/out/bin
 $ cd /home/user/optee/out/bin && \
@@ -417,32 +417,32 @@ $ cd /home/user/optee/out/bin && \
         -kernel Image -no-acpi \
         -append "console=ttyAMA0,38400 keep_bootcon root=/dev/vda2"
 
-# If you face any error like 
+# If you face any error like
 # qemu-system-aarch64: keep_bootcon: Could not open 'keep_bootcon': No such file or directory
 # Just replace the double quotes in the last line with single quotes.
 
 # When asked for builroot login, please enter root
 # buildroot login: root
-	
+
 # Inside Qemu run the steps to test test_hello and test_gp
 # Test test_hello
 $ cd test_hello/
 $ cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib/optee_armtz/
 $ ./optee_ref_ta
-	
+
 --- enclave log start---
 ecall_ta_main() start
 hello world!
 ecall_ta_main() end
 
 --- enclave log end---
-# 
-		
+#
+
 # Test test_gp
 $ cd ../test_gp/
 $ cp a6f77c1e-96fe-4a0e-9e74-262582a4c8f1.ta /lib/optee_armtz/
-$ ./optee_ref_ta 
-	
+$ ./optee_ref_ta
+
 start TEEC_InvokeCommand
 --- enclave log start---
 ecall_ta_main() start
@@ -488,30 +488,30 @@ verify ok
 @digest: 40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880
 @signature: a43c693ccede4504bc921c41ad9c937cd5ed3bab2494a72079f51deffb4d32d3840f55e699aa3
 ec092e033efd4662bb702c6de4cb338f65bd015647d5a10bc62
-@@TEE_FreeOperation: 
+@@TEE_FreeOperation:
 verify ok
 ecall_ta_main() end
-	
+
 --- enclave log end---
 res = TEEC_SUCCESS; TEEC_InvokeCommand succeeded!
-# 
+#
 
 ```
 
-### Building ta-ref for Intel SGX with docker
+### Building TA-Ref for Intel SGX with docker
 
 Following commands are to be executed on Ubuntu 20.04.
 
 ```sh
 # Clone the ta-ref repo and checkout teep-master branch
-$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ git clone https://github.com/mcd500/ta-ref.git
 $ cd ta-ref/
 $ git checkout teep-master
-	
+
 # Sync and update the submodules
 $ git submodule sync --recursive
 $ git submodule update --init --recursive
-	
+
 # Start the docker
 $ docker run -it --rm -v $(pwd):/home/user/ta-ref aistcpsec/tee-dev:sgx-2.10
 ```
@@ -520,22 +520,22 @@ Commands to be executed inside docker:
 
 ```sh
 $ cd ta-ref/
-	
+
 # Source SGX environment variables
 $ source /opt/intel/sgxsdk/environment
 $ source env/sgx_x64.sh
-	
+
 # Build test_hello directory
 $ make build test-bin MACHINE=SIM TEST_DIR=test_hello
-	
+
 # Build test_gp directory
 $ make build test-bin MACHINE=SIM TEST_DIR=test_gp
 ```
 
-By the above steps, we have successfully built the ta-ref.
+By the above steps, we have successfully built the TA-Ref.
 Since we are building in SIM mode, We can execute in docker itself.
 
-There are two files required to test_hello 
+There are two files required to test_hello
 1) ./sgx_app
 2)enclave.signed.so
 copy the files into a directory and then execute the ./sgx_app command
@@ -547,18 +547,14 @@ Make sure test_hello is already built in SIM mode.
 
 Test_hello:
 
-```sh	
-$ cd 
-$ mkdir test_hello
-		
+```sh
+$ cd test_hello/
+
 # Copy the sgx_app for test_hello
-$ cp ta-ref/test_hello/sgx/App/sgx_app test_hello/
+$ cp sgx/App/sgx_app .
 # Copy the enclave
-$ cp ta-ref/test_hello/sgx/Enclave/enclave.signed.so test_hello/ 
-	
-# Change to test_hello
-$ cd test_hello/ 
-	
+$ cp sgx/Enclave/enclave.signed.so .
+
 # Run the program
 $ ./sgx_app
 
@@ -572,18 +568,14 @@ Test_gp:
 Make sure test_hello is already built in SIM mode.
 [Inside /home/user directory]
 
-```sh	
-$ cd 
-$ mkdir test_gp
-	
+```sh
+$ cd test_gp/
+
 # Copy the sgx_app for test_gp
-$ cp ta-ref/test_gp/sgx/App/sgx_app test_gp/
+$ cp sgx/App/sgx_app .
 # Copy the enclave
-$ cp ta-ref/test_gp/sgx/Enclave/enclave.signed.so test_gp/ 
-	
-# Change to test_gp
-$ cd test_gp/ 
-	
+$ cp sgx/Enclave/enclave.signed.so .
+
 # Run the program
 $ ./sgx_app
 
@@ -690,7 +682,7 @@ TEE_FreeOperation(): start
 TEE_AllocateOperation(): start
 TEE_AsymmetricVerifyDigest(): start
 TEE_FreeOperation(): start
-@@TEE_FreeOperation: 
+@@TEE_FreeOperation:
 TEE_FreeTransientObject(): start
 verify ok
 main end

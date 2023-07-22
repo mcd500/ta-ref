@@ -13,7 +13,7 @@ Prerequisites: libncursesw5-dev, libpopt-dev
 ```sh
 $ cd ..
 $ sudo apt install libncursesw5-dev lib64ncurses5-dev uuid-dev libpopt-dev build-essential
-$ git clone https://192.168.100.100/rinkai/gptfdisk.git
+$ git clone https://github.com/tmagik/gptfdisk.git
 $ cd gptfdisk
 $ git checkout -b risc-v-sd 3d6a15873f582803aa8ad3288b3e32d3daff9fde
 $ make

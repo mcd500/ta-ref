@@ -85,7 +85,7 @@ Following commands are to be executed on Ubuntu 20.04.
 
 ```sh
 # Clone the TA-Ref repo and checkout teep-master branch
-$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ git clone https://github.com/mcd500/ta-ref.git
 $ cd ta-ref/
 $ git checkout teep-master
 
@@ -283,7 +283,7 @@ Following commands are to be executed on Ubuntu 20.04.
 
 ```sh
 # Clone the ta-ref repo and checkout teep-master branch
-$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ git clone https://github.com/mcd500/ta-ref.git
 $ cd ta-ref/
 $ git checkout teep-master
 
@@ -424,7 +424,7 @@ Following commands are to be executed on Ubuntu 20.04.
 
 ```sh
 # Clone the ta-ref repo and checkout teep-master branch
-$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ git clone https://github.com/mcd500/ta-ref.git
 $ cd ta-ref/
 $ git checkout teep-master
 
@@ -468,16 +468,12 @@ Make sure test_hello is already built in SIM mode.
 Test_hello:
 
 ```sh
-$ cd
-$ mkdir test_hello
+$ cd test_hello/
 
 # Copy the sgx_app for test_hello
-$ cp ta-ref/test_hello/sgx/App/sgx_app test_hello/
+$ cp sgx/App/sgx_app .
 # Copy the enclave
-$ cp ta-ref/test_hello/sgx/Enclave/enclave.signed.so test_hello/
-
-# Change to test_hello
-$ cd test_hello/
+$ cp sgx/Enclave/enclave.signed.so .
 
 # Run the program
 $ ./sgx_app
@@ -493,16 +489,12 @@ Make sure test_hello is already built in SIM mode.
 [Inside /home/user directory]
 
 ```sh
-$ cd
-$ mkdir test_gp
+$ cd test_gp/
 
 # Copy the sgx_app for test_gp
-$ cp ta-ref/test_gp/sgx/App/sgx_app test_gp/
+$ cp sgx/App/sgx_app .
 # Copy the enclave
-$ cp ta-ref/test_gp/sgx/Enclave/enclave.signed.so test_gp/
-
-# Change to test_gp
-$ cd test_gp/
+$ cp sgx/Enclave/enclave.signed.so .
 
 # Run the program
 $ ./sgx_app

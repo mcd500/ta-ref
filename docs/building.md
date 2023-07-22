@@ -42,7 +42,7 @@ $ make BITS=64 OPTIONS_FLAGS="-DUSE_FREEMEM"
 ## Clone the ta-ref source
 
 ```sh
-$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ git clone https://github.com/mcd500/ta-ref.git
 $ cd ta-ref
 $ git checkout teep-master
 $ git submodule sync --recursive
@@ -222,7 +222,7 @@ Make sure optee has been built already from the preparation steps.
 Clone the source
 
 ```sh
-$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ git clone https://github.com/mcd500/ta-ref.git
 $ cd ta-ref
 $ git checkout teep-master
 $ git submodule sync --recursive
@@ -373,7 +373,7 @@ Build TA-Ref for Intel SGX platforms
 ## Clone the ta-ref source
 
 ```sh
-$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ git clone https://github.com/mcd500/ta-ref.git
 $ cd ta-ref
 $ git checkout teep-master
 $ git submodule sync --recursive
@@ -703,7 +703,7 @@ As a pre-requisite, make sure  `doxygen-1.9.2` was installed and built already.
 Clone the ta-ref source
 
 ```sh
-$ git clone https://192.168.100.100/rinkai/ta-ref.git
+$ git clone https://github.com/mcd500/ta-ref.git
 $ cd ta-ref
 $ git checkout teep-master
 ```
