@@ -1,6 +1,6 @@
 # Preparation before building TA-Ref without Docker
 
-All the preparation steps below are based on Ubuntu 20.04
+All the preparation steps below are based on Ubuntu 20.04 and 22.04.
 
 
 # Keystone(RISC-V Unleased)
@@ -12,6 +12,7 @@ Keystone is an open-source TEE framework for RISC-V processors. For more details
 
 Install the following packages for building TA-Ref on Keystone
 
+For ubuntu 20.04
 ```sh
 $ sudo apt-get update
 
@@ -26,6 +27,19 @@ $ sudo apt-get install -y autoconf automake autotools-dev bc bison \
 # Following packages are required for clang, keyedge and make run commands in TA-Ref.
 $ sudo apt-get install -y clang-tools-6.0 libclang-6.0-dev cmake \
 	ocaml expect screen sshpass
+```
+
+For ubuntu 22.04
+```sh
+# Required tools to build the keystone
+$ sudo apt-get update
+$ sudo apt-get install -y autoconf automake autotools-dev bc bison \
+  build-essential curl expat libexpat1-dev flex gawk gcc git gperf libgmp-dev \
+  libmpc-dev libmpfr-dev libtool texinfo tmux patchutils zlib1g-dev wget \
+  bzip2 patch vim-common lbzip2 pkg-config libglib2.0-dev libpixman-1-dev \
+  libssl-dev screen device-tree-compiler expect makeself unzip cpio rsync cmake \
+  p7zip-full python3-pip e2tools
+
 ```
 
 ## Download RISC-V toolchain and Keystone SDK
@@ -155,6 +169,7 @@ OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a non-s
 
 Install the following packages
 
+For ubuntu 20.04
 ```sh
 $ sudo dpkg --add-architecture i386
 
@@ -169,6 +184,24 @@ $ sudo apt-get install -y android-tools-adb android-tools-fastboot autoconf \
   python3-pycryptodome python3-pyelftools python3-serial vim-common \
   rsync unzip uuid-dev xdg-utils xterm xz-utils zlib1g-dev \
   git python3-pip wget cpio texlive texinfo locales
+
+```
+
+For ubuntu 22.04
+```sh
+$ sudo dpkg --add-architecture i386
+$ sudo apt-get update
+$ sudo apt-get install -y \
+  android-tools-adb android-tools-fastboot autoconf \
+  automake bc bison build-essential ccache cscope curl device-tree-compiler \
+  expect flex ftp-upload gdisk iasl libattr1-dev libc6:i386 libcap-dev \
+  libfdt-dev libftdi-dev libglib2.0-dev libhidapi-dev libncurses5-dev \
+  libpixman-1-dev libssl-dev libstdc++6:i386 libtool libz1:i386 make \
+  mtools netcat python2 \
+  python3-pycryptodome python3-pyelftools python3-serial vim-common \
+  rsync unzip uuid-dev xdg-utils xterm xz-utils zlib1g-dev \
+  git python3-pip wget cpio texlive texinfo cmake \
+  locales
 
 ```
 
@@ -331,13 +364,25 @@ Refer: https://github.com/intel/sgx-software-enable/blob/master/README.md
 
 ## Required Packages
 
-Install following packages on Ubuntu 20.04
+Install following packages.
 
+For ubuntu 20.04
 ```sh
+$ sudo apt-get update
 $ sudo apt-get install -y build-essential ocaml ocamlbuild automake autoconf \
   libtool wget python libssl-dev git cmake perl libssl-dev \
   libcurl4-openssl-dev protobuf-compiler libprotobuf-dev debhelper cmake \
-  reprepro expect unzip libcurl4 libprotobuf17 python3-pip
+  reprepro expect unzip libcurl4 libprotobuf17 python3-pipcurl libcap-dev
+```
+
+For ubuntu 22.04
+```sh
+$ sudo apt-get update
+$ sudo apt-get install -y \
+  build-essential ocaml ocamlbuild automake autoconf \
+  libtool wget libssl-dev git cmake perl libssl-dev \
+  libcurl4-openssl-dev protobuf-compiler libprotobuf-dev debhelper cmake \
+  reprepro expect unzip libcurl4 libprotobuf23 python3-pip curl libcap-dev
 ```
 
 ## Build SGX
@@ -670,7 +715,8 @@ This PDF (ta-ref.pdf) was generated using Doxygen version 1.9.2. To install `dox
 Install following packages on Ubuntu. Its better to install from package rather than using apt-install.
 
 ```sh
-$ sudo apt install doxygen-latex graphviz texlive-full texlive-latex-base latex-cjk-all
+$ sudo apt-get update
+$ sudo apt-get install -y build-essential doxygen-latex graphviz texlive-full texlive-latex-base latex-cjk-all make cmake flex bison git
 ```
 
 Above packages required to generate PDF using doxygen.
@@ -680,6 +726,7 @@ Above packages required to generate PDF using doxygen.
 ```sh
 $ git clone https://github.com/doxygen/doxygen.git
 $ cd doxygen
+$ git checkout 227952da7562a6f13da2a9d19c3cdc93812bc2de
 $ mkdir build
 $ cd build
 $ cmake -G "Unix Makefiles" ..
