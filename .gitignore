@@ -5,8 +5,8 @@ docs/doxygen/latex_readme/
 docs/doxygen/latex_spec/
 docs/html_readme.tar.gz
 docs/html_spec.tar.gz
-docs/ta-ref_readme_html/
-docs/ta-ref_spec_html/
+#docs/ta-ref_readme_html/
+#docs/ta-ref_spec_html/
 docs/aist_supported_apis.md/
-docs/ta-ref-spec.pdf/
-docs/ta-ref.pdf/
+docs/ta-ref-spec.pdf
+docs/ta-ref.pdf
