@@ -1,0 +1,5 @@
+var searchData=
+[
+  ['ocall_5fprint_5fstring_5fwrapper_0',['ocall_print_string_wrapper',['../a00273.html#a91eb2c1ee7fb81800ddd298ad93e4047',1,'ocall_print_string_wrapper(const char *str):&#160;ocall_wrapper.c'],['../a00279.html#a91eb2c1ee7fb81800ddd298ad93e4047',1,'ocall_print_string_wrapper(const char *str):&#160;ocall_wrapper.c'],['../a00276.html#a91eb2c1ee7fb81800ddd298ad93e4047',1,'ocall_print_string_wrapper(const char *str):&#160;ocall_wrapper.c'],['../a00282.html#a91eb2c1ee7fb81800ddd298ad93e4047',1,'ocall_print_string_wrapper(const char *str):&#160;ocall_wrapper.c']]],
+  ['openpersistentobject_1',['OpenPersistentObject',['../a00291.html#a18b21d13c6e44a0c13509efed221f6ff',1,'OpenPersistentObject(uint32_t storageID, const void *objectID, uint32_t objectIDLen, uint32_t flags, TEE_ObjectHandle *object, int ocreat):&#160;tee-internal-api.c'],['../a00294.html#a18b21d13c6e44a0c13509efed221f6ff',1,'OpenPersistentObject(uint32_t storageID, const void *objectID, uint32_t objectIDLen, uint32_t flags, TEE_ObjectHandle *object, int ocreat):&#160;tee-internal-api.c']]]
+];
