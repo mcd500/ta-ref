@@ -58,7 +58,15 @@ docs: docs_clean
 	cd docs; tar czf html_spec.tar.gz open-spec.html ta-ref_spec_html
 
 gen_readme:
-	cat docs/overview_of_ta-ref.md docs/building_with_docker.md > README.md
+	cat docs/overview_of_ta-ref.md \
+		docs/gp_api.md \
+		docs/run_sample_program.md \
+		docs/how_to_program_on_ta-ref.md \
+		docs/aist_supported_apis.md \
+		docs/building_with_docker.md \
+		docs/preparation.md \
+		docs/building.md \
+		docs/running_on_dev_boards.md > README.md
 	sed -i 's/@image html /![](/g' README.md
 	sed -i '/^\!\[\]/ s/$$/)/' README.md
 	sed -i '/^@image latex/d' README.md
