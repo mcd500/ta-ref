@@ -1,5 +1,11 @@
 # Overview of Trusted Application Reference (TA-Ref)
 
+There is a wiki page describing Introduction, objective and use cases of TEEP Protoc
+ol.
+
+  * [https://github.com/ietf-teep/teep-protocol/wiki](https://github.com/ietf-teep/t
+eep-protocol/wiki)
+
 The TEE is a feature of having capability of running software from an isolated area assisted by CPU hardware.
 
 Many recent devices are able to be customized by installing softwares from end users, dealers and security service companies which are different entities from the device vendors, for example, smart phones, Android TVs, set top boxes. infotainment system on cars, surveillance cameras, home security gateways, edge routers, network equipment, and etc. In this situation, malicious software could be installed on a regular operating system, such as Linux.
