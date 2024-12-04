@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TA-REF: ta-ref/api/include/tee-common.h File Reference</title>
+<title>TA-REF: ta-ref/api/include/test_dev_key.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -89,67 +89,133 @@ $(document).ready(function(){initNavTree('a00122.html',''); initResizable(); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">tee-common.h File Reference</div></div>
+  <div class="summary">
+<a href="#var-members">Variables</a>  </div>
+  <div class="headertitle"><div class="title">test_dev_key.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Common type and definitions of RISC-V TEE.  
-<a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
-<code>#include &lt;stdio.h&gt;</code><br />
-<code>#include &lt;<a class="el" href="a00080_source.html">tee_api_defines.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="a00089_source.html">tee_api_types.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="a00083_source.html">tee_ta_api.h</a>&gt;</code><br />
-</div><div class="textblock"><div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-0-trigger" src="closed.png" alt="+"/> Include dependency graph for tee-common.h:</div>
-<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-0-content" class="dyncontent" style="display:none;">
-<div class="center"><img src="a00123.png" border="0" usemap="#ata-ref_2api_2include_2tee-common_8h" alt=""/></div>
-<map name="ata-ref_2api_2include_2tee-common_8h" id="ata-ref_2api_2include_2tee-common_8h">
-<area shape="rect" title="Common type and definitions of RISC&#45;V TEE." alt="" coords="142,5,275,47"/>
-<area shape="rect" title=" " alt="" coords="5,244,76,271"/>
-<area shape="rect" title=" " alt="" coords="335,95,402,121"/>
-<area shape="rect" href="a00080.html" title=" " alt="" coords="101,244,237,271"/>
-<area shape="rect" href="a00089.html" title=" " alt="" coords="235,169,361,196"/>
-<area shape="rect" href="a00083.html" title=" " alt="" coords="157,95,260,121"/>
-<area shape="rect" href="a00098.html" title=" " alt="" coords="538,244,629,271"/>
-<area shape="rect" title=" " alt="" coords="653,244,735,271"/>
-<area shape="rect" title=" " alt="" coords="261,244,335,271"/>
-<area shape="rect" title=" " alt="" coords="360,244,513,271"/>
-</map>
-</div>
-</div><div class="textblock"><div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-1-trigger" src="closed.png" alt="+"/> This graph shows which files directly or indirectly include this file:</div>
-<div id="dynsection-1-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-1-content" class="dyncontent" style="display:none;">
-<div class="center"><img src="a00124.png" border="0" usemap="#ata-ref_2api_2include_2tee-common_8hdep" alt=""/></div>
-<map name="ata-ref_2api_2include_2tee-common_8hdep" id="ata-ref_2api_2include_2tee-common_8hdep">
-<area shape="rect" title="Common type and definitions of RISC&#45;V TEE." alt="" coords="723,5,856,47"/>
-<area shape="rect" href="a00113.html" title="Candidate API list for Global Platform like RISC&#45;V TEE." alt="" coords="559,95,692,136"/>
-<area shape="rect" href="a00291.html" title=" " alt="" coords="553,184,698,225"/>
-<area shape="rect" href="a00294.html" title=" " alt="" coords="722,184,857,225"/>
-<area shape="rect" href="a00062.html" title=" " alt="" coords="881,184,1044,225"/>
-<area shape="rect" href="a00104.html" title=" " alt="" coords="1007,95,1140,136"/>
-<area shape="rect" href="a00074.html" title=" " alt="" coords="5,184,139,225"/>
-<area shape="rect" href="a00110.html" title=" " alt="" coords="163,184,306,225"/>
-<area shape="rect" href="a00071.html" title=" " alt="" coords="330,184,529,225"/>
-<area shape="rect" href="a00068.html" title=" " alt="" coords="1069,184,1214,225"/>
-</map>
-</div>
-</div>
 <p><a href="a00122_source.html">Go to the source code of this file.</a></p>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p >Common type and definitions of RISC-V TEE. </p>
-<p >draft RISC-V Internal TEE API </p><dl class="section author"><dt>Author</dt><dd>Akira Tsukamoto, AIST </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2019/09/25 </dd></dl>
-</div></div><!-- contents -->
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a414ca01e5a7ab1682647f105452f108d"><td class="memItemLeft" align="right" valign="top">static const unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00122.html#a414ca01e5a7ab1682647f105452f108d">_sanctum_dev_secret_key</a> []</td></tr>
+<tr class="separator:a414ca01e5a7ab1682647f105452f108d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad20f1506f9c3fb7261f560dcb9a9360f"><td class="memItemLeft" align="right" valign="top">static const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00122.html#ad20f1506f9c3fb7261f560dcb9a9360f">_sanctum_dev_secret_key_len</a> = 64</td></tr>
+<tr class="separator:ad20f1506f9c3fb7261f560dcb9a9360f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac4c6e63829bd59132735f04822ab316"><td class="memItemLeft" align="right" valign="top">static const unsigned char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00122.html#aac4c6e63829bd59132735f04822ab316">_sanctum_dev_public_key</a> []</td></tr>
+<tr class="separator:aac4c6e63829bd59132735f04822ab316"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b5789e1ce77c1a87c7e76b7791b455f"><td class="memItemLeft" align="right" valign="top">static const size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00122.html#a1b5789e1ce77c1a87c7e76b7791b455f">_sanctum_dev_public_key_len</a> = 32</td></tr>
+<tr class="separator:a1b5789e1ce77c1a87c7e76b7791b455f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="aac4c6e63829bd59132735f04822ab316" name="aac4c6e63829bd59132735f04822ab316"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac4c6e63829bd59132735f04822ab316">&#9670;&nbsp;</a></span>_sanctum_dev_public_key</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned char _sanctum_dev_public_key[]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">  0x0f, 0xaa, 0xd4, 0xff, 0x01, 0x17, 0x85, 0x83, 0xba, 0xa5, 0x88, 0x96,</div>
+<div class="line">  0x6f, 0x7c, 0x1f, 0xf3, 0x25, 0x64, 0xdd, 0x17, 0xd7, 0xdc, 0x2b, 0x46,</div>
+<div class="line">  0xcb, 0x50, 0xa8, 0x4a, 0x69, 0x27, 0x0b, 0x4c</div>
+<div class="line">}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a1b5789e1ce77c1a87c7e76b7791b455f" name="a1b5789e1ce77c1a87c7e76b7791b455f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b5789e1ce77c1a87c7e76b7791b455f">&#9670;&nbsp;</a></span>_sanctum_dev_public_key_len</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const size_t _sanctum_dev_public_key_len = 32</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a414ca01e5a7ab1682647f105452f108d" name="a414ca01e5a7ab1682647f105452f108d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a414ca01e5a7ab1682647f105452f108d">&#9670;&nbsp;</a></span>_sanctum_dev_secret_key</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned char _sanctum_dev_secret_key[]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">  0x40, 0xa0, 0x99, 0x47, 0x8c, 0xce, 0xfa, 0x3a, 0x06, 0x63, 0xab, 0xc9,</div>
+<div class="line">  0x5e, 0x7a, 0x1e, 0xc9, 0x54, 0xb4, 0xf5, 0xf6, 0x45, 0xba, 0xd8, 0x04,</div>
+<div class="line">  0xdb, 0x13, 0xe7, 0xd7, 0x82, 0x6c, 0x70, 0x73, 0x57, 0x6a, 0x9a, 0xb6,</div>
+<div class="line">  0x21, 0x60, 0xd9, 0xd1, 0xc6, 0xae, 0xdc, 0x29, 0x85, 0x2f, 0xb9, 0x60,</div>
+<div class="line">  0xee, 0x51, 0x32, 0x83, 0x5a, 0x16, 0x89, 0xec, 0x06, 0xa8, 0x72, 0x34,</div>
+<div class="line">  0x51, 0xaa, 0x0e, 0x4a</div>
+<div class="line">}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ad20f1506f9c3fb7261f560dcb9a9360f" name="ad20f1506f9c3fb7261f560dcb9a9360f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad20f1506f9c3fb7261f560dcb9a9360f">&#9670;&nbsp;</a></span>_sanctum_dev_secret_key_len</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const size_t _sanctum_dev_secret_key_len = 64</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_f9530a031e82794186de7c9c8fdc2b6f.html">ta-ref</a></li><li class="navelem"><a class="el" href="dir_f46799117fa6d4670f313b2ab4ad8389.html">api</a></li><li class="navelem"><a class="el" href="dir_777eb751ba0556a74a781f1965b690d9.html">include</a></li><li class="navelem"><a class="el" href="a00122.html">tee-common.h</a></li>
+    <li class="navelem"><a class="el" href="dir_f9530a031e82794186de7c9c8fdc2b6f.html">ta-ref</a></li><li class="navelem"><a class="el" href="dir_f46799117fa6d4670f313b2ab4ad8389.html">api</a></li><li class="navelem"><a class="el" href="dir_777eb751ba0556a74a781f1965b690d9.html">include</a></li><li class="navelem"><a class="el" href="a00122.html">test_dev_key.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['aist_5fsupported_5fapis_2emd_0',['aist_supported_apis.md',['../a00038.html',1,'']]],
-  ['api_20comparison_20with_20full_20set_20of_20gp_20api_1',['API comparison with full set of GP API',['../a00053.html',1,'']]]
+  ['overview_20of_20trusted_20application_20reference_20_28ta_2dref_29_0',['Overview of Trusted Application Reference (TA-Ref)',['../index.html',1,'']]],
+  ['overview_5fof_5fta_2dref_2emd_1',['overview_of_ta-ref.md',['../a00026.html',1,'']]]
 ];

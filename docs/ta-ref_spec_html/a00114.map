@@ -1,13 +1,10 @@
-<map id="ta&#45;ref/api/include/tee&#45;ta&#45;internal.h" name="ta&#45;ref/api/include/tee&#45;ta&#45;internal.h">
-<area shape="rect" id="node1" title="Candidate API list for Global Platform like RISC&#45;V TEE." alt="" coords="142,5,275,47"/>
-<area shape="rect" id="node2" href="$a00122.html" title="Common type and definitions of RISC&#45;V TEE." alt="" coords="150,95,267,121"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,319,76,345"/>
-<area shape="rect" id="node4" title=" " alt="" coords="335,169,402,196"/>
-<area shape="rect" id="node5" href="$a00080.html" title=" " alt="" coords="101,319,237,345"/>
-<area shape="rect" id="node6" href="$a00089.html" title=" " alt="" coords="235,244,361,271"/>
-<area shape="rect" id="node11" href="$a00083.html" title=" " alt="" coords="157,169,260,196"/>
-<area shape="rect" id="node7" href="$a00098.html" title=" " alt="" coords="538,319,629,345"/>
-<area shape="rect" id="node8" title=" " alt="" coords="653,319,735,345"/>
-<area shape="rect" id="node9" title=" " alt="" coords="261,319,335,345"/>
-<area shape="rect" id="node10" title=" " alt="" coords="360,319,513,345"/>
+<map id="ta&#45;ref/api/include/tee_ta_api.h" name="ta&#45;ref/api/include/tee_ta_api.h">
+<area shape="rect" id="node1" title=" " alt="" coords="120,5,239,47"/>
+<area shape="rect" id="node2" href="$a00098.html" title=" " alt="" coords="5,169,129,196"/>
+<area shape="rect" id="node3" href="$a00080.html" title=" " alt="" coords="234,95,349,121"/>
+<area shape="rect" id="node4" href="$a00077.html" title=" " alt="" coords="153,169,235,196"/>
+<area shape="rect" id="node5" title=" " alt="" coords="259,169,324,196"/>
+<area shape="rect" id="node6" title=" " alt="" coords="349,169,423,196"/>
+<area shape="rect" id="node7" title=" " alt="" coords="447,169,517,196"/>
+<area shape="rect" id="node8" title=" " alt="" coords="541,169,679,196"/>
 </map>

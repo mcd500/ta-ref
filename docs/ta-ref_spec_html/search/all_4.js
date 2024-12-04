@@ -6,6 +6,6 @@ var searchData=
   ['datasize_3',['dataSize',['../a00160.html#a62e86918ecc3604c78c19ec4b82db942',1,'TEE_ObjectInfo']]],
   ['desc_4',['desc',['../a00256.html#a332b861b97a0354bb79a90e4b94044fc',1,'__TEE_ObjectHandle']]],
   ['dev_5fpublic_5fkey_5',['dev_public_key',['../a00136.html#a3fb7a865631a190ad02f612fc25da4d8',1,'report']]],
-  ['dhex_5fdump_6',['dhex_dump',['../a00107.html#a6ae309735ee1fed9decc4e537dcc240d',1,'trace.h']]],
+  ['dhex_5fdump_6',['dhex_dump',['../a00092.html#a6ae309735ee1fed9decc4e537dcc240d',1,'trace.h']]],
   ['digestlength_7',['digestLength',['../a00188.html#a20b452df1cc34aaa0d5d000165bf5c79',1,'TEE_OperationInfo::digestLength()'],['../a00196.html#a4848f2823b0daedcb3c18872bfd43ac8',1,'TEE_OperationInfoMultiple::digestLength()']]]
 ];

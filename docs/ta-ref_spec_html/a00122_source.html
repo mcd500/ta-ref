@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>TA-REF: ta-ref/api/include/tee-common.h Source File</title>
+<title>TA-REF: ta-ref/api/include/test_dev_key.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -89,77 +89,38 @@ $(document).ready(function(){initNavTree('a00122_source.html',''); initResizable
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">tee-common.h</div></div>
+  <div class="headertitle"><div class="title">test_dev_key.h</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="a00122.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * SPDX-License-Identifier: BSD-2-Clause</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * Copyright (C) 2019 National Institute of Advanced Industrial Science</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> *                           and Technology (AIST)</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * All rights reserved.</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment"> * Redistribution and use in source and binary forms, with or without</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment"> * modification, are permitted provided that the following conditions are met:</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment"> * 1. Redistributions of source code must retain the above copyright notice,</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment"> * this list of conditions and the following disclaimer.</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="comment"> * 2. Redistributions in binary form must reproduce the above copyright notice,</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="comment"> * this list of conditions and the following disclaimer in the documentation</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment"> * and/or other materials provided with the distribution.</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment"> * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment"> * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment"> * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="comment"> * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment"> * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment"> * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment"> * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="comment"> * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="comment"> * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="comment"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment"> * POSSIBILITY OF SUCH DAMAGE.</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#ifndef TEE_COMMON_H</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#define TEE_COMMON_H</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &lt;stdint.h&gt;</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#ifndef DOXYGEN_SHOULD_SKIP_THIS</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="preprocessor">#ifdef DEBUG</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#define pr_deb(...)       do { printf(__VA_ARGS__); } while (0)</span></div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="preprocessor">#define pr_deb(...)       do { } while (0)</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">#endif </span><span class="comment">/* DEBUG */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#endif </span><span class="comment">/*DOXYGEN_SHOULD_SKIP_THIS*/</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span><span class="comment">//#include &lt;tee_api.h&gt;</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#include &lt;<a class="code" href="a00080.html">tee_api_defines.h</a>&gt;</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#include &lt;<a class="code" href="a00089.html">tee_api_types.h</a>&gt;</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#include &lt;<a class="code" href="a00083.html">tee_ta_api.h</a>&gt;</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="comment">//typedef uint32_t TEE_Result;</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="preprocessor">#endif </span><span class="comment">/* TEE_COMMON_H */</span><span class="preprocessor"></span></div>
-<div class="ttc" id="aa00080_html"><div class="ttname"><a href="a00080.html">tee_api_defines.h</a></div></div>
-<div class="ttc" id="aa00083_html"><div class="ttname"><a href="a00083.html">tee_ta_api.h</a></div></div>
-<div class="ttc" id="aa00089_html"><div class="ttname"><a href="a00089.html">tee_api_types.h</a></div></div>
+<a href="a00122.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/* These are known device TESTING keys, use them for testing on platforms/qemu */</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#warning Using TEST device root key. No integrity guarantee.</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno"><a class="line" href="a00122.html#a414ca01e5a7ab1682647f105452f108d">    4</a></span><span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code hl_variable" href="a00122.html#a414ca01e5a7ab1682647f105452f108d">_sanctum_dev_secret_key</a>[] = {</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>  0x40, 0xa0, 0x99, 0x47, 0x8c, 0xce, 0xfa, 0x3a, 0x06, 0x63, 0xab, 0xc9,</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>  0x5e, 0x7a, 0x1e, 0xc9, 0x54, 0xb4, 0xf5, 0xf6, 0x45, 0xba, 0xd8, 0x04,</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>  0xdb, 0x13, 0xe7, 0xd7, 0x82, 0x6c, 0x70, 0x73, 0x57, 0x6a, 0x9a, 0xb6,</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>  0x21, 0x60, 0xd9, 0xd1, 0xc6, 0xae, 0xdc, 0x29, 0x85, 0x2f, 0xb9, 0x60,</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>  0xee, 0x51, 0x32, 0x83, 0x5a, 0x16, 0x89, 0xec, 0x06, 0xa8, 0x72, 0x34,</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>  0x51, 0xaa, 0x0e, 0x4a</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>};</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="a00122.html#ad20f1506f9c3fb7261f560dcb9a9360f">   12</a></span><span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> <a class="code hl_variable" href="a00122.html#ad20f1506f9c3fb7261f560dcb9a9360f">_sanctum_dev_secret_key_len</a> = 64;</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="a00122.html#aac4c6e63829bd59132735f04822ab316">   14</a></span><span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code hl_variable" href="a00122.html#aac4c6e63829bd59132735f04822ab316">_sanctum_dev_public_key</a>[] = {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>  0x0f, 0xaa, 0xd4, 0xff, 0x01, 0x17, 0x85, 0x83, 0xba, 0xa5, 0x88, 0x96,</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  0x6f, 0x7c, 0x1f, 0xf3, 0x25, 0x64, 0xdd, 0x17, 0xd7, 0xdc, 0x2b, 0x46,</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  0xcb, 0x50, 0xa8, 0x4a, 0x69, 0x27, 0x0b, 0x4c</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>};</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="a00122.html#a1b5789e1ce77c1a87c7e76b7791b455f">   19</a></span><span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> <a class="code hl_variable" href="a00122.html#a1b5789e1ce77c1a87c7e76b7791b455f">_sanctum_dev_public_key_len</a> = 32;</div>
+<div class="ttc" id="aa00122_html_a1b5789e1ce77c1a87c7e76b7791b455f"><div class="ttname"><a href="a00122.html#a1b5789e1ce77c1a87c7e76b7791b455f">_sanctum_dev_public_key_len</a></div><div class="ttdeci">static const size_t _sanctum_dev_public_key_len</div><div class="ttdef"><b>Definition:</b> test_dev_key.h:19</div></div>
+<div class="ttc" id="aa00122_html_a414ca01e5a7ab1682647f105452f108d"><div class="ttname"><a href="a00122.html#a414ca01e5a7ab1682647f105452f108d">_sanctum_dev_secret_key</a></div><div class="ttdeci">static const unsigned char _sanctum_dev_secret_key[]</div><div class="ttdef"><b>Definition:</b> test_dev_key.h:4</div></div>
+<div class="ttc" id="aa00122_html_aac4c6e63829bd59132735f04822ab316"><div class="ttname"><a href="a00122.html#aac4c6e63829bd59132735f04822ab316">_sanctum_dev_public_key</a></div><div class="ttdeci">static const unsigned char _sanctum_dev_public_key[]</div><div class="ttdef"><b>Definition:</b> test_dev_key.h:14</div></div>
+<div class="ttc" id="aa00122_html_ad20f1506f9c3fb7261f560dcb9a9360f"><div class="ttname"><a href="a00122.html#ad20f1506f9c3fb7261f560dcb9a9360f">_sanctum_dev_secret_key_len</a></div><div class="ttdeci">static const size_t _sanctum_dev_secret_key_len</div><div class="ttdef"><b>Definition:</b> test_dev_key.h:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_f9530a031e82794186de7c9c8fdc2b6f.html">ta-ref</a></li><li class="navelem"><a class="el" href="dir_f46799117fa6d4670f313b2ab4ad8389.html">api</a></li><li class="navelem"><a class="el" href="dir_777eb751ba0556a74a781f1965b690d9.html">include</a></li><li class="navelem"><a class="el" href="a00122.html">tee-common.h</a></li>
+    <li class="navelem"><a class="el" href="dir_f9530a031e82794186de7c9c8fdc2b6f.html">ta-ref</a></li><li class="navelem"><a class="el" href="dir_f46799117fa6d4670f313b2ab4ad8389.html">api</a></li><li class="navelem"><a class="el" href="dir_777eb751ba0556a74a781f1965b690d9.html">include</a></li><li class="navelem"><a class="el" href="a00122.html">test_dev_key.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>
