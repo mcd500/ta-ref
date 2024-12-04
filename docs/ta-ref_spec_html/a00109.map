@@ -1,8 +1,9 @@
-<map id="ta&#45;ref/api/include/trace.h" name="ta&#45;ref/api/include/trace.h">
-<area shape="rect" id="node1" title=" " alt="" coords="364,5,497,47"/>
-<area shape="rect" id="node2" href="$a00074.html" title=" " alt="" coords="5,95,139,136"/>
-<area shape="rect" id="node3" href="$a00092.html" title=" " alt="" coords="163,95,296,136"/>
-<area shape="rect" id="node4" href="$a00086.html" title=" " alt="" coords="320,95,541,136"/>
-<area shape="rect" id="node5" href="$a00318.html" title=" " alt="" coords="566,95,711,136"/>
-<area shape="rect" id="node6" href="$a00327.html" title=" " alt="" coords="736,102,901,129"/>
+<map id="ta&#45;ref/api/include/trace_levels.h" name="ta&#45;ref/api/include/trace_levels.h">
+<area shape="rect" id="node1" title=" " alt="" coords="331,5,449,47"/>
+<area shape="rect" id="node2" href="$a00092.html" title=" " alt="" coords="331,95,449,136"/>
+<area shape="rect" id="node3" href="$a00104.html" title=" " alt="" coords="5,184,124,225"/>
+<area shape="rect" id="node4" href="$a00083.html" title=" " alt="" coords="148,184,267,225"/>
+<area shape="rect" id="node5" href="$a00101.html" title=" " alt="" coords="291,184,489,225"/>
+<area shape="rect" id="node6" href="$a00318.html" title=" " alt="" coords="513,184,643,225"/>
+<area shape="rect" id="node7" href="$a00327.html" title=" " alt="" coords="667,191,817,218"/>
 </map>

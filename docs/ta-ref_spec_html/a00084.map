@@ -1,10 +1,12 @@
-<map id="ta&#45;ref/api/include/tee_ta_api.h" name="ta&#45;ref/api/include/tee_ta_api.h">
-<area shape="rect" id="node1" title=" " alt="" coords="128,5,261,47"/>
-<area shape="rect" id="node2" href="$a00080.html" title=" " alt="" coords="5,169,141,196"/>
-<area shape="rect" id="node3" href="$a00089.html" title=" " alt="" coords="253,95,379,121"/>
-<area shape="rect" id="node4" href="$a00098.html" title=" " alt="" coords="165,169,256,196"/>
-<area shape="rect" id="node5" title=" " alt="" coords="281,169,351,196"/>
-<area shape="rect" id="node6" title=" " alt="" coords="376,169,459,196"/>
-<area shape="rect" id="node7" title=" " alt="" coords="483,169,557,196"/>
-<area shape="rect" id="node8" title=" " alt="" coords="582,169,735,196"/>
+<map id="ta&#45;ref/api/include/tee_api.h" name="ta&#45;ref/api/include/tee_api.h">
+<area shape="rect" id="node1" title=" " alt="" coords="213,5,332,47"/>
+<area shape="rect" id="node2" title=" " alt="" coords="238,169,307,196"/>
+<area shape="rect" id="node3" href="$a00077.html" title=" " alt="" coords="5,169,87,196"/>
+<area shape="rect" id="node4" href="$a00098.html" title=" " alt="" coords="683,169,807,196"/>
+<area shape="rect" id="node5" href="$a00080.html" title=" " alt="" coords="311,95,426,121"/>
+<area shape="rect" id="node9" href="$a00092.html" title=" " alt="" coords="172,95,235,121"/>
+<area shape="rect" id="node6" title=" " alt="" coords="593,169,659,196"/>
+<area shape="rect" id="node7" title=" " alt="" coords="331,169,406,196"/>
+<area shape="rect" id="node8" title=" " alt="" coords="430,169,569,196"/>
+<area shape="rect" id="node10" href="$a00107.html" title=" " alt="" coords="111,169,213,196"/>
 </map>
