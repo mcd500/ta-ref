@@ -3,8 +3,7 @@
 There is a wiki page describing Introduction, objective and use cases of TEEP Protoc
 ol.
 
-  * [https://github.com/ietf-teep/teep-protocol/wiki](https://github.com/ietf-teep/t
-eep-protocol/wiki)
+  * [https://github.com/ietf-teep/teep-protocol/wiki](https://github.com/ietf-teep/teep-protocol/wiki)
 
 The TEE is a feature of having capability of running software from an isolated area assisted by CPU hardware.
 
